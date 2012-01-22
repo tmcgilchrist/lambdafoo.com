@@ -1,0 +1,36 @@
+--- 
+layout: post
+title: Ubuntu Server update!
+tags: []
+
+status: draft
+type: post
+published: false
+meta: 
+  _edit_last: "1"
+---
+I posted a while ago about switching to Ubtuntu for my home server.
+
+I've got the basics up an running on my  MacMini. Namely DHCP/DNS/WWW
+
+The setup of DHCP was easy enough. Followed the find documentation on the Ubuntu site.Same story for a caching DNS.
+
+Setup Apache/PHP/MySQL was a quick 'sudo apt-get install php5-mysql' and I installed Wordpress via subversion checkout.
+
+I've also installed BIND9 as a caching DNS server.
+
+Some services I'm not bothering to migrate:
+<ul>
+	<li>Subversion, I've switched to github and migrated anything I cared about out of subversion. It was useful at the time I set it up 6 or so years ago, but other/better options exist now.</li>
+	<li>MediaWiki, most of the stuff in there was either related to a project in Subversion. So I'll switch to using the github wiki associated with a project. No need to worry about security or keeping software up to date.</li>
+</ul>
+So all in all a success switching to Ubuntu.
+
+Now onto my wish list:
+<ol>
+	<li>Ruby/Rails using passenger and Postgres</li>
+	<li>virtual hosts in Apache</li>
+	<li>monitoring system stats like Memory/CPU etc</li>
+	<li>DNS within home network so I can setup aliases like dns.home</li>
+</ol>
+&nbsp;
