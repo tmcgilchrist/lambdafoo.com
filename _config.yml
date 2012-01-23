@@ -64,7 +64,7 @@ github_show_profile_link: true
 github_skip_forks: true
 
 # Twitter
-twitter_user: @lambda_foo
+twitter_user:
 twitter_tweet_count: 4
 twitter_show_replies: false
 twitter_follow_button: true
@@ -93,7 +93,7 @@ disqus_short_name:
 disqus_show_comment_count: false
 
 # Google Analytics
-google_analytics_tracking_id:
+google_analytics_tracking_id: UA-28532776-1
 
 # Facebook Like
 facebook_like: false
