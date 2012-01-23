@@ -6,3 +6,6 @@
 - export sitemap for submission to google.
 - setup 301 redirect for wordpress.
 - research colour theme for octopress.
+
+BUGS
+- fix up layout of <ul> not indented like the <p> tags.
