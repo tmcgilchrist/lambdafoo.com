@@ -9,48 +9,53 @@ type: post
 published: true
 ---
 
-Lately I've been running up against  ORA-00972: identifier is too long, when
+Lately I've been running up against *"ORA-00972: identifier is too long"*, when
 writing Rails migrations for Oracle. This particular error indicates that one of
 your identifiers is longer than 32 characters which is the maximum length for
 Oracle.
 
 It'll look something like this in your code:
 
-    class CreateLongTable &lt; ActiveRecord::Migration
-      def self.up
-<pre>    create_table :long_table do |t|</pre>
-<pre>      t.string :title</pre>
-<pre>      t.references :someother_really_long_identifier</pre>
-<pre>    end</pre>
-<pre>  end</pre>
-<pre>  ...</pre>
-<pre>end
-</pre>
-[/codesyntax]
+{% codeblock lang:ruby %}
+class CreateLongTable < ActiveRecord::Migration
+  def self.up
+    create_table :long_table do |t|
+      t.string :title
+      t.references :someother_really_long_identifier
+    end
+  end
+  ...
+end
+{% endcodeblock %}
 
-This migration will give you a foreign key id called "someother_really_long_identifier_id" which is obviously too long for oracle.
 
-The solution is to use your own foreign key id name. In your migration add a shorter reference
+This migration will give you a foreign key id called
+**someother_really_long_identifier_id** which is obviously too long for
+Oracle. The solution is to use your own foreign key id name. In your migration
+add a shorter reference.
 
-[codesyntax lang="ruby"]
-<pre>class CreateLongTable &lt; ActiveRecord::Migration</pre>
-<pre>  def self.up</pre>
-<pre>    create_table :long_table do |t|</pre>
-<pre>      t.string :title</pre>
-<pre>      t.references :short_name</pre>
-<pre>    end</pre>
-<pre>  end</pre>
-<pre>  ...</pre>
-<pre>end</pre>
-[/codesyntax]
-Then in your model use the shorter foreign key name
+{% codeblock lang:ruby %}
+class CreateLongTable < ActiveRecord::Migration
+  def self.up
+    create_table :long_table do |t|
+      t.string :title
+      t.references :short_name
+    end
+  end
+  ...
+end
+{% endcodeblock %}
 
-[codesyntax lang="ruby"]
-<pre>class LongTable &lt; ActiveRecord::Base</pre>
-<pre>  belongs_to :someother_really_long_identifier,</pre>
-<pre>             :class_name =&gt; 'ClassName',</pre>
-<pre>             :foreign_key =&gt; 'short_name_id'</pre>
-<pre>end</pre>
-[/codesyntax]
+Then in your model use the shorter foreign key name.
 
-And everything should be sweet, your model will use "someother_really_long_identifier" and no-one need know that the table is really using "short_name_id".
+{% codeblock lang:ruby %}
+class LongTable < ActiveRecord::Base
+  belongs_to :someother_really_long_identifier,
+             :class_name => 'ClassName',
+             :foreign_key => 'short_name_id'
+end
+{% endcodeblock %}
+
+And everything should be sweet, your model will use
+**someother_really_long_identifier** and no-one need know that the table is
+really using **short_name_id**.
