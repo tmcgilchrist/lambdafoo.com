@@ -1,6 +1,6 @@
 ---
 layout: post
-title: IntelliJ IDEA Ubuntu Launcher ++
+title: IntelliJ IDEA Ubuntu Launcher
 tags:
 - Java
 status: draft
@@ -8,14 +8,15 @@ type: post
 published: false
 ---
 I've been using IntelliJ on Ubuntu 10.10 lately for work and rather than
-starting things from the terminal I wanted a pretty launcher in the top menu. So
-after a quick search I found this site:
+starting things from the terminal I wanted a pretty launcher in the top menu.
+
+After a quick search I found this site:
 
 [IntelliJ Ubuntu Launcher](http://www.dotkam.com/2010/06/16/intellij-idea-ubuntu-launcher/)
 
-Following the instructions yielded a pretty launcher.
+Following the instructions yielded a pretty launcher to sit in my top menu bar.
 
-Only improvement I could add is to have an '/opt/intellij-current' directory and use
+The only improvement I could add is to have an **/opt/intellij-current** directory and use
 
     sudo ln -s /opt/idea-IU-99.18 /opt/idea-current
 
