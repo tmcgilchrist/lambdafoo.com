@@ -1,11 +1,9 @@
 ---
 layout: post
 title: Setting up Oracle 10g XE with Rails 3
-tags:
+categories:
 - Rails
 - Ruby
-status: publish
-type: post
 ---
 Just linking to a gist I created about setting up Ubuntu with Oracle 10g XE and Rails 3.
 

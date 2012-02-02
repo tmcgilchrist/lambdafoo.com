@@ -1,12 +1,8 @@
 ---
 layout: post
-title: The Rubinius Virtual Machine
-tags:
-  - ruby
-
-status: draft
-type: post
-
+title: "The Rubinius Virtual Machine"
+categories:
+  - Ruby
 ---
 
 Cool talk about the Rubinius Virtual Machine.

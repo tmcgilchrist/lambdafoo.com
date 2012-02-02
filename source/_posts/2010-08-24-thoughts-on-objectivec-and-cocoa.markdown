@@ -1,12 +1,9 @@
 ---
 layout: post
 title: Thoughts on ObjectiveC and Cocoa
-tags:
+categories:
 - ObjectiveC
 - OS X
-status:
-type: post
-published: true
 ---
 I wanted to collect my initial impressions of ObjectiveC and Cocoa. I've started
 reading the Hillegas book again after and interrupted start last year with the

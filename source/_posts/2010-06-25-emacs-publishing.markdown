@@ -1,12 +1,9 @@
 ---
 layout: post
 title: .emacs publishing
-tags:
+categories:
 - Coding
 - Emacs
-status: publish
-type: post
-published: true
 ---
 I signed up for a BitBucket account earlier this month but I've only recently
 got around to using it. My first public project is my .emacs file. Check it out

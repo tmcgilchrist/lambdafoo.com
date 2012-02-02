@@ -5,7 +5,7 @@ date: 2012-02-01 10:34
 comments: true
 categories:
  - Hurd
- - Musings
+ - Opinion
 ---
 
 After reading a recent

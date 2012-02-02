@@ -1,11 +1,9 @@
 ---
 layout: post
 title: Ubuntu Server update
-tags:
+categories:
  - Unix
-status: publish
-type: post
-published: true
+ - Linux
 ---
 
 I posted a while ago about switching to Ubtuntu for my home server.

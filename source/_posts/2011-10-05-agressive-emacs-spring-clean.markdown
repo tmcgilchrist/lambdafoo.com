@@ -1,11 +1,10 @@
 ---
 layout: post
 title: Agressive Emacs Spring Clean
-tags:
+categories:
 - Emacs
 - Rails
 - Ruby
-type: post
 ---
 A few weeks ago I mentioned that I was going to start using Emacs regularly for my Ruby/Rails development.
 
@@ -20,4 +19,3 @@ Everything is up on [github](https://github.com/tmcgilchrist/.emacs.d).
 I've still got my old configuration files hanging around in personal-lisp, which
 I will gradually migrate over. The top of that list is getting my Erlang mode
 and Distel working again.
-

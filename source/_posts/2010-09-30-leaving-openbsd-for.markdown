@@ -1,12 +1,10 @@
 ---
 layout: post
 title: Leaving OpenBSD for
-tags:
+categories:
 - Linux
 - OpenBSD
-status: publish
-type: post
-published: true
+- Unix
 ---
 I'm migrating my home server away from OpenBSD.
 

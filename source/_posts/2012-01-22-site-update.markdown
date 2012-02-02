@@ -1,9 +1,9 @@
 ---
 layout: post
-title: Site Update
-tags:
+title: "Site Update"
+date: 2012-01-22 00:00
+categories:
 - Misc
-status: publish
 type: post
 published: true
 ---

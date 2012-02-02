@@ -1,12 +1,9 @@
 ---
 layout: post
 title: Rails, ORA-000972 and you
-tags:
+categories:
 - Rails
 - Ruby
-status: publish
-type: post
-published: true
 ---
 
 Lately I've been running up against *"ORA-00972: identifier is too long"*, when

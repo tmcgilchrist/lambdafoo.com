@@ -1,7 +1,7 @@
 ---
 layout: post
-title: Git and Mercurial Workflow Gist
-tags:
+title: "Git and Mercurial Workflow Gist"
+categories:
 - Coding
 - github
 ---
