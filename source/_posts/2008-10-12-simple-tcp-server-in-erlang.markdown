@@ -1,22 +1,13 @@
 ---
 layout: post
 title: Simple TCP Server in Erlang
-tags:
+categories:
 - Coding
 - Erlang
-status: publish
-type: post
-published: true
-meta:
-  _edit_last: "1"
-  _aioseop_keywords: erlang, network programming, erlang network programming
-  _aioseop_description: erlang daytime network programming
-  _aioseop_title: Erlang daytime server
 ---
 Just a quick example of a tcp server that returns the current time.
 
-<pre>
-<code>
+{% codeblock lang:erlang %}
 -module(daytime).
 -export([start/0]).
 
@@ -43,47 +34,34 @@ getDateTime() ->
                                          Hour, Minute, Second]),
     lists:flatten(DateString).
 
-</code>
-</pre>
+{% endcodeblock %}
 
 To test, startup an erlang shell:
-<pre>
-<code>
-erl
-</code>
-</pre>
-Compile the daytime.erl file:
-<pre>
-<code>
-1> c(daytime).
-{ok,daytime}
-</code>
-</pre>
-Startup the daytime server:
-<pre>
-<code>
-2> daytime:start().
-<0.50.0>
-</code>
-</pre>
-Now in another terminal fire up telnet and connect to port 1313.
-<pre>
-<code>
-telnet localhost 1313
-</code>
-</pre>
-You should get something like this:
-<pre>
-<code>
-Trying ::1...
-telnet: connect to address ::1: Connection refused
-Trying fe80::1...
-telnet: connect to address fe80::1: Connection refused
-Trying 127.0.0.1...
-Connected to localhost.
-Escape character is '^]'.
-Sun, Oct 12, 2008 11:33:26
-Connection closed by foreign host.
-</code>
-</pre>
 
+    erl
+
+Compile the daytime.erl file:
+
+    1> c(daytime).
+    {ok,daytime}
+
+Startup the daytime server:
+
+    2> daytime:start().
+    <0.50.0>
+
+Now in another terminal fire up telnet and connect to port 1313.
+
+    telnet localhost 1313
+
+You should get something like this:
+
+    Trying ::1...
+    telnet: connect to address ::1: Connection refused
+    Trying fe80::1...
+    telnet: connect to address fe80::1: Connection refused
+    Trying 127.0.0.1...
+    Connected to localhost.
+    Escape character is '^]'.
+    Sun, Oct 12, 2008 11:33:26
+    Connection closed by foreign host.

@@ -1,30 +1,29 @@
---- 
-layout: post
-title: NetBSD wireless setup
-tags: 
-- NetBSD
-status: publish
-type: post
-published: true
-meta: 
-  _edit_last: "1"
-  _aioseop_title: NetBSD wireless setup
-  _aioseop_description: How to get NetBSD working with a 3COM CRWE777A pcmcia card.
-  _aioseop_keywords: NetBSD wi, NetBSD CRWE777A, 3COM CRWE777A, NetBSD wi
 ---
-<p>
-After installing NetBSD 4, the ethernet connection worked but not the wireless. The easiest option available was a 3Com CRWE777A wireless PCMCIA card, which originally came with a PCI bridge but I'm using it as a normal PCMCIA card.
-</p>
-<p>
-Searching around the man pages for various BSD variants showed that the wi(4) driver should work with this card. Unfortunately the NetBSD source doesn't have a Product Id for this particular card under the PCMCIA, but it does for the PCI. Strange!
-</p>
-<p>
+layout: post
+title: "NetBSD wireless setup"
+categories:
+- NetBSD
+---
+
+After installing NetBSD 4, the ethernet connection worked but not the
+wireless. The easiest option available was a 3Com CRWE777A wireless PCMCIA card,
+which originally came with a PCI bridge but I'm using it as a normal PCMCIA
+card.
+
+
+Searching around the man pages for various BSD variants showed that the wi(4)
+driver should work with this card. Unfortunately the NetBSD source doesn't have
+a Product Id for this particular card under the PCMCIA, but it does for the
+PCI. Strange!
+
 So it was a simple case of putting the Product Id into 'pcmciadevs':
-<pre>
-product 3COM 3CRWE777A          0x0777 3Com AirConnect CRWE777A Wireless LAN
-</pre>
+
+    product 3COM 3CRWE777A          0x0777 3Com AirConnect CRWE777A Wireless LAN
+
 Then run:
-<pre>make -f Makefile.pcmciadevs</pre>
+
+    make -f Makefile.pcmciadevs
+
 which generates the correct structs in the header files.
 </p>
 <p>
