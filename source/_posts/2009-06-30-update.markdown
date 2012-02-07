@@ -1,11 +1,8 @@
 ---
 layout: post
 title: Update
-tags:
+categories:
 - Misc
-status: publish
-type: post
-published: true
 ---
 
 Since I haven't posted anything here for a while. I wanted to give a quick

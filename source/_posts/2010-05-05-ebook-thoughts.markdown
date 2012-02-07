@@ -1,10 +1,8 @@
 ---
 layout: post
 title: eBook Thoughts
-tags: []
-status: publish
-type: post
-published: true
+categories:
+- Opinion
 ---
 I've become a convert to the whole ebook thing recently, but only in a limited
 capacity.

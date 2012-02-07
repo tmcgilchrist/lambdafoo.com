@@ -1,11 +1,8 @@
 ---
 layout: post
 title: NetBSD 5.0 On An AspireOne 110L
-tags:
+categories:
 - NetBSD
-status: publish
-type: post
-published: true
 ---
 After trying Ubuntu Linx on the AspireOne for a few months, I wanted to branch
 out and try something a bit different. Linux is so main stream theses days, I

@@ -1,13 +1,10 @@
 ---
 layout: post
 title: XMonad Install on NetBSD 5.0
-tags:
+categories:
 - Haskell
 - NetBSD
 - xmonad
-status: publish
-type: post
-published: true
 ---
 I had some issues with getting XMonad and it's dependencies working on NetBSD
 5.0 with pkgsrc, so I thought I'd put this up to help out others and myself when

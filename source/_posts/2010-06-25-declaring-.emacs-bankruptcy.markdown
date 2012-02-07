@@ -1,11 +1,8 @@
 ---
 layout: post
 title: Declaring .emacs Bankruptcy
-tags:
-- Coding
-status: draft
-type: post
-published: true
+categories:
+- Emacs
 ---
 Well really this is a post bankruptcy posting!
 

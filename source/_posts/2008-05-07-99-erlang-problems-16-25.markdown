@@ -1,85 +1,65 @@
---- 
+---
 layout: post
 title: "99 Erlang Problems: 16 - 25"
-tags: 
+categories:
 - Coding
 - Erlang
-status: publish
-type: post
-published: true
-meta: 
-  _edit_last: "1"
 ---
-<p>
-<strong>Problem 16:</strong> Drop every N'th element from a list.
-<code>
- problems:p16([a,b,c,d,e,f,g,h,i,k], 3).
- > [a,b,d,e,g,h,k]
-</code>
-</p>
-<p>
-<strong>Problem 17:</strong> Split a list into two parts; the length of the first part is given. Do not use any Built In Functions (BIF).
-<code>
- problems:p17([1,2,3,4,5], 2).
- > {[1,2],[3,4,5]}
-</code>
-</p>
-<p>
-<strong>Problem 18:</strong> Extract a slice from a list.
-<code>
- problems:p18([a,b,c,d,e,f,g,h,i,k], 3, 7).
- > [c,d,e,f,g]
-</code>
-</p>
-<p>
-<strong>Problem 19:</strong> Rotate a list N places to the left.
-<code>
-problems:p19([a,b,c,d,e,f,g,h], 3).
- > [d,e,f,g,h,a,b,c]
 
-problems:p19([a,b,c,d,e,f,g,h], -2).
- > [g,h,a,b,c,d,e,f]
-</code>
-</p>
-<p>
-<strong>Problem 20:</strong> Remove the K'th element from a list
-<code>
-problems:p20([1,2,3], 2).
- > [1,3]
-</code>
-</p>
-<p>
-<strong>Problem21:</strong> Insert an element at a given position into a list.
-<code>
-problems:p21([1,2,3], 5, 2).
- > [1,2,5,3]
-</code>
-</p>
-<p>
-<strong>Problem 22:</strong> Create a list containing all integers within a given range.
-<code>
-problems:p22(9, 4).
- > [9,8,7,6,5,4]
-problems:p22(4,9).
- > [4,5,6,7,8,9]
-</code>
-</p>
-<p>
-<strong>Problem 23:</strong> Extract a given nubmer of randomly selected elements from a list.
-<code>
-problems:p23([1,2,3,4,5,6], 3).
- > [1,2,6]
-</code>
-</p>
-<p>
-<strong>Problem 24:</strong> Lotto: Draw N diference random numbers from the set 1..M. The selected numbers shall be returned in a list.
-<code>
-problems:p24(6, 49).
- > [23, 1, 17,33,21,37]
-</code>
-</p>
-<p>
-<strong>Problem 25:</strong> Generate a random permutation of the elements of a list.
+**Problem 16:** Drop every N'th element from a list.
+
+    problems:p16([a,b,c,d,e,f,g,h,i,k], 3).
+    > [a,b,d,e,g,h,k]
+
+
+**Problem 17:** Split a list into two parts; the length of the first part is
+given. Do not use any Built In Functions (BIF).
+
+    problems:p17([1,2,3,4,5], 2).
+    > {[1,2],[3,4,5]}
+
+**Problem 18:** Extract a slice from a list.
+
+    problems:p18([a,b,c,d,e,f,g,h,i,k], 3, 7).
+    > [c,d,e,f,g]
+
+**Problem 19:** Rotate a list N places to the left.
+
+    problems:p19([a,b,c,d,e,f,g,h], 3).
+    > [d,e,f,g,h,a,b,c]
+
+    problems:p19([a,b,c,d,e,f,g,h], -2).
+    > [g,h,a,b,c,d,e,f]
+
+**Problem 20:** Remove the K'th element from a list
+
+    problems:p20([1,2,3], 2).
+    > [1,3]
+
+**Problem21:** Insert an element at a given position into a list.
+
+    problems:p21([1,2,3], 5, 2).
+    > [1,2,5,3]
+
+**Problem 22:** Create a list containing all integers within a given range.
+
+    problems:p22(9, 4).
+    > [9,8,7,6,5,4]
+    problems:p22(4,9).
+    > [4,5,6,7,8,9]
+
+**Problem 23:** Extract a given nubmer of randomly selected elements from a list.
+
+    problems:p23([1,2,3,4,5,6], 3).
+    > [1,2,6]
+
+**Problem 24:** Lotto: Draw N diference random numbers from the set 1..M. The
+selected numbers shall be returned in a list.
+
+    problems:p24(6, 49).
+    > [23, 1, 17,33,21,37]
+
+**Problem 25:** Generate a random permutation of the elements of a list.
 <code>
 problems:p25([a,b,c,d,e,f]).
  > [e,d,b,c,a,f]
