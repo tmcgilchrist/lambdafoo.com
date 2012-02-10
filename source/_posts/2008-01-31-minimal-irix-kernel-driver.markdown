@@ -1,19 +1,216 @@
---- 
+---
 layout: post
 title: Minimal IRIX Kernel Driver
-tags: 
+tags:
 - IRIX
 status: publish
 type: post
 published: true
-meta: 
+meta:
   _aioseop_keywords: IRIX, SGI, Device Driver
   _aioseop_description: Simple IRIX Device Driver
   _aioseop_title: IRIX Device Driver
   _edit_last: "1"
 ---
- There are loads of articles and examples about how to develop a simple device driver for Linux or any of the BSDs, but outside of that there are very few. So why not have one for IRIX, it's not exaclty the most common OS but there's a good community around it at <a href="http://www.nekochan.net">Nekochan</a> and for anyone curious about Unix its a worthwhile task.<pre><span class="Apple-style-span" style="font-size: 12px; line-height: 18px; white-space: normal; font-family: Verdana">      </span></pre><nekochan></nekochan>So presented here is a rather short "Hello, world" driver for the IRIX operating system. <ol>	<li>Introduction</li>	<li>Basic Requirements</li>	<li>Kernel Driver</li>	<li>Compiling</li>	<li>Testing</li>	<li>Conclusion</li></ol><br class="webkit-block-placeholder" /><h3>1. Introduction</h3> This article is for anyone interested in kernel development under IRIX. It assumes that the reader has had previous exposure to C and is familar with some form of Unix, hopefully IRIX but Linux or *BSD is sufficient. There are already loads of similar articles showing how to get started with Linux or BSD drivers, but the only real resource for IRIX is SGI’s monster <a href="http://techpubs.sgi.com/library/tpl/cgi-bin/browse.cgi?coll=0650&db=bks&cmd=toc&pth=/SGI_Developer/DevDriver_PG">Device Driver</a> document. The problem I found with this document is, the depth of the material presented makes if difficult to know where to start from. So hopefully this article will provide a gentle introduction to IRIX before you jump into the SGI documentation.<h3>2. Basic Requirements</h3> The main requirements for using the driver presented are:<ul>	<li>root access to a SGI machine running IRIX 6.5</li>	<li>MIPSPro Compiler</li></ul>Unfortunately, these requirements may be a little difficult to fulfill but <a href="http://www.ebay.com">eBay</a> is your friend when looking for SGI equipment. All code was tested on an SGI O2 R10K 250Mhz running IRIX 6.5.27, and compiled with MIPSPro 7.3.<h3>3. Kernel Driver</h3> The driver is very simple but provides a starting point for investigation about IRIX.  <pre><span style="line-height: 18px; white-space: normal; font-family: Verdana" class="Apple-style-span"><span style="font-size: small" class="Apple-style-span">#</span></span><span style="font-size: small" class="Apple-style-span">include &lt;sys/types.h&gt;</span></pre><pre><span style="font-size: small" class="Apple-style-span">#i</span><span style="font-size: small" class="Apple-style-span">nclud</span><span style="font-size: small" class="Apple-style-span">e &lt;sys/param.h&gt;</span></pre><pre><span style="font-size: small" class="Apple-style-span">#include &lt;sys/systm.h&gt;</span></pre><pre><span style="font-size: small" class="Apple-style-span">#include &lt;sys/sysmacros.h&gt;</span></pre><pre><span style="font-size: small" class="Apple-style-span">#include &lt;sys/ddi.h&gt;</span></pre><pre><span class="Apple-style-span" style="font-size: 13px">/* ====================================================================</span></pre><pre><span class="Apple-style-span" style="font-size: 13px"> * Module version information, required for loadable modules. </span></pre><pre><span class="Apple-style-span" style="font-size: 13px"> */</span> </pre><pre></pre><pre><span style="font-size: small" class="Apple-style-span">#include &lt;sys/mload.h&gt;  </span></pre><pre><span style="font-size: small" class="Apple-style-span">char *sim_mversion = M_VERSION;</span></pre><pre></pre><pre><span style="font-size: small" class="Apple-style-span">/* ====================================================================</span></pre><pre><span style="font-size: small" class="Apple-style-span"> *          Device-Related Constants and Structures</span></pre><pre><span style="font-size: small" class="Apple-style-span"> */</span></pre><pre><span style="font-size: small" class="Apple-style-span">int     sim_devflag = D_MP;</span></pre><pre></pre><pre><span style="font-size: small" class="Apple-style-span">/* ==================================================================</span></pre><pre><span style="font-size: small" class="Apple-style-span"> *          FUNCTION TABLE OF CONTENTS</span></pre><pre><span style="font-size: small" class="Apple-style-span"> */</span></pre><pre><span style="font-size: small" class="Apple-style-span">void sim_init(void);</span></pre><pre><span style="font-size: small" class="Apple-style-span">int sim_unload(void);</span></pre><pre><span style="font-size: small" class="Apple-style-span">int sim_reg(void);</span></pre><pre><span style="font-size: small" class="Apple-style-span">int sim_unreg(void);</span></pre><pre><span style="font-size: small" class="Apple-style-span">int sim_open(dev_t *devp, int oflag, int otyp, struct cred *crp);</span></pre><pre><span style="font-size: small" class="Apple-style-span">int sim_close(dev_t dev, int oflag, int otyp, struct cred *crp);</span></pre><pre></pre><pre><span style="font-size: small" class="Apple-style-span">/*</span></pre><pre><span style="font-size: small" class="Apple-style-span"> * For Irix6.4 compatability only, do nothing here.</span></pre><pre><span style="font-size: small" class="Apple-style-span"> */</span></pre><pre><span style="font-size: small" class="Apple-style-span">void sim_init(void) {</span></pre><pre><span style="white-space: pre" class="Apple-tab-span"><span style="font-size: small" class="Apple-style-span">	</span></span><span style="font-size: small" class="Apple-style-span">printf("sim_init()\n");</span></pre><pre><span style="font-size: small" class="Apple-style-span">}</span></pre><pre></pre><pre><span style="font-size: small" class="Apple-style-span">/*</span></pre><pre><span style="font-size: small" class="Apple-style-span"> * Called by the kernel when the driver is loaded.</span></pre><pre><span style="font-size: small" class="Apple-style-span"> * Here you'd do things like setup per device data and</span></pre><pre><span style="font-size: small" class="Apple-style-span"> * register this driver for the hardware.</span></pre><pre><span style="font-size: small" class="Apple-style-span"> */</span></pre><pre><span style="font-size: small" class="Apple-style-span">int sim_reg(void) {</span></pre><pre><span style="white-space: pre" class="Apple-tab-span"><span style="font-size: small" class="Apple-style-span">	</span></span><span style="font-size: small" class="Apple-style-span">printf("sim_reg()\n");</span></pre><pre><span style="white-space: pre" class="Apple-tab-span"><span style="font-size: small" class="Apple-style-span">	</span></span><span style="font-size: small" class="Apple-style-span">return 0;</span></pre><pre><span style="font-size: small" class="Apple-style-span">}</span></pre><pre></pre><pre><span style="font-size: small" class="Apple-style-span">/*</span></pre><pre><span style="font-size: small" class="Apple-style-span"> * Unloads the driver.</span></pre><pre><span style="font-size: small" class="Apple-style-span"> */</span></pre><pre><span style="font-size: small" class="Apple-style-span">int sim_unload(void) {</span></pre><pre><span style="white-space: pre" class="Apple-tab-span"><span style="font-size: small" class="Apple-style-span">	</span></span><span style="font-size: small" class="Apple-style-span">printf("sim_unload()\n");</span></pre><pre><span style="white-space: pre" class="Apple-tab-span"><span style="font-size: small" class="Apple-style-span">	</span></span><span style="font-size: small" class="Apple-style-span">return 0;</span></pre><pre><span style="font-size: small" class="Apple-style-span">}</span></pre><pre></pre><pre><span style="font-size: small" class="Apple-style-span">/*</span></pre><pre><span style="font-size: small" class="Apple-style-span"> * Unregisters the driver.</span></pre><pre><span style="font-size: small" class="Apple-style-span"> */</span></pre><pre><span style="font-size: small" class="Apple-style-span">int sim_unreg(void) {</span></pre><pre><span style="white-space: pre" class="Apple-tab-span"><span style="font-size: small" class="Apple-style-span">	</span>
-</
-span><span style="font-size: small" class="Apple-style-span">printf("sim_unreg()\n");</span></pre><pre><span style="white-space: pre" class="Apple-tab-span"><span style="font-size: small" class="Apple-style-span">	</span></span><span style="font-size: small" class="Apple-style-span">return 0;</span></pre><pre><span style="font-size: small" class="Apple-style-span">}</span></pre><pre></pre><pre><span style="font-size: small" class="Apple-style-span">/*</span></pre><pre><span style="font-size: small" class="Apple-style-span"> * Opens the driver.</span></pre><pre><span style="font-size: small" class="Apple-style-span"> */</span></pre><pre><span style="font-size: small" class="Apple-style-span">int sim_open(dev_t *devp, int oflag, int otyp, struct cred *crp)</span></pre><pre><span style="font-size: small" class="Apple-style-span">{</span></pre><pre><span style="font-size: small" class="Apple-style-span">    printf("sim_open()\n");</span></pre><pre><span style="white-space: pre" class="Apple-tab-span"><span style="font-size: small" class="Apple-style-span">	</span></span><span style="font-size: small" class="Apple-style-span">return 0;</span></pre><pre><span style="font-size: small" class="Apple-style-span">}</span></pre><pre></pre><pre><span style="font-size: small" class="Apple-style-span">/*</span></pre><pre><span style="font-size: small" class="Apple-style-span"> * Closes the driver.</span></pre><pre><span style="font-size: small" class="Apple-style-span"> */</span></pre><pre><span style="font-size: small" class="Apple-style-span">int sim_close(dev_t dev, int oflag, int otyp, struct cred *crp)</span></pre><pre><span style="font-size: small" class="Apple-style-span">{</span></pre><pre><span style="white-space: pre" class="Apple-tab-span"><span style="font-size: small" class="Apple-style-span">	</span></span><span style="font-size: small" class="Apple-style-span">printf("sim_close()\n"); </span></pre><pre><span style="white-space: pre" class="Apple-tab-span"><span style="font-size: small" class="Apple-style-span">	</span></span><span style="font-size: small" class="Apple-style-span">return 0;</span></pre><pre><span style="font-size: small" class="Apple-style-span">}</span></pre> <h3>4. Compiling</h3> The major area missing from the SGI Driver manual is how to get your code to compile and load into the kernel. To help solve this problem a makefile has been provided and the important sections will be covered here.<pre><span style="font-size: 10pt">#!smake</span></pre><pre><span style="font-size: 10pt">CPUBOARD=IP32</span></pre>The first line is pretty self explainatory, run smake, which is a slightly different version of the standard unix make command. The CPUBOARD indicates which architecture to compile the driver for. The architecture differs between machines even if they have the same CPU so to find correct number run.<pre><span style="font-size: 10pt">hinv |grep IP</span></pre>which will printout the board number to use. I'm using an R10K in an O2, so my board number is IP32.<pre><span style="font-size: 10pt">include /var/sysgen/Makefile.kernloadio</span></pre>The file /var/sysgen/Makefile.kernloadio is a sample Makefile for kernel drivers, it sets up all the compiler and linker preferences for us. So far I've treated this as a black-box and haven't changed anything in it, I assume the SGI engineers knew what they were doing.<pre><span style="font-size: 10pt">all: compile</span></pre><pre><span style="font-size: 10pt">compile:</span></pre><pre><span style="font-size: 10pt"><span style="white-space: pre" class="Apple-tab-span">	</span>$(CC) $(CFLAGS) $(LDFLAGS) -c simple.c</span></pre>This is will compile the driver, and should be pretty familiar to any C coder.<pre><span style="font-size: 10pt">load:</span></pre><pre><span style="font-size: 10pt"><span style="white-space: pre" class="Apple-tab-span">	</span>$(ML) ld -v -c simple.o -p sim_ -s 13</span></pre><pre><span style="font-size: 10pt">clean:</span></pre><pre><span style="font-size: 10pt"><span style="white-space: pre" class="Apple-tab-span">	</span>$(RM) -f simple.o</span></pre>The load target here will do exactly what it says, load the driver  into the kernel, and the clean will cleanup the files created. When  running the 'load' target you may get an error like<pre><span style="line-height: 18px; white-space: normal; font-family: Verdana" class="Apple-style-span"><span style="font-size: small" class="Apple-style-span">-</span></span><span style="font-size: small" class="Apple-style-span">-- load ---</span></pre><pre><span style="font-size: small" class="Apple-style-span">        /sbin/ml ld -v -c simple.o -p sim_ -s 13</span></pre><pre><span style="font-size: small" class="Apple-style-span">Error loading module sim_:  Major number already in use.</span></pre><pre><span style="font-size: small" class="Apple-style-span">*** Error code 255</span></pre><pre><span style="font-size: small" class="Apple-style-span">smake: Error: 1 error</span></pre>This is simply saying that an existing driver is using the major  device number that we specified, so keep changing the number until it  doesn't clash. There must be some sort of logic to assigning major  device numbers but it isn't terribly important here.<h3>5. Testing</h3> Being a simple dirver there isn't a whole lot to test. The main thing is that it can be loaded and unloaded successfully, and that you can see the messages printed out when this happens. So open a new shell<pre><span><span style="font-size: small" class="Apple-style-span">tail -f /var/adm/SYSLOG</span></span></pre>This will open the main logfile under IRIX so you can see the output of the driver. Now compile the driver and load the driver, you'll need to be root for this to work. <pre><span><span style="font-size: small" class="Apple-style-span">make &amp;&amp; make load</span></span></pre>Make a note of the id assigned to the driver, as it is required to unload it. Check that the driver has been loaded by listing all loadable drivers. The ml command is used for manipulating loadable kernel drivers, check out man ml for more details. In the other shell you should see something like<pre><span style="font-size: small" class="Apple-style-span">Jan 31 01:34:20 6A:sgi unix: sim_init()</span></pre><pre><span style="font-size: small" class="Apple-style-span">Jan 31 01:34:20 6A:sgi unix: sim_reg()</span></pre><pre><span style="font-size: small" class="Apple-style-span">Jan 31 01:34:20 5E:sgi lboot: Module /usr/people/you/code/simple/simple.o dynamically loaded. </span></pre>To unload the driver use the id assigned to it earlier, eg 5<pre><span style="font-size: small" class="Apple-style-span">ml unld 5 </span></pre>In the other shell you should see<pre><span class="Apple-style-span" style="font-size: medium">Jan 31 01:34:20 6A:sgi unix: sim_unreg()</span></pre><pre style="font-family: 'Courier New', fixed; line-height: 13px"><span class="Apple-style-span" style="font-size: medium">Jan 31 01:34:20 6A:sgi unix: sim_unload()</span></pre><h3>6. Conclusion</h3> So now you should have a working driver for IRIX that can be modified to support any sort of hardware outlined in the <a href="http://techpubs.sgi.com/library/tpl/cgi-bin/browse.cgi?coll=0650&db=bks&cmd=toc&pth=/SGI_Developer/DevDriver_PG">SGI Device Driver</a>'s document. There are plenty of more advanced examples of how to write drivers for PCI cards, SCSI, TCP/IP networking, amongst others. The PCI card examples are the most relevant if you have an O2 as they have PCI built in, unlike other SGI machines, and cheap PCI cards are everywhere, so you'll always have good material to work with. <h3>Extra</h3>Just an additional thing I came across when messing about withloadable drivers. Most of the examples in the SGI Device Driverdocument are for non-loadable drivers if you add the following sections you'll be able to treat them as loadable drivers.  A Loadable Driver will fail when attempting to load with this cryptic error message.<pre><span style="font-size: 10pt">Error loading module sim_:  Module version string is missing.</span></pre><pre><span style="font-size: 10pt">*** Error code 255</span></
+There are loads of articles and examples about how to develop a simple device
+driver for Linux or any of the BSDs, but outside of that there are very few. So
+why not have one for IRIX, it's not exaclty the most common OS but there's a
+good community around it at <a href="http://www.nekochan.net">Nekochan</a> and
+for anyone curious about Unix its a worthwhile task.
+
+So presented here is a rather short "Hello, world" driver for the IRIX operating
+system.
+
+1. Introduction
+2. Basic Requirements
+3. Kernel Driver
+4. Compiling
+5. Testing
+6. Conclusion
+
+### 1. Introduction ###
+This article is for anyone interested in kernel development under IRIX. It
+assumes that the reader has had previous exposure to C and is familar with some
+form of Unix, hopefully IRIX but Linux or *BSD is sufficient. There are already
+loads of similar articles showing how to get started with Linux or BSD drivers,
+but the only real resource for IRIX is SGI’s monster
+[Device Driver](http://techpubs.sgi.com/library/tpl/cgi-bin/browse.cgi?coll=0650&db=bks&cmd=toc&pth=/SGI_Developer/DevDriver_PG)
+document. The problem I found with this document is, the depth of the material
+presented makes if difficult to know where to start from. So hopefully this
+article will provide a gentle introduction to IRIX before you jump into the SGI
+documentation.
+
+### 2. Basic Requirements ###
+The main requirements for using the driver presented are:
+ * root access to a SGI machine running IRIX 6.5
+ * MIPSPro Compiler
+
+
+Unfortunately, these requirements may be a little difficult to fulfill but
+[eBay](http://www.ebay.com) is your friend when looking for SGI equipment. All
+code was tested on an SGI O2 R10K 250Mhz running IRIX 6.5.27, and compiled with
+MIPSPro 7.3.
+
+### 3. Kernel Driver ###
+The driver is very simple but provides a starting point for investigation about
+IRIX.
+
+{% codeblock lang:c %}
+
+#include <sys/types.h>
+#include <sys/param.h>
+#include <sys/systm.h>
+#include <sys/sysmacros.h>
+#include <sys/ddi.h>
+
+/* ====================================================================
+ * Module version information, required for loadable modules.
+ */
+
+#include <sys/mload.h>
+char *sim_mversion = M_VERSION;
+
+/* ====================================================================
+ * Device-Related Constants and Structures
+ */
+
+int sim_devflag = D_MP;
+
+/* ==================================================================
+ *    FUNCTION TABLE OF CONTENTS
+ */
+void sim_init(void);
+int sim_unload(void);
+int sim_reg(void);
+int sim_unreg(void);
+int sim_open(dev_t devp, int oflag, int otyp, struct cred crp);
+int sim_close(dev_t dev, int oflag, int otyp, struct cred crp);
+
+/*
+ * For Irix6.4 compatability only, do nothing here.
+ */
+void sim_init(void) {
+   printf("sim_init()\n");
+}
+
+/*
+ * Called by the kernel when the driver is loaded.
+ * Here you'd do things like setup per device data and
+ * register this driver for the hardware.
+ */
+int sim_reg(void) {
+    printf("sim_reg()\n");
+    return 0;
+}
+
+/*
+ * Unloads the driver.
+ */
+int sim_unload(void) {
+    printf("sim_unload()\n");
+    return 0;
+}
+
+/*
+ * Unregisters the driver.
+ */
+int sim_unreg(void) {
+    printf("sim_unreg()\n");
+    return 0;
+}
+
+/*
+ * Opens the driver.
+ */
+int sim_open(dev_t devp, int oflag, int otyp, struct cred crp)
+{
+    printf("sim_open()\n");
+    return 0;
+}
+
+/*
+ * Closes the driver.
+ */
+int sim_close(dev_t dev, int oflag, int otyp, struct cred crp)
+{
+    printf("sim_close()\n");
+    return 0;
+}
+
+### 4. Compiling ###
+The major area missing from the SGI Driver manual is how to get your code to
+compile and load into the kernel. To help solve this problem a makefile has been
+provided and the important sections will be covered here.
+
+{% codeblock lang:sh %}
+#!smake
+
+CPUBOARD=IP32
+
+{% endcodeblock %}
+
+The first line is pretty self explainatory, run smake, which is a slightly
+different version of the standard unix make command. The CPUBOARD indicates
+which architecture to compile the driver for. The architecture differs between
+machines even if they have the same CPU so to find correct number run.
+
+
+    hinv |grep IP
+
+which will printout the board number to use. I'm using an R10K in an O2, so my
+board number is IP32.
+
+    include /var/sysgen/Makefile.kernloadio
+
+The file /var/sysgen/Makefile.kernloadio is a sample Makefile for kernel
+drivers, it sets up all the compiler and linker preferences for us. So far I've
+treated this as a black-box and haven't changed anything in it, I assume the SGI
+engineers knew what they were doing.
+
+    all: compile
+    compile:
+        $(CC) $(CFLAGS) $(LDFLAGS) -c simple.c
+
+This is will compile the driver, and should be pretty familiar to any C coder.
+
+    load:
+        $(ML) ld -v -c simple.o -p sim -s 13
+
+    clean:
+        $(RM) -f simple.o
+
+The load target here will do exactly what it says, load the driver  into the
+kernel, and the clean will cleanup the files created. When  running the 'load'
+target you may get an error like:
+
+    -- load ---
+    /sbin/ml ld -v -c simple.o -p sim_ -s 13
+    Error loading module sim_:  Major number already in use.
+    *** Error code 255
+    smake: Error: 1 error
+
+This is simply saying that an existing driver is using the major  device number
+that we specified, so keep changing the number until it  doesn't clash. There
+must be some sort of logic to assigning major  device numbers but it isn't
+terribly important here.
+
+### 5. Testing ###
+Being a simple dirver there isn't a whole lot to test. The main thing is that it
+can be loaded and unloaded successfully, and that you can see the messages
+printed out when this happens. So open a new shell
+
+    tail -f /var/adm/SYSLOG
+
+This will open the main logfile under IRIX so you can see the output of the
+driver. Now compile the driver and load the driver, you'll need to be root
+for this to work.
+
+    make && make load
+
+Make a note of the id assigned to the driver, as it is required to unload
+it. Check that the driver has been loaded by listing all loadable drivers. The
+ml command is used for manipulating loadable kernel drivers, check out man ml
+for more details. In the other shell you should see something like
+<pre><span style="font-size: small" class="Apple-style-span">Jan 31 01:34:20 6A:sgi unix: sim_init()</span></pre><pre><span style="font-size: small" class="Apple-style-span">Jan 31 01:34:20 6A:sgi unix: sim_reg()</span></pre><pre><span style="font-size: small" class="Apple-style-span">Jan 31 01:34:20 5E:sgi lboot: Module /usr/people/you/code/simple/simple.o dynamically loaded. </span></pre>To unload the driver use the id assigned to it earlier, eg 5<pre><span style="font-size: small" class="Apple-style-span">ml unld 5 </span></pre>In the other shell you should see<pre><span class="Apple-style-span" style="font-size: medium">Jan 31 01:34:20 6A:sgi unix: sim_unreg()</span></pre><pre style="font-family: 'Courier New', fixed; line-height: 13px"><span class="Apple-style-span" style="font-size: medium">Jan 31 01:34:20 6A:sgi unix: sim_unload()</span></pre><h3>6. Conclusion</h3> So now you should have a working driver for IRIX that can be modified to support any sort of hardware outlined in the <a href="http://techpubs.sgi.com/library/tpl/cgi-bin/browse.cgi?coll=0650&db=bks&cmd=toc&pth=/SGI_Developer/DevDriver_PG">SGI Device Driver</a>'s document. There are plenty of more advanced examples of how to write drivers for PCI cards, SCSI, TCP/IP networking, amongst others. The PCI card examples are the most relevant if you have an O2 as they have PCI built in, unlike other SGI machines, and cheap PCI cards are everywhere, so you'll always have good material to work with. <h3>Extra</h3>Just an additional thing I came across when messing about withloadable drivers. Most of the examples in the SGI Device Driverdocument are for non-loadable drivers if you add the following sections you'll be able to treat them as loadable drivers.  A Loadable Driver will fail when attempting to load with this cryptic error message.<pre><span style="font-size: 10pt">Error loading module sim_:  Module version string is missing.</span></pre><pre><span style="font-size: 10pt">*** Error code 255</span></
 
 pre>This means that the loadable version string is missing from this driver. To fix add the following code to the driver, and the error should disappear.<pre><span style="font-size: 10pt">#include <sys>char *pfxmversion = M_VERSION;</sys></span></pre>where <span style="font-size: 10pt"><em>pfx</em></span> is the prefix used in the driver. In this article the prefix would be <span style="font-size: 10pt"><em>sim_</em></span>.<h3><span style="font-size: 12px; font-weight: normal; font-family: Verdana; color: #000000" class="Apple-style-span"><span style="font-size: 16px" class="Apple-style-span">D</span><span style="font-size: 16px; font-weight: bold; font-family: 'Trebuchet MS'; color: #333333" class="Apple-style-span">ownloads </span></span></h3><ul>	<li><a href="http://gothmog.homeunix.net/blog/minimal-irix-kernel-driver/2008/01/31/simple-irix-device-driver/" title="Simple IRIX Device Driver" rel="attachment wp-att-13">Simple IRIX Device Driver</a></li>	<li><a href="http://gothmog.homeunix.net/blog/minimal-irix-kernel-driver/2008/01/31/makefile-for-simple-driver/" title="Makefile for Simple Driver" rel="attachment wp-att-14">Makefile for Simple Driver</a></li></ul><a href="http://gothmog.homeunix.net/blog/minimal-irix-kernel-driver/2008/01/31/simple-irix-device-driver/" title="Simple IRIX Device Driver" rel="attachment wp-att-13"></a>
