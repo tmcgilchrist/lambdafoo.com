@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Posting from the iPhone
-tags:
+categories:
 - Misc
 ---
 Just testing the iPhone app for posting to my weblog. It seems to work

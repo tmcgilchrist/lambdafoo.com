@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Erlang hot code loading
-tags:
+categories:
 - Erlang
 ---
 Nearly every posting about Erlang that you come across mentions the hot code

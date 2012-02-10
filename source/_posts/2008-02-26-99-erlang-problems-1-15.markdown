@@ -1,21 +1,25 @@
---- 
+---
 layout: post
 title: "99 Erlang Problems: 1 - 15"
-tags: 
+categories:
 - Coding
 - Erlang
-status: publish
-type: post
-published: true
-meta: {}
-
 ---
-<p>Following in the tradition of 99 Lisp/Haskell/Prolog problems, I present my attempt at 99 Erlang problems. I'm writing these while I work my way through the Progamming Erlang book. They are great short exercises and actually doing them forces me to get my head around Erlang, rather than reading pages of code and not really getting it. I'd definitely recommend doing these exercises as you read the Erlang book, most of these are from my train commute.</p>
-<p>Before you start reading the code please note that I've never done any Erlang coding before doing these exercises, so they have come out as very Prolog-ish as that was the most recent Functional language I used. If you find any bugs please email me or comment on this article.</p>
+Following in the tradition of 99 Lisp/Haskell/Prolog problems, I present my
+attempt at 99 Erlang problems. I'm writing these while I work my way through
+the Progamming Erlang book. They are great short exercises and actually doing
+them forces me to get my head around Erlang, rather than reading pages of code
+and not really getting it. I'd definitely recommend doing these exercises as
+you read the Erlang book, most of these are from my train commute.
 
-<p>Answers for Problems 1 to 15 as adapted from the original Lisp version.</p>
+Before you start reading the code please note that I've never done any Erlang
+coding before doing these exercises, so they have come out as very Prolog-ish as
+that was the most recent Functional language I used. If you find any bugs please
+email me or comment on this article.
 
-<pre>
+Answers for Problems 1 to 15 as adapted from the original Lisp version.
+
+{% codeblock lang:erlang %}
 %%%  Ninety-Nine Erlang Problems
 -module(problems).
 -compile(export_all).
@@ -241,4 +245,4 @@ p15([], _) ->
     [];
 p15([H|T], Number) ->
     lists:append(repeat(H, Number), p15(T, Number)).
-</pre>
+{% endcodeblock %}
