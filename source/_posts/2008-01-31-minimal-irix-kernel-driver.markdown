@@ -1,21 +1,13 @@
 ---
 layout: post
 title: Minimal IRIX Kernel Driver
-tags:
+categories:
 - IRIX
-status: publish
-type: post
-published: true
-meta:
-  _aioseop_keywords: IRIX, SGI, Device Driver
-  _aioseop_description: Simple IRIX Device Driver
-  _aioseop_title: IRIX Device Driver
-  _edit_last: "1"
 ---
 There are loads of articles and examples about how to develop a simple device
 driver for Linux or any of the BSDs, but outside of that there are very few. So
 why not have one for IRIX, it's not exaclty the most common OS but there's a
-good community around it at <a href="http://www.nekochan.net">Nekochan</a> and
+good community around it at [Nekochan](http://www.nekochan.net) and
 for anyone curious about Unix its a worthwhile task.
 
 So presented here is a rather short "Hello, world" driver for the IRIX operating
@@ -55,7 +47,7 @@ MIPSPro 7.3.
 The driver is very simple but provides a starting point for investigation about
 IRIX.
 
-{% codeblock lang:c %}
+{% codeblock lang:c%}
 
 #include <sys/types.h>
 #include <sys/param.h>
@@ -137,6 +129,8 @@ int sim_close(dev_t dev, int oflag, int otyp, struct cred crp)
     return 0;
 }
 
+{% endcodeblock %}
+
 ### 4. Compiling ###
 The major area missing from the SGI Driver manual is how to get your code to
 compile and load into the kernel. To help solve this problem a makefile has been
@@ -211,6 +205,47 @@ Make a note of the id assigned to the driver, as it is required to unload
 it. Check that the driver has been loaded by listing all loadable drivers. The
 ml command is used for manipulating loadable kernel drivers, check out man ml
 for more details. In the other shell you should see something like
-<pre><span style="font-size: small" class="Apple-style-span">Jan 31 01:34:20 6A:sgi unix: sim_init()</span></pre><pre><span style="font-size: small" class="Apple-style-span">Jan 31 01:34:20 6A:sgi unix: sim_reg()</span></pre><pre><span style="font-size: small" class="Apple-style-span">Jan 31 01:34:20 5E:sgi lboot: Module /usr/people/you/code/simple/simple.o dynamically loaded. </span></pre>To unload the driver use the id assigned to it earlier, eg 5<pre><span style="font-size: small" class="Apple-style-span">ml unld 5 </span></pre>In the other shell you should see<pre><span class="Apple-style-span" style="font-size: medium">Jan 31 01:34:20 6A:sgi unix: sim_unreg()</span></pre><pre style="font-family: 'Courier New', fixed; line-height: 13px"><span class="Apple-style-span" style="font-size: medium">Jan 31 01:34:20 6A:sgi unix: sim_unload()</span></pre><h3>6. Conclusion</h3> So now you should have a working driver for IRIX that can be modified to support any sort of hardware outlined in the <a href="http://techpubs.sgi.com/library/tpl/cgi-bin/browse.cgi?coll=0650&db=bks&cmd=toc&pth=/SGI_Developer/DevDriver_PG">SGI Device Driver</a>'s document. There are plenty of more advanced examples of how to write drivers for PCI cards, SCSI, TCP/IP networking, amongst others. The PCI card examples are the most relevant if you have an O2 as they have PCI built in, unlike other SGI machines, and cheap PCI cards are everywhere, so you'll always have good material to work with. <h3>Extra</h3>Just an additional thing I came across when messing about withloadable drivers. Most of the examples in the SGI Device Driverdocument are for non-loadable drivers if you add the following sections you'll be able to treat them as loadable drivers.  A Loadable Driver will fail when attempting to load with this cryptic error message.<pre><span style="font-size: 10pt">Error loading module sim_:  Module version string is missing.</span></pre><pre><span style="font-size: 10pt">*** Error code 255</span></
 
-pre>This means that the loadable version string is missing from this driver. To fix add the following code to the driver, and the error should disappear.<pre><span style="font-size: 10pt">#include <sys>char *pfxmversion = M_VERSION;</sys></span></pre>where <span style="font-size: 10pt"><em>pfx</em></span> is the prefix used in the driver. In this article the prefix would be <span style="font-size: 10pt"><em>sim_</em></span>.<h3><span style="font-size: 12px; font-weight: normal; font-family: Verdana; color: #000000" class="Apple-style-span"><span style="font-size: 16px" class="Apple-style-span">D</span><span style="font-size: 16px; font-weight: bold; font-family: 'Trebuchet MS'; color: #333333" class="Apple-style-span">ownloads </span></span></h3><ul>	<li><a href="http://gothmog.homeunix.net/blog/minimal-irix-kernel-driver/2008/01/31/simple-irix-device-driver/" title="Simple IRIX Device Driver" rel="attachment wp-att-13">Simple IRIX Device Driver</a></li>	<li><a href="http://gothmog.homeunix.net/blog/minimal-irix-kernel-driver/2008/01/31/makefile-for-simple-driver/" title="Makefile for Simple Driver" rel="attachment wp-att-14">Makefile for Simple Driver</a></li></ul><a href="http://gothmog.homeunix.net/blog/minimal-irix-kernel-driver/2008/01/31/simple-irix-device-driver/" title="Simple IRIX Device Driver" rel="attachment wp-att-13"></a>
+    Jan 31 01:34:20 6A:sgi unix: sim_init()
+    Jan 31 01:34:20 6A:sgi unix: sim_reg()
+    Jan 31 01:34:20 5E:sgi lboot: Module /usr/people/you/code/simple/simple.o dynamically loaded.
+
+To unload the driver use the id assigned to it earlier, eg 5
+    ml unld 5
+
+In the other shell you should see
+
+    Jan 31 01:34:20 6A:sgi unix: sim_unreg()
+    Jan 31 01:34:20 6A:sgi unix: sim_unload()
+
+### 6. Conclusion ###
+So now you should have a working driver for IRIX that can be modified to support
+any sort of hardware outlined in the
+[SGI Device Driver](http://techpubs.sgi.com/library/tpl/cgi-bin/browse.cgi?coll=0650&db=bks&cmd=toc&pth=/SGI_Developer/DevDriver_PG)
+document. There are plenty of more advanced examples of how to write drivers for
+PCI cards, SCSI, TCP/IP networking, amongst others. The PCI card examples are
+the most relevant if you have an O2 as they have PCI built in, unlike other SGI
+machines, and cheap PCI cards are everywhere, so you'll always have good
+material to work with.
+
+### Extra ###
+Just an additional thing I came across when messing about withloadable
+drivers. Most of the examples in the SGI Device Driverdocument are for
+non-loadable drivers if you add the following sections you'll be able to treat
+them as loadable drivers. A Loadable Driver will fail when attempting to load
+with this cryptic error message.
+
+    Error loading module sim_:  Module version string is missing.
+    *** Error code 255
+
+This means that the loadable version string is missing from this driver. To fix
+add the following code to the driver, and the error should disappear.
+
+     #include <sys>char *pfxmversion = M_VERSION;
+
+where **pfx** is the prefix used in the driver. In this article the prefix would
+be **sim_**.
+
+### Downloads ###
+
+The source code is up on github: [Simple IRIX Device Driver](https://github.com/tmcgilchrist/simple_irix_driver)
