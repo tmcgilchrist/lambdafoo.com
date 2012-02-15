@@ -1,11 +1,7 @@
 - setup page for About Me.
-- convert previous posts to markdown, from newest to oldest.
-
-- setup disqus comments.
-- traffic analytics ?
-- export sitemap for submission to google.
-- setup 301 redirect for wordpress.
+- setup disqus comments. Registered but not working on the live site.
 - research colour theme for octopress.
+- find link to smf postfix files locally.
 
 BUGS
 - fix up layout of <ul> not indented like the <p> tags.
