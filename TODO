@@ -2,6 +2,8 @@
 - setup disqus comments. Registered but not working on the live site.
 - research colour theme for octopress.
 - find link to smf postfix files locally.
+- add new coloured layout, everyone is using the default grey theme.
+- add a lambda icon
 
 BUGS
 - fix up layout of <ul> not indented like the <p> tags.
