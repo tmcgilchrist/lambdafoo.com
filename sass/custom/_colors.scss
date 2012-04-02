@@ -14,6 +14,18 @@
 //$footer-bg-front: image-url('noise.png');
 //$footer-bg-back: linear-gradient(lighten($footer-bg, 8), $footer-bg, darken($footer-bg, 11));
 
+$header-bg: #384945;
+$subtitle-color: lighten($header-bg, 58);
+$nav-bg: desaturate(lighten(#3E4147, 18), 5);
+$nav-bg-front: image-url('noise.png');
+$nav-bg-back: linear-gradient(lighten($nav-bg, 8), $nav-bg, darken($nav-bg, 11));
+$sidebar-bg: #EFEBF1;
+$sidebar-link-color: saturate(#FE9925, 10);
+$sidebar-link-color-hover: darken(#3E4147, 9);
+$footer-bg: #ccc !default;
+$footer-bg-front: image-url('noise.png');
+$footer-bg-back: linear-gradient(lighten($footer-bg, 8), $footer-bg, darken($footer-bg, 11));
+
 
 /* To use the light Solarized highlighting theme uncomment the following line */
 //$solarized: light;
