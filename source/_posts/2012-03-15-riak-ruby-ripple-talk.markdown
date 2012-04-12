@@ -7,6 +7,7 @@ categories:
 - Ruby
 - Riak
 - NoSQL
+- Talk
 ---
 
 I recently presented a talk to
