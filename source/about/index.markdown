@@ -21,7 +21,6 @@ Alternate representations of this resource can be found at:
 Pictorial representations may be similar to the following:
 
  ![Moustached](http://lambdafoo.com/images/tim-movember-2009.jpg)
- ![Moustached](images/tim-movember-2009.jpg)
  ![Clean Shaven](http://www.gravatar.com/avatar/67afd2b4c98c9befd18c19f0ee9d94dc.png)
 
 Contact can be made via [@lambda_foo](https://twitter.com/lambda_foo) on
