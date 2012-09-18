@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Getting started with Sinan"
-date: 2012-09-10 21:00
+date: 2012-09-18 21:00
 comments: true
 categories:
     - Erlang
@@ -32,14 +32,15 @@ Let's see how well it delivers on the promise.
 First you'll need Erlang installed, which your friendly local package management tool
 should provide. I'm using Homebrew on OSX so I just did:
 
-    $ brew install erlang
-    ...
-    $ erl -v
-    Erlang R15B01 (erts-5.9.1) [source] [64-bit] [smp:8:8] [async-threads:0] [hipe] [kernel-poll:false]
+{% codeblock lang:shell %}
+$ brew install erlang
+...
+$ erl -v
+Erlang R15B01 (erts-5.9.1) [source] [64-bit] [smp:8:8] [async-threads:0] [hipe] [kernel-poll:false]
 
-    Eshell V5.9.1  (abort with ^G)
-    1>
-
+Eshell V5.9.1  (abort with ^G)
+1>
+{% endcodeblock %}
 Linux should be similarly straight forward and Windows well you're on your own.
 
 Grab sinan from the
@@ -49,6 +50,7 @@ using version 4.1.1. Put it somewhere on your PATH, I've got mine in ~/bin which
 
 Now for the fun bit, type `sinan gen` and fill in the details.
 
+{% codeblock %}
      Please specify your name
      your name> Tim McGilchrist
      Please specify your email address
@@ -63,11 +65,13 @@ Now for the fun bit, type `sinan gen` and fill in the details.
      Is this a single application project ("n")> y
      Would you like a build config? ("y")> y
      Project was created, you should be good to go!
+{% endcodeblock %}
 
 From that Sinan has generated a project, filling in your details, with an OTP
 application and some build configuration. Your directories should look something
 similar to this.
 
+{% codeblock %}
     sinan_demo
         ├── config
         │   └── sys.config
@@ -80,6 +84,7 @@ similar to this.
             ├── sinan_demo.app.src
             ├── sinan_demo_app.erl
             └── sinan_demo_sup.erl
+{% endcodeblock %}
 
 It includes all the standard directories you'd expect plus a `sinan.config`
 file.
@@ -89,16 +94,19 @@ tells sinan to include the erlang runtime system when it generates a release.
 Open sinan.config and add `{include_erts, true}.` as the last line. It should
 look like this:
 
-    {project_name, sinan_demo}.
-    {project_vsn, "0.0.1"}.
+{% codeblock lang:erlang %}
+{project_name, sinan_demo}.
+{project_vsn, "0.0.1"}.
 
-    {build_dir,  "_build"}.
+{build_dir,  "_build"}.
 
-    {ignore_dirs, ["_", "."]}.
+{ignore_dirs, ["_", "."]}.
 
-    {ignore_apps, []}.
+{ignore_apps, []}.
 
-    {include_erts, true}.
+{include_erts, true}.
+
+{% endcodeblock %}
 
 Back to making our generated code runnable.
 
@@ -107,61 +115,63 @@ need to remedy that before trying to startup the application.
 
 Create a new file called `sinan_demo_server.erl` in src and drop the following code in.
 
-    -module(sinan_demo_server).
+{% codeblock lang:erlang %}
+-module(sinan_demo_server).
 
-    -behaviour(gen_server).
+-behaviour(gen_server).
 
-    %% API
-    -export([start_link/0, add_one/0, total/0]).
+%% API
+-export([start_link/0, add_one/0, total/0]).
 
-    %% Callbacks
-    -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
-             terminate/2, code_change/3]).
+%% Callbacks
+-export([init/1, handle_call/3, handle_cast/2, handle_info/2,
+         terminate/2, code_change/3]).
 
-    -record(state, {count}).
+-record(state, {count}).
 
-    %%%===================================================================
-    %%% API functions
-    %%%===================================================================
+%%%===================================================================
+%%% API functions
+%%%===================================================================
 
-    start_link() ->
-        gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
+start_link() ->
+    gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
 
-    total() ->
-        gen_server:call(?MODULE, total).
+total() ->
+    gen_server:call(?MODULE, total).
 
-    add_one() ->
-        gen_server:call(?MODULE, add).
+add_one() ->
+    gen_server:call(?MODULE, add).
 
-    %%%===================================================================
-    %%% Callbacks
-    %%%===================================================================
+%%%===================================================================
+%%% Callbacks
+%%%===================================================================
 
-    init([]) ->
-        io:format("starting~n", []),
-        {ok, #state{count = 0}, 0}.
+init([]) ->
+    io:format("starting~n", []),
+    {ok, #state{count = 0}, 0}.
 
-    handle_call(add, _From, State) ->
-        NewCount = State#state.count + 1,
-        NewState = State#state{count = NewCount},
-        Reply    = {ok, NewState},
-        {reply, Reply, NewState};
-    handle_call(total, _From, State = #state{ count = Count }) ->
-        {reply, Count, State};
-    handle_call(Msg, _From, State) ->
-        {reply, {ok, Msg}, State}.
+handle_call(add, _From, State) ->
+    NewCount = State#state.count + 1,
+    NewState = State#state{count = NewCount},
+    Reply    = {ok, NewState},
+    {reply, Reply, NewState};
+handle_call(total, _From, State = #state{ count = Count }) ->
+    {reply, Count, State};
+handle_call(Msg, _From, State) ->
+    {reply, {ok, Msg}, State}.
 
-    handle_cast(_Msg, State) ->
-        {noreply, State}.
+handle_cast(_Msg, State) ->
+    {noreply, State}.
 
-    handle_info(_Info, State) ->
-        {noreply, State}.
+handle_info(_Info, State) ->
+    {noreply, State}.
 
-    terminate(_Reason, _State) ->
-        ok.
+terminate(_Reason, _State) ->
+    ok.
 
-    code_change(_OldVsn, State, _Extra) ->
-        {ok, State}.
+code_change(_OldVsn, State, _Extra) ->
+    {ok, State}.
+{% endcodeblock %}
 
 
 It's a pretty standard OTP gen_server application with 2 API
@@ -173,33 +183,33 @@ to hit the OTP callback for `handle_call/3`.
 Next we need to fix the supervisor so it starts the correct module. Change
 `sinan_demo_sup.erl` so it looks like the code below:
 
-    start_link() ->
-        supervisor:start_link({local, ?SERVER}, ?MODULE, []).
+{% codeblock lang:erlang %}
+start_link() ->
+    supervisor:start_link({local, ?SERVER}, ?MODULE, []).
 
-    %%%===================================================================
-    %%% Supervisor callbacks
-    %%%===================================================================
+%%%===================================================================
+%%% Supervisor callbacks
+%%%===================================================================
 
-    %% @private
-    -spec init(list()) -> {ok, {SupFlags::any(), [ChildSpec::any()]}} |
-                           ignore | {error, Reason::any()}.
-    init([]) ->
-        RestartStrategy = one_for_one,
-        MaxRestarts = 1000,
-        MaxSecondsBetweenRestarts = 3600,
+%% @private
+-spec init(list()) -> {ok, {SupFlags::any(), [ChildSpec::any()]}} |
+                            ignore | {error, Reason::any()}.
+init([]) ->
+    RestartStrategy = one_for_one,
+    MaxRestarts = 1000,
+    MaxSecondsBetweenRestarts = 3600,
 
-        SupFlags = {RestartStrategy, MaxRestarts, MaxSecondsBetweenRestarts},
+    SupFlags = {RestartStrategy, MaxRestarts, MaxSecondsBetweenRestarts},
 
-        Restart = permanent,
-        Shutdown = 2000,
-        Type = worker,
+    Restart = permanent,
+    Shutdown = 2000,
+    Type = worker,
 
-        AChild = {sinan_demo_server, {sinan_demo_server, start_link, []},
-                  Restart, Shutdown, Type, [sinan_demo_server]},
+    AChild = {sinan_demo_server, {sinan_demo_server, start_link, []},
+              Restart, Shutdown, Type, [sinan_demo_server]},
 
-        {ok, {SupFlags, [AChild]}}.
-
-
+    {ok, {SupFlags, [AChild]}}.
+{% endcodeblock %}
 
 The 2 changes we have make is to `start_link/0` so we can call the server
 directly, and fix the child spec so it starts our new module.
@@ -227,41 +237,46 @@ From here you've got a few options to get your application running,
 but the easiest is just to use the sinan shell and start your application from
 there.
 
-    sinan shell
-    Eshell V5.9.1  (abort with ^G)
-    1> application:which_applications().
-    [{parsetools,"XLATETOOLS  CXC 138 xx","2.0.7"},
-     {syntax_tools,"Syntax tools","1.6.8"},
-     {compiler,"ERTS  CXC 138 10","4.8.1"},
-     {getopt,"Command-line options parser for Erlang","0.4.2"},
-     {erlware_commons,"Additional standard library for Erlang",
-                      "0.6.1"},
-     {stdlib,"ERTS  CXC 138 10","1.18.1"},
-     {kernel,"ERTS  CXC 138 10","2.15.1"}]
-     2> application:start(sinan_demo).
-     ok
+{% codeblock lang:shell %}
+sinan shell
+Eshell V5.9.1  (abort with ^G)
+1> application:which_applications().
+[{parsetools,"XLATETOOLS  CXC 138 xx","2.0.7"},
+ {syntax_tools,"Syntax tools","1.6.8"},
+ {compiler,"ERTS  CXC 138 10","4.8.1"},
+ {getopt,"Command-line options parser for Erlang","0.4.2"},
+ {erlware_commons,"Additional standard library for Erlang",
+                  "0.6.1"},
+ {stdlib,"ERTS  CXC 138 10","1.18.1"},
+ {kernel,"ERTS  CXC 138 10","2.15.1"}]
+2> application:start(sinan_demo).
+ok
+{% endcodeblock %}
 
 We've started a shell and checked what applications are started with
 `application:which_applications()`. Now start the demo application with:
 
-    3> application:start(sinan_demo).
-    ok
+{% codeblock lang:shell %}
+3> application:start(sinan_demo).
+ok
+{% endcodeblock %}
 
 Now lets test that we can call the application.
 
-    4> sinan_demo_server:add_one().
-    {ok,{state,1}}
-    5> sinan_demo_server:add_one().
-    {ok,{state,2}}
+{% codeblock lang:shell %}
+4> sinan_demo_server:add_one().
+{ok,{state,1}}
+5> sinan_demo_server:add_one().
+{ok,{state,2}}
+{% endcodeblock %}
 
 As you can see it's calling the server and incrementing the call count.
 
-The next step is to create a release, which is as simple as running
-
-    sinan release
+The next step is to create a release, which is as simple as running `sinan release`
 
 Sinan has created a number of new directories under `_build`
 
+{% codeblock lang:shell %}
     $ tree -d _build/
     _build/
     `-- sinan_demo
@@ -273,6 +288,7 @@ Sinan has created a number of new directories under `_build`
         |   `-- stdlib-1.18.1
         `-- releases
             `-- 0.0.1
+{% endcodeblock %}
 
 The `bin` directory is still there from last time but now we have an erts, lib
 and releases directories. erts is there because earlier we asked sinan to
@@ -285,16 +301,18 @@ configuration files specific to a particular release of the application.
 
 Starting the release generated is as simple as
 
-    _build/sinan_demo/bin/sinan_demo
-    Erlang R15B01 (erts-5.9.1) [source] [64-bit] [smp:8:8] [async-threads:0] [hipe] [kernel-poll:false]
+{% codeblock lang:shell %}
+./_build/sinan_demo/bin/sinan_demo
+Erlang R15B01 (erts-5.9.1) [source] [64-bit] [smp:8:8] [async-threads:0] [hipe] [kernel-poll:false]
 
-    starting
-    Eshell V5.9.1  (abort with ^G)
-    1> application:which_applications().
-    [{sinan_demo,"Sinan demo application.","0.0.1"},
-     {stdlib,"ERTS  CXC 138 10","1.18.1"},
-     {kernel,"ERTS  CXC 138 10","2.15.1"}]
-    2>
+starting
+Eshell V5.9.1  (abort with ^G)
+1> application:which_applications().
+ [{sinan_demo,"Sinan demo application.","0.0.1"},
+  {stdlib,"ERTS  CXC 138 10","1.18.1"},
+  {kernel,"ERTS  CXC 138 10","2.15.1"}]
+2>
+{% endcodeblock %}
 
 We'll leave it there for now, but if you're curious like me you'll probably have
 a bunch of questions of where to take sinan next.
