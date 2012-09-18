@@ -32,7 +32,7 @@ Let's see how well it delivers on the promise.
 First you'll need Erlang installed, which your friendly local package management tool
 should provide. I'm using Homebrew on OSX so I just did:
 
-{% codeblock lang:shell %}
+{% codeblock %}
 $ brew install erlang
 ...
 $ erl -v
@@ -51,20 +51,20 @@ using version 4.1.1. Put it somewhere on your PATH, I've got mine in ~/bin which
 Now for the fun bit, type `sinan gen` and fill in the details.
 
 {% codeblock %}
-     Please specify your name
-     your name> Tim McGilchrist
-     Please specify your email address
-     your email> timmcgil@gmail.com
-     Please specify the copyright holder
-     copyright holder ("Tim McGilchrist")>
-     Please specify name of your project
-     project name> sinan_demo
-     Please specify version of your project
-     project version> 0.0.1
-     Please specify the ERTS version ("5.9.1")>
-     Is this a single application project ("n")> y
-     Would you like a build config? ("y")> y
-     Project was created, you should be good to go!
+Please specify your name
+your name> Tim McGilchrist
+Please specify your email address
+your email> timmcgil@gmail.com
+Please specify the copyright holder
+copyright holder ("Tim McGilchrist")>
+Please specify name of your project
+project name> sinan_demo
+Please specify version of your project
+project version> 0.0.1
+Please specify the ERTS version ("5.9.1")>
+Is this a single application project ("n")> y
+Would you like a build config? ("y")> y
+Project was created, you should be good to go!
 {% endcodeblock %}
 
 From that Sinan has generated a project, filling in your details, with an OTP
@@ -72,18 +72,18 @@ application and some build configuration. Your directories should look something
 similar to this.
 
 {% codeblock %}
-    sinan_demo
-        ├── config
-        │   └── sys.config
-        ├── doc
-        ├── ebin
-        │   └── overview.edoc
-        ├── include
-        ├── sinan.config
-        └── src
-            ├── sinan_demo.app.src
-            ├── sinan_demo_app.erl
-            └── sinan_demo_sup.erl
+sinan_demo
+    ├── config
+    │   └── sys.config
+    ├── doc
+    ├── ebin
+    │   └── overview.edoc
+    ├── include
+    ├── sinan.config
+    └── src
+        ├── sinan_demo.app.src
+        ├── sinan_demo_app.erl
+        └── sinan_demo_sup.erl
 {% endcodeblock %}
 
 It includes all the standard directories you'd expect plus a `sinan.config`
@@ -111,9 +111,8 @@ look like this:
 Back to making our generated code runnable.
 
 By default the generated supervisor doesn't point to a valid module so you'll
-need to remedy that before trying to startup the application.
-
-Create a new file called `sinan_demo_server.erl` in src and drop the following code in.
+need to remedy that before trying to startup the application. Create a new file
+called `sinan_demo_server.erl` in `src` and drop the following code in.
 
 {% codeblock lang:erlang %}
 -module(sinan_demo_server).
@@ -218,18 +217,20 @@ Now we need to add the sinan_demo_server module to `sinan_demo.app.src` so we
 know about it when generating the OTP application. Just add it to the list of
 modules like so:
 
-    %% This is the application resource file (.app file) for the,
-    %% application.
-    {application, sinan_demo,
-      [{description, "Sinan demo application.},
-       {vsn, "0.0.1"},
-       {modules, [sinan_demo_app,
-                  sinan_demo_sup,
-                  sinan_demo_server]},
-       {registered,[sinan_demo_sup]},
-       {applications, [kernel, stdlib]},
-       {mod, {sinan_demo_app,[]}},
-       {start_phases, []}]}.
+{% codeblock lang:erlang %}
+%% This is the application resource file (.app file) for the,
+%% application.
+{application, sinan_demo,
+ [{description, "Sinan demo application."},
+  {vsn, "0.0.1"},
+  {modules, [sinan_demo_app,
+             sinan_demo_sup,
+             sinan_demo_server]},
+  {registered,[sinan_demo_sup]},
+  {applications, [kernel, stdlib]},
+  {mod, {sinan_demo_app,[]}},
+  {start_phases, []}]}.
+{% endcodeblock %}
 
 Compile with `sinan build` and hopefully everything works.
 
@@ -237,8 +238,8 @@ From here you've got a few options to get your application running,
 but the easiest is just to use the sinan shell and start your application from
 there.
 
-{% codeblock lang:shell %}
-sinan shell
+{% codeblock %}
+$ sinan shell
 Eshell V5.9.1  (abort with ^G)
 1> application:which_applications().
 [{parsetools,"XLATETOOLS  CXC 138 xx","2.0.7"},
@@ -256,14 +257,14 @@ ok
 We've started a shell and checked what applications are started with
 `application:which_applications()`. Now start the demo application with:
 
-{% codeblock lang:shell %}
+{% codeblock %}
 3> application:start(sinan_demo).
 ok
 {% endcodeblock %}
 
 Now lets test that we can call the application.
 
-{% codeblock lang:shell %}
+{% codeblock %}
 4> sinan_demo_server:add_one().
 {ok,{state,1}}
 5> sinan_demo_server:add_one().
@@ -276,8 +277,8 @@ The next step is to create a release, which is as simple as running `sinan relea
 
 Sinan has created a number of new directories under `_build`
 
-{% codeblock lang:shell %}
-    $ tree -d _build/
+{% codeblock %}
+$ tree -d _build/
     _build/
     `-- sinan_demo
         |-- bin
@@ -301,8 +302,8 @@ configuration files specific to a particular release of the application.
 
 Starting the release generated is as simple as
 
-{% codeblock lang:shell %}
-./_build/sinan_demo/bin/sinan_demo
+{% codeblock %}
+$ ./_build/sinan_demo/bin/sinan_demo
 Erlang R15B01 (erts-5.9.1) [source] [64-bit] [smp:8:8] [async-threads:0] [hipe] [kernel-poll:false]
 
 starting
