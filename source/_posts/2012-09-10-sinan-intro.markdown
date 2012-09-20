@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Getting started with Sinan"
-date: 2012-09-18 21:00
+date: 2012-09-10 21:00
 comments: true
 categories:
     - Erlang
