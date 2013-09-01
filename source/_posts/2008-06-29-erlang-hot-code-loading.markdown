@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Erlang hot code loading
+published: false
 categories:
 - Erlang
 ---
