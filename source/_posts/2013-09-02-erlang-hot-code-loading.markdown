@@ -1,10 +1,11 @@
 ---
 layout: post
 title: Erlang hot code loading
-published: false
-categories:
-- Erlang
+date: 2013-09-02
+comments: true
+categories: Erlang
 ---
+
 Nearly every posting about Erlang that you come across mentions the hot code
 loading feature, aka dynamic code loading. But so far I have had problems
 finding a simple example of how to add this to my code. So here is one.
