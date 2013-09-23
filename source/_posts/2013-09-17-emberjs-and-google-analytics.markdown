@@ -6,7 +6,7 @@ comments: true
 categories: emberjs
 ---
 
-Single Page Javascript Applications and specifically Ember.js appslications don't
+Single Page Javascript Applications and specifically Ember.js applications don't
 always expose the right information to Google Analytics. Usually you'll see
 100% traffic to `/` and nothing else.
 
