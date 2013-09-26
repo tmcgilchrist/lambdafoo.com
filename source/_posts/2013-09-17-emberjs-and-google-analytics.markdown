@@ -9,7 +9,7 @@ categories: emberjs
 
 ## Update
 
-As some people have pointed out in the comments the code I gave has a bug in it.
+As iStefo pointed out in the comments the code I gave has a bug in it.
 The `observes('currentPath')` on an application controller doesn't fire when you
 transition between paths in the same route. eg '/lesson/1/activity/1' to '/lesson/1/activity/2'
 
@@ -36,6 +36,8 @@ router to achieve the same result.
 [PR#3453](https://github.com/emberjs/ember.js/pull/3453)
 
 ------------------------------------------
+
+## Original
 
 Single Page Javascript Applications and specifically Ember.js applications don't
 always expose the right information to Google Analytics. Usually you'll see
