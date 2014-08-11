@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "lambdajam_talk"
+title: "Lambdajam Talks"
 date: 2014-08-08 14:15
 comments: true
 categories: talks
