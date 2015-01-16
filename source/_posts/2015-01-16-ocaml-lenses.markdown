@@ -70,7 +70,7 @@ let scifi_novel = {
 Given our `scifi_novel` we can access the editor's car mileage:
 
 {%codeblock lang:ocaml%}
-let mileage = scifi_novel.editor.car.milage
+let mileage = scifi_novel.editor.car.mileage;;
 {% endcodeblock %}
 
 Setting the mileage is a bit trickier, we need to unpack each record:
@@ -78,7 +78,7 @@ Setting the mileage is a bit trickier, we need to unpack each record:
 {%codeblock lang:ocaml%}
 let second_edition = { scifi_novel with editor =
                 { scifi_novel.editor with car =
-                    { scifi_novel.editor.car with mileage = 1000 } } }
+                    { scifi_novel.editor.car with mileage = 1000 } } };;
 {% endcodeblock %}
 
 That's not really an appealing prospect, can we do better?
