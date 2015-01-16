@@ -19,7 +19,7 @@ to use [ocaml-lens](https://github.com/avsm/ocaml-lens/) as a minimal lens
 implementation.
 
 First since ocaml-lens isn't in opam, clone the repo locally and open up
-`utop`. Then load the `lens.ml` file into `utop`, `#use "lens.ml";;`.
+`utop`. Then load the `lens.ml` file into `utop`.
 
 {%codeblock lang:ocaml%}
 utop # #use "lens.ml";;
