@@ -73,17 +73,17 @@ similar to this.
 
 {% codeblock %}
 sinan_demo
-    ├── config
-    │   └── sys.config
-    ├── doc
-    ├── ebin
-    │   └── overview.edoc
-    ├── include
-    ├── sinan.config
-    └── src
-        ├── sinan_demo.app.src
-        ├── sinan_demo_app.erl
-        └── sinan_demo_sup.erl
+  |-- config
+  |    |-- sys.config
+  |-- doc
+  |-- ebin
+  |    |-- overview.edoc
+  |-- include
+  |-- sinan.config
+  |-- src
+  |    |-- sinan_demo.app.src
+  |    |-- sinan_demo_app.erl
+  |    |-- sinan_demo_sup.erl
 {% endcodeblock %}
 
 It includes all the standard directories you'd expect plus a `sinan.config`

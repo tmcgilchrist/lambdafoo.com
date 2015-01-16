@@ -25,7 +25,7 @@ This article is for anyone interested in kernel development under IRIX. It
 assumes that the reader has had previous exposure to C and is familar with some
 form of Unix, hopefully IRIX but Linux or *BSD is sufficient. There are already
 loads of similar articles showing how to get started with Linux or BSD drivers,
-but the only real resource for IRIX is SGI’s monster
+but the only real resource for IRIX is SGIs monster
 [Device Driver](http://techpubs.sgi.com/library/tpl/cgi-bin/browse.cgi?coll=0650&db=bks&cmd=toc&pth=/SGI_Developer/DevDriver_PG)
 document. The problem I found with this document is, the depth of the material
 presented makes if difficult to know where to start from. So hopefully this
@@ -179,7 +179,7 @@ target you may get an error like:
 
     -- load ---
     /sbin/ml ld -v -c simple.o -p sim_ -s 13
-    Error loading module sim_:  Major number already in use.
+    Error loading module sim_: Major number already in use.
     *** Error code 255
     smake: Error: 1 error
 

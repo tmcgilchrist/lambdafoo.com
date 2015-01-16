@@ -62,7 +62,7 @@ it started looking for things like "init" and "/etc/rc" which didn't seem right
 so I went back to the other kernel.
 
 After I had the bootable USB setup correctly I rebooted the Aspire and started
-the install. Initially I tried following the instructions on installing from the
+the install. Initially I tried following the instructions on installing from the
 *sets* copied onto the USB stick but the installer couldn't find them. So In the
 end I went for the HTTP install
 ([Figure 3.20](http://www.netbsd.org/docs/guide/en/chap-exinst.html#inst-medium)
