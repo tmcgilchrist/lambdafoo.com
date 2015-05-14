@@ -281,5 +281,5 @@ Further Reading
 The best reference is really [Real World OCaml](http://realworldocaml.org). If
 you've got some Haskell experience and don't mind reading a paper then "ML
 Modules and Haskell Type Classes: A Constructive Comparison" by Stefan Wehr and
-Manuel CHakravarty gives a thorough coverage of how ML modules stack up to Type
+Manuel Chakravarty gives a thorough coverage of how ML modules stack up to Type
 Classes.
