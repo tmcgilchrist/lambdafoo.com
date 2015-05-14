@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Crash Course in OCaml modules"
+title: "Unreliable guide to OCaml modules"
 date: 2015-05-15 19:13
 comments: true
 categories:
