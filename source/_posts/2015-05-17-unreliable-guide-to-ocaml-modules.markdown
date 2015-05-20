@@ -49,7 +49,7 @@ module langauge. Below is a module for integer Sets:
       type t = int
       type set = t list
       let empty = []
-      let member i s = List.exists (fun x -> x == i) s
+      let member i s = List.exists (fun x -> x = i) s
       let insert i s = if member i s then s else (i::s)
     end
 ```
@@ -77,7 +77,7 @@ with:
       type t = int
       type set = t list
       let empty = []
-      let member i s = List.exists (fun x -> x == i) s
+      let member i s = List.exists (fun x -> x = i) s
       let insert i s = if member i s then s else (i::s)
 ```
 
@@ -90,7 +90,7 @@ just having 1 file becoming 1 module.
     module IntSet = struct
       module Compare = struct
          type t = int
-         let eql x y = x == y
+         let eql x y = x = y
       end
     end;;
 ```
