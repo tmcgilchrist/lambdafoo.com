@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "First month of Haskell"
-date: 2015-05-09 18:02
+date: 2015-05-20 16:02
 comments: true
 categories:
   - haskell
