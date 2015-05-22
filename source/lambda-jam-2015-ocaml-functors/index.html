@@ -50,8 +50,8 @@ Tim McGilchrist (@lambda_foo)
 * OCaml functors ain't Haskell functors.
 * Hey man, where's my fmap. Such confuse, much wow.
 * introduce people to the OCaml module system
-* what OCaml functors are
-* what sorts of problems they let us solve.
+* What OCaml functors are
+* What sorts of problems they let us solve.
 
 ---
 
@@ -76,7 +76,8 @@ Anecdote about why I chose to learn OCaml rather than Haskell.
 be a contrarian
 
 Lets dive into some terminology
-
+---
+.bottom[![Right-aligned image](except-for-tim-comic.jpg)]
 ---
 
 # Terminology
@@ -128,7 +129,7 @@ module IntSet = struct
   type t = int
   type set = t list
   let empty = []
-  let member i s = List.exists (fun x -> x == i) s
+  let member i s = List.exists (fun x -> x = i) s
   let insert i s = if member i s then s else (i::s)
 end
 ```
@@ -185,7 +186,7 @@ Compare.eql 1 1
 
 (* or *)
 
-InSet.Compare.(eq 1 1)
+IntSet.Compare.(eq 1 1)
 
 (* or *)
 
@@ -195,18 +196,17 @@ in S.eql 1 1
 
 ???
 
-Using structures needs to more convenient that using the long form names,
-especially if we want to use nested modules to organise our code. OCaml provides
-3 ways to make it more convenient.
+* Using structures needs to more convenient that using the long form names
+especially if we want to use nested modules to organise our code.
 
-1. opening the module at the top of a file. Using `open` then the name of the
+1. Opening the module at the top of a file. Using `open` then the name of the
    module, everything that the module exports will be available in the opening
    module. This is convenient, no need to pre-pend anything with module names,
    the downside however is you pollute the namespace. Might not want to have
    everything in this namespace, eg name clashes. Good idea to keep it small.
 
 2. Convenient option if you're only using the module in a few places within a file.
-Especially if you're using the same module repeatedly in a a statement.
+   Especially if you're using the same module repeatedly in a a statement.
 
 3. Helpful to keep what the short name of a module is close to where it's being used.
 
@@ -503,9 +503,7 @@ concurrency platforms, Lwt, Async and Javascript
 ---
 # Type Safe Extensions
 
-Using the `include` keyword we can extend an existing `struct`.
-
-Also works for signatures
+Using the `include` keyword we can extend an existing `struct` or signature.
 
 ``` ocaml
 module Listy = struct
@@ -513,13 +511,14 @@ module Listy = struct
 
   let intersperse t sep =
     match t with
-      | [] -> []
-      | x :: xs ->
-        x :: List.fold_right
+      | [] | [_] -> t
+      | x :: List.fold_right
           (fun y acc -> sep :: y :: acc) xs []
 end
 
 module List = Listy
+
+include (module type of List)
 ```
 ???
 * Here include is bringing in contents of List into our Listy module
@@ -527,6 +526,7 @@ module List = Listy
 * Export the module back out as List, effectively replacing List with our own version.
 * You can perform a similar thing with signatures, to bring in all the functions
   and types, then re-exporting them.
+*
 
 ---
 # Paramterising Library
@@ -683,6 +683,8 @@ record root d = ...
 * Signatures combine types and function signatures
 * Functors are functions from `struct` to `struct`
 * Simple translation of Type Classes to Modules
+
+???
 * OCaml Modules provide features Haskell can't.
 
 ---
