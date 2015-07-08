@@ -4,7 +4,7 @@ title: "Unreliable guide to OCaml modules"
 date: 2015-05-15 19:13
 comments: true
 categories:
-  - ocaml
+- ocaml
 ---
 
 Being on the curious side of things I have been interested lately in the dualities
@@ -26,7 +26,7 @@ Terminology
 
 OCaml is a member of the ML family of languages, sharing common features like
 modules,
-[Hindley-Milner type sytem](http://en.wikipedia.org/wiki/Hindley–Milner_type_system)
+[Hindley-Milner type sytem](http://en.wikipedia.org/wiki/Hindley-Milner_type_system)
 and strict evaluation. OCaml as a language can be though of 2 distinct part; one
 a core language that's values and types and a second module language that
 revolves around modules and signatures. While OCaml does provide some support
@@ -135,10 +135,12 @@ A signature is introduced with the `sig` keyword
 ``` ocaml
     module type Set =
       sig
-        type 't set
-        val empty : 't set
-        val member : 't set -> 't -> bool
-        val insert : 't set -> 't -> 't set option
+        type elt
+        type t
+
+        val empty : t
+        val member : elt -> t -> bool
+        val insert : elt-> t -> t
       end
 ```
 
@@ -171,8 +173,6 @@ Following out set example we can make set operations abstract across both the
 type inside the set and the equality comparison.
 
 ``` ocaml
-    open Core.Std;; (* for Int.compare later on *)
-
     module type ORDERING =
       sig
         type t
@@ -181,43 +181,39 @@ type inside the set and the equality comparison.
 
     module type Set =
       sig
-        type 't set
-        val empty : 't set
-        val member : 't set -> 't -> bool
-        val insert : 't set -> 't -> 't set option
+        type elt
+        type t
+        val empty : t
+        val member : elt -> t -> bool
+        val insert : elt-> t -> t
       end;;
 
-    module MkSet (O : ORDERING) =
+    module MkSet (Ord : ORDERING) : (Set with type elt := Ord.t) =
       struct
-         type t = O.t
-         let empty = []
+        type elt = Ord.t
+        type t = Empty | Node of t * elt * t
 
-         let rec member s x =
-          match s with
-            [] -> false
-          | hd::tl ->
-              match O.compare x hd with
-                0  -> true     (* x belongs to s *)
-              | 1  -> false    (* x is smaller than all elements of s *)
-              | -1 -> member tl x
+        let empty = Empty
 
-        let rec add x s =
-          match s with
-            [] -> [x]
-          | hd::tl ->
-             match O.compare x hd with
-               0  -> s         (* x is already in s *)
-             | 1  -> x :: s    (* x is smaller than all elements of s *)
-             | -1 -> hd :: add x tl
+        let rec insert x = function
+          | Empty -> Node(Empty, x, Empty)
+          | Node(a, y, b) when Ord.compare x y < 0 -> Node(insert x a, y, b)
+          | Node(a, y, b) when Ord.compare x y > 0 -> Node(a, y, insert x b)
+          | Node(a, y, b) as s -> s
+
+        let rec member x = function
+          | Empty -> false
+          | Node(l, v, r) ->
+              let c = Ord.compare x v in
+              c = 0 || member x (if c < 0 then l else r)
     end;;
 
     module IntOrdering = struct
-             type t = int
-             let compare = Int.compare
+        type t = int
+        let compare x y = Pervasives.compare x y
       end;;
 
     module IntSet' = MkSet(IntOrdering);;
-
 ```
 
 Here we define `ORDERING` and `Set` as signatures, similar to our previous
