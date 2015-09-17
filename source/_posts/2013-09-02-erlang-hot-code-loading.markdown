@@ -21,20 +21,21 @@ Copy this code into an editor. I'm using Emacs here, so all instructions use it'
 start() -> loop(0).
 
 loop(Sum) ->
-    receive
-        {increment, Count} ->
-            loop(Sum+Count);
-	{print} ->
-	    io:format("Sum is ~p~n", [Sum]),
-	    loop(Sum);
-        {counter, Pid} ->
-            Pid ! {counter, Sum},
-            loop(Sum);
-        code_switch ->
-            ?MODULE:codeswitch(Sum);
-	M ->
-	    io:format("Unhandled message ~p~n", [M])
-    end.
+  receive
+    {increment, Count} ->
+      loop(Sum+Count);
+    {print} ->
+      io:format("Sum is ~p~n", [Sum]),
+      loop(Sum);
+    {counter, Pid} ->
+      Pid ! {counter, Sum},
+      loop(Sum);
+    code_switch ->
+      ?MODULE:codeswitch(Sum);
+    M ->
+      io:format("Unhandled message ~p~n", [M]),
+      loop(Sum)
+   end.
 
 codeswitch(Sum) -> loop(Sum).
 {% endcodeblock %}
