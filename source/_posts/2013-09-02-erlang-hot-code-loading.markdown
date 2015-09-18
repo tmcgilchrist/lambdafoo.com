@@ -71,14 +71,14 @@ Now that we have the first version of the process running, add a new clause to
 the receive like so.
 
 {% codeblock lang:erlang %}
-        {print} ->
-	    io:format("Sum is ~p~n", [Sum]),
-	    loop(Sum);
-	{reset} ->
-	    loop(0);
-        {counter, Pid} ->
-            Pid ! {counter, Sum},
-            loop(Sum);
+  {print} ->
+    io:format("Sum is ~p~n", [Sum]),
+    loop(Sum);
+  {reset} ->
+    loop(0);
+  {counter, Pid} ->
+    Pid ! {counter, Sum},
+    loop(Sum);
 {% endcodeblock %}
 
 Compile this version, Ctrl-C Ctrl-K and send a message to the process that only
