@@ -6,6 +6,7 @@ sharing: true
 footer: true
 ---
 
+ * 29-04-2016 - ["Practical Haskell Performance"](/lambda-jam-2016-performance) @ YOW LambdaJam 2016 (Video)
  * 18-04-2016 - ["Freer Monads, More Extensible Effects"](/fp-syd-freer-2016) @ FP-SYD (Video)
  * 23-09-2015 - ["Lightweight Higherkinded Polymorphism"](/fp-syd-higher-2015)@ FP-SYD [(Video)](https://www.youtube.com/watch?v=K3Y01DIMErk)
  * 08-07-2015 - ["Scalas Modular Roots"](/scala-syd-2015-modules) @ Scala-Syd
