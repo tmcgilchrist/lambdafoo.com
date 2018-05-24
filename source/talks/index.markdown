@@ -6,6 +6,7 @@ sharing: true
 footer: true
 ---
 
+ * 28-03-2018 - ["Either Error Success"](https://speakerdeck.com/lambda_foo/either-error-success)
  * 24-05-2017 - ["Idris States: Dependent types, not just for vectors?"](https://speakerdeck.com/lambda_foo/idris-states-dependent-types-not-just-for-vectors) @ FP-SYD
  * 29-04-2016 - ["Practical Haskell Performance"](/lambda-jam-2016-performance) @ YOW LambdaJam 2016 [(Video)](https://www.youtube.com/watch?v=vmFdJPs3DvU)
  * 18-04-2016 - ["Freer Monads, More Extensible Effects"](/fp-syd-freer-2016) @ FP-SYD (Video)
