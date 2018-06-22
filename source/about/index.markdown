@@ -1,14 +1,13 @@
 ---
 layout: page
-title: "def about"
+title: "about"
 date: 2012-04-02 12:06
 comments: false
 sharing: false
 footer: true
 ---
 
-Code produced by this resource can be found written in Erlang, Ruby, Haskell and
-Java on [github](https://github.com/tmcgilchrist).
+Code produced by this resource can be found written in Haskell, OCaml and Erlang on [github](https://github.com/tmcgilchrist).
 
 Snapshots of this resource's reasoning are available @ [lambdafoo.com](http://lambdafoo.com)
 
@@ -16,7 +15,7 @@ Alternate representations of this resource can be found at:
 
  * [twitter.com/lambda_foo](https://twitter.com/lambda_foo)
  * [github.com/tmcgilchrist](https://github.com/tmcgilchrist)
- * [linkedin.com/timmcgilchrist ](http://au.linkedin.com/in/timmcgilchrist )
+ * [linkedin.com/timmcgilchrist ](http://au.linkedin.com/in/timmcgilchrist)
 
 Pictorial representations may be similar to the following:
 
@@ -26,4 +25,4 @@ Pictorial representations may be similar to the following:
 Contact can be made via [@lambda_foo](https://twitter.com/lambda_foo) on
 Twitter.
 
-# end
+I day-job at [Ansarada](https://www.ansarada.com) doing function programming and machine learning things.
