@@ -15,7 +15,7 @@ The theory of lenses and their accompanying prisms and traversals, have been
 better described by other people.
 [This](https://www.fpcomplete.com/school/to-infinity-and-beyond/pick-of-the-week/a-little-lens-starter-tutorial)
 article at FPComplete was a particularly good one. I'm just going to cover how
-to use [ocaml-lens](https://github.com/avsm/ocaml-lens/) as a minimal lens
+to use [ocaml-lens](https://github.com/pdonadeo/ocaml-lens/) as a minimal lens
 implementation.
 
 First since ocaml-lens isn't in opam, clone the repo locally and open up
