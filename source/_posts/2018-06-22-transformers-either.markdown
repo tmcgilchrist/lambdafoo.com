@@ -9,7 +9,7 @@ categories:
 In choosing Haskell as a language you sign up for a certain class of features and behaviours.
 e.g. lazy evaluation, static typing
 
-This gives you a general point in the design space for general prupose langauages but like
+This gives you a general point in the design space for general purpose languages but like
 all languages you are still left with a number of choices in building software. These choices
 are broad, diverse and hotly debated, sometimes they get labelled with **Best Practices** or the
 **Right way**. Like any good engineer you should recognise that everything involves
@@ -35,7 +35,7 @@ data Either a b
   | Right b
 {% endcodeblock %}
 
-where typicall `Left` represents some failure case in this context and `Right` represents success.
+where typically `Left` represents some failure case in this context and `Right` represents success.
 Another formulation from OCaml community is:
 
 {%codeblock lang:ocaml%}
@@ -264,14 +264,7 @@ References
 
  1. [Asynchronous Exceptions in Practice](https://simonmar.github.io/posts/2017-01-24/asynchronous-exceptions.html)
  2. [Asynchronous Exceptions in Haskell](https://simonmar.github.io/bib/papers/async.pdf)
-
  3. [Exceptions Best Practices in Haskell](https://www.fpcomplete.com/blog/2016/11/exceptions-best-practices-haskell)
  4. [The RIO Monad](https://www.fpcomplete/com/blog/2017/07/the-rio-monad)
  5. [Yaron's Thoughts](https://discuss.ocaml.org/t/specific-reason-for-not-embracing-the-use-of-exceptions-for-error-propagation/1666/15)
  6. [Checked Exceptions](https://www.well-typed.com/blog/2015/07/checked-exceptions/)
-
-Links
----------------
-https://hackage.haskell.org/package/transformers-either-0.1.0/docs/Control-Monad-Trans-Either.html
-http://hackage.haskell.org/package/base-4.11.0.0/docs/System-IO.html#t:IO
-http://hackage.haskell.org/package/base-4.11.0.0/docs/Control-Exception-Base.html
