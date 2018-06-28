@@ -64,7 +64,7 @@ So, how should we best deal with this reality and structure our code?
 Exceptions
 ---------------
 
-We have exceptions lets use them.
+We have exceptions; lets use them.
 
 To start doing that you need to define your own custom exception type.
 
@@ -79,7 +79,7 @@ data VapourError =
 instance Show VapourError where
   show a = case a of
     InsufficientFunds -> "Insufficient funds."
-    ItemUnavailable i -> "Item " ++ i " unavailable."
+    ItemUnavailable i -> "Item " ++ i ++ " unavailable."
     MachineMalfunction e -> "Hardware malfunction " ++ e ++ "."
 
 instance Exception VapourError
@@ -221,12 +221,13 @@ Exception Disadvantages
 
 The main downsides as I see it to exception oriented code are:
 
- * exception throwing functions compose too easily forced to think about what it means.
+ * exception throwing functions compose too easily you are not forced to think about what it means.
  * no stack traces by default in Haskell mean you lose context.
  * handling exceptions requires knowledge about the internals of dependencies and how they use exceptions.
 
-Here the compiler is less helpful in guiding you, giving little or no help with handling particular exceptions
-or giving compile errors for new exceptions that you might need to consider.
+Here the compiler is less helpful in guiding you, giving little or no help with
+handling particular exceptions or giving compile errors for new exceptions that you might
+need to consider.
 
 Supporting Libraries
 ---------------
