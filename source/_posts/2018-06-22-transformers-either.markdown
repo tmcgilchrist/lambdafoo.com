@@ -9,7 +9,7 @@ categories:
 In choosing Haskell as a language you sign up for a certain class of features and behaviours.
 e.g. lazy evaluation, static typing
 
-This gives you a general point in the design space for general prupose langauages but like
+This gives you a general point in the design space for general purpose languages but like
 all languages you are still left with a number of choices in building software. These choices
 are broad, diverse and hotly debated, sometimes they get labelled with **Best Practices** or the
 **Right way**. Like any good engineer you should recognise that everything involves
@@ -35,7 +35,7 @@ data Either a b
   | Right b
 {% endcodeblock %}
 
-where typicall `Left` represents some failure case in this context and `Right` represents success.
+where typically `Left` represents some failure case in this context and `Right` represents success.
 Another formulation from OCaml community is:
 
 {%codeblock lang:ocaml%}
