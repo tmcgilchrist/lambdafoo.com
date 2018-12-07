@@ -6,6 +6,8 @@ sharing: true
 footer: true
 ---
 
+ * 27-08-2018 - ["Dependently Typed State Machines"](https://speakerdeck.com/lambda_foo/dependently-typed-state-machines) @ Compose Conference Melbourne 2018 [(Video)](https://www.youtube.com/watch?v=AgRmpMPCKeU)
+ * 25-07-2018 - ["Code reuse through polymorphic variants?"](https://speakerdeck.com/lambda_foo/code-reuse-through-polymorphic-variants) @ FP-SYD
  * 28-03-2018 - ["Either Error Success"](https://speakerdeck.com/lambda_foo/either-error-success) @ FP-SYD
  * 24-05-2017 - ["Idris States: Dependent types, not just for vectors?"](https://speakerdeck.com/lambda_foo/idris-states-dependent-types-not-just-for-vectors) @ FP-SYD
  * 29-04-2016 - ["Practical Haskell Performance"](/lambda-jam-2016-performance) @ YOW LambdaJam 2016 [(Video)](https://www.youtube.com/watch?v=vmFdJPs3DvU)
