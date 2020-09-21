@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>My Hakyll Blog - index</title>
+        <link rel="stylesheet" type="text/css" href="../../css/default.css" />
+        <link rel="stylesheet" type="text/css" href="../../css/screen.css" />
+    </head>
+    <body>
+        <div id="header">
+            <div id="logo">
+                <a href="../../">My Hakyll Blog</a>
+            </div>
+            <div id="navigation">
+                <a href="../../">Home</a>
+                <a href="../../about.html">About</a>
+                <a href="../../talks.html">Talks</a>
+                <a href="../../archive.html">Archive</a>
+            </div>
+        </div>
+
+        <div id="content">
+            <h1>index</h1>
+
+            <p><!--[if lt IE 7]> <html class="no-js ie6" lang="en"> <![endif]--> <!--[if IE 7]>    <html class="no-js ie7" lang="en"> <![endif]--> <!--[if IE 8]>    <html class="no-js ie8" lang="en"> <![endif]--> <!--[if gt IE 8]><!--></p>
+<p><!--<![endif]--></p>
+<p><!-- Begin slides --></p>
+<section id="title-slide" class="slide">
+<h1 id="riak-ruby-ripple">Riak, Ruby &amp; Ripple</h1>
+<h3 id="tim-mcgilchrist">Tim McGilchrist</h3>
+<h5 id="lambda_foo">(@lambda_foo)</h5>
+</section>
+<section id="overview" class="slide">
+<h2 id="overview">Overview</h2>
+<div class="left" style="float:right;">
+<img src="../../roro-2012-riak/images/Riak-1-1.png" />
+</div>
+<ol>
+<li>
+What is Riak?
+</li>
+<li>
+Riak Concepts &amp; Features
+</li>
+<ul>
+<li>Buckets and Keys</li>
+<li>Links and Metadata</li>
+<li>Clustering and Distribution</li>
+<li>Replication</li>
+<li>Map Reduce</li>
+</ul>
+<li>
+Using Riak from Ruby
+</li>
+<li>
+The Good / The Bad
+</li>
+<li>
+Some Conclusions
+</li>
+</ol>
+</section>
+<section id="what" class="slide">
+<h2 id="what-is-riak">What is Riak?</h2>
+<blockquote>
+<p>Riak is an open source, highly scalable, fault-tolerant and distributed database.</p>
+</blockquote>
+<h4 id="features">Features</h4>
+<div class="left" style="float:right;">
+<img src="../../roro-2012-riak/images/basho_logo.png" />
+</div>
+<ul>
+<li>Key/Value store</li>
+<li>Highly available, the AP in CAP</li>
+<li>Clustered by default</li>
+<li>Map Reduce processing</li>
+<li>P2P architecture</li>
+<li>Secondary Indexes</li>
+<li>Full Text Search</li>
+<li>Simple Ops</li>
+</ul>
+</section>
+<section id="background" class="slide">
+<h2 id="background">Background</h2>
+<div class="left" style="float:right;">
+<img src="../../roro-2012-riak/images/red_cap_mushroom.jpg" />
+</div>
+<p>Based on Amazon’s Dynamo Key/Value paper and Dr Eric Brewer’s CAP Theorem.</p>
+<p><strong>CAP theorem</strong>, states that it is impossible for a distributed computer system to simultaneously provide all three of the following guarantees:</p>
+<ol>
+<li>Consistency</li>
+<li>Availability</li>
+<li>Partition Tolerance</li>
+</ol>
+You can only pick 2!
+</p>
+</section>
+<section id="buckets_keys" class="slide">
+<h2 id="buckets-and-keys">Buckets and Keys</h2>
+<p>Buckets + keys are the main way to organise user data.</p>
+<p>Bucket is a collection of keys, with associated configuration data.</p>
+<p>Keys can be either a string or binary, user defined or riak can generate one.<br />
+eg 37458abc752f8413e, fancy_string or 0xDEADBEEF</p>
+<img src="../../roro-2012-riak/images/multi_colour_bucket.jpg" />
+</section>
+<section id="links_metadata" class="slide">
+<h2 id="links-and-metadata">Links and Metadata</h2>
+<ul>
+<li>Lightweight pointers, like HTML <link> tags</li>
+<li>Composed of a bucket, key &amp; tag</li>
+<li>Traverse through “link-walking”</li>
+<li>User defined metadata.</li>
+</ul>
+<pre><code>    Link: &lt;/riak/bucket/key&gt;; riaktag=&quot;whatever?&quot;
+
+    X-Riak-Meta-Color: whatever?
+  </code></pre>
+<pre><code>curl -X PUT http://localhost:8091/riak/cages/1 \
+  -H &quot;Content-Type: application/json&quot; \
+  -H &quot;X-Riak-Meta-Color: Pink&quot; \
+  -H &quot;Link: ; riaktag=\&quot;contains\&quot;&quot; \
+  -d '{&quot;room&quot; : 101}'</code></pre>
+</section>
+<section id="clutering" class="slide">
+<h2 id="clustering">Clustering</h2>
+<p>Riak’s default mode of operation is in a cluster.</p>
+<p>CAP Controls: N, R and W</p>
+<p>The extent to which data is replicated, when, and with what merge strategy and failure model, is configurable at runtime.</p>
+<p>Riak computes a 160-bit binary hash of the bucket/key pair, and maps this value to a position on an ordered “ring” of all such values.</p>
+<img src="../../roro-2012-riak/images/riak-ring.png" /> eg 32 partitions / 4 nodes = 8 vnodes for each node
+</section>
+<section id="clustering_2" class="slide">
+<h2 id="more-clustering">More Clustering</h2>
+<div class="left" style="float:right;">
+<img src="../../roro-2012-riak/images/gossip.jpg" />
+</div>
+<p>Writes are split across multiple nodes and only returns success if write is <strong>confirmed</strong> by N nodes.</p>
+<p>Reads are also split across multiple nodes with the same consensus protocol.</p>
+<p>Inconsistent read results can be <strong>repaired</strong> without user intervention (<a href="http://wiki.basho.com/Riak-Glossary.html#Read-Repair">Read Repair</a>).</p>
+<p>Ring state is shared around the cluster by means of a <strong>gossip protocol</strong>.</p>
+</section>
+<section id="replication" class="slide">
+<h2 id="replication">Replication</h2>
+<img src="../../roro-2012-riak/images/being-john-malkovich.jpg" />
+<ul>
+<li>Replication is fundamental and automatic in Riak.</li>
+<li>All data stored in Riak will be replicated to a number of nodes in the cluster according to the <strong>n_val</strong> property set on the bucket.</li>
+<li>Tune <strong>n_val</strong> wisely; high values provide more redundancy and lower values provide more speed.</li>
+</ul>
+</div>
+</section>
+<section id="map_reduce" class="slide">
+<h2 id="map-reduce">Map Reduce</h2>
+<p>Riak’s Map Reduce allows richer queries over the data stored in Riak.</p>
+<p>Can be written in Javascript or Erlang.</p>
+<p>Spreads the processing of the query to where the data is.</p>
+<div>
+<div id="code" class="code" name="code" data-mode="javascript" style="display:none;">
+// Map Function function(v) { var words = v.values[0].data.toLowerCase().match(’\w*’,’g’); var counts = []; for(var word in words) if (words[word] != ’’) { var count = {}; count[words[word]] = 1; counts.push(count); } return counts; }
+</div>
+</div>
+</section>
+<section id="map_reduce_2" class="slide">
+<h2 id="map-reduce-cont.">Map Reduce Cont.</h2>
+</p>
+<div>
+<div id="code" class="code" name="code" data-mode="javascript" style="display:none;">
+// Reduce Function function(values) { var result = {}; for (var value in values) { for(var word in values[value]) { if (word in result) result[word] += values[value][word]; else result[word] = values[value][word]; } } return [result]; } [{“the”:8,“rabbit”:2,“hole”:1,“went”:1,“straight”:1}]
+</div>
+</div>
+</section>
+<section id="clients" class="slide">
+<h2 id="talking-the-talk">Talking the talk</h2>
+<p>Basho provides supported clients for:</p>
+<ul>
+<li>Java</li>
+<li>Ruby</li>
+<li>Erlang</li>
+<li>PHP</li>
+<li>Javascript</li>
+</ul>
+Many more community contributed ones.
+</p>
+</section>
+<section id="wheres_ruby" class="slide">
+<h2 id="riak-and-ruby">Riak and Ruby</h2>
+</p>
+<p>Basho provides great Ruby support via the Ripple library,<br />
+<a href="https://github.com/seancribbs/ripple">https://github.com/seancribbs/ripple</a></p>
+<p>It includes two namespaces:</p>
+<ul>
+<li><strong>Riak</strong> basic wrapper around typical operations.</li>
+<li><strong>Ripple</strong> provides a rich modeling layer for Riak, based on ActiveModel abstraction similar to ActiveRecord, DataMapper and MongoMapper.</li>
+</ul>
+</p>
+<p>Supports Rails 3 and greater.</p>
+<code>    </code>
+</section>
+<section id="riak_setup" class="slide">
+<h2 id="setting-up-riak">Setting up Riak</h2>
+<p>Available for all good Unix systems. Instructions available on <a href="http://wiki.basho.com/Installation.html">wiki.basho.com</a></p>
+<pre><code>phoenix$ curl -O http://downloads.basho.com/riak/riak-1.1.1/riak-1.1.1-osx-x86_64.tar.gz
+phoenix$ tar xzvf riak-1.1.1-osx-x86_64.tar.gz
+phoenix$ cd riak-1.1.1
+phoenix:riak-1.1.1$ ./bin/riak start
+phoenix:riak-1.1.1$ ./bin/riak ping
+pong
+  </code></pre>
+</section>
+<section id="loading_data" class="slide">
+<h2 id="saving-data-to-riak">Saving data to Riak</h2>
+<textarea id="code" name="code" class="code" mode="ruby" style="display: none;">
+require ‘riak’ # Create a client connection client = Riak::Client.new # Retrieve a bucket bucket = client.bucket(’books’) # Create a new object new_book = Riak::RObject.new(bucket, ‘erlang_otp_in_action’) new_book.content_type = ‘application/json’ new_book.data = { title: ‘Erlang and OTP in Action’, author: ‘Logan Martin’, summary: ‘Erlang is a functional language’} # Save! new_book.store
+</textarea>
+</section>
+<section id="active_resource_save" class="slide">
+<h2 id="using-ripple-activemodel">Using Ripple ActiveModel</h2>
+<textarea id="code" name="code" class="code" mode="ruby" style="display: none;">
+require ‘ripple’ class Book include Ripple::Document property :title, String, :presence =&gt; true property :author, String, :presence =&gt; true property :summary, String, :presence =&gt; true end book = Book.new book.title = ‘The Well-Grounded Rubyist’ book.author = ‘David Black’ book.summary = ‘Takes you from interested novice to proficient practitioner.’ book.save
+</textarea>
+</section>
+<section id="retrieve_data" class="slide">
+<h2 id="wheres-my-data">Where’s my data?</h2>
+<pre><code>phoenix$ curl -v http://127.0.0.1:8098/riak/books/erlang_otp_in_action
+* About to connect() to 127.0.0.1 port 8098 (#0)
+*   Trying 127.0.0.1...
+* connected
+* Connected to 127.0.0.1 (127.0.0.1) port 8098 (#0)
+&gt; GET /riak/books/erlang_otp_in_action HTTP/1.1
+&gt; User-Agent: curl/7.24.0 (x86_64-apple-darwin11.3.0) libcurl/7.24.0 OpenSSL/1.0.0g zlib/1.2.6 libidn/1.22
+&gt; Host: 127.0.0.1:8098
+&gt; Accept: */*
+&gt;
+&lt; HTTP/1.1 200 OK
+&lt; X-Riak-Vclock: a85hYGBgzGDKBVIcypz/fvpHeitmMCUy5bEyOOw6f4IvCwA=
+&lt; Vary: Accept-Encoding
+&lt; Server: MochiWeb/1.1 WebMachine/1.9.0 (someone had painted it blue)
+&lt; Link: ; rel=&quot;up&quot;
+&lt; Last-Modified: Sat, 10 Mar 2012 11:42:56 GMT
+&lt; ETag: &quot;76dfItNC7ZsSupMV0VIGZ4&quot;
+&lt; Date: Sun, 11 Mar 2012 10:15:55 GMT
+&lt; Content-Type: application/json
+&lt; Content-Length: 213
+&lt;
+* Connection #0 to host 127.0.0.1 left intact
+{&quot;title&quot;:&quot;Erlang and OTP in Action&quot;,&quot;author&quot;:&quot;Logan Martin&quot;,&quot;summary&quot;:&quot;Erlang is
+an adaptable and fault tolerant functional programming language originally
+designed for the unique demands of the telecom industry&quot;}
+* Closing connection #0
+  </code></pre>
+</section>
+<section id="retrieve_data_2" class="slide">
+<h2 id="more-data">More Data</h2>
+<pre><code>phoenix$ curl -v http://127.0.0.1:8098/buckets/books/keys?keys=true
+...
+&lt; HTTP/1.1 200 OK
+&lt; Vary: Accept-Encoding
+&lt; Server: MochiWeb/1.1 WebMachine/1.9.0 (someone had painted it blue)
+&lt; Date: Sun, 11 Mar 2012 10:42:36 GMT
+&lt; Content-Type: application/json
+&lt; Content-Length: 155
+&lt;
+* Connection #0 to host 127.0.0.1 left intact
+{&quot;keys&quot;:[&quot;machine_learning_in_action&quot;,&quot;erlang_otp_in_action&quot;,&quot;programming_erlang&quot;,&quot;well_grounded_rubyist&quot;,&quot;practical_common_lisp&quot;,&quot;javascript_good_parts&quot;]}
+* Closing connection #0</code></pre>
+<pre><code>phoenix$ curl -v -X DELETE http://127.0.0.1:8098/riak/books/erlang_otp_in_action
+...
+&lt; HTTP/1.1 204 No Content
+&lt; Vary: Accept-Encoding
+...</code></pre>
+</section>
+<section id="map_reduce" class="slide">
+<h2 id="map-reduce-1">Map Reduce</h2>
+<textarea id="code" name="code" class="code" mode="ruby" style="display: none;">
+require ‘riak’ # do connection stuff here. results = Riak::MapReduce.new(client).add(“books”). map(“function(v) { var results = []; var book = JSON.parse(v.values[0].data); if (book.author == ‘Joe Armstrong’) { results.push(book); } return results; }”, :keep =&gt; true).run puts results {“title”=&gt;“Programming Erlang: Software for a Concurrent World”, “author”=&gt;“Joe Armstrong”, “summary”=&gt;“Erlang solves one of the most pressing problems facing developers today.”} {“title”=&gt;“Things Joe Says”, “author”=&gt;“Joe Armstrong”, “summary”=&gt;“Collection of quotes from Joe’s talks, like Erlang is the most OO language.”}
+</textarea>
+</section>
+<section id="good-riak" class="slide">
+<h2 id="good-riak">Good Riak</h2>
+<ul>
+<li>Masterless, all nodes are equal</li>
+<li>Read / Write performance scales with nodes</li>
+<li>Replication and Sharding are transparent</li>
+<li>Administration is simple</li>
+<li>Store whatever you want, json/bson, text, images, binaries …</li>
+</ul>
+</section>
+<section id="bad-riak" class="slide">
+<h2 id="bad-riak">Bad Riak</h2>
+<ul>
+<li>Data modeling requires more forward planning</li>
+<li>Requires &gt; 2 nodes to see benefits</li>
+<li>Data safety is the default</li>
+<li>Query interface, map reduce gets old</li>
+<li>Map Reduce query tools</li>
+</ul>
+</section>
+<section id="else" class="slide">
+<h2 id="what-else">What else?</h2>
+<ul>
+<li>Full Text Search</li>
+<li>Commit hooks, invoke code before or after save</li>
+<li>Secondary indexes</li>
+<li>Luwak, store large binaries</li>
+<li>riak_core, github.com/basho/riak_core</li>
+<li>riak_mongo, github.com/pavlobaron/riak_mongo</li>
+</ul>
+</section>
+<section id="add-node-demo" class="slide">
+<h2 id="demo">Demo</h2>
+<ul>
+<li>Change the node name in vm.args</li>
+<li>Change HTTP and PB ports in app.config</li>
+<li>Startup node</li>
+<li>Add node to cluster riak-admin join riak@cluster-node</li>
+</ul>
+<p>What’s happening?</p>
+</section>
+<section id="resources" class="slide">
+<h2 id="resources">Resources</h2>
+<ul>
+<li><a href="http://wiki.basho.com/Riak.html">http://wiki.basho.com/Riak.html</a></li>
+<li><a href="www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf">Dynamo: Amazon’s Highly Available Key-value Store</a></li>
+<li><a href="http://en.wikipedia.org/wiki/CAP_theorem">http://en.wikipedia.org/wiki/CAP_theorem</a></li>
+<li><a href="https://github.com/seancribbs/ripple">https://github.com/seancribbs/ripple</a></li>
+<li><a href="http://wiki.basho.com/Client-Libraries.html">http://wiki.basho.com/Client-Libraries.html</a></li>
+<li>Seven Databases in Seven Weeks by Eric Redmond and Jim R. Wilson</li>
+<li>The Riak Handbook by Mathias Meyer</li>
+</ul>
+</section>
+<p><!-- deck.navigation snippet --> <a href="#" class="deck-prev-link" title="Previous">←</a> <a href="#" class="deck-next-link" title="Next">→</a> <!-- deck.status snippet --></p>
+<p><span class="deck-status-current"></span> / <span class="deck-status-total"></span></p>
+<p><!-- deck.goto snippet --></p>
+<form action="." method="get" class="goto-form">
+<p><label for="goto-slide">Go to slide:</label> <input type="text" name="slidenum" id="goto-slide" list="goto-datalist"> <datalist id="goto-datalist"></datalist> <input type="submit" value="Go"></p>
+</form>
+<p><!-- deck.hash snippet --> <a href="." class="deck-permalink" title="Permalink to this slide">#</a> <!-- Grab CDN jQuery, with a protocol relative URL; fall back to local if offline --></p>
+<script>window.jQuery || document.write('<script src="jquery-1.7.min.js"><\/script>')</script>
+<p><!-- Deck Core and extensions --></p>
+<script src="../../roro-2012-riak/core/deck.core.js"></script>
+<script src="../../roro-2012-riak/extensions/hash/deck.hash.js"></script>
+<script src="../../roro-2012-riak/extensions/menu/deck.menu.js"></script>
+<script src="../../roro-2012-riak/extensions/goto/deck.goto.js"></script>
+<script src="../../roro-2012-riak/extensions/status/deck.status.js"></script>
+<script src="../../roro-2012-riak/extensions/navigation/deck.navigation.js"></script>
+<p><!-- Base codemiror code --></p>
+<script src="../../roro-2012-riak/extensions/codemirror/codemirror.js"></script>
+<p><!-- Syntax highlighting Modes --> <!-- javascript --></p>
+<script src="../../roro-2012-riak/extensions/codemirror/mode/javascript/javascript.js"></script>
+<script src="../../roro-2012-riak/extensions/codemirror/mode/ruby/ruby.js"></script>
+<p><!-- html mode (note html mode requires xml, css and javascript) --></p>
+<script src="../../roro-2012-riak/extensions/codemirror/mode/xml/xml.js"></script>
+<script src="../../roro-2012-riak/extensions/codemirror/mode/css/css.js"></script>
+<script src="../../roro-2012-riak/extensions/codemirror/mode/htmlmixed/htmlmixed.js"></script>
+<p><!-- Plugin code --></p>
+<script src="../../roro-2012-riak/extensions/codemirror/deck.codemirror.js"></script>
+<p><!-- Initialize the deck --></p>
+<script>
+$(function() {
+	$.deck('.slide');
+});
+</script>
+        </div>
+        <div id="footer">
+            Site proudly generated by
+            <a href="http://jaspervdj.be/hakyll">Hakyll</a>
+        </div>
+    </body>
+</html>

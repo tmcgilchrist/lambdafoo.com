@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>My Hakyll Blog - NetBSD 5.0 On An AspireOne 110L</title>
+        <link rel="stylesheet" type="text/css" href="../css/default.css" />
+        <link rel="stylesheet" type="text/css" href="../css/screen.css" />
+    </head>
+    <body>
+        <div id="header">
+            <div id="logo">
+                <a href="../">My Hakyll Blog</a>
+            </div>
+            <div id="navigation">
+                <a href="../">Home</a>
+                <a href="../about.html">About</a>
+                <a href="../talks.html">Talks</a>
+                <a href="../archive.html">Archive</a>
+            </div>
+        </div>
+
+        <div id="content">
+            <h1>NetBSD 5.0 On An AspireOne 110L</h1>
+
+            <div class="info">
+    Posted on March 23, 2010
+    
+</div>
+
+<p>After trying Ubuntu Linx on the AspireOne for a few months, I wanted to branch out and try something a bit different. Linux is so main stream theses days, I only had to mess around with the wireless. Far too easy. Why back in my day we entered our X11 config on punchcards!!!</p>
+<p>Anyway, my options were either OpenBSD or NetBSD.</p>
+<p>I’ve wanted to try OpenBSD on the desktop for ages, but being a bit fresh at the BSDs I decided to go for NetBSD. It was a bit less daunting and there are more online resources for NetBSD. But there is still something about OpenBSD, I’m sure I’ll get around to it soon.</p>
+<p>So I started off with downloading the ISO images for the latest <a href="http://www.netbsd.org/releases/formal-5/NetBSD-5.0.html">NetBSD</a> release 5.0. The latest release of NetBSD includes improved ACPI support and the <strong>ath(4)</strong> wireless is (apparently) supported. Plus all the other goodies mentioned in the release notes.</p>
+<h2 id="netbsd-install">NetBSD Install</h2>
+<p>NetBSD has a basic terminal based installer, anyone with some Unix experience should be comfortable and even without any experience, just reading the <a href="http://www.netbsd.org/docs/guide/en/index.html">installer</a> guide should get you a working system.</p>
+<p>My AspireOne 110L came with:</p>
+<ul>
+<li>Intel Atom 270 (1.6Ghz)</li>
+<li>1.5Gb RAM (upgraded from the base 512MB)</li>
+<li>8Gb SSD, and</li>
+<li>8.9&quot;screen @ 1024x600</li>
+</ul>
+<p>No CD drive meant that I needed a bootable USB drive. I followed these <a href="http://wiki.netbsd.se/How_to_install_NetBSD_from_an_USB_Memory_Stick">basic guidelines</a>. Since this page was written for 4.0 some of the steps are different.</p>
+<p>Step 7. change the url from</p>
+<pre><code>ftp -a ftp://ftp.netbsd.org/pub/NetBSD/iso/4.0.1/i386cd-4.0.1.iso</code></pre>
+<p>to</p>
+<pre><code>http://ftp.netbsd.org/pub/NetBSD/iso/5.0/i386cd-5.0.iso</code></pre>
+<p>At Step 9 change it to look like this:</p>
+<pre><code>mount /dev/sd0a /stick
+cp /image/i386/binary/kernel/netbsd-FLOPPY.gz /stick/netbsd.gz
+cp -R /image/i386/binary/sets /stick/sets
+umount /stick
+rmdir /stick</code></pre>
+<p>I’m not sure I used the correct kernel here, the name suggests a bootable floppy kernel rather than the normal install kernel. I tried the netbsd-GENERIC.tgz but it started looking for things like “init” and “/etc/rc” which didn’t seem right so I went back to the other kernel.</p>
+<p>After I had the bootable USB setup correctly I rebooted the Aspire and started the install. Initially I tried following the instructions on installing from the <em>sets</em> copied onto the USB stick but the installer couldn’t find them. So In the end I went for the HTTP install (<a href="http://www.netbsd.org/docs/guide/en/chap-exinst.html#inst-medium">Figure 3.20</a> from the Install Guide), a few hours later the installed finished. Rebooting the system brought this greeting:</p>
+<pre><code>Last login: Mon May 18 22:09:59 2009 from 172.17.0.10
+NetBSD 5.0 (GENERIC) #0: Sat May 16 18:00:22 EST 2009
+Welcome to NetBSD!
+micro$</code></pre>
+<p>After poking around for a bit the 2 main outstanding issues are: X11 Setup and Wireless.</p>
+<h2 id="x11-setup">X11 Setup</h2>
+<p>Here the NetBSD docs are really lacking, they still explain how to configure XFree86 which is a complete pain. Instead NetBSD is shipping with Xorg, providing a vastly superior configuration experience.</p>
+<p>Simply run <strong>X -configure</strong> as root. Nice!</p>
+<p>It’ll dump an <strong>xorg.conf.new</strong> in root’s home directory.</p>
+<p>To test the server with this file, run <strong>X -config /root/xorg.conf.new</strong>.</p>
+<p>And if you’re happy with it copy it over to <strong>/etc/X11/xorg.conf</strong>.</p>
+<h2 id="wireless">Wireless</h2>
+<p>The <strong>ath(4)</strong> driver doesn’t attach correctly with the default GENERIC kernel, so some customisation is required. Apply this patch:</p>
+<pre><code>ftp://ftp.netbsd.org/pub/NetBSD/misc/jmcneill/old/atheee.patch</code></pre>
+<p>Recompile the GENERIC kernel and reboot.</p>
+<p>All the steps are documented here:</p>
+<p><a href="http://www.netbsd.org/docs/guide/en/chap-tuning.html#tuning-kernel-prepare">http://www.netbsd.org/docs/guide/en/chap-tuning.html#tuning-kernel-prepare</a></p>
+<p>After a reboot it’s recognised:</p>
+<pre><code> ath0 at pci3 dev 0 function 0
+ ath0: interrupting at ioapic0 pin 18
+ ath0: 11b rates: 1Mbps 2Mbps 5.5Mbps 11Mbps
+ ath0: 11g rates: 1Mbps 2Mbps 5.5Mbps 11Mbps 6Mbps 9Mbps 12Mbps 18Mbps 24Mbps 36Mbps 48Mbps 54Mbps</code></pre>
+<h2 id="things-to-fix-up">Things to fix up</h2>
+<p>Installing NetBSD and getting productive certainly isn’t the seamless process that Ubuntu was. So there are a few minor things that need a bit of fixing.</p>
+<ul>
+<li>Wireless on WPA2: Linux worked on this so I’m sure NetBSD can.</li>
+<li>Booting straight into X: It’s in the docs so it won’t be hard.</li>
+<li>Installing a decent WindowManager: XMonad here we come :-)</li>
+</ul>
+<h3 id="resources">Resources:</h3>
+<ul>
+<li><a href="http://wiki.netbsd.se/Acer_Aspire_one">http://wiki.netbsd.se/Acer_Aspire_one</a></li>
+<li><a href="http://www.netbsd.org/docs/guide/en/">http://www.netbsd.org/docs/guide/en/</a></li>
+<li><a href="http://mail-index.netbsd.org/current-users/2008/08/21/msg004079.html">http://mail-index.netbsd.org/current-users/2008/08/21/msg004079.html</a></li>
+</ul>
+
+        </div>
+        <div id="footer">
+            Site proudly generated by
+            <a href="http://jaspervdj.be/hakyll">Hakyll</a>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>My Hakyll Blog - YARB: Yet Another Ring Benchmark, Part I</title>
+        <link rel="stylesheet" type="text/css" href="../css/default.css" />
+        <link rel="stylesheet" type="text/css" href="../css/screen.css" />
+    </head>
+    <body>
+        <div id="header">
+            <div id="logo">
+                <a href="../">My Hakyll Blog</a>
+            </div>
+            <div id="navigation">
+                <a href="../">Home</a>
+                <a href="../about.html">About</a>
+                <a href="../talks.html">Talks</a>
+                <a href="../archive.html">Archive</a>
+            </div>
+        </div>
+
+        <div id="content">
+            <h1>YARB: Yet Another Ring Benchmark, Part I</h1>
+
+            <div class="info">
+    Posted on March 21, 2009
+    
+</div>
+
+<p>In Joe Armstrong’s excellent Erlang book he has an exercise to:</p>
+<pre><code>Write a ring benchmark. Create N processes in a ring. Send a message round the
+ring M times so that a total or N*M messages get sent. Time how long it takes
+for different values of N and M. Write a similar program in some other language
+you are familar with. Compare the results. Write a blog and public the results
+on the Internet!</code></pre>
+<p>So far I’ve done the Erlang section of this. It turns out to be pretty straight forward in Erlang, not surprisingly. If it was difficult it wouldn’t be a great example now would it.</p>
+<p>So lets see how it’s done.</p>
+<p>{% codeblock lang:erlang %} -module(ring). -compile(export_all). -import(lists, [foreach/2, map/2, reverse/1]).</p>
+<p>main([A,B]) -&gt; N = list_to_integer(A), M = list_to_integer(B), io:format(“~w: ~w processes with ~w messages”, [self(), N, M]),</p>
+<p>{% endcodeblock %}</p>
+<p>This section simply reads in the command-line arguments and uses <strong>list_to_integer()</strong> to convert them into numbers.</p>
+<p>{% codeblock lang:erlang %}</p>
+<p>[First|_] = Pids = for(1, N, fun() -&gt; spawn(fun() -&gt; loop() end) end), setupLoop(Pids),</p>
+<p>{% endcodeblock %}</p>
+<p>Next we spawn the required number of threads and setup the loop, so that each thread knows the PID of the next thread in the loop.</p>
+<p>{% codeblock lang:erlang %}</p>
+<p>sendMsgs(M, First), % Cleanup!! map(fun(P) -&gt; P ! {exit} end, Pids).</p>
+<p>{% endcodeblock %}</p>
+<p>SengMsgs does the work of sending messages around the loop. It starts with sending a <strong>{relay}</strong> message to the first thread in the loop and waits for a reply from the last thread in the loop. When it receives a message from the last thread, it decrements the message count and sends another <strong>{relay}</strong> message. Continuing until the message count reaches 0.</p>
+<p>{% codeblock lang:erlang %}</p>
+<p>sendMsgs(0, First) -&gt; First ! {relay}, receive {relay} -&gt; io:format(“~w: Finished ~w loops.~n”, [self(), 0]) end; sendMsgs(N, First) -&gt; First ! {relay}, receive {relay} -&gt; sendMsgs(N-1, First) end.</p>
+<p>{% endcodeblock %}</p>
+<p>To setup the loop, we take the first 2 PIDs sending the second PID to the first as a message indicating that it’s the next thread in the loop. When we get down to the last PID, the next thread is the main thread.</p>
+<p>The second language to compare against, needs to be something with a similar threading model with support for something similar to message passing. I’m looking at doing it with either Haskell or Lisp but I haven’t worked out how to do the message passing just yet. It’ll have to wait for PartII.</p>
+<p>Hope this helps someone, and please ask questions if my explaination isn’t clear.</p>
+<p>Full source code follows, simply copy the code and place into a file called <strong>ring.erl</strong>. Compile using this command <strong>erlc ring.erl</strong> and run the resulting program like so</p>
+<pre><code>erl -noshell -run ring main 1 2 -run init stop</code></pre>
+<p>{% codeblock lang:erlang %}</p>
+<p>-module(ring). -compile(export_all). -import(lists, [foreach/2, map/2, reverse/1]).</p>
+<p>%%% Write a ring benchmark. Create N processes in a ring. Send a %%% message round the ring M times so that a total of N*M messages %%% get sent. Time how long this takes for different values of N and M.</p>
+<p>%%% Write a similar program in some other language you are familar with. %%% Compare the results. Write a blog, and publish the results on the Internet! %%% Compile: “erlc ring.erl” Run: “erl -noshell -run ring main 1 2 -run init stop” main([A,B]) -&gt; N = list_to_integer(A), M = list_to_integer(B), io:format(“~w: ~w processes with ~w messages”, [self(), N, M]), % Spawn ‘N’ processes and link them together. [First|_] = Pids = for(1, N, fun() -&gt; spawn(fun() -&gt; loop() end) end), setupLoop(Pids),</p>
+<pre><code>% Start sending messages.
+sendMsgs(M, First),
+
+% Cleanup!!
+map(fun(P) -&gt; P ! {exit} end, Pids).</code></pre>
+<p>setupLoop([P]) -&gt; P ! {next, self()}; setupLoop([P1,P2|Rest]) -&gt; P1 ! {next, P2}, setupLoop([P2|Rest]).</p>
+<p>sendMsgs(0, First) -&gt; First ! {relay}, receive {relay} -&gt; io:format(“~w: Finished ~w loops.~n”, [self(), 0]) end; sendMsgs(N, First) -&gt; First ! {relay}, receive {relay} -&gt; sendMsgs(N-1, First) end.</p>
+<p>loop() -&gt; io:format(“~w: Starting node<sub>w</sub>n”, [self(), self()]), receive {next, Pid} -&gt; loop(Pid); {exit} -&gt; io:format(“~w: Exiting now! ~n”, [self()]) end.</p>
+<p>loop(Pid) -&gt; receive {relay} -&gt; Pid ! {relay}, loop(Pid); {exit} -&gt; io:format(“~w: Exiting now!~n”, [self()]) end.</p>
+<p>for(N, N, F) -&gt; [F()]; for(I, N, F) -&gt; [F() | for (I+1, N, F)].</p>
+<p>{% endcodeblock %}</p>
+
+        </div>
+        <div id="footer">
+            Site proudly generated by
+            <a href="http://jaspervdj.be/hakyll">Hakyll</a>
+        </div>
+    </body>
+</html>
