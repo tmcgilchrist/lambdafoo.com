@@ -1,3 +1,5 @@
+dist/
+dist-newstyle/
 .bundle
 .DS_Store
 .sass-cache
