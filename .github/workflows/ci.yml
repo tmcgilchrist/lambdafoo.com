@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        cabal: ["3.2"]
+        cabal: ["3.2.0.0"]
         ghc: ["8.4.4"]
     env:
       CONFIG: "--enable-tests --enable-benchmarks"
