@@ -14,8 +14,6 @@ jobs:
       matrix:
         cabal: ["3.2.0.0"]
         ghc: ["8.10.3"]
-    env:
-      CONFIG: "--enable-tests --enable-benchmarks"
     steps:
       - uses: actions/checkout@v2
       - uses: haskell/actions/setup@v1
@@ -23,8 +21,10 @@ jobs:
         with:
           ghc-version: ${{ matrix.ghc }}
           cabal-version: ${{ matrix.cabal }}
-      - run: cabal v2-update
-      - run: cabal v2-freeze $CONFIG
+      - name: Cabal Update
+        run: |
+          cabal v2-update
+          cabal v2-freeze $CONFIG
       - uses: actions/cache@v2
         with:
           path: |
@@ -33,7 +33,15 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.ghc }}-${{ hashFiles('cabal.project.freeze') }}
           restore-keys: |
             ${{ runner.os }}-${{ matrix.ghc }}-
-      - run: cabal v2-build $CONFIG
-      # - run: cabal v2-test $CONFIG
-      # - run: cabal v2-haddock $CONFIG
-      - run: cabal v2-sdist
+      - name: Build Site
+        run: |
+          cabal v2-build $CONFIG
+          cabal exec site build
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@3.7.1
+        if: github.ref == 'refs/heads/master'
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages # The branch the action should deploy to.
+          FOLDER: _site # The folder the action should deploy.
+          CLEAN: true # Automatically remove deleted files from the deploy branch
