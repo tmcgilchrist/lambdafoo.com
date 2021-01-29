@@ -1,9 +1,10 @@
+--------------------------------------------------------------------------------
 {-# LANGUAGE OverloadedStrings #-}
 
 import Data.Monoid (mappend)
 import Hakyll
-import Hakyll.Web.Feed (renderAtom, renderRss)
 
+--------------------------------------------------------------------------------
 main :: IO ()
 main = hakyll $ do
   match "images/*" $ do
@@ -14,11 +15,15 @@ main = hakyll $ do
     route idRoute
     compile compressCssCompiler
 
-  match (fromList ["about.markdown", "talks.markdown"]) $ do
+  match "talks/**/*" $ do
+    route idRoute
+    compile $ copyFileCompiler
+
+  match (fromList ["about.md", "contact.md"]) $ do
     route $ setExtension "html"
     compile $
       pandocCompiler
-        >>= loadAndApplyTemplate "templates/default.html" defaultContext
+        >>= loadAndApplyTemplate "templates/default.html" allContext
         >>= relativizeUrls
 
   match "posts/*" $ do
@@ -26,15 +31,41 @@ main = hakyll $ do
     compile $
       pandocCompiler
         >>= loadAndApplyTemplate "templates/post.html" postCtx
+        -- Used by the RSS/Atom feed
+        >>= saveSnapshot "content"
         >>= loadAndApplyTemplate "templates/default.html" postCtx
         >>= relativizeUrls
 
-  -- TODO Support serving plain HTML
-  -- match "talks/lambda-jam-2016-performance/*" $ do
+  match "pages/*" $ do
+    route $ setExtension "html"
+    compile $
+      pandocCompiler
+        >>= loadAndApplyTemplate "templates/page.html" postCtx
+        >>= loadAndApplyTemplate "templates/default.html" postCtx
+        >>= relativizeUrls
+
+  -- match "bib/*.md" $ do
   --   route $ setExtension "html"
   --   compile $
   --     pandocCompiler
+  --       >>= loadAndApplyTemplate "templates/page.html" postCtx
+  --       >>= loadAndApplyTemplate "templates/default.html" postCtx
   --       >>= relativizeUrls
+
+  -- match "bib/*.bib" $ do
+  --   route idRoute
+  --   compile copyFileCompiler
+
+  -- http://jaspervdj.be/hakyll/tutorials/05-snapshots-feeds.html
+  let rss name render' =
+        create [name] $ do
+          route idRoute
+          compile $ do
+            let feedCtx = mconcat [bodyField "description", postCtx] -- description must be prepended for some reason
+            posts <- fmap (take 10) . recentFirst =<< loadAllSnapshots "posts/*" "content"
+            render' feedConfiguration feedCtx posts
+
+  rss "atom.xml" renderAtom
 
   create ["archive.html"] $ do
     route idRoute
@@ -43,7 +74,7 @@ main = hakyll $ do
       let archiveCtx =
             listField "posts" postCtx (return posts)
               `mappend` constField "title" "Archives"
-              `mappend` defaultContext
+              `mappend` allContext
 
       makeItem ""
         >>= loadAndApplyTemplate "templates/archive.html" archiveCtx
@@ -53,35 +84,49 @@ main = hakyll $ do
   match "index.html" $ do
     route idRoute
     compile $ do
-      posts <- fmap (take 5) . recentFirst =<< loadAll "posts/*"
+      posts <- fmap (take 10) . recentFirst =<< loadAll "posts/*"
       let indexCtx =
             listField "posts" postCtx (return posts)
               `mappend` constField "title" "Home"
-              `mappend` defaultContext
+              `mappend` allContext
 
       getResourceBody
         >>= applyAsTemplate indexCtx
         >>= loadAndApplyTemplate "templates/default.html" indexCtx
         >>= relativizeUrls
 
-  -- Render atom / rss feeds
-  create ["atom.xml"] $ do
-    route idRoute
-    compile $ do
-      posts <- fmap (take 10) . recentFirst =<< loadAll "posts/*"
-      renderAtom feedConfiguration postCtx posts
+  -- TODO Create a sitemap.xml
+  -- create ["sitemap.xml"] $ do
+  --   route idRoute
+  --   compile $ do
+  --     -- load and sort the posts
+  --     posts <- recentFirst =<< loadAll "posts/*"
 
-  create ["rss.xml"] $ do
-    route idRoute
-    compile $ do
-      posts <- fmap (take 10) . recentFirst =<< loadAll "posts/*"
-      renderRss feedConfiguration postCtx posts
+  --     -- load individual pages from a list (globs DO NOT work here)
+  --     singlePages <- loadAll (fromList ["about.rst", "contact.markdown"])
+
+  --     -- mappend the posts and singlePages together
+  --     let pages = posts <> singlePages
+
+  --         -- create the `pages` field with the postCtx
+  --         -- and return the `pages` value for it
+  --         sitemapCtx = listField "pages" postCtx (return pages)
+
+  --     -- make the item and apply our sitemap template
+  --     makeItem ""
+  --       >>= loadAndApplyTemplate "templates/sitemap.xml" sitemapCtx
 
   match "templates/*" $ compile templateCompiler
 
+--------------------------------------------------------------------------------
 postCtx :: Context String
 postCtx =
-  dateField "date" "%B %e, %Y"
+  allContext
+
+allContext =
+  field "siteTitle" (\_ -> return "Tim McGilchrist")
+    `mappend` field "baseurl" (\_ -> return "")
+    `mappend` dateField "date" "%B %e, %Y"
     `mappend` defaultContext
 
 feedConfiguration :: FeedConfiguration

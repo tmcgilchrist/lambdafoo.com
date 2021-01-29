@@ -1,36 +1,104 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>My Hakyll Blog - On EitherT</title>
-        <link rel="stylesheet" type="text/css" href="../css/default.css" />
-        <link rel="stylesheet" type="text/css" href="../css/screen.css" />
-    </head>
-    <body>
-        <div id="header">
-            <div id="logo">
-                <a href="../">My Hakyll Blog</a>
-            </div>
-            <div id="navigation">
-                <a href="../">Home</a>
-                <a href="../about.html">About</a>
-                <a href="../talks.html">Talks</a>
-                <a href="../archive.html">Archive</a>
-            </div>
-        </div>
 
-        <div id="content">
-            <h1>On EitherT</h1>
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
-            <div class="info">
-    Posted on June 22, 2018
-    
-        by Tim McGilchrist
-    
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+      
+        On EitherT &middot; Tim McGilchrist
+      
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="../css/poole.css">
+  <link rel="stylesheet" href="../css/syntax.css">
+  <link rel="stylesheet" href="../css/lanyon.css">
+  <link rel="stylesheet" href="../css/book.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="../images/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="../atom.xml">
+
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+
+  <div class="sidebar-item">
+    <img src="../images/tim-movember-2009.jpg" />
+    <p>Tim McGilchrist</p>
+    <p>Software Engineer at Digital Asset in Sydney</p>
+
+    <p>
+      Twitter: <a href="https://twitter.com/lambda_foo">@lambda_foo</a><br>
+      Github: <a href="https://github.com/tmcgilchrist">tmcgilchrist</a><br>
+      Email: <a href="mailto:timmcgil@gmail.com">timmcgil@gmail.com</a><br>
+      LinkedIn: <a href="https://www.linkedin.com/in/timmcgilchrist">Tim McGilchrist</a>
+    </p>
+
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="../">
+      Blog
+    </a>
+    <a class="sidebar-nav-item" href="../about">
+      About
+    </a>
+    <a class="sidebar-nav-item" href="../talks">
+      Talks
+    </a>
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; Tim McGilchrist 2007-2021
+    </p>
+  </div>
 </div>
 
-<p>In choosing Haskell as a language you sign up for a certain class of features and behaviours. e.g. lazy evaluation, static typing</p>
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="../" title="Home">Tim McGilchrist</a>
+            
+            <span class="masthead-links">
+              <a href="../">Blog</a> |
+              <a href="../pages/about.html">About</a> |
+              <a href="../archive.html">Archive</a> |
+              <a href="../pages/talks.html">Talks</a>
+            </span>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">On EitherT</h1>
+  <span class="post-date">June 22, 2018</span>
+  <p>In choosing Haskell as a language you sign up for a certain class of features and behaviours. e.g. lazy evaluation, static typing</p>
 <p>This gives you a general point in the design space for general purpose languages but like all languages you are still left with a number of choices in building software. These choices are broad, diverse and hotly debated, sometimes they get labelled with <strong>Best Practices</strong> or the <strong>Right way</strong>. Like any good engineer you should recognise that everything involves trade-offs and that these labels are trying to hide that. There is not always one best way, an approach has positives and negatives. Knowing those trade offs and deliberately choosing an approach based off them is good engineering.</p>
 <p>In programming language communities there are always bikeshedding arguments and Haskell is no different. I want to call out a particular point of view around using exceptions vs data types in Haskell when dealing with <em>errors</em>. Both are valid design points in a wider error handling design space. The exception path is widely associated with Snoyman, who has written much software and written extensively about this in <a href="https://www.fpcomplete.com/blog/2016/11/exceptions-best-practices-haskell">Exceptions Best Practices in Haskell</a> and in the <a href="http://hackage.haskell.org/package/safe-exceptions">Safe Exceptions</a> package.</p>
 <p>I’d like to highlight the negatives, as I see them, of that approach and suggest a different set of trade offs around modelling <em>errors</em> as data types using EitherT/ExceptT.</p>
@@ -174,11 +242,29 @@
 <li><a href="https://discuss.ocaml.org/t/specific-reason-for-not-embracing-the-use-of-exceptions-for-error-propagation/1666/15">Yaron’s Thoughts</a></li>
 <li><a href="https://www.well-typed.com/blog/2015/07/checked-exceptions/">Checked Exceptions</a></li>
 </ol>
+</div>
 
-        </div>
-        <div id="footer">
-            Site proudly generated by
-            <a href="http://jaspervdj.be/hakyll">Hakyll</a>
-        </div>
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
     </body>
 </html>

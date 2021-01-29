@@ -15,7 +15,155 @@
     <id>https://lambdafoo.com/posts/2018-06-22-transformers-either.html</id>
     <published>2018-06-22T00:00:00Z</published>
     <updated>2018-06-22T00:00:00Z</updated>
-    <summary type="html"><![CDATA[Thoughts on Haskell error handling and using EitherT.]]></summary>
+    <summary type="html"><![CDATA[<div class="post">
+  <h1 class="post-title">On EitherT</h1>
+  <span class="post-date">June 22, 2018</span>
+  <p>In choosing Haskell as a language you sign up for a certain class of features and behaviours. e.g. lazy evaluation, static typing</p>
+<p>This gives you a general point in the design space for general purpose languages but like all languages you are still left with a number of choices in building software. These choices are broad, diverse and hotly debated, sometimes they get labelled with <strong>Best Practices</strong> or the <strong>Right way</strong>. Like any good engineer you should recognise that everything involves trade-offs and that these labels are trying to hide that. There is not always one best way, an approach has positives and negatives. Knowing those trade offs and deliberately choosing an approach based off them is good engineering.</p>
+<p>In programming language communities there are always bikeshedding arguments and Haskell is no different. I want to call out a particular point of view around using exceptions vs data types in Haskell when dealing with <em>errors</em>. Both are valid design points in a wider error handling design space. The exception path is widely associated with Snoyman, who has written much software and written extensively about this in <a href="https://www.fpcomplete.com/blog/2016/11/exceptions-best-practices-haskell">Exceptions Best Practices in Haskell</a> and in the <a href="http://hackage.haskell.org/package/safe-exceptions">Safe Exceptions</a> package.</p>
+<p>I’d like to highlight the negatives, as I see them, of that approach and suggest a different set of trade offs around modelling <em>errors</em> as data types using EitherT/ExceptT.</p>
+<p>EitherT is a Monad Transformer built on the familar Either data type.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="kw">data</span> <span class="dt">Either</span> a b</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a>  <span class="ot">=</span> <span class="dt">Left</span> a</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a>  <span class="op">|</span> <span class="dt">Right</span> b</span></code></pre></div>
+<p>where typically <code>Left</code> represents some failure case in this context and <code>Right</code> represents success. Another formulation from OCaml community is:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="kw">type</span> (&#39;a,&#39;b) result</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a>  = Ok <span class="kw">of</span> &#39;a</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a>  | Error <span class="kw">of</span> &#39;b</span></code></pre></div>
+<p>which is more explicit about what the two constructors represent.</p>
+<h2 id="async-exceptions">Async Exceptions</h2>
+<p>Back in the beginning, actually in 2000/01, asynchronous exceptions were added to Haskell. [2] Quoting Simon Marlow:</p>
+<blockquote>
+<p>Basically it comes down to this: if we want to be able to interrupt purely functional code, asynchronous exceptions are the only way, because polling would be a side-effect.</p>
+</blockquote>
+<p>So Haskell has async exceptions whether you like them or not, the ship has sailed. This means that any code in <code>IO</code> can throw a runtime exception, further any thread can receive an async exception.</p>
+<p>So, how should we best deal with this reality and structure our code?</p>
+<h2 id="exceptions">Exceptions</h2>
+<p>We have exceptions; lets use them.</p>
+<p>To start doing that you need to define your own custom exception type.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="kw">data</span> <span class="dt">VapourError</span> <span class="ot">=</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a>    <span class="dt">InsufficientFunds</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a>  <span class="op">|</span> <span class="dt">ItemUnavailable</span> <span class="dt">Text</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a>  <span class="op">|</span> <span class="dt">MachineMalfunction</span> <span class="dt">Text</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a>  <span class="kw">deriving</span> <span class="dt">Typeable</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a><span class="co">-- Write a reasonable Show instance for each error</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true"></a><span class="kw">instance</span> <span class="dt">Show</span> <span class="dt">VapourError</span> <span class="kw">where</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true"></a>  <span class="fu">show</span> a <span class="ot">=</span> <span class="kw">case</span> a <span class="kw">of</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true"></a>    <span class="dt">InsufficientFunds</span> <span class="ot">-&gt;</span> <span class="st">&quot;Insufficient funds.&quot;</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true"></a>    <span class="dt">ItemUnavailable</span> i <span class="ot">-&gt;</span> <span class="st">&quot;Item &quot;</span> <span class="op">++</span> i <span class="op">++</span> <span class="st">&quot; unavailable.&quot;</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true"></a>    <span class="dt">MachineMalfunction</span> e <span class="ot">-&gt;</span> <span class="st">&quot;Hardware malfunction &quot;</span> <span class="op">++</span> e <span class="op">++</span> <span class="st">&quot;.&quot;</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true"></a><span class="kw">instance</span> <span class="dt">Exception</span> <span class="dt">VapourError</span></span></code></pre></div>
+<p>The three steps we need are:</p>
+<ol type="1">
+<li>Build the custom error type as a data type</li>
+<li>Provide a show instance, this could be generated but your error messages would not be great.</li>
+<li>Make your custom error an instance of <code>Exception</code></li>
+</ol>
+<p>At this point you can use <code>throw</code>, <code>catch</code> and <code>handle</code> with your custom error type.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="ot">runVendingMachine ::</span> <span class="dt">VendingMachineState</span> <span class="ot">-&gt;</span> <span class="dt">Coin</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a>                   <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">Product</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a>runVendingMachine state coin <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a>  unless (coin <span class="op">&gt;</span> <span class="dv">0</span>) <span class="op">$</span> throw <span class="dt">InsufficientFunds</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a>  dispenseItem state coin</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true"></a><span class="ot">dispenseItem ::</span> <span class="dt">VendingMachineState</span> <span class="ot">-&gt;</span> <span class="dt">Coin</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true"></a>             <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">VendingMachineState</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true"></a>dispenseItem <span class="ot">=</span> <span class="op">....</span></span></code></pre></div>
+<p>Looking at the signature of <code>runVendingMachine</code> you can see that it returns a <code>Product</code> by running a computation in <code>IO</code>. The problem you have when looking at that code is the signature doesn’t give you any indication that it might fail outside of the <code>IO</code> which we saw earlier can fail with anything. So as a consumer of this function, how are you to know what exceptions to catch. Your options are:</p>
+<ul>
+<li>Catch all exceptions - clearly dangerous and wrong</li>
+<li>Catch a subset of exceptions - better but tricky to do correctly</li>
+</ul>
+<p>The first option is dangerous as catching all exceptions includes asynchronous exceptions like stack/heap overflow, thread killed and user interrupt. The documentation in <code>safe-exception</code> is particularly helpful here and I recommend you read it thoroughly, it is well written. The short version is you should only catch certain exceptions, trying to handle <code>StackOverflow</code>, <code>HeapOverflow</code> and <code>ThreadKilled</code> exceptions could cause your program to crash or behave in unexpected ways.</p>
+<p>The second option is error prone. The process for finding the possible exceptions involves reading the source code and reading the haddock docs, with the goal of finding the set of sensible exceptions you need to put into a <code>catch</code> or <code>handle</code> call. Have you found all the places an exception might be thrown? What about if you pull in a new dependency, does it throw exceptions? What about a sub-dependency of a dependency?</p>
+<p>What about the functions <code>runVendingMachine</code> calls? And their functions? To me it feels like going back to Javascript or Ruby land and giving up on some of the benefits of a typed language. I want the types to help me find the places I need to consider the errors, just like pattern matching does for data types.</p>
+<p>The other less obvious (perhaps) issue is that you force the consumers of your function to know all the gory details of exceptions in Haskell, which ones are safe to catch and what to do. Getting this right is hard and tricky, and really belongs in a library so that it can be written one and reused.</p>
+<p>Finally the behaviour of a Haskell system in production is such that throwing an exception would yield you exactly what the show instance for <code>VapourError</code> is. It wouldn’t give you a classic stack trace (unless you set that up) so you loose context where the exception was raised and what was happening around it. At a previous workplace we spend many weeks tracking down SSL and connection reset exceptions that occured in a base library but bubbled out through multiple layers of application code. It wasn’t fun.</p>
+<p>This style is perfect for a quick script to munge some data, or an ICFP programming contest</p>
+<p>If you really need exceptions, use <code>bracket</code> pattern or <code>safe-exceptions</code> like library. Keep the complexity contained and code needs to be written <em>very</em> carefully.</p>
+<h2 id="data-types">Data Types</h2>
+<p>We mentioned data types earlier, using data types to model your computation is the natural approach in Haskell. You build a data type that accurately reflects the data or states that you want to model. We even did it for the custom <code>VapourError</code> type earlier.</p>
+<p>Extending that we will use a particular data type <code>EitherT</code> to model errors. This is a <code>monad transformer</code> with an <code>Either</code> where the monad could be anything.</p>
+<p>In context it would look something like:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="ot">crankHandle ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">EitherT</span> <span class="dt">VapourError</span> <span class="dt">IO</span> <span class="dt">Product</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a><span class="co">-- or</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a><span class="ot">crankHandle ::</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">EitherT</span> <span class="dt">VapourError</span> m <span class="dt">Product</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a><span class="co">-- or</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true"></a><span class="ot">crankHandle ::</span> <span class="dt">MonadIO</span> m <span class="ot">=&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">EitherT</span> <span class="dt">VapourError</span> m <span class="dt">Product</span></span></code></pre></div>
+<p>The type of our error is present in the type of our function, a familar situation. If the monad <code>m</code> isn’t IO then we have a good degree of confidence that none of the base <code>exceptions</code> will be present.</p>
+<h2 id="solution">Solution</h2>
+<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="pp"># Build a data type that represents the possible error states</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a><span class="kw">data</span> <span class="dt">VapourError</span> <span class="ot">=</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a>    <span class="dt">InsufficientFunds</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a>  <span class="op">|</span> <span class="dt">ItemUnavailable</span> <span class="dt">Text</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true"></a>  <span class="op">|</span> <span class="dt">MachineMalfunction</span> <span class="dt">Text</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true"></a><span class="pp"># Provide a function for turning errors into text</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true"></a><span class="ot">renderVapourError ::</span> <span class="dt">VapourError</span> <span class="ot">-&gt;</span> <span class="dt">Text</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true"></a>renderVapourError <span class="ot">=</span> <span class="op">...</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true"></a><span class="pp"># Usage site</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true"></a><span class="ot">runVendingMachine ::</span> <span class="dt">VendingMachineState</span> <span class="ot">-&gt;</span> <span class="dt">Coin</span> <span class="ot">-&gt;</span> <span class="dt">EitherT</span> <span class="dt">VapourError</span> <span class="dt">IO</span> <span class="dt">Product</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true"></a>runVendingMachine <span class="ot">=</span> <span class="op">...</span></span></code></pre></div>
+<h2 id="either---examples">Either - Examples</h2>
+<p>Examples of substantial pieces of code using <code>EitherT</code> to organise errors.</p>
+<ul>
+<li>mafia - https://github.com/haskell-mafia/mafia/search?utf8=✓&amp;q=EitherT&amp;type=</li>
+<li>boris - https://github.com/markhibberd/boris/search?utf8=✓&amp;q=EitherT&amp;type=</li>
+<li>traction - https://github.com/markhibberd/traction/search?utf8=✓&amp;q=EitherT&amp;type=</li>
+<li>mismi - https://github.com/nhibberd/mismi/search?q=EitherT&amp;type=Code&amp;utf8=✓</li>
+</ul>
+<h2 id="either-advantages">Either Advantages</h2>
+<ul>
+<li>function signatures clearly indicate error states</li>
+<li>exhaustive pattern matching indicates where errors have/have not been handled</li>
+<li>requires explicit composition of error data types</li>
+</ul>
+<p>Basically the compiler helps you handle the various states required using the type system.</p>
+<h2 id="exception---examples">Exception - Examples</h2>
+<p>Example of code using <code>Exceptions</code> to organise errors</p>
+<ul>
+<li>http-client - using non-200 response codes as exceptions</li>
+<li>stack - internally follows an exception style</li>
+</ul>
+<h2 id="exception-disadvantages">Exception Disadvantages</h2>
+<p>The main downsides as I see it to exception oriented code are:</p>
+<ul>
+<li>exception throwing functions compose too easily you are not forced to think about what it means.</li>
+<li>no stack traces by default in Haskell mean you lose context.</li>
+<li>handling exceptions requires knowledge about the internals of dependencies and how they use exceptions.</li>
+</ul>
+<p>Here the compiler is less helpful in guiding you, giving little or no help with handling particular exceptions or giving compile errors for new exceptions that you might need to consider.</p>
+<h2 id="supporting-libraries">Supporting Libraries</h2>
+<p>The supporting libraries for this pattern of error handling are:</p>
+<ul>
+<li>transformers-either - Provides a type alias <code>type EitherT = ExceptT</code> plus addition operators.</li>
+<li>transformers-bifunctor - Provies bifunctors over a monad transformer.</li>
+</ul>
+<p>There is nothing revolutionary about <code>transformers-either</code>, you could roll your own version easily or use the <code>ExceptT</code> transformer provided in the <code>transformers</code> package (adding any helper functions you need). The value codes in a structured, consious handling of errors and using the Haskell compiler to help.</p>
+<h2 id="conclusion">Conclusion</h2>
+<blockquote>
+<p>The primary value of avoiding exceptions is that it makes error behavior explicit in the type of the function. If you’re in an environment where everything might fail, being explicit about it is probably a negative. But if most of your function calls are total, then knowing which ones might fail highlights places where you should consider what the correct behavior is in the case of that failure. Remember that the failure of an individual step in your program doesn’t generally mean the overall failure of your code.</p>
+<p>It’s a little bit like null-handling in languages without options. If everything might be null, well, option types probably don’t help you. But if most of the values you encounter in your program are guaranteed to be there, then tracking which ones might be null be tagging them as options is enormously helpful, since it draws your attention to the cases where it might be there, and so you get an opportunity to think about what the difference really is.</p>
+</blockquote>
+<blockquote>
+<ul>
+<li>Yaron Minsky</li>
+</ul>
+</blockquote>
+<h2 id="references">References</h2>
+<ol type="1">
+<li><a href="https://simonmar.github.io/posts/2017-01-24/asynchronous-exceptions.html">Asynchronous Exceptions in Practice</a></li>
+<li><a href="https://simonmar.github.io/bib/papers/async.pdf">Asynchronous Exceptions in Haskell</a></li>
+<li><a href="https://www.fpcomplete.com/blog/2016/11/exceptions-best-practices-haskell">Exceptions Best Practices in Haskell</a></li>
+<li><a href="https://www.fpcomplete/com/blog/2017/07/the-rio-monad">The RIO Monad</a></li>
+<li><a href="https://discuss.ocaml.org/t/specific-reason-for-not-embracing-the-use-of-exceptions-for-error-propagation/1666/15">Yaron’s Thoughts</a></li>
+<li><a href="https://www.well-typed.com/blog/2015/07/checked-exceptions/">Checked Exceptions</a></li>
+</ol>
+</div>
+]]></summary>
 </entry>
 <entry>
     <title>OCaml FFI bindings</title>
@@ -23,7 +171,59 @@
     <id>https://lambdafoo.com/posts/2015-08-17-ocaml-ffi-bindings.html</id>
     <published>2015-08-17T00:00:00Z</published>
     <updated>2015-08-17T00:00:00Z</updated>
-    <summary type="html"><![CDATA[OCaml FFI bindings]]></summary>
+    <summary type="html"><![CDATA[<div class="post">
+  <h1 class="post-title">OCaml FFI bindings</h1>
+  <span class="post-date">August 17, 2015</span>
+  <p>One thing that always comes up with your favourite language is how do you use libraries written in another language. Typically this involves needing to talk to a particular C library, either because it’s faster than a native one or just that it is already written.</p>
+<p>For OCaml there is the ctypes library for binding to C libraries using pure OCaml. Written by the people at the good people at OCaml Labs <a href="http://ocaml.io">http://ocaml.io</a></p>
+<p>The core of ctypes is a set of combinators for describing the structure of C types – numeric types, arrays, pointers, structs, unions and functions. You can use these combinators to describe the types of the functions that you want to call, then bind directly to those functions – all without writing or generating any C!</p>
+<p>Lets go through a simple example binding to libyaml. Here’s a declaration form libyaml to get the version string.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="co">/**</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="co"> * Get the library version as a string.</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a><span class="co"> *</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a><span class="co"> * </span><span class="an">@returns</span><span class="co"> The function returns the pointer to a static string of the form</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a><span class="co"> * </span><span class="an">@c</span><span class="co"> </span><span class="cv">&quot;X.Y.Z&quot;</span><span class="co">, where </span><span class="an">@c</span><span class="co"> </span><span class="cv">X</span><span class="co"> is the major version number, </span><span class="an">@c</span><span class="co"> </span><span class="cv">Y</span><span class="co"> is a minor version</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a><span class="co"> * number, and </span><span class="an">@c</span><span class="co"> </span><span class="cv">Z</span><span class="co"> is the patch version number.</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a><span class="co"> */</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true"></a>YAML_DECLARE(<span class="dt">const</span> <span class="dt">char</span> *)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true"></a>yaml_get_version_string(<span class="dt">void</span>);</span></code></pre></div>
+<p>To bind to this we need to declare a compatible signature for our OCaml code.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a><span class="kw">open</span> Ctypes</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a><span class="kw">open</span> Foreign</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a><span class="kw">let</span> get_version_string =</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a>  foreign <span class="st">&quot;yaml_get_version_string&quot;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a>    (void @-&gt; returning <span class="dt">string</span>)</span></code></pre></div>
+<p>We’re pulling in Ctypes and Foreign. Then the let binding is using foreign with the name of the c method we want to call plus a type signature for that method.</p>
+<p>Next we need some calling code to print out the version string.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="kw">open</span> Core.Std</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a><span class="kw">let</span> () =</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a>  <span class="kw">let</span> version_string = get_version_string() <span class="kw">in</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a>  printf <span class="st">&quot;Version: %s</span><span class="ch">\n</span><span class="st">&quot;</span> version_string</span></code></pre></div>
+<p>Assuming you’ve got opam installed you can get the dependencies <code>opam install core ctypes</code> and compile the whole thing.</p>
+<pre class="shell"><code>
+&gt; corebuild -pkg ctypes.foreign -lflags -cclib,-lyaml version_string.native
+...
+./version_string.native
+Version: 0.1.6
+</code></pre>
+<p>We’ve got bindings to a native C library without writing any C.</p>
+<p>More complicated example involving passing an allocated string back from C, lets look at the <code>proc_pidpath</code> call from OSX. This particular library call takes a process id (PID) and returns back</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="dt">int</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a>proc_pidpath(<span class="dt">int</span> pid, <span class="dt">void</span> * buffer, <span class="dt">uint32_t</span>  buffersize)</span></code></pre></div>
+<p>To bind to this call we again define a compatible signature.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="kw">let</span> pidpath =</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a>    foreign ~check_errno:<span class="kw">true</span> <span class="st">&quot;proc_pidpath&quot;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a>            (<span class="dt">int</span> @-&gt; ptr <span class="dt">char</span> @-&gt; <span class="dt">int</span> @-&gt; returning <span class="dt">int</span>)</span></code></pre></div>
+<p>The arguments simply mirror those for the C library call, along with a new argument <code>check_errno</code> which indicates the c library sets errno if it encounters a problem.</p>
+<p>http://stackoverflow.com/questions/22651910/returning-a-string-from-a-c-library-to-ocaml-using-ctypes-and-foreign</p>
+<p>Ctypes provides native bindings for most things you’ll need. There’s all sorts of pointers and types matching pretty much every native C type you’ll need <a href="https://github.com/ocamllabs/ocaml-ctypes/blob/master/src/ctypes/ctypes.mli">here</a>.</p>
+</div>
+]]></summary>
 </entry>
 <entry>
     <title>First month of Haskell</title>
@@ -31,7 +231,19 @@
     <id>https://lambdafoo.com/posts/2015-05-20-first-month-of-haskell.html</id>
     <published>2015-05-20T00:00:00Z</published>
     <updated>2015-05-20T00:00:00Z</updated>
-    <summary type="html"><![CDATA[First month of Haskell]]></summary>
+    <summary type="html"><![CDATA[<div class="post">
+  <h1 class="post-title">First month of Haskell</h1>
+  <span class="post-date">May 20, 2015</span>
+  <p>I’ve been excpetionally fortunate in the past month to accomplish a long held goal of mine. As of the 13th of April I’ve been employed full time as a functional programmer. In particular I’ve taken the deepest of dives into Haskell. I thought it might be interesting, at least for me, to write up my thoughts after completing a month of Haskell.</p>
+<p>First the depth of the dive has been overwhelming and the learning curve more equivalent to a vertical rock climb. But the entire time, no matter the exhaustion and believe me there was a lot of that, has been extrodinary. When I take a moment to reflect, I’ve had a smile on my face.</p>
+<p>First thing, the degree to which types are ingrained in Haskell. That might seem surprising in itself, Haskell is afterall a strongly typed langauge and it was surprising to me too. I’ve used Erlang, with dialyzer, and OCaml a great deal before starting, and both these languages have reasonable type systems. Ocaml is even described as strongly typed. So what am I getting at?</p>
+<p>Everything in Haskell feels typed to the nth degree. Every possible abstraction is pulled out into a common place, either Applicatives, Monads, Bimaps or Monad Transformers. Which is great that you can abstract like that. Using any Haskell library will require you to know about some of these things.</p>
+<p>Coming from a background where I’d done Lisp, Erlang and OCaml, and some Haskell I thought I was totally prepared to start working in Haskell full time.</p>
+<p>Learning Haskell the language is a good first step, but knowing the syntax and being comfortable reading code is one thing. What really surprised me was that knowing Haskell isn’t sufficient, you need to learn the set of typical Haskell libraries before you can really start making progress and feel at home in Haskell. Of course I’d used things like Monads in OCaml and read</p>
+<p>No equivalent to Monad, Monad transformers, lenses, applicative, traversable library eco-system in OCaml. I naievely wonder why this hasn’t been built before and whether it’s even a good idea. The parallels to Scala and scalaz are all too apparent to me. Scala is a mixed OO/FP langauge in a similar way to OCaml. It also doesn’t enforce the same level of strictness with respect to side effects that Haskell does. So in both langauges if you want you can create a mess of side effectey code if you;re not careful. Also both langauges allow mutation, again another side effect, without tracking this via the type system.</p>
+<p>I want to thank Mark Hibberd and Charles O’Farrell for being such great mentors over the last month, may they never grow tired of my endless questions.</p>
+</div>
+]]></summary>
 </entry>
 <entry>
     <title>Unreliable guide to OCaml modules</title>
@@ -39,7 +251,143 @@
     <id>https://lambdafoo.com/posts/2015-05-17-unreliable-guide-to-ocaml-modules.html</id>
     <published>2015-05-17T00:00:00Z</published>
     <updated>2015-05-17T00:00:00Z</updated>
-    <summary type="html"><![CDATA[Unreliable guide to OCaml modules]]></summary>
+    <summary type="html"><![CDATA[<div class="post">
+  <h1 class="post-title">Unreliable guide to OCaml modules</h1>
+  <span class="post-date">May 17, 2015</span>
+  <p>Being on the curious side of things I have been interested lately in the dualities between programming languages. Like how one feature say Type Classes in Haskell compares to what is available in Scala or OCaml. This has lead to me reading a substantial amount of academic papers about the subject.</p>
+<p>So with that in mind I would like to give a brief introduction to OCaml style modules. Perhaps in another post going into how can you encode something like rank n types from Haskell in OCaml which natively doesn’t support them.</p>
+<p>Preface, the use of the word module can be confusing, and it sometimes seems that module is used to refer to structures interchangeably. I’ve tried to avoid that but it’s helpful to keep in mind for further reading. Look at what’s on the right hand side of the equals in the code. Let start.</p>
+<h2 id="terminology">Terminology</h2>
+<p>OCaml is a member of the ML family of languages, sharing common features like modules, <a href="http://en.wikipedia.org/wiki/Hindley-Milner_type_system">Hindley-Milner type sytem</a> and strict evaluation. OCaml as a language can be though of 2 distinct part; one a core language that’s values and types and a second module language that revolves around modules and signatures. While OCaml does provide some support for bridging these parts in the form of First Class Modules, I won’t cover them here.</p>
+<p>The key parts of the module system in OCaml are:</p>
+<ul>
+<li>Structures</li>
+<li>Signatures</li>
+<li>Functors</li>
+</ul>
+<h2 id="structures">Structures</h2>
+<p>Structures provide a way for grouping together related declarations like data types and functions the operate on them; they also provide the values in the module langauge. Below is a module for integer Sets:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a>    <span class="kw">module</span> IntSet = <span class="kw">struct</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a>      <span class="kw">type</span> t = <span class="dt">int</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a>      <span class="kw">type</span> set = t <span class="dt">list</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a>      <span class="kw">let</span> empty = []</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a>      <span class="kw">let</span> member i s = <span class="dt">List</span>.exists (<span class="kw">fun</span> x -&gt; x = i) s</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a>      <span class="kw">let</span> insert i s = <span class="kw">if</span> member i s <span class="kw">then</span> s <span class="kw">else</span> (i::s)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a>    <span class="kw">end</span></span></code></pre></div>
+<p>This code defines a new structure using the <code>struct</code> keyword and binds it to a name using module. It’s useful to note that OCaml types are written in lowercase (<code>t</code>, <code>list</code> and <code>set</code>) and type variables are written with a single quote <code>'a</code>. Also type constructors are written differently to Haskell, in Haskell you’d have <code>List a</code> while in OCaml the order is reveresed <code>t list</code>.</p>
+<p>Basically a struct is an opening <code>struct</code> followed by a bunch of <code>type</code> and <code>let</code> bindings, and closed with an <code>end</code>.</p>
+<p>At the call site exposed declarations are referred to by dot notation:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a>    IntSet.t</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a>    IntSet.empty</span></code></pre></div>
+<p>If no module name is defined within a file, say you have a file called <code>set.ml</code> with:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a>      <span class="kw">type</span> t = <span class="dt">int</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a>      <span class="kw">type</span> set = t <span class="dt">list</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a>      <span class="kw">let</span> empty = []</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a>      <span class="kw">let</span> member i s = <span class="dt">List</span>.exists (<span class="kw">fun</span> x -&gt; x = i) s</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a>      <span class="kw">let</span> insert i s = <span class="kw">if</span> member i s <span class="kw">then</span> s <span class="kw">else</span> (i::s)</span></code></pre></div>
+<p>It will implicitly be given a structure name derived from the file name <code>Set</code> but as you may have worked out module names are not bound to file names. Further structures can be nested within other structures, leading to more freedom than just having 1 file becoming 1 module.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a>    <span class="kw">module</span> IntSet = <span class="kw">struct</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a>      <span class="kw">module</span> Compare = <span class="kw">struct</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a>         <span class="kw">type</span> t = <span class="dt">int</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a>         <span class="kw">let</span> eql x y = x = y</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a>      <span class="kw">end</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a>    <span class="kw">end</span>;;</span></code></pre></div>
+<p>The values within the nested module are referred to like so:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a>    IntSet.Compare.eql <span class="dv">1</span> <span class="dv">1</span>;;</span></code></pre></div>
+<p>While it is great to have functions namespaced like so, it would become tedious if you needed to use the longer name to refer to a nested module. OCaml provides a couple of solutions, first local opens.</p>
+<p>Rather than having an <code>open</code> statement at the top of the file and bringing every thing into scope for that file we can do a local open and restrict the scope to between the two brackets.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a>     IntSet.Compare.(eql <span class="dv">1</span> <span class="dv">1</span>);;</span></code></pre></div>
+<p>The other option available is aliasing the module name to something shorter</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a>     <span class="kw">module</span> X = IntSet.Compare;;</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a>     X.eql <span class="dv">1</span> <span class="dv">1</span>;;</span></code></pre></div>
+<p>I mentioned <code>open</code> before without saying what it does. Simply open brings the contents of a module within another module, so they can be referred to without the module name prefix.</p>
+<h2 id="signatures">Signatures</h2>
+<p>Signatures are the interfaces for structures, a signature defines what parts of a structure is visable from the outside. A signature can be used to hide components of a structure or export some definitions with more general types.</p>
+<p>A signature is introduced with the <code>sig</code> keyword</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a>    <span class="kw">module</span> <span class="kw">type</span> <span class="dt">Set</span> =</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a>      <span class="kw">sig</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true"></a>        <span class="kw">type</span> elt</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true"></a>        <span class="kw">type</span> t</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true"></a>        <span class="kw">val</span> empty : t</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true"></a>        <span class="kw">val</span> member : elt -&gt; t -&gt; <span class="dt">bool</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true"></a>        <span class="kw">val</span> insert : elt-&gt; t -&gt; t</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true"></a>      <span class="kw">end</span></span></code></pre></div>
+<p>As you can see looking at our definition of Set, it lists a type and function signatures without specifying a concrete implementation. It’s also bound to a name <code>Set</code> using <code>module type</code>.</p>
+<p>As I metnioned before signatures are typically used to hide or change the interface a module exposes. By default all types and functions are exported from a module. Useful for doing things like hiding implementation details or only construct the data type via the invariant-preserving operations that the module provides.</p>
+<p>Typically in OCaml you’ll define your <code>struct</code> in one file <code>set.ml</code> and then create a second file <code>set.mli</code> which contains the signature for the module set. Only occasionally will you see the signature and structure defined together.</p>
+<h2 id="functors">Functors</h2>
+<p>Now to the functors, they’re not exactly like Haskell’s though they do perform a kind of mapping.</p>
+<p>Functors are for lifting functions into the module language, or another way they are <code>functions</code> from structures to structures. Which brings the abstract idea of functors from category theory back to 2 concrete examples, where Haskell functors are <code>functions</code> from types to types, OCaml’s functors are <code>functions</code> from structures to structures.</p>
+<p>Following out set example we can make set operations abstract across both the type inside the set and the equality comparison.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a>    <span class="kw">module</span> <span class="kw">type</span> ORDERING =</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a>      <span class="kw">sig</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true"></a>        <span class="kw">type</span> t</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true"></a>        <span class="kw">val</span> <span class="dt">compare</span> : t -&gt; t -&gt; <span class="dt">int</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true"></a>      <span class="kw">end</span>;;</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true"></a>    <span class="kw">module</span> <span class="kw">type</span> <span class="dt">Set</span> =</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true"></a>      <span class="kw">sig</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true"></a>        <span class="kw">type</span> elt</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true"></a>        <span class="kw">type</span> t</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true"></a>        <span class="kw">val</span> empty : t</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true"></a>        <span class="kw">val</span> member : elt -&gt; t -&gt; <span class="dt">bool</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true"></a>        <span class="kw">val</span> insert : elt-&gt; t -&gt; t</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true"></a>      <span class="kw">end</span>;;</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true"></a></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true"></a>    <span class="kw">module</span> MkSet (Ord : ORDERING) : (<span class="dt">Set</span> <span class="kw">with</span> <span class="kw">type</span> elt := Ord.t) =</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true"></a>      <span class="kw">struct</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true"></a>        <span class="kw">type</span> elt = Ord.t</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true"></a>        <span class="kw">type</span> t = Empty | Node <span class="kw">of</span> t * elt * t</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true"></a></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true"></a>        <span class="kw">let</span> empty = Empty</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true"></a></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true"></a>        <span class="kw">let</span> <span class="kw">rec</span> insert x = <span class="kw">function</span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true"></a>          | Empty -&gt; Node(Empty, x, Empty)</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true"></a>          | Node(a, y, b) <span class="kw">when</span> Ord.<span class="dt">compare</span> x y &lt; <span class="dv">0</span> -&gt; Node(insert x a, y, b)</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true"></a>          | Node(a, y, b) <span class="kw">when</span> Ord.<span class="dt">compare</span> x y &gt; <span class="dv">0</span> -&gt; Node(a, y, insert x b)</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true"></a>          | Node(a, y, b) <span class="kw">as</span> s -&gt; s</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true"></a></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true"></a>        <span class="kw">let</span> <span class="kw">rec</span> member x = <span class="kw">function</span></span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true"></a>          | Empty -&gt; <span class="kw">false</span></span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true"></a>          | Node(l, v, r) -&gt;</span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true"></a>              <span class="kw">let</span> c = Ord.<span class="dt">compare</span> x v <span class="kw">in</span></span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true"></a>              c = <span class="dv">0</span> || member x (<span class="kw">if</span> c &lt; <span class="dv">0</span> <span class="kw">then</span> l <span class="kw">else</span> r)</span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true"></a>    <span class="kw">end</span>;;</span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true"></a></span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true"></a>    <span class="kw">module</span> IntOrdering = <span class="kw">struct</span></span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true"></a>        <span class="kw">type</span> t = <span class="dt">int</span></span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true"></a>        <span class="kw">let</span> <span class="dt">compare</span> x y = Pervasives.<span class="dt">compare</span> x y</span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true"></a>      <span class="kw">end</span>;;</span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true"></a></span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true"></a>    <span class="kw">module</span> IntSet&#39; = MkSet(IntOrdering);;</span></code></pre></div>
+<p>Here we define <code>ORDERING</code> and <code>Set</code> as signatures, similar to our previous definitons. Then a functor is defined <code>MkSet</code> that takes the <code>ORDERING</code> signature and defines the types and functions for set based off that interface. So the definition of <code>MkSet</code> is completely abstracted away from the type used in the set and the functions used on those types. As long as it implements <code>ORDERING</code>.</p>
+<p>The last part defines a particular ordering for <code>int</code> using, binding t to <code>int</code> and compare to <code>Int.compare</code>.</p>
+<h2 id="using-modules">Using Modules</h2>
+<p>After covering what is in the OCaml module system, what exactly do we use it for. At the very basic level we collect together types and functions, which is pretty much what all modules do. Outside of that we can:</p>
+<ol type="1">
+<li>Hide implementation details, like the types exported by the module. If we wanted to hide how our Set was implemented we could redefine the functor as:</li>
+</ol>
+<div class="sourceCode" id="cb10"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a><span class="kw">module</span> <span class="kw">type</span> SETFUNCTOR =</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true"></a>    <span class="kw">functor</span> (O: ORDERING) -&gt;</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true"></a>      <span class="kw">sig</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true"></a>        <span class="kw">type</span> t = O.t      <span class="co">(* concrete *)</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true"></a>        <span class="kw">type</span> set          <span class="co">(* abstract *)</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true"></a>        <span class="kw">val</span> empty : set</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true"></a>        <span class="kw">val</span> add : t -&gt; set -&gt; set</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true"></a>        <span class="kw">val</span> member : t -&gt; set -&gt; <span class="dt">bool</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true"></a>      <span class="kw">end</span>;;</span></code></pre></div>
+<p>Here we expose the elements within the set via <code>type t = O.t</code> so they’re a concrete type, while <code>set</code> isn’t given a definition so the consumers of this module can’t look into that type without using the functions provided in the Set module. This hiding using abstract types lets us swap out different implementations for testing purposes or if requirements change.</p>
+<ol start="2" type="1">
+<li><p>Namespace functions and type, all types and functions live within some module.</p></li>
+<li><p>Extending existing modules in a type safe way. You may want to extend a module from a library with extra derived functions. For example the <code>Core</code> library from Jane Street extends the built in OCaml library with a number of new and different functions. eg Say Lists didn’t provide a <code>transpose</code> function.</p></li>
+<li><p>Instantiating modules with State, OCaml allows modules to include mutable state (while we may not particularly like mutable things) sometimes it’s necessary and you may want multiple instances of a particular module with their own state. Functors make doing this more succinct.</p></li>
+<li><p>Collecting definitions and exporting as a single module, e.g. Core.Std inside Jane Street Core library.</p></li>
+</ol>
+<h2 id="further-reading">Further Reading</h2>
+<p>The best reference is really <a href="http://realworldocaml.org">Real World OCaml</a>. If you’ve got some Haskell experience and don’t mind reading a paper then “ML Modules and Haskell Type Classes: A Constructive Comparison” by Stefan Wehr and Manuel Chakravarty gives a thorough coverage of how ML modules stack up to Type Classes.</p>
+</div>
+]]></summary>
 </entry>
 <entry>
     <title>Lenses in OCaml</title>
@@ -47,7 +395,57 @@
     <id>https://lambdafoo.com/posts/2015-01-16-ocaml-lenses.html</id>
     <published>2015-01-16T00:00:00Z</published>
     <updated>2015-01-16T00:00:00Z</updated>
-    <summary type="html"><![CDATA[Lenses in OCaml]]></summary>
+    <summary type="html"><![CDATA[<div class="post">
+  <h1 class="post-title">Lenses in OCaml</h1>
+  <span class="post-date">January 16, 2015</span>
+  <p>Lenses have been on my mind since encountering them last year in the context of Haskell. Much of the literature on lenses has a very Haskell slant so show how they can be used in OCaml.</p>
+<p>The theory of lenses and their accompanying prisms and traversals, have been better described by other people. <a href="https://www.fpcomplete.com/school/to-infinity-and-beyond/pick-of-the-week/a-little-lens-starter-tutorial">This</a> article at FPComplete was a particularly good one. I’m just going to cover how to use <a href="https://github.com/pdonadeo/ocaml-lens/">ocaml-lens</a> as a minimal lens implementation.</p>
+<p>First since ocaml-lens isn’t in opam, clone the repo locally and open up <code>utop</code>. Then load the <code>lens.ml</code> file into <code>utop</code>.</p>
+<p>{%codeblock lang:ocaml%} utop # #use “lens.ml”;; .. {% endcodeblock %}</p>
+<p>Starting with a few record types for a car, editor and book.</p>
+<p>{%codeblock lang:ocaml%} type car = { make : string; model: string; mileage: int; };;</p>
+<p>type editor = { name: string; salary: int; car: car; };;</p>
+<p>type book = { name: string; author: string; editor: editor; };; {%endcodeblock%}</p>
+<p>Creating a new book is as simple as.</p>
+<p>{%codeblock lang:ocaml%} let scifi_novel = { name = “Metro 2033”; author = “Dmitry Glukhovsky”; editor = { name = “Vitali Gubarev”; salary = 1300; car = { make = “Lada”; model = “VAZ-2103”; mileage = 310000 } } };;</p>
+<p>{% endcodeblock %}</p>
+<p>Given our <code>scifi_novel</code> we can access the editor’s car mileage:</p>
+<p>{%codeblock lang:ocaml%} let mileage = scifi_novel.editor.car.mileage;; {% endcodeblock %}</p>
+<p>Setting the mileage is a bit trickier, we need to unpack each record:</p>
+<p>{%codeblock lang:ocaml%} let second_edition = { scifi_novel with editor = { scifi_novel.editor with car = { scifi_novel.editor.car with mileage = 1000 } } };; {% endcodeblock %}</p>
+<p>That’s not really an appealing prospect, can we do better?</p>
+<p>Enter lenses, at the most simple level a lense is a pair of functions for getting and setting a property.</p>
+<p>{%codeblock lang:ocaml%} (** Lens type definition *) type (’a, ’b) t = { get : ’a -&gt; ’b; (** Functional getter *) set : ’b -&gt; ’a -&gt; ’a (** Functional setter *) } {% endcodeblock %}</p>
+<p>With this definition of a lens, modifying the mileage is now:</p>
+<p>{%codeblock lang:ocaml%} let a = compose mileage_lens (compose car_lens editor_lens) in _set 10 scifi_novel a;; {% endcodeblock %}</p>
+<p>In the background we need to define some lenses for the records above:</p>
+<p>{%codeblock lang:ocaml%} let car_lens = { get = (fun x -&gt; x.car); set = (fun v x -&gt; { x with car = v }) };;</p>
+<p>let editor_lens = { get = (fun x -&gt; x.editor); set = (fun v x -&gt; { x with editor = v }) };;</p>
+<p>let mileage_lens = { get = (fun x -&gt; x.mileage); set = (fun v x -&gt; { x with mileage = v })</p>
+<p>};; {% endcodeblock %}</p>
+<p>Using these definitions the original lens version of modify the editor’s car mileage works.</p>
+<p>The compose operator we used allows us to combine 2 lenses to go from the novel into the editor and then into the car. And compose can be combined with itself to build up arbitarily deep lenses into a structure.</p>
+<p>{%codeblock lang:ocaml%} let editor_car_lens = compose car_lens editor_lens;; {% endcodeblock %}</p>
+<p>This way of composing can seem backwards, you supply the inner lens first then the outer lens. We can fix that by using the infix operators, open the <code>Infix</code> module and define the same lens:</p>
+<p>{%codeblock lang:ocaml%} let editor_car_lens = editor_lens |– car_lens;; {% endcodeblock %}</p>
+<p>This feels more intuative reading it left to right. Revisiting our original <code>_set</code> mileage example we can now write it.</p>
+<p>{%codeblock lang:ocaml%} _set 10 scifi_novel (editor_lens |– car_lens |– mileage_lens);; (* or even *) ((editor_lens |– car_lens |– mileage_lens) ^= 10) @@ scifi_novel;; {% endcodeblock %}</p>
+<p>The infix module comes with some other helpful operators like <code>|.</code> for get and <code>^=</code> for set. All these operators avoid mutation so our code remains pure and referentially transparent.</p>
+<h3 id="conclusion">Conclusion</h3>
+<p>There are a heap more things that lenses can do, and while this ocaml-lens package is pretty basic, looking at the hundreds of functions exported by <a href="http://hackage.haskell.org/package/lens">Control.Lens</a> in Haskell you can get a good idea of the possibilities. <code>Control.Lens</code> includes all the basic lens functions plus things like:</p>
+<ul>
+<li><code>prisms</code> which are lenses but for sum types</li>
+<li><code>traversals</code> are lenses that focus on multiple targets simultaneously</li>
+</ul>
+<h3 id="resources">Resources</h3>
+<p>I made use of the following resources to write this and took some of the examples and definitions from the following articles. All mistakes are my own and probably accidental.</p>
+<ul>
+<li><a href="https://www.fpcomplete.com/school/to-infinity-and-beyond/pick-of-the-week/a-little-lens-starter-tutorial#okay--what-are-prisms-">A Little Lens Starter FPComplete</a></li>
+<li><a href="http://bugsquash.blogspot.com.au/2011/11/lenses-in-f.html">Lenses in F#</a></li>
+<li><a href="http://hackage.haskell.org/package/lens">Control.Lens on hackage</a></li>
+</ul>
+</div>
+]]></summary>
 </entry>
 <entry>
     <title>Lambdajam Talks</title>
@@ -55,7 +453,15 @@
     <id>https://lambdafoo.com/posts/2014-08-08-lambdajam-talk.html</id>
     <published>2014-08-08T00:00:00Z</published>
     <updated>2014-08-08T00:00:00Z</updated>
-    <summary type="html"><![CDATA[Lambdajam 2014 talks]]></summary>
+    <summary type="html"><![CDATA[<div class="post">
+  <h1 class="post-title">Lambdajam Talks</h1>
+  <span class="post-date">August  8, 2014</span>
+  <p>Earlier this year I spoke at <a href="http://lambdajam.yowconference.com.au">Yow! LambdaJam</a> about RAFT and Erlang. I thought I should link to my talk descriptions and slides <a href="https://a.confui.com/-kpclGeyK">here</a>.</p>
+<p>On the first morning of the conference I spoke about the RAFT distributed consensus algorithm and how it could be implemented in Erlang/OTP. The slides are <a href="http://yowconference.com.au/slides/yowlambdajam2014/McGilchrist-RAFTImplementingDistributedConsensusWithErlang.pdf">here</a> with the video to follow sometime later. I was very happy with how the talk went despite many pre-conference nerves and will surely be submitting something next year.</p>
+<p>In the final workshop slot of the conference I presented an Erlang workshop on building a Webmachine system for shortening urls. The source code on github <a href="https://github.com/tmcgilchrist/erlang_from_scratch">here</a>.</p>
+<p>Yow! LambdaJam is a great conference that brings together the functional programmers from across Australia. I personally had a great time and would encourage anyone who is interested in functional programming to come along next year. We had talks on Erlang, Haskell, Idris, Scala and Clojure. I’m hoping next year we see something on OCaml and F#.</p>
+</div>
+]]></summary>
 </entry>
 <entry>
     <title>Ember.js and Google Analytics</title>
@@ -63,7 +469,46 @@
     <id>https://lambdafoo.com/posts/2013-09-17-emberjs-and-google-analytics.html</id>
     <published>2013-09-17T00:00:00Z</published>
     <updated>2013-09-17T00:00:00Z</updated>
-    <summary type="html"><![CDATA[Ember.js and Google Analytics]]></summary>
+    <summary type="html"><![CDATA[<div class="post">
+  <h1 class="post-title">Ember.js and Google Analytics</h1>
+  <span class="post-date">September 17, 2013</span>
+  <h2 id="update">Update</h2>
+<p>As iStefo pointed out in the comments the code I gave has a bug in it. The <code>observes('currentPath')</code> on an application controller doesn’t fire when you transition between paths in the same route. eg ‘/lesson/1/activity/1’ to ‘/lesson/1/activity/2’</p>
+<p>A better approach is to add the code to your router.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode coffeescript"><code class="sourceCode coffee"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a>App<span class="kw">.</span>Router<span class="kw">.</span>reopen</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a>  didTransition<span class="kw">:</span> <span class="fu">(infos) -&gt;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a>    <span class="dt">@_super</span><span class="kw">(</span>infos<span class="kw">);</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a>    <span class="kw">return</span> <span class="kw">unless</span> window<span class="kw">.</span>ga</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a>    Em<span class="kw">.</span>run<span class="kw">.</span>next <span class="fu">-&gt;</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a>      ga<span class="kw">(</span><span class="st">&#39;send&#39;</span><span class="kw">,</span> <span class="st">&#39;pageview&#39;</span><span class="kw">,</span> <span class="kw">{</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true"></a>         <span class="st">&#39;page&#39;</span><span class="kw">:</span> window<span class="kw">.</span>location<span class="kw">.</span>hash<span class="kw">,</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true"></a>         <span class="st">&#39;title&#39;</span><span class="kw">:</span> window<span class="kw">.</span>location<span class="kw">.</span>hash</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true"></a>      <span class="kw">});</span></span></code></pre></div>
+<p>Matthew Beale also pointed out below that there may be a new API coming on the router to achieve the same result. <a href="https://github.com/emberjs/ember.js/pull/3452">PR#3452</a> and <a href="https://github.com/emberjs/ember.js/pull/3453">PR#3453</a></p>
+<hr />
+<h2 id="original">Original</h2>
+<p>Single Page Javascript Applications and specifically Ember.js applications don’t always expose the right information to Google Analytics. Usually you’ll see 100% traffic to <code>/</code> and nothing else.</p>
+<p>What I wanted to be able to see what areas of the site people were using in real time. A bit of searching led to various solutions with <a href="http://www.pansapien.com/ember/2013/01/using-google-analytics-with-ember-js/">this post</a> having the most upto date solution. Working in Ember you quickly become wary of older solutions posted and start filtering search results based on time. Hopefully now that 1.0 is out the correct solutions will start bubbling to the top of Google searches.</p>
+<p>To make your Ember.js application more visible to Google Analytics you need to expose the value of your application state. I’m using the hash scheme (eg <code>#/album</code>) so whatever is after the hash in the url shows where a person is in the application.</p>
+<p>First you’ll need to have the Google Analytics Javascript library loaded, I’ve been using the more recent <a href="https://developers.google.com/analytics/devguides/collection/analyticsjs/">analytics.js</a> library which has a different API to the older ga.js library. After you’ve followed Google’s instructions the library is available at <code>ga</code>.</p>
+<p>Next you want to observe whenever the hash path changes within your app. The code below assumes you’re using hashes rather than HTML5 pushState.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode coffeescript"><code class="sourceCode coffee"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a>App<span class="kw">.</span>ApplicationController <span class="kw">=</span> Em<span class="kw">.</span>Controller<span class="kw">.</span>extend</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a>    routeChanged<span class="kw">:</span> <span class="kw">(</span><span class="fu">-&gt;</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a>        <span class="kw">return</span> <span class="kw">unless</span> window<span class="kw">.</span>ga</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a>        Em<span class="kw">.</span>run<span class="kw">.</span>next <span class="fu">-&gt;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a>            ga<span class="kw">(</span><span class="st">&#39;send&#39;</span><span class="kw">,</span> <span class="st">&#39;pageview&#39;</span><span class="kw">,</span> <span class="kw">{</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true"></a>                <span class="st">&#39;page&#39;</span><span class="kw">:</span> window<span class="kw">.</span>location<span class="kw">.</span>hash<span class="kw">,</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true"></a>                <span class="st">&#39;title&#39;</span><span class="kw">:</span> window<span class="kw">.</span>location<span class="kw">.</span>hash</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true"></a>                <span class="kw">});</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true"></a>    <span class="kw">).</span>observes<span class="kw">(</span><span class="st">&#39;currentPath&#39;</span><span class="kw">)</span></span></code></pre></div>
+<p>The <code>routeChanged</code> function gets called when <code>currentPath</code> changes; it checks whether <code>ga</code> is defined and if it is it sends a pageview event with the current value of location.hash. The <code>Em.run.next</code> is there to make sure all the routing has occured and the hash value is final before using it.</p>
+<p><code>page</code> and <code>title</code> are just strings so you could provide meaningful formatting based on what your application does. The next obvious step is to add <a href="https://developers.google.com/analytics/devguides/collection/analyticsjs/events">event tracking</a> to really see how people interact with the app.</p>
+</div>
+]]></summary>
 </entry>
 <entry>
     <title>Erlang hot code loading</title>
@@ -71,7 +516,85 @@
     <id>https://lambdafoo.com/posts/2013-09-02-erlang-hot-code-loading.html</id>
     <published>2013-09-02T00:00:00Z</published>
     <updated>2013-09-02T00:00:00Z</updated>
-    <summary type="html"><![CDATA[Erlang hot code loading]]></summary>
+    <summary type="html"><![CDATA[<div class="post">
+  <h1 class="post-title">Erlang hot code loading</h1>
+  <span class="post-date">September  2, 2013</span>
+  <p>Nearly every posting about Erlang that you come across mentions the hot code loading feature, aka dynamic code loading. But so far I have had problems finding a simple example of how to add this to my code. So here is one.</p>
+<p>Copy this code into an editor. I’m using Emacs here, so all instructions use it’s keybindings.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode erlang"><code class="sourceCode erlang"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="co">%% A process whose only job is to keep a counter.</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a><span class="kw">-module</span><span class="fu">(</span><span class="ch">counter</span><span class="fu">).</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a><span class="kw">-export</span><span class="fu">([</span><span class="ch">start</span><span class="op">/</span><span class="dv">0</span><span class="fu">,</span> <span class="ch">codeswitch</span><span class="op">/</span><span class="dv">1</span><span class="fu">]).</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a><span class="fu">start()</span> <span class="op">-&gt;</span> <span class="fu">loop(</span><span class="dv">0</span><span class="fu">).</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a><span class="fu">loop(</span><span class="va">Sum</span><span class="fu">)</span> <span class="op">-&gt;</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true"></a>  <span class="kw">receive</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true"></a>    <span class="fu">{</span><span class="ch">increment</span><span class="fu">,</span> <span class="va">Count</span><span class="fu">}</span> <span class="op">-&gt;</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true"></a>      <span class="fu">loop(</span><span class="va">Sum</span><span class="op">+</span><span class="va">Count</span><span class="fu">);</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true"></a>    <span class="fu">{</span><span class="ch">print</span><span class="fu">}</span> <span class="op">-&gt;</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true"></a>      <span class="fu">io:format(</span><span class="st">&quot;Sum is ~p~n&quot;</span><span class="fu">,</span> <span class="fu">[</span><span class="va">Sum</span><span class="fu">]),</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true"></a>      <span class="fu">loop(</span><span class="va">Sum</span><span class="fu">);</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true"></a>    <span class="fu">{</span><span class="ch">counter</span><span class="fu">,</span> <span class="va">Pid</span><span class="fu">}</span> <span class="op">-&gt;</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true"></a>      <span class="va">Pid</span> <span class="op">!</span> <span class="fu">{</span><span class="ch">counter</span><span class="fu">,</span> <span class="va">Sum</span><span class="fu">},</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true"></a>      <span class="fu">loop(</span><span class="va">Sum</span><span class="fu">);</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true"></a>    <span class="ch">code_switch</span> <span class="op">-&gt;</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true"></a>      <span class="fu">?</span><span class="va">MODULE</span><span class="fu">:codeswitch(</span><span class="va">Sum</span><span class="fu">);</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true"></a>    <span class="va">M</span> <span class="op">-&gt;</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true"></a>      <span class="fu">io:format(</span><span class="st">&quot;Unhandled message ~p~n&quot;</span><span class="fu">,</span> <span class="fu">[</span><span class="va">M</span><span class="fu">]),</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true"></a>      <span class="fu">loop(</span><span class="va">Sum</span><span class="fu">)</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true"></a>   <span class="kw">end</span><span class="fu">.</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true"></a><span class="fu">codeswitch(</span><span class="va">Sum</span><span class="fu">)</span> <span class="op">-&gt;</span> <span class="fu">loop(</span><span class="va">Sum</span><span class="fu">).</span></span></code></pre></div>
+<p>Compile and start a new erlang shell, Ctrl-C Ctrl-K.</p>
+<p>Now we want to start a new process running this code. Startup and enter the following code into the erlang shell.</p>
+<pre class="shell"><code>
+Erlang R15B (erts-5.9) [source] [64-bit] [smp:8:8] [async-threads:0] [hipe] [kernel-poll:false]
+
+Eshell V5.9  (abort with ^G)
+1&gt; Pid = spawn(fun() -&gt; counter:start() end).
+&lt;0.37.0&gt;
+</code></pre>
+<p>Send the process a message to make sure it’s alive and working.</p>
+<pre class="shell"><code>
+3&gt; Pid ! {increment, 3}.
+{increment,3}
+4&gt; Pid ! {print}.
+Sum is 3
+{print}
+</code></pre>
+<p>Now that we have the first version of the process running, add a new clause to the receive like so.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode erlang"><code class="sourceCode erlang"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a>  <span class="fu">{</span><span class="ch">print</span><span class="fu">}</span> <span class="op">-&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a>    <span class="fu">io:format(</span><span class="st">&quot;Sum is ~p~n&quot;</span><span class="fu">,</span> <span class="fu">[</span><span class="va">Sum</span><span class="fu">]),</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a>    <span class="fu">loop(</span><span class="va">Sum</span><span class="fu">);</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a>  <span class="fu">{</span><span class="ch">reset</span><span class="fu">}</span> <span class="op">-&gt;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a>    <span class="fu">loop(</span><span class="dv">0</span><span class="fu">);</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true"></a>  <span class="fu">{</span><span class="ch">counter</span><span class="fu">,</span> <span class="va">Pid</span><span class="fu">}</span> <span class="op">-&gt;</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true"></a>    <span class="va">Pid</span> <span class="op">!</span> <span class="fu">{</span><span class="ch">counter</span><span class="fu">,</span> <span class="va">Sum</span><span class="fu">},</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true"></a>    <span class="fu">loop(</span><span class="va">Sum</span><span class="fu">);</span></span></code></pre></div>
+<p>Compile this version, Ctrl-C Ctrl-K and send a message to the process that only the new version can handle.</p>
+<pre class="shell"><code>
+6&gt; Pid ! {reset}.
+Unhandled message {reset}
+{reset}
+</code></pre>
+<p>So we are still running the previous version of the code.</p>
+<pre class="shell"><code>
+6&gt; Pid ! code_switch.
+code_switch
+7&gt; Pid ! {print}.
+Sum is 3
+{print}
+8&gt; Pid ! {reset}.
+{reset}
+9&gt;  Pid ! {print}.
+Sum is 0
+{print}
+</code></pre>
+<p>The ‘code_switch’ message makes the process load the new version of code. So using this you can upgrade the running process without losing state. Cool.</p>
+</div>
+]]></summary>
 </entry>
 <entry>
     <title>Getting started with Sinan</title>
@@ -79,7 +602,235 @@
     <id>https://lambdafoo.com/posts/2012-09-10-sinan-intro.html</id>
     <published>2012-09-10T00:00:00Z</published>
     <updated>2012-09-10T00:00:00Z</updated>
-    <summary type="html"><![CDATA[Getting started with Sinan]]></summary>
+    <summary type="html"><![CDATA[<div class="post">
+  <h1 class="post-title">Getting started with Sinan</h1>
+  <span class="post-date">September 10, 2012</span>
+  <h2 id="background">Background</h2>
+<p>When I started with Erlang I used a simple Makefile to call <code>erlc</code> and pretty much did things by hand. After a number of years in the wilderness I found out about <a href="http://github.com/basho/rebar">rebar</a> from Basho and started using that to compile my code. Everything was good, rebar knew how to compile OTP apps and pull down external dependencies. Except when I needed to generate releases. It’s not necessarily straight forward to get rebar to build you a nice release, <a href="http://www.metabrew.com/article/erlang-rebar-tutorial-generating-releases-upgrades">not that it’s impossible</a> it’s just not as simple as I’d like.</p>
+<p>Enter Sinan, the somewhat forgotten erlang build tool.</p>
+<p>Sinan is a build tool designed to build Erlang/OTP projects, releases and applications. It claims to be more OTP than rebar and uses the OTP metadata artefacts to build your project with little configuration needed.</p>
+<p>Let’s see how well it delivers on the promise.</p>
+<h2 id="sinan-from-scratch">Sinan From Scratch</h2>
+<p>First you’ll need Erlang installed, which your friendly local package management tool should provide. I’m using Homebrew on OSX so I just did:</p>
+<pre class="shell"><code>$ brew install erlang
+...
+$ erl -v
+Erlang R15B01 (erts-5.9.1) [source] [64-bit] [smp:8:8] [async-threads:0] [hipe] [kernel-poll:false]
+
+Eshell V5.9.1  (abort with ^G)
+1&gt;</code></pre>
+<p>Linux should be similarly straight forward and Windows well you’re on your own.</p>
+<p>Grab sinan from the <a href="https://github.com/erlware/sinan/downloads">downloads page</a> on github, I’m using version 4.1.1. Put it somewhere on your PATH, I’ve got mine in ~/bin which is on my PATH, and chmod +x it so it’s executable.</p>
+<p>Now for the fun bit, type <code>sinan gen</code> and fill in the details.</p>
+<pre class="shell"><code>
+Please specify your name
+your name&gt; Tim McGilchrist
+Please specify your email address
+your email&gt; timmcgil@gmail.com
+Please specify the copyright holder
+copyright holder (&quot;Tim McGilchrist&quot;)&gt;
+Please specify name of your project
+project name&gt; sinan_demo
+Please specify version of your project
+project version&gt; 0.0.1
+Please specify the ERTS version (&quot;5.9.1&quot;)&gt;
+Is this a single application project (&quot;n&quot;)&gt; y
+Would you like a build config? (&quot;y&quot;)&gt; y
+Project was created, you should be good to go!
+</code></pre>
+<p>From that Sinan has generated a project, filling in your details, with an OTP application and some build configuration. Your directories should look something similar to this.</p>
+<pre class="shell"><code>
+sinan_demo
+  |-- config
+  |    |-- sys.config
+  |-- doc
+  |-- ebin
+  |    |-- overview.edoc
+  |-- include
+  |-- sinan.config
+  |-- src
+  |    |-- sinan_demo.app.src
+  |    |-- sinan_demo_app.erl
+  |    |-- sinan_demo_sup.erl
+</code></pre>
+<p>It includes all the standard directories you’d expect plus a <code>sinan.config</code> file.</p>
+<p>First a little diversion, we need to add a line to the sinan config file, which tells sinan to include the erlang runtime system when it generates a release. Open sinan.config and add <code>{include_erts, true}.</code> as the last line. It should look like this:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode erlang"><code class="sourceCode erlang"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a><span class="fu">{</span><span class="ch">project_name</span><span class="fu">,</span> <span class="ch">sinan_demo</span><span class="fu">}.</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a><span class="fu">{</span><span class="ch">project_vsn</span><span class="fu">,</span> <span class="st">&quot;0.0.1&quot;</span><span class="fu">}.</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a><span class="fu">{</span><span class="ch">build_dir</span><span class="fu">,</span>  <span class="st">&quot;_build&quot;</span><span class="fu">}.</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true"></a><span class="fu">{</span><span class="ch">ignore_dirs</span><span class="fu">,</span> <span class="fu">[</span><span class="st">&quot;_&quot;</span><span class="fu">,</span> <span class="st">&quot;.&quot;</span><span class="fu">]}.</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true"></a><span class="fu">{</span><span class="ch">ignore_apps</span><span class="fu">,</span> <span class="fu">[]}.</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true"></a><span class="fu">{</span><span class="ch">include_erts</span><span class="fu">,</span> <span class="ch">true</span><span class="fu">}.</span></span></code></pre></div>
+<p>Back to making our generated code runnable.</p>
+<p>By default the generated supervisor doesn’t point to a valid module so you’ll need to remedy that before trying to startup the application. Create a new file called <code>sinan_demo_server.erl</code> in <code>src</code> and drop the following code in.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode erlang"><code class="sourceCode erlang"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a><span class="kw">-module</span><span class="fu">(</span><span class="ch">sinan_demo_server</span><span class="fu">).</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a><span class="op">-</span><span class="fu">behaviour(</span><span class="ch">gen_server</span><span class="fu">).</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true"></a><span class="co">%% API</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true"></a><span class="kw">-export</span><span class="fu">([</span><span class="ch">start_link</span><span class="op">/</span><span class="dv">0</span><span class="fu">,</span> <span class="ch">add_one</span><span class="op">/</span><span class="dv">0</span><span class="fu">,</span> <span class="ch">total</span><span class="op">/</span><span class="dv">0</span><span class="fu">]).</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true"></a><span class="co">%% Callbacks</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true"></a><span class="kw">-export</span><span class="fu">([</span><span class="ch">init</span><span class="op">/</span><span class="dv">1</span><span class="fu">,</span> <span class="ch">handle_call</span><span class="op">/</span><span class="dv">3</span><span class="fu">,</span> <span class="ch">handle_cast</span><span class="op">/</span><span class="dv">2</span><span class="fu">,</span> <span class="ch">handle_info</span><span class="op">/</span><span class="dv">2</span><span class="fu">,</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true"></a>         <span class="ch">terminate</span><span class="op">/</span><span class="dv">2</span><span class="fu">,</span> <span class="ch">code_change</span><span class="op">/</span><span class="dv">3</span><span class="fu">]).</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true"></a><span class="op">-</span><span class="fu">record(</span><span class="ch">state</span><span class="fu">,</span> <span class="fu">{</span><span class="ch">count</span><span class="fu">}).</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true"></a><span class="co">%%%===================================================================</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true"></a><span class="co">%%% API functions</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true"></a><span class="co">%%%===================================================================</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true"></a></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true"></a><span class="fu">start_link()</span> <span class="op">-&gt;</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true"></a>    <span class="fu">gen_server:start_link({</span><span class="ch">local</span><span class="fu">,</span> <span class="fu">?</span><span class="va">MODULE</span><span class="fu">},</span> <span class="fu">?</span><span class="va">MODULE</span><span class="fu">,</span> <span class="fu">[],</span> <span class="fu">[]).</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true"></a></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true"></a><span class="fu">total()</span> <span class="op">-&gt;</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true"></a>    <span class="fu">gen_server:call(?</span><span class="va">MODULE</span><span class="fu">,</span> <span class="ch">total</span><span class="fu">).</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true"></a></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true"></a><span class="fu">add_one()</span> <span class="op">-&gt;</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true"></a>    <span class="fu">gen_server:call(?</span><span class="va">MODULE</span><span class="fu">,</span> <span class="ch">add</span><span class="fu">).</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true"></a></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true"></a><span class="co">%%%===================================================================</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true"></a><span class="co">%%% Callbacks</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true"></a><span class="co">%%%===================================================================</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true"></a></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true"></a><span class="fu">init([])</span> <span class="op">-&gt;</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true"></a>    <span class="fu">io:format(</span><span class="st">&quot;starting~n&quot;</span><span class="fu">,</span> <span class="fu">[]),</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true"></a>    <span class="fu">{</span><span class="ch">ok</span><span class="fu">,</span> <span class="fu">#</span><span class="ch">state</span><span class="fu">{</span><span class="ch">count</span> <span class="op">=</span> <span class="dv">0</span><span class="fu">},</span> <span class="dv">0</span><span class="fu">}.</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true"></a></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true"></a><span class="fu">handle_call(</span><span class="ch">add</span><span class="fu">,</span> <span class="va">_From</span><span class="fu">,</span> <span class="va">State</span><span class="fu">)</span> <span class="op">-&gt;</span></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true"></a>    <span class="va">NewCount</span> <span class="op">=</span> <span class="va">State</span><span class="fu">#</span><span class="ch">state</span><span class="fu">.</span><span class="ch">count</span> <span class="op">+</span> <span class="dv">1</span><span class="fu">,</span></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true"></a>    <span class="va">NewState</span> <span class="op">=</span> <span class="va">State</span><span class="fu">#</span><span class="ch">state</span><span class="fu">{</span><span class="ch">count</span> <span class="op">=</span> <span class="va">NewCount</span><span class="fu">},</span></span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true"></a>    <span class="va">Reply</span>    <span class="op">=</span> <span class="fu">{</span><span class="ch">ok</span><span class="fu">,</span> <span class="va">NewState</span><span class="fu">},</span></span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true"></a>    <span class="fu">{</span><span class="ch">reply</span><span class="fu">,</span> <span class="va">Reply</span><span class="fu">,</span> <span class="va">NewState</span><span class="fu">};</span></span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true"></a><span class="fu">handle_call(</span><span class="ch">total</span><span class="fu">,</span> <span class="va">_From</span><span class="fu">,</span> <span class="va">State</span> <span class="op">=</span> <span class="fu">#</span><span class="ch">state</span><span class="fu">{</span> <span class="ch">count</span> <span class="op">=</span> <span class="va">Count</span> <span class="fu">})</span> <span class="op">-&gt;</span></span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true"></a>    <span class="fu">{</span><span class="ch">reply</span><span class="fu">,</span> <span class="va">Count</span><span class="fu">,</span> <span class="va">State</span><span class="fu">};</span></span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true"></a><span class="fu">handle_call(</span><span class="va">Msg</span><span class="fu">,</span> <span class="va">_From</span><span class="fu">,</span> <span class="va">State</span><span class="fu">)</span> <span class="op">-&gt;</span></span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true"></a>    <span class="fu">{</span><span class="ch">reply</span><span class="fu">,</span> <span class="fu">{</span><span class="ch">ok</span><span class="fu">,</span> <span class="va">Msg</span><span class="fu">},</span> <span class="va">State</span><span class="fu">}.</span></span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true"></a></span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true"></a><span class="fu">handle_cast(</span>_<span class="va">Msg</span><span class="fu">,</span> <span class="va">State</span><span class="fu">)</span> <span class="op">-&gt;</span></span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true"></a>    <span class="fu">{</span><span class="ch">noreply</span><span class="fu">,</span> <span class="va">State</span><span class="fu">}.</span></span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true"></a></span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true"></a><span class="fu">handle_info(</span>_<span class="va">Info</span><span class="fu">,</span> <span class="va">State</span><span class="fu">)</span> <span class="op">-&gt;</span></span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true"></a>    <span class="fu">{</span><span class="ch">noreply</span><span class="fu">,</span> <span class="va">State</span><span class="fu">}.</span></span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true"></a></span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true"></a><span class="fu">terminate(</span>_<span class="va">Reason</span><span class="fu">,</span> <span class="va">_State</span><span class="fu">)</span> <span class="op">-&gt;</span></span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true"></a>    <span class="ch">ok</span><span class="fu">.</span></span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true"></a></span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true"></a><span class="fu">code_change(</span>_<span class="va">OldVsn</span><span class="fu">,</span> <span class="va">State</span><span class="fu">,</span> <span class="va">_Extra</span><span class="fu">)</span> <span class="op">-&gt;</span></span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true"></a>    <span class="fu">{</span><span class="ch">ok</span><span class="fu">,</span> <span class="va">State</span><span class="fu">}.</span></span></code></pre></div>
+<p>It’s a pretty standard OTP gen_server application with 2 API methods. <code>add_one/0</code> adds 1 to the counter and <code>total/0</code> returns the value of the counter. The record definition setups up the state record for this server with just a <code>count</code> attribute. The 2 API functions use the <code>gen_server:call/2</code> method to hit the OTP callback for <code>handle_call/3</code>.</p>
+<p>Next we need to fix the supervisor so it starts the correct module. Change <code>sinan_demo_sup.erl</code> so it looks like the code below:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode erlang"><code class="sourceCode erlang"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a><span class="fu">start_link()</span> <span class="op">-&gt;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a>    <span class="fu">supervisor:start_link({</span><span class="ch">local</span><span class="fu">,</span> <span class="fu">?</span><span class="va">SERVER</span><span class="fu">},</span> <span class="fu">?</span><span class="va">MODULE</span><span class="fu">,</span> <span class="fu">[]).</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true"></a><span class="co">%%%===================================================================</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true"></a><span class="co">%%% Supervisor callbacks</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true"></a><span class="co">%%%===================================================================</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true"></a><span class="co">%% @private</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true"></a><span class="op">-</span><span class="ch">spec</span> <span class="fu">init(list())</span> <span class="op">-&gt;</span> <span class="fu">{</span><span class="ch">ok</span><span class="fu">,</span> <span class="fu">{</span><span class="va">SupFlags</span><span class="fu">::any(),</span> <span class="fu">[</span><span class="va">ChildSpec</span><span class="fu">::any()]}}</span> <span class="fu">|</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true"></a>                            <span class="ch">ignore</span> <span class="fu">|</span> <span class="fu">{</span><span class="ch">error</span><span class="fu">,</span> <span class="va">Reason</span><span class="fu">::any()}.</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true"></a><span class="fu">init([])</span> <span class="op">-&gt;</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true"></a>    <span class="va">RestartStrategy</span> <span class="op">=</span> <span class="ch">one_for_one</span><span class="fu">,</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true"></a>    <span class="va">MaxRestarts</span> <span class="op">=</span> <span class="dv">1000</span><span class="fu">,</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true"></a>    <span class="va">MaxSecondsBetweenRestarts</span> <span class="op">=</span> <span class="dv">3600</span><span class="fu">,</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true"></a></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true"></a>    <span class="va">SupFlags</span> <span class="op">=</span> <span class="fu">{</span><span class="va">RestartStrategy</span><span class="fu">,</span> <span class="va">MaxRestarts</span><span class="fu">,</span> <span class="va">MaxSecondsBetweenRestarts</span><span class="fu">},</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true"></a></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true"></a>    <span class="va">Restart</span> <span class="op">=</span> <span class="ch">permanent</span><span class="fu">,</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true"></a>    <span class="va">Shutdown</span> <span class="op">=</span> <span class="dv">2000</span><span class="fu">,</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true"></a>    <span class="va">Type</span> <span class="op">=</span> <span class="ch">worker</span><span class="fu">,</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true"></a></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true"></a>    <span class="va">AChild</span> <span class="op">=</span> <span class="fu">{</span><span class="ch">sinan_demo_server</span><span class="fu">,</span> <span class="fu">{</span><span class="ch">sinan_demo_server</span><span class="fu">,</span> <span class="ch">start_link</span><span class="fu">,</span> <span class="fu">[]},</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true"></a>              <span class="va">Restart</span><span class="fu">,</span> <span class="va">Shutdown</span><span class="fu">,</span> <span class="va">Type</span><span class="fu">,</span> <span class="fu">[</span><span class="ch">sinan_demo_server</span><span class="fu">]},</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true"></a></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true"></a>    <span class="fu">{</span><span class="ch">ok</span><span class="fu">,</span> <span class="fu">{</span><span class="va">SupFlags</span><span class="fu">,</span> <span class="fu">[</span><span class="va">AChild</span><span class="fu">]}}.</span></span></code></pre></div>
+<p>The 2 changes we have make is to <code>start_link/0</code> so we can call the server directly, and fix the child spec so it starts our new module.</p>
+<p>Now we need to add the sinan_demo_server module to <code>sinan_demo.app.src</code> so we know about it when generating the OTP application. Just add it to the list of modules like so:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode erlang"><code class="sourceCode erlang"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a><span class="co">%% This is the application resource file (.app file) for the,</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a><span class="co">%% application.</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true"></a><span class="fu">{</span><span class="ch">application</span><span class="fu">,</span> <span class="ch">sinan_demo</span><span class="fu">,</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true"></a> <span class="fu">[{</span><span class="ch">description</span><span class="fu">,</span> <span class="st">&quot;Sinan demo application.&quot;</span><span class="fu">},</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true"></a>  <span class="fu">{</span><span class="ch">vsn</span><span class="fu">,</span> <span class="st">&quot;0.0.1&quot;</span><span class="fu">},</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true"></a>  <span class="fu">{</span><span class="ch">modules</span><span class="fu">,</span> <span class="fu">[</span><span class="ch">sinan_demo_app</span><span class="fu">,</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true"></a>             <span class="ch">sinan_demo_sup</span><span class="fu">,</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true"></a>             <span class="ch">sinan_demo_server</span><span class="fu">]},</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true"></a>  <span class="fu">{registered,[</span><span class="ch">sinan_demo_sup</span><span class="fu">]},</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true"></a>  <span class="fu">{</span><span class="ch">applications</span><span class="fu">,</span> <span class="fu">[</span><span class="ch">kernel</span><span class="fu">,</span> <span class="ch">stdlib</span><span class="fu">]},</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true"></a>  <span class="fu">{</span><span class="ch">mod</span><span class="fu">,</span> <span class="fu">{</span><span class="ch">sinan_demo_app</span><span class="fu">,[]}},</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true"></a>  <span class="fu">{</span><span class="ch">start_phases</span><span class="fu">,</span> <span class="fu">[]}]}.</span></span></code></pre></div>
+<p>Compile with <code>sinan build</code> and hopefully everything works.</p>
+<p>From here you’ve got a few options to get your application running, but the easiest is just to use the sinan shell and start your application from there.</p>
+<pre class="shell"><code>
+$ sinan shell
+Eshell V5.9.1  (abort with ^G)
+1&gt; application:which_applications().
+[{parsetools,&quot;XLATETOOLS  CXC 138 xx&quot;,&quot;2.0.7&quot;},
+ {syntax_tools,&quot;Syntax tools&quot;,&quot;1.6.8&quot;},
+ {compiler,&quot;ERTS  CXC 138 10&quot;,&quot;4.8.1&quot;},
+ {getopt,&quot;Command-line options parser for Erlang&quot;,&quot;0.4.2&quot;},
+ {erlware_commons,&quot;Additional standard library for Erlang&quot;,
+                  &quot;0.6.1&quot;},
+ {stdlib,&quot;ERTS  CXC 138 10&quot;,&quot;1.18.1&quot;},
+ {kernel,&quot;ERTS  CXC 138 10&quot;,&quot;2.15.1&quot;}]
+2&gt; application:start(sinan_demo).
+ok
+</code></pre>
+<p>We’ve started a shell and checked what applications are started with <code>application:which_applications()</code>. Now start the demo application with:</p>
+<pre class="shell"><code>3&gt; application:start(sinan_demo).
+ok</code></pre>
+<p>Now lets test that we can call the application.</p>
+<pre class="shell"><code>4&gt; sinan_demo_server:add_one().
+{ok,{state,1}}
+5&gt; sinan_demo_server:add_one().
+{ok,{state,2}}</code></pre>
+<p>As you can see it’s calling the server and incrementing the call count.</p>
+<p>The next step is to create a release, which is as simple as running <code>sinan release</code></p>
+<p>Sinan has created a number of new directories under <code>_build</code></p>
+<pre class="shell"><code>
+$ tree -d _build/
+    _build/
+    `-- sinan_demo
+        |-- bin
+        |-- erts-5.9.1
+        |-- lib
+        |   |-- kernel-2.15.1
+        |   |-- sinan_demo-0.0.1
+        |   `-- stdlib-1.18.1
+        `-- releases
+            `-- 0.0.1
+</code></pre>
+<p>The <code>bin</code> directory is still there from last time but now we have an erts, lib and releases directories. erts is there because earlier we asked sinan to include an erlang runtime, so you can copy everything under _build/sinan_demo to another machine without erlang installed and run this application. The limitation being that the CPU and OS needs to match the machine you’ve built on. <code>lib</code> includes all the applications you asked sinan to include, they’ll match what you have in your collective .app.src files. <code>releases</code> contains configuration files specific to a particular release of the application.</p>
+<p>Starting the release generated is as simple as</p>
+<pre class="shell"><code>$ ./_build/sinan_demo/bin/sinan_demo
+Erlang R15B01 (erts-5.9.1) [source] [64-bit] [smp:8:8] [async-threads:0] [hipe] [kernel-poll:false]
+
+starting
+Eshell V5.9.1  (abort with ^G)
+1&gt; application:which_applications().
+ [{sinan_demo,&quot;Sinan demo application.&quot;,&quot;0.0.1&quot;},
+  {stdlib,&quot;ERTS  CXC 138 10&quot;,&quot;1.18.1&quot;},
+  {kernel,&quot;ERTS  CXC 138 10&quot;,&quot;2.15.1&quot;}]
+2&gt;
+</code></pre>
+<p>We’ll leave it there for now, but if you’re curious like me you’ll probably have a bunch of questions of where to take sinan next.</p>
+<p>Next time I’m going to cover:</p>
+<ul>
+<li>Generating Version 2</li>
+<li>Doing an OTP upgrade to Version 2</li>
+<li>Downgrading to Version 1</li>
+</ul>
+<p>But if you’ve got other suggestions please leave them in the comments.</p>
+</div>
+]]></summary>
 </entry>
 <entry>
     <title>Ripple on Rails</title>
@@ -87,7 +838,122 @@
     <id>https://lambdafoo.com/posts/2012-05-22-ripple-rails.html</id>
     <published>2012-05-22T00:00:00Z</published>
     <updated>2012-05-22T00:00:00Z</updated>
-    <summary type="html"><![CDATA[Ripple on Rails]]></summary>
+    <summary type="html"><![CDATA[<div class="post">
+  <h1 class="post-title">Ripple on Rails</h1>
+  <span class="post-date">May 22, 2012</span>
+  <h2 id="introduction">Introduction</h2>
+<p>Motivation?? Checkout the RailsCasts episode on Mongoid</p>
+<p>Started with the Seven DB in Seven weeks book. Wanted to see how Riak would mix with Rails / Ruby.</p>
+<h2 id="what-is-riak">What is Riak</h2>
+<p>Riak is a distributed key-value store based on the Amazon Dynamo papers. Written in Erlang by the people at Basho, it’s an exciting addition to the crowded NoSQL zoo.</p>
+<ul>
+<li>Map Reduce</li>
+<li>eventually consistent</li>
+<li>read / write balancing</li>
+</ul>
+<h2 id="installing-riak">Installing Riak</h2>
+<p>Installing Riak is pretty straight forward for development, if you’re on a Mac use the excellent Homebrew package and you’ll get the latest 1.2 release.</p>
+<pre><code>brew install riak</code></pre>
+<p>Similarly on Linux it should be a matter of invoking your local package manager and you should be set. I’m assuming you’re using a Mac here, cause that’s what I’ve got but Linux should work as well. And Windows, well use a VM :-)</p>
+<h2 id="ruby-environment">Ruby Environment</h2>
+<p>You’ll need some form of Ruby installed, I’d recommend installing via rvm over using your local ruby version. See rvm.io for details, it should simply be a matter of running a command in your terminal.</p>
+<p>Next we’ll create a gemset and install rails into that.</p>
+<pre><code>rvm --create use 1.9.3@ripple
+gem install rails</code></pre>
+<h2 id="creating-a-new-rails-application-with-ripple">Creating a new Rails Application with Ripple</h2>
+<p>Now that we have Riak installed we’ll create a new Rails 3 application that uses Riak. Continuing in the Rails tradition, lets create a blogging app.</p>
+<pre><code>$ rails new blog --skip-active-record --skip-bundle -T</code></pre>
+<p>Now the first thing to do is add the Ripple gem to the Gemfile. Currently the latest version doesn’t work with latest rails so lets use the latest from git.</p>
+<pre><code>source &#39;http://rubygems.org&#39;
+gem &#39;rails&#39;, &#39;3.2.2&#39;
+
+gem &#39;ripple&#39;, &#39;1.0.0.beta&#39;
+
+group :development, :test do
+    gem &#39;rspec&#39;
+    gem &#39;rspec-rails&#39;
+end</code></pre>
+<p>Then install the gems in the usual way.</p>
+<pre><code> $ bundle</code></pre>
+<p>Once the gems have installed we’ll need to generate the Ripple configuration.</p>
+<pre><code>$ rails g
+...
+Ripple:
+  ripple
+  ripple:configuration
+  ripple:js
+  ripple:model
+  ripple:observer
+  ripple:test</code></pre>
+<p>So we want the default ripple one.</p>
+<pre><code>$ rails g ripple
+create  config/ripple.yml
+create  app/mapreduce
+create  app/mapreduce/contrib.js
+create  app/mapreduce/iso8601.js
+create  app/mapreduce/ripple.js
+insert  spec/spec_helper.rb
+insert  spec/spec_helper.rb</code></pre>
+<p>As you can see it creates a ripple configuration file, some mapreduce assets and updates my spec_helper. Lets look just at the <code>config/ripple.yml</code> file for now.</p>
+<p>The default config file is shown below. You may have to modify or add the ‘source:’ property to point to where you’ve installed Riak. I’ve put mine in the same directory as the rails project so it looks like this</p>
+<pre><code># TODO use the default homebrew path here.
+# Configure Riak connections for the Ripple library.
+development:
+    http_port: 9000
+    pb_port: 9001
+    host: 127.0.0.1
+    source: /usr/local/bin   # Default for Homebrew.
+
+# The test environment has additional keys for configuring the
+# Riak::TestServer for your test/spec suite:
+#
+# * bin_dir specifies the path to the &quot;riak&quot; script that you use to
+#           start Riak (just the directory)
+# * js_source_dir specifies where your custom Javascript functions for
+#           MapReduce should be loaded from. Usually app/mapreduce.
+test:
+    http_port: 9000
+    pb_port: 9002
+    host: 127.0.0.1
+    source: /usr/local/bin   # Default for Homebrew.
+    js_source_dir: &lt;%= Rails.root + &quot;app/mapreduce&quot; %&gt;
+
+production:
+    http_port: 8098
+    pb_port: 8087
+    host: 127.0.0.1
+    source: /usr/local/bin   # Default for Homebrew.</code></pre>
+<p>With everything in place we can begin to build our application. We’ll start by generating an <code>Article</code> model with name and content fields and use the Rails scaffolding to create all the dependent bits.</p>
+<pre><code>$ rails g scaffold article name:string content:text</code></pre>
+<p>Ripple provides generators for models so that Ripple’s model generator is invoked when a model is created and ActiveRecord isn’t used. When we open up the model file we’ll see that it’s a simple class that includes <code>Ripple::Document</code>.</p>
+<pre><code>class Article
+    include Ripple::Document
+    property :name, String
+    property :content, String
+end</code></pre>
+<p>The big difference to an ActiveModel model is that the class defines each property, along with the type.</p>
+<p>Ripple also adds a number of helpful rake tasks for Riak.</p>
+<pre><code>$ rake -T
+...
+rake riak:create        # Creates a Riak cluster for the current environment in db/, e.g. d...
+rake riak:create:all    # Creates Riak clusters for all environments defined in config/ripp...
+rake riak:destroy       # Destroys the generated Riak cluster for the current environment.
+rake riak:drop          # Drops data only from the Riak cluster for the current environment.
+rake riak:drop:all      # Drops data Riak clusters for all environments defined in config/r...
+rake riak:start         # Starts the Riak cluster for the current environment
+rake riak:stop          # Stops the Riak cluster for the current environment</code></pre>
+<h2 id="load-the-controller-and-show-some-actions">Load the controller and show some actions</h2>
+<h2 id="make-the-controller-run-some-basic-rspec-things">Make the controller run some basic rspec things</h2>
+<h2 id="show-some-basic-validations-on-the-data.">Show some basic validations on the data.</h2>
+<h2 id="point-to-part2">Point to Part2</h2>
+<h2 id="running-mapreduce-queries-against-riak">Running MapReduce queries against Riak</h2>
+<h2 id="pulling-in-postgres">Pulling in Postgres</h2>
+<h2 id="writing-queries-in-coffeescript">Writing queries in CoffeeScript</h2>
+<h2 id="using-the-rails-console">Using the rails console</h2>
+<h2 id="using-the-riak-console">Using the Riak Console</h2>
+<h2 id="what-else-does-railscasts-mongoid-cover">What else does RailsCasts Mongoid cover?</h2>
+</div>
+]]></summary>
 </entry>
 
 </feed>

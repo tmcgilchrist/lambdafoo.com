@@ -1,36 +1,104 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>My Hakyll Blog - NetBSD 5.0 On An AspireOne 110L</title>
-        <link rel="stylesheet" type="text/css" href="../css/default.css" />
-        <link rel="stylesheet" type="text/css" href="../css/screen.css" />
-    </head>
-    <body>
-        <div id="header">
-            <div id="logo">
-                <a href="../">My Hakyll Blog</a>
-            </div>
-            <div id="navigation">
-                <a href="../">Home</a>
-                <a href="../about.html">About</a>
-                <a href="../talks.html">Talks</a>
-                <a href="../archive.html">Archive</a>
-            </div>
-        </div>
 
-        <div id="content">
-            <h1>NetBSD 5.0 On An AspireOne 110L</h1>
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
-            <div class="info">
-    Posted on March 23, 2010
-    
-        by Tim McGilchrist
-    
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+      
+        NetBSD 5.0 On An AspireOne 110L &middot; Tim McGilchrist
+      
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="../css/poole.css">
+  <link rel="stylesheet" href="../css/syntax.css">
+  <link rel="stylesheet" href="../css/lanyon.css">
+  <link rel="stylesheet" href="../css/book.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="../images/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="../atom.xml">
+
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+
+  <div class="sidebar-item">
+    <img src="../images/tim-movember-2009.jpg" />
+    <p>Tim McGilchrist</p>
+    <p>Software Engineer at Digital Asset in Sydney</p>
+
+    <p>
+      Twitter: <a href="https://twitter.com/lambda_foo">@lambda_foo</a><br>
+      Github: <a href="https://github.com/tmcgilchrist">tmcgilchrist</a><br>
+      Email: <a href="mailto:timmcgil@gmail.com">timmcgil@gmail.com</a><br>
+      LinkedIn: <a href="https://www.linkedin.com/in/timmcgilchrist">Tim McGilchrist</a>
+    </p>
+
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="../">
+      Blog
+    </a>
+    <a class="sidebar-nav-item" href="../about">
+      About
+    </a>
+    <a class="sidebar-nav-item" href="../talks">
+      Talks
+    </a>
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; Tim McGilchrist 2007-2021
+    </p>
+  </div>
 </div>
 
-<p>After trying Ubuntu Linx on the AspireOne for a few months, I wanted to branch out and try something a bit different. Linux is so main stream theses days, I only had to mess around with the wireless. Far too easy. Why back in my day we entered our X11 config on punchcards!!!</p>
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="../" title="Home">Tim McGilchrist</a>
+            
+            <span class="masthead-links">
+              <a href="../">Blog</a> |
+              <a href="../pages/about.html">About</a> |
+              <a href="../archive.html">Archive</a> |
+              <a href="../pages/talks.html">Talks</a>
+            </span>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">NetBSD 5.0 On An AspireOne 110L</h1>
+  <span class="post-date">March 23, 2010</span>
+  <p>After trying Ubuntu Linx on the AspireOne for a few months, I wanted to branch out and try something a bit different. Linux is so main stream theses days, I only had to mess around with the wireless. Far too easy. Why back in my day we entered our X11 config on punchcards!!!</p>
 <p>Anyway, my options were either OpenBSD or NetBSD.</p>
 <p>I’ve wanted to try OpenBSD on the desktop for ages, but being a bit fresh at the BSDs I decided to go for NetBSD. It was a bit less daunting and there are more online resources for NetBSD. But there is still something about OpenBSD, I’m sure I’ll get around to it soon.</p>
 <p>So I started off with downloading the ISO images for the latest <a href="http://www.netbsd.org/releases/formal-5/NetBSD-5.0.html">NetBSD</a> release 5.0. The latest release of NetBSD includes improved ACPI support and the <strong>ath(4)</strong> wireless is (apparently) supported. Plus all the other goodies mentioned in the release notes.</p>
@@ -91,11 +159,29 @@ micro$</code></pre>
 <li><a href="http://www.netbsd.org/docs/guide/en/">http://www.netbsd.org/docs/guide/en/</a></li>
 <li><a href="http://mail-index.netbsd.org/current-users/2008/08/21/msg004079.html">http://mail-index.netbsd.org/current-users/2008/08/21/msg004079.html</a></li>
 </ul>
+</div>
 
-        </div>
-        <div id="footer">
-            Site proudly generated by
-            <a href="http://jaspervdj.be/hakyll">Hakyll</a>
-        </div>
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
     </body>
 </html>
