@@ -14,3 +14,5 @@ TODO
  * rss/atom feed
  * github action build
  * github action deploy
+ * html url redirects to new url structure
+ *

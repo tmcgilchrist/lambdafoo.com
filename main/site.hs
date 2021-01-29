@@ -2,18 +2,13 @@
 
 import Data.Monoid (mappend)
 import Hakyll
-import Hakyll.Web.Sass (sassCompiler)
+import Hakyll.Web.Feed (renderAtom, renderRss)
 
 main :: IO ()
 main = hakyll $ do
   match "images/*" $ do
     route idRoute
     compile copyFileCompiler
-
-  match "css/*.sass" $ do
-    route $ setExtension "css"
-    let compressCssItem = fmap compressCss
-    compile (compressCssItem <$> sassCompiler)
 
   match "css/*" $ do
     route idRoute
@@ -34,6 +29,7 @@ main = hakyll $ do
         >>= loadAndApplyTemplate "templates/default.html" postCtx
         >>= relativizeUrls
 
+  -- TODO Support serving plain HTML
   -- match "talks/lambda-jam-2016-performance/*" $ do
   --   route $ setExtension "html"
   --   compile $
@@ -57,7 +53,7 @@ main = hakyll $ do
   match "index.html" $ do
     route idRoute
     compile $ do
-      posts <- recentFirst =<< loadAll "posts/*"
+      posts <- fmap (take 5) . recentFirst =<< loadAll "posts/*"
       let indexCtx =
             listField "posts" postCtx (return posts)
               `mappend` constField "title" "Home"
@@ -68,9 +64,34 @@ main = hakyll $ do
         >>= loadAndApplyTemplate "templates/default.html" indexCtx
         >>= relativizeUrls
 
+  -- Render atom / rss feeds
+  create ["atom.xml"] $ do
+    route idRoute
+    compile $ do
+      posts <- fmap (take 10) . recentFirst =<< loadAll "posts/*"
+      renderAtom feedConfiguration postCtx posts
+
+  create ["rss.xml"] $ do
+    route idRoute
+    compile $ do
+      posts <- fmap (take 10) . recentFirst =<< loadAll "posts/*"
+      renderRss feedConfiguration postCtx posts
+
   match "templates/*" $ compile templateCompiler
 
 postCtx :: Context String
 postCtx =
   dateField "date" "%B %e, %Y"
     `mappend` defaultContext
+
+feedConfiguration :: FeedConfiguration
+feedConfiguration =
+  FeedConfiguration
+    { feedTitle = "Perpetually Curious Blog",
+      feedDescription =
+        "Personal opinions on technology,\
+        \functional programming and various systems topics.",
+      feedAuthorName = "Tim McGilchrist",
+      feedAuthorEmail = "timmcgil@gmail.com",
+      feedRoot = "https://lambdafoo.com"
+    }

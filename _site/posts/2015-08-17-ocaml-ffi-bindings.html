@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>My Hakyll Blog - OCaml FFI bindings</title>
+        <link rel="stylesheet" type="text/css" href="../css/default.css" />
+        <link rel="stylesheet" type="text/css" href="../css/screen.css" />
+    </head>
+    <body>
+        <div id="header">
+            <div id="logo">
+                <a href="../">My Hakyll Blog</a>
+            </div>
+            <div id="navigation">
+                <a href="../">Home</a>
+                <a href="../about.html">About</a>
+                <a href="../talks.html">Talks</a>
+                <a href="../archive.html">Archive</a>
+            </div>
+        </div>
+
+        <div id="content">
+            <h1>OCaml FFI bindings</h1>
+
+            <div class="info">
+    Posted on August 17, 2015
+    
+        by Tim McGilchrist
+    
+</div>
+
+<p>One thing that always comes up with your favourite language is how do you use libraries written in another language. Typically this involves needing to talk to a particular C library, either because it’s faster than a native one or just that it is already written.</p>
+<p>For OCaml there is the ctypes library for binding to C libraries using pure OCaml. Written by the people at the good people at OCaml Labs <a href="http://ocaml.io">http://ocaml.io</a></p>
+<p>The core of ctypes is a set of combinators for describing the structure of C types – numeric types, arrays, pointers, structs, unions and functions. You can use these combinators to describe the types of the functions that you want to call, then bind directly to those functions – all without writing or generating any C!</p>
+<p>Lets go through a simple example binding to libyaml. Here’s a declaration form libyaml to get the version string.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="co">/**</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="co"> * Get the library version as a string.</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a><span class="co"> *</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a><span class="co"> * </span><span class="an">@returns</span><span class="co"> The function returns the pointer to a static string of the form</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a><span class="co"> * </span><span class="an">@c</span><span class="co"> </span><span class="cv">&quot;X.Y.Z&quot;</span><span class="co">, where </span><span class="an">@c</span><span class="co"> </span><span class="cv">X</span><span class="co"> is the major version number, </span><span class="an">@c</span><span class="co"> </span><span class="cv">Y</span><span class="co"> is a minor version</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a><span class="co"> * number, and </span><span class="an">@c</span><span class="co"> </span><span class="cv">Z</span><span class="co"> is the patch version number.</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a><span class="co"> */</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true"></a>YAML_DECLARE(<span class="dt">const</span> <span class="dt">char</span> *)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true"></a>yaml_get_version_string(<span class="dt">void</span>);</span></code></pre></div>
+<p>To bind to this we need to declare a compatible signature for our OCaml code.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a><span class="kw">open</span> Ctypes</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a><span class="kw">open</span> Foreign</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a><span class="kw">let</span> get_version_string =</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a>  foreign <span class="st">&quot;yaml_get_version_string&quot;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a>    (void @-&gt; returning <span class="dt">string</span>)</span></code></pre></div>
+<p>We’re pulling in Ctypes and Foreign. Then the let binding is using foreign with the name of the c method we want to call plus a type signature for that method.</p>
+<p>Next we need some calling code to print out the version string.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="kw">open</span> Core.Std</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a><span class="kw">let</span> () =</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a>  <span class="kw">let</span> version_string = get_version_string() <span class="kw">in</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a>  printf <span class="st">&quot;Version: %s</span><span class="ch">\n</span><span class="st">&quot;</span> version_string</span></code></pre></div>
+<p>Assuming you’ve got opam installed you can get the dependencies <code>opam install core ctypes</code> and compile the whole thing.</p>
+<pre class="shell"><code>
+&gt; corebuild -pkg ctypes.foreign -lflags -cclib,-lyaml version_string.native
+...
+./version_string.native
+Version: 0.1.6
+</code></pre>
+<p>We’ve got bindings to a native C library without writing any C.</p>
+<p>More complicated example involving passing an allocated string back from C, lets look at the <code>proc_pidpath</code> call from OSX. This particular library call takes a process id (PID) and returns back</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="dt">int</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a>proc_pidpath(<span class="dt">int</span> pid, <span class="dt">void</span> * buffer, <span class="dt">uint32_t</span>  buffersize)</span></code></pre></div>
+<p>To bind to this call we again define a compatible signature.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="kw">let</span> pidpath =</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a>    foreign ~check_errno:<span class="kw">true</span> <span class="st">&quot;proc_pidpath&quot;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a>            (<span class="dt">int</span> @-&gt; ptr <span class="dt">char</span> @-&gt; <span class="dt">int</span> @-&gt; returning <span class="dt">int</span>)</span></code></pre></div>
+<p>The arguments simply mirror those for the C library call, along with a new argument <code>check_errno</code> which indicates the c library sets errno if it encounters a problem.</p>
+<p>http://stackoverflow.com/questions/22651910/returning-a-string-from-a-c-library-to-ocaml-using-ctypes-and-foreign</p>
+<p>Ctypes provides native bindings for most things you’ll need. There’s all sorts of pointers and types matching pretty much every native C type you’ll need <a href="https://github.com/ocamllabs/ocaml-ctypes/blob/master/src/ctypes/ctypes.mli">here</a>.</p>
+
+        </div>
+        <div id="footer">
+            Site proudly generated by
+            <a href="http://jaspervdj.be/hakyll">Hakyll</a>
+        </div>
+    </body>
+</html>

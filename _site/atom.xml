@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <title>Perpetually Curious Blog</title>
+    <link href="https://lambdafoo.com/atom.xml" rel="self" />
+    <link href="https://lambdafoo.com" />
+    <id>https://lambdafoo.com/atom.xml</id>
+    <author>
+        <name>Tim McGilchrist</name>
+        <email>timmcgil@gmail.com</email>
+    </author>
+    <updated>2018-06-22T00:00:00Z</updated>
+    <entry>
+    <title>On EitherT</title>
+    <link href="https://lambdafoo.com/posts/2018-06-22-transformers-either.html" />
+    <id>https://lambdafoo.com/posts/2018-06-22-transformers-either.html</id>
+    <published>2018-06-22T00:00:00Z</published>
+    <updated>2018-06-22T00:00:00Z</updated>
+    <summary type="html"><![CDATA[Thoughts on Haskell error handling and using EitherT.]]></summary>
+</entry>
+<entry>
+    <title>OCaml FFI bindings</title>
+    <link href="https://lambdafoo.com/posts/2015-08-17-ocaml-ffi-bindings.html" />
+    <id>https://lambdafoo.com/posts/2015-08-17-ocaml-ffi-bindings.html</id>
+    <published>2015-08-17T00:00:00Z</published>
+    <updated>2015-08-17T00:00:00Z</updated>
+    <summary type="html"><![CDATA[OCaml FFI bindings]]></summary>
+</entry>
+<entry>
+    <title>First month of Haskell</title>
+    <link href="https://lambdafoo.com/posts/2015-05-20-first-month-of-haskell.html" />
+    <id>https://lambdafoo.com/posts/2015-05-20-first-month-of-haskell.html</id>
+    <published>2015-05-20T00:00:00Z</published>
+    <updated>2015-05-20T00:00:00Z</updated>
+    <summary type="html"><![CDATA[First month of Haskell]]></summary>
+</entry>
+<entry>
+    <title>Unreliable guide to OCaml modules</title>
+    <link href="https://lambdafoo.com/posts/2015-05-17-unreliable-guide-to-ocaml-modules.html" />
+    <id>https://lambdafoo.com/posts/2015-05-17-unreliable-guide-to-ocaml-modules.html</id>
+    <published>2015-05-17T00:00:00Z</published>
+    <updated>2015-05-17T00:00:00Z</updated>
+    <summary type="html"><![CDATA[Unreliable guide to OCaml modules]]></summary>
+</entry>
+<entry>
+    <title>Lenses in OCaml</title>
+    <link href="https://lambdafoo.com/posts/2015-01-16-ocaml-lenses.html" />
+    <id>https://lambdafoo.com/posts/2015-01-16-ocaml-lenses.html</id>
+    <published>2015-01-16T00:00:00Z</published>
+    <updated>2015-01-16T00:00:00Z</updated>
+    <summary type="html"><![CDATA[Lenses in OCaml]]></summary>
+</entry>
+<entry>
+    <title>Lambdajam Talks</title>
+    <link href="https://lambdafoo.com/posts/2014-08-08-lambdajam-talk.html" />
+    <id>https://lambdafoo.com/posts/2014-08-08-lambdajam-talk.html</id>
+    <published>2014-08-08T00:00:00Z</published>
+    <updated>2014-08-08T00:00:00Z</updated>
+    <summary type="html"><![CDATA[Lambdajam 2014 talks]]></summary>
+</entry>
+<entry>
+    <title>Ember.js and Google Analytics</title>
+    <link href="https://lambdafoo.com/posts/2013-09-17-emberjs-and-google-analytics.html" />
+    <id>https://lambdafoo.com/posts/2013-09-17-emberjs-and-google-analytics.html</id>
+    <published>2013-09-17T00:00:00Z</published>
+    <updated>2013-09-17T00:00:00Z</updated>
+    <summary type="html"><![CDATA[Ember.js and Google Analytics]]></summary>
+</entry>
+<entry>
+    <title>Erlang hot code loading</title>
+    <link href="https://lambdafoo.com/posts/2013-09-02-erlang-hot-code-loading.html" />
+    <id>https://lambdafoo.com/posts/2013-09-02-erlang-hot-code-loading.html</id>
+    <published>2013-09-02T00:00:00Z</published>
+    <updated>2013-09-02T00:00:00Z</updated>
+    <summary type="html"><![CDATA[Erlang hot code loading]]></summary>
+</entry>
+<entry>
+    <title>Getting started with Sinan</title>
+    <link href="https://lambdafoo.com/posts/2012-09-10-sinan-intro.html" />
+    <id>https://lambdafoo.com/posts/2012-09-10-sinan-intro.html</id>
+    <published>2012-09-10T00:00:00Z</published>
+    <updated>2012-09-10T00:00:00Z</updated>
+    <summary type="html"><![CDATA[Getting started with Sinan]]></summary>
+</entry>
+<entry>
+    <title>Ripple on Rails</title>
+    <link href="https://lambdafoo.com/posts/2012-05-22-ripple-rails.html" />
+    <id>https://lambdafoo.com/posts/2012-05-22-ripple-rails.html</id>
+    <published>2012-05-22T00:00:00Z</published>
+    <updated>2012-05-22T00:00:00Z</updated>
+    <summary type="html"><![CDATA[Ripple on Rails]]></summary>
+</entry>
+
+</feed>
