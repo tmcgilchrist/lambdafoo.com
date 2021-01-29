@@ -1,9 +1,9 @@
 ---
-layout: post
-title: "ocaml ffi bindings"
+title: OCaml FFI bindings
+author: Tim McGilchrist
 date: 2015-08-17 08:14
-comments: true
-categories: ocaml
+tags: ocaml
+description: OCaml FFI bindings
 ---
 
 One thing that always comes up with your favourite language is how do you use
@@ -24,8 +24,7 @@ any C!
 Lets go through a simple example binding to libyaml. Here's a declaration form
 libyaml to get the version string.
 
-{% codeblock lang:c %}
-
+``` c
 /**
  * Get the library version as a string.
  *
@@ -37,12 +36,11 @@ libyaml to get the version string.
 YAML_DECLARE(const char *)
 yaml_get_version_string(void);
 
-{% endcodeblock %}
-
+```
 
 To bind to this we need to declare a compatible signature for our OCaml code.
 
-{% codeblock lang:ocaml %}
+``` ocaml
 
 open Ctypes
 open Foreign
@@ -51,33 +49,34 @@ let get_version_string =
   foreign "yaml_get_version_string"
     (void @-> returning string)
 
-{% endcodeblock %}
+```
 
 We're pulling in Ctypes and Foreign. Then the let binding is using foreign with
 the name of the c method we want to call plus a type signature for that method.
 
 Next we need some calling code to print out the version string.
 
-{% codeblock lang:ocaml %}
+``` ocaml
+
 open Core.Std
 
 let () =
   let version_string = get_version_string() in
   printf "Version: %s\n" version_string
 
-{% endcodeblock %}
+```
 
 Assuming you've got opam installed you can get the dependencies `opam install
 core ctypes` and compile the whole thing.
 
-{% codeblock lang:bash %}
+``` shell
 
 > corebuild -pkg ctypes.foreign -lflags -cclib,-lyaml version_string.native
 ...
 ./version_string.native
 Version: 0.1.6
 
-{% endcodeblock %}
+```
 
 We've got bindings to a native C library without writing any C.
 
@@ -85,18 +84,18 @@ More complicated example involving passing an allocated string back from C, lets
 look at the `proc_pidpath` call from OSX. This particular library call takes a
 process id (PID) and returns back
 
-{% codeblock lang:c %}
+``` c++
 int
 proc_pidpath(int pid, void * buffer, uint32_t  buffersize)
-{% endcodeblock %}
+```
 
 To bind to this call we again define a compatible signature.
 
-{% codeblock lang:ocaml %}
+``` ocaml
 let pidpath =
     foreign ~check_errno:true "proc_pidpath"
             (int @-> ptr char @-> int @-> returning int)
-{% endcodeblock %}
+```
 
 The arguments simply mirror those for the C library call, along with a new
 argument `check_errno` which indicates the c library sets errno if it encounters

@@ -1,9 +1,11 @@
 ---
-layout: post
 title: "99 Erlang Problems: 16 - 25"
-categories:
+author: Tim McGilchrist
+date: 2008-05-07 00:00
+tags:
 - Coding
 - Erlang
+description: "99 Erlang Problems: 16 - 25"
 ---
 
 **Problem 16:** Drop every N'th element from a list.
@@ -66,7 +68,9 @@ selected numbers shall be returned in a list.
 
 ### Answers ###
 <!--more-->
-{% codeblock lang:erlang %}
+
+``` erlang
+
 p16(List, N) ->  p16(List, N, 1).
 p16([], _, _) -> [];
 p16([H|T], N, A) ->
@@ -178,4 +182,4 @@ p25(L) ->
     Elem = lists:nth(Idx, L),
     [Elem|p25(lists:delete(Elem, L))].
 
-{% endcodeblock %}
+```

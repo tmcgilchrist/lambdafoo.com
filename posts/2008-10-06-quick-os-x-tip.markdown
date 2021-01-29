@@ -1,8 +1,9 @@
 ---
-layout: post
 title: "Quick OS X Tip: crontab entry to startup a GUI application on OS X"
-categories:
-- OS X
+author: Tim McGilchrist
+date: 2008-10-06
+tags: OSX
+description: "Quick OS X Tip: crontab entry to startup a GUI application on OS X"
 ---
 
 Just a quick note, about crontab and OS X.

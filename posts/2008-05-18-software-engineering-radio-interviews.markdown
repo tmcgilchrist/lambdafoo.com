@@ -1,11 +1,11 @@
 ---
-layout: post
 title: Software Engineering Radio Interviews
-categories:
-- Coding
-- Erlang
-- Lisp
+author: Tim McGilchrist
+date: 2008-05-18 00:00
+tags: Coding Erlang Lisp
+description: Software Engineering Radio Interviews
 ---
+
 Here are some interesting interviews I came across the other day on
 [SE Radio](http://www.se-radio.net), and thought I'd post them up
 here.

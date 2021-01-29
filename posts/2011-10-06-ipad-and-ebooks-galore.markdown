@@ -1,8 +1,9 @@
 ---
-layout: post
 title: iPad and eBooks galore
-categories:
- - Opinion
+author: Tim McGilchrist
+date: 2011-01-06
+tags: Opinion
+description: iPad and eBooks galore
 ---
 Having recently caved and bought an iPad. It's exceptionally good, much better
 than I expected, it's just I need to fight to get it back off my wife and/or

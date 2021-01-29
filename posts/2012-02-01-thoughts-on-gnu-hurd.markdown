@@ -1,11 +1,9 @@
 ---
-layout: post
-title: "Thoughts on GNU Hurd"
+title: Thoughts on GNU Hurd
+author: Tim McGilchrist
 date: 2012-02-01 10:34
-comments: true
-categories:
- - Hurd
- - Opinion
+tags: Hurd Opinion
+description: Thoughts on GNU Hurd
 ---
 
 After reading a recent

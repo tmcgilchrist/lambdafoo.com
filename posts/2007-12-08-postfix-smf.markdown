@@ -1,9 +1,9 @@
 ---
-layout: post
 title: Postfix & SMF
-categories:
-  - Postfix
-  - Solaris
+author: Tim McGilchrist
+date: 2007-12-08 00:00
+tags: Postfix Solaris
+description: Postfix & SMF
 ---
 Blastwave's Postfix doesn't currently use SMF, but I really wanted it to. So I
 converted the SysV init script supplied into a more usable form. I'll assume

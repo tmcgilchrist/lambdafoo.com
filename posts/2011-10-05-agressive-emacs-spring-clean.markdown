@@ -1,10 +1,9 @@
 ---
-layout: post
 title: Agressive Emacs Spring Clean
-categories:
-- Emacs
-- Rails
-- Ruby
+author: Tim McGilchrist
+date: 2011-10-05 00:00
+description: Agressive Emacs Spring Clean
+tags: Emacs Rails Ruby
 ---
 A few weeks ago I mentioned that I was going to start using Emacs regularly for my Ruby/Rails development.
 

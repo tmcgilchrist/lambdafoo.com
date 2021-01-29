@@ -1,8 +1,9 @@
 ---
-layout: post
 title: Update on Me
-categories:
-- Coding
+author: Tim McGilchrist
+date: 2008-12-14 00:00
+tags: Coding
+description: Update on Me
 ---
 A quick update for what it's worth.
 

@@ -1,10 +1,9 @@
 ---
-layout: post
-title: "Git rebase workflow"
+title: Git rebase workflow
+author: Tim McGilchrist
 date: 2012-02-10 14:00
-comments: true
-categories:
-- Git
+tags: git
+description: Git rebase workflow
 ---
 
 New gist for using a rebase workflow with git.

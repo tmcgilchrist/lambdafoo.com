@@ -1,9 +1,9 @@
 ---
-layout: post
 title: Erlang hot code loading
+author: Tim McGilchrist
 date: 2013-09-02
-comments: true
-categories: Erlang
+tags: Erlang
+description: Erlang hot code loading
 ---
 
 Nearly every posting about Erlang that you come across mentions the hot code
@@ -12,7 +12,7 @@ finding a simple example of how to add this to my code. So here is one.
 
 Copy this code into an editor. I'm using Emacs here, so all instructions use it's keybindings.
 
-{% codeblock lang:erlang %}
+``` erlang
 
 %% A process whose only job is to keep a counter.
 -module(counter).
@@ -38,14 +38,15 @@ loop(Sum) ->
    end.
 
 codeswitch(Sum) -> loop(Sum).
-{% endcodeblock %}
+
+```
 
 Compile and start a new erlang shell, Ctrl-C Ctrl-K.
 
 Now we want to start a new process running this code. Startup and enter the
 following code into the erlang shell.
 
-{% codeblock %}
+``` shell
 
 Erlang R15B (erts-5.9) [source] [64-bit] [smp:8:8] [async-threads:0] [hipe] [kernel-poll:false]
 
@@ -53,11 +54,12 @@ Eshell V5.9  (abort with ^G)
 1> Pid = spawn(fun() -> counter:start() end).
 <0.37.0>
 
-{% endcodeblock %}
+```
+
 
 Send the process a message to make sure it's alive and working.
 
-{% codeblock %}
+``` shell
 
 3> Pid ! {increment, 3}.
 {increment,3}
@@ -65,12 +67,13 @@ Send the process a message to make sure it's alive and working.
 Sum is 3
 {print}
 
-{% endcodeblock %}
+```
 
 Now that we have the first version of the process running, add a new clause to
 the receive like so.
 
-{% codeblock lang:erlang %}
+``` erlang
+
   {print} ->
     io:format("Sum is ~p~n", [Sum]),
     loop(Sum);
@@ -79,22 +82,23 @@ the receive like so.
   {counter, Pid} ->
     Pid ! {counter, Sum},
     loop(Sum);
-{% endcodeblock %}
+
+```
 
 Compile this version, Ctrl-C Ctrl-K and send a message to the process that only
 the new version can handle.
 
-{% codeblock %}
+``` shell
 
 6> Pid ! {reset}.
 Unhandled message {reset}
 {reset}
 
-{% endcodeblock %}
+```
 
 So we are still running the previous version of the code.
 
-{% codeblock %}
+``` shell
 
 6> Pid ! code_switch.
 code_switch
@@ -107,7 +111,7 @@ Sum is 3
 Sum is 0
 {print}
 
-{% endcodeblock %}
+```
 
 The 'code_switch' message makes the process load the new version of code. So
 using this you can upgrade the running process without losing state. Cool.

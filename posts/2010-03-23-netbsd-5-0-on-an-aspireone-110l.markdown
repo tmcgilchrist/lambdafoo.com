@@ -1,9 +1,11 @@
 ---
-layout: post
 title: NetBSD 5.0 On An AspireOne 110L
-categories:
-- NetBSD
+author: Tim McGilchrist
+date: 2010-03-23 00:00
+tags: NetBSD
+description: NetBSD 5.0 On An AspireOne 110L
 ---
+
 After trying Ubuntu Linx on the AspireOne for a few months, I wanted to branch
 out and try something a bit different. Linux is so main stream theses days, I
 only had to mess around with the wireless. Far too easy. Why back in my day we

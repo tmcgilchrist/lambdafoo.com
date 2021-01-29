@@ -1,10 +1,13 @@
 ---
-layout: post
 title: "YARB: Yet Another Ring Benchmark, Part I"
-categories:
+author: Tim McGilchrist
+date: 2009-03-21 00:00
+tags:
 - Coding
 - Erlang
+description: "YARB: Yet Another Ring Benchmark, Part I"
 ---
+
 In Joe Armstrong's excellent Erlang book he has an exercise to:
 
     Write a ring benchmark. Create N processes in a ring. Send a message round the
@@ -19,7 +22,8 @@ example now would it.
 
 So lets see how it's done.
 
-{% codeblock lang:erlang %}
+``` erlang
+
 -module(ring).
 -compile(export_all).
 -import(lists, [foreach/2, map/2, reverse/1]).
@@ -29,28 +33,28 @@ main([A,B]) ->
     M = list_to_integer(B),
     io:format("~w: ~w processes with ~w messages\n", [self(), N, M]),
 
-{% endcodeblock %}
+```
 
 This section simply reads in the command-line arguments and uses
 **list_to_integer()** to convert them into numbers.
 
-{% codeblock lang:erlang %}
+```erlang
 
 [First|_] = Pids = for(1, N, fun() -> spawn(fun() -> loop() end) end),
 setupLoop(Pids),
 
-{% endcodeblock %}
+```
 
 Next we spawn the required number of threads and setup the loop, so that each
 thread knows the PID of the next thread in the loop.
 
-{% codeblock lang:erlang %}
+``` erlang
 
 sendMsgs(M, First),
 % Cleanup!!
 map(fun(P) -> P ! {exit} end, Pids).
 
-{% endcodeblock %}
+```
 
 SengMsgs does the work of sending messages around the loop. It starts with
 sending a **{relay}** message to the first thread in the loop and waits for
@@ -58,7 +62,7 @@ a reply from the last thread in the loop. When it receives a message from the
 last thread, it decrements the message count and sends another **{relay}**
 message. Continuing until the message count reaches 0.
 
-{% codeblock lang:erlang %}
+``` erlang
 
 sendMsgs(0, First) ->
     First ! {relay},
@@ -73,7 +77,7 @@ sendMsgs(N, First) ->
             sendMsgs(N-1, First)
     end.
 
-{% endcodeblock %}
+```
 
 To setup the loop, we take the first 2 PIDs sending the second PID to the first
 as a message indicating that it's the next thread in the loop. When we get down
@@ -91,9 +95,11 @@ Full source code follows, simply copy the code and place into a file called
 **ring.erl**. Compile using this command **erlc ring.erl** and run the
 resulting program like so
 
-    erl -noshell -run ring main 1 2 -run init stop
+``` shell
+erl -noshell -run ring main 1 2 -run init stop
+```
 
-{% codeblock lang:erlang %}
+``` erlang
 
 -module(ring).
 -compile(export_all).
@@ -162,4 +168,4 @@ for(N, N, F) ->
 for(I, N, F) ->
     [F() | for (I+1, N, F)].
 
-{% endcodeblock %}
+```

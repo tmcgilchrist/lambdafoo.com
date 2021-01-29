@@ -1,11 +1,9 @@
 ---
-layout: post
 title: "First month of Haskell"
+author: Tim McGilchrist
 date: 2015-05-20 16:02
-comments: true
-categories:
-  - haskell
-  - ocaml
+tags: haskell ocaml
+description: First month of Haskell
 ---
 
 I've been excpetionally fortunate in the past month to accomplish a long held

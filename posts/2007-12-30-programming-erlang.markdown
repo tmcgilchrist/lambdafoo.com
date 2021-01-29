@@ -1,9 +1,9 @@
 ---
-layout: post
 title: Programming Erlang
-categories:
-- Coding
-- Erlang
+author: Tim McGilchrist
+date: 2007-12-30 00:00
+tags: Erlang
+description: Programming Erlang
 ---
 
 I've been interested in functional programming languages ever since I was

@@ -1,10 +1,11 @@
 ---
-layout: post
 title: Compiler Update
-categories:
-- Coding
-- Haskell
+author: Tim McGilchrist
+date: 2009-03-05 00:00
+tags: Coding Haskell
+description: Compiler Update
 ---
+
 More than a month ago I started writing a compiler for a subset of C in
 Python. Partially inspired by a blog posting from Steve Yegge and out of a
 desire to learn Python.

@@ -1,11 +1,9 @@
 ---
-layout: post
-title: "Site Update"
+title: Site Update
+author: Tim McGilchrist
 date: 2012-01-22 00:00
-categories:
-- Misc
-type: post
-published: true
+tags: Misc
+description: Site Update
 ---
 
 I've been rather lax in my updates of late so here is a new site and a status

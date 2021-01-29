@@ -1,11 +1,14 @@
 ---
-layout: post
 title: Acer Aspire One with NetBSD 5.0
-categories:
-- NetBSD
+author: Tim McGilchrist
+date: 2009-05-23 00:00
+tags: NetBSD
+description: Acer Aspire One with NetBSD 5.0
 ---
 
 Finished installing NetBSD 5.0 on my AspireOne, here's the output from dmesg.
+
+``` shell
 
     Copyright (c) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
     2006, 2007, 2008
@@ -180,6 +183,8 @@ Finished installing NetBSD 5.0 on my AspireOne, here's the output from dmesg.
     wsdisplay0: screen 2 added (80x25, vt100 emulation)
     wsdisplay0: screen 3 added (80x25, vt100 emulation)
     wsdisplay0: screen 4 added (80x25, vt100 emulation)
+
+```
 
 I'm writing up some notes on how the install went and special things I needed to
 do to get hardware working which I'll be posting sometime over the weekend.

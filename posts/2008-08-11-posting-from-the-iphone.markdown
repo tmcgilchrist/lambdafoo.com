@@ -1,9 +1,11 @@
 ---
-layout: post
 title: Posting from the iPhone
-categories:
-- Misc
+author: Tim McGilchrist
+date: 2008-08-11
+tags: Misc
+description: Posting from the iPhone
 ---
+
 Just testing the iPhone app for posting to my weblog. It seems to work
 -correctly. Cool.
 

@@ -1,10 +1,11 @@
 ---
-layout: post
-title: "Lambdajam Talks"
+title: Lambdajam Talks
+author: Tim McGilchrist
 date: 2014-08-08 14:15
-comments: true
-categories: talks
+tags: talks
+description: Lambdajam 2014 talks
 ---
+
 Earlier this year I spoke at
 [Yow! LambdaJam](http://lambdajam.yowconference.com.au) about RAFT and Erlang. I
 thought I should link to my talk descriptions and slides [here](https://a.confui.com/-kpclGeyK).

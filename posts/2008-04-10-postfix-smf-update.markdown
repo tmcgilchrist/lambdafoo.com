@@ -1,9 +1,9 @@
 ---
-layout: post
 title: "Postfix & SMF: Update"
-categories:
-- Postfix
-- Solaris
+author: Tim McGilchrist
+date: 2008-04-10
+tags: Postfix Solaris
+description: "Postfix & SMF: Update"
 ---
 
 It looks like blastwave has updated their version of Postfix to 2.4.6 which

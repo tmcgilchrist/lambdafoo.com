@@ -1,8 +1,9 @@
 ---
-layout: post
-title: "The Rubinius Virtual Machine"
-categories:
-  - Ruby
+title: The Rubinius Virtual Machine
+author: Tim McGilchrist
+date: 2011-07-05 00:00
+description: The Rubinius Virtual Machine
+tags: Ruby
 ---
 
 Cool talk about the Rubinius Virtual Machine.

@@ -1,9 +1,7 @@
 ---
-layout: post
 title: Meraki Internals
-categories:
-- Coding
-- Meraki
+author: Tim McGilchrist
+tags: Coding Meraki
 ---
 
 Pristine Meraki Mini.

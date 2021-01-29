@@ -1,10 +1,9 @@
 ---
-layout: post
 title: Emacs reboot
-categories:
-- Emacs
-- Rails
-- Ruby
+author: Tim McGilchrist
+date: 2011-08-12 00:00
+tags: Emacs Rails Ruby
+description: Emacs reboot
 ---
 
 I'm trying out a little experiment for the next few week. I'll be using Emacs as

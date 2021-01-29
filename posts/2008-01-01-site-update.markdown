@@ -1,9 +1,11 @@
 ---
-layout: post
 title: Site update
-categories:
-- Misc
+author: Tim McGilchrist
+date: 2008-01-01
+tags: Misc
+description: Site update
 ---
+
 Apologies for the brief outage. There was an
 [urgent security release](http://wordpress.org/development/2007/12/wordpress-232/)
 for WordPress.

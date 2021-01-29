@@ -1,8 +1,9 @@
 ---
-layout: post
 title: Reading List for the Holidays
-categories:
-- Books
+author: Tim McGilchrist
+date: 2008-12-26 00:00
+tags: Books
+description: Reading List for the Holidays
 ---
 My holiday reading list.
 

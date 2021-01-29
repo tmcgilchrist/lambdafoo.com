@@ -1,8 +1,9 @@
 ---
-layout: post
-title: "NetBSD wireless setup"
-categories:
-- NetBSD
+title: NetBSD wireless setup
+author: Tim McGilchrist
+date: 2008-09-20 00:00
+tags: NetBSD
+description: NetBSD wireless setup
 ---
 
 After installing NetBSD 4, the ethernet connection worked but not the

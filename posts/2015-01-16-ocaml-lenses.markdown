@@ -1,10 +1,9 @@
 ---
-layout: post
-title: "Lenses in OCaml"
+title: Lenses in OCaml
+author: Tim McGilchrist
 date: 2015-01-16 10:52
-comments: true
-categories:
- - ocaml
+tags: ocaml
+description: Lenses in OCaml
 ---
 
 Lenses have been on my mind since encountering them last year in the context of

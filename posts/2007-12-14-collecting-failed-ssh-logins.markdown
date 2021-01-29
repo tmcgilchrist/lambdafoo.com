@@ -1,9 +1,11 @@
 ---
-layout: post
 title: Collecting Failed SSH Logins
-categories:
-- Solaris
+author: Tim McGilchrist
+date: 2007-12-14 00:00
+tags: Solaris
+description: Collecting Failed SSH Logins
 ---
+
 It's always a good idea to keep an eye on what's happening on your servers,
 especially when they're connected to a hostile environment like the
 Interweb. Following in this vein, I'm going to show how I configured my Solaris

@@ -1,9 +1,11 @@
 ---
-layout: post
 title: Erlang + Emacs = Fun
-categories:
+author: Tim McGilchrist
+date: 2008-03-09 00:00
+tags:
 - Coding
 - Erlang
+description: Erlang + Emacs = Fun
 ---
 
 As part of learning Erlang I needed a decent editor. I tried using
@@ -15,14 +17,16 @@ you can do with Erlang but I you need to start somewhere.
 So here is the configuration for getting an Erlang emacs mode, drop it into your
 .emacs file.
 
-{% codeblock lang:cl %}
+``` common-lisp
+
 (setq load-path (cons  "/opt/local/lib/erlang/lib/tools-2.6/emacs"
                        load-path))
 (setq erlang-root-dir "/opt/local/lib/erlang")
 (setq exec-path (cons "/opt/local/lib/erlang/bin" exec-path))
 (require 'erlang-start)
 
-{% endcodeblock %}
+
+```
 
 I'm using the Erlang installed by MacPorts, which installs into **/opt/local**,
 adjust the path for local conditions.

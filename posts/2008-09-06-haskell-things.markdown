@@ -1,9 +1,11 @@
 ---
-layout: post
 title: Haskell Things
-categories:
-- Haskell
+author: Tim McGilchrist
+date: 2008-09-06 00:00
+tags: Haskell
+description: Haskell Things
 ---
+
 Just wanted to share a few good Haskell links that I've come across.
 
 Software Engineering radio just recently had an

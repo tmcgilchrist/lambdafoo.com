@@ -1,13 +1,16 @@
 ---
-layout: post
 title: Simple TCP Server in Erlang
-categories:
+author: Tim McGilchrist
+date: 2008-10-12 00:00
+tags:
 - Coding
 - Erlang
+description: Simple TCP Server in Erlang
 ---
 Just a quick example of a tcp server that returns the current time.
 
-{% codeblock lang:erlang %}
+``` erlang
+
 -module(daytime).
 -export([start/0]).
 
@@ -34,7 +37,8 @@ getDateTime() ->
                                          Hour, Minute, Second]),
     lists:flatten(DateString).
 
-{% endcodeblock %}
+```
+
 
 To test, startup an erlang shell:
 

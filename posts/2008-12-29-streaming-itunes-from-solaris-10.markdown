@@ -1,9 +1,11 @@
 ---
-layout: post
 title: Streaming iTunes from Solaris 10
-categories:
+author: Tim McGilchrist
+date: 2008-12-29 00:00
+tags:
 - Solaris
 - iTunes
+description: Streaming iTunes from Solaris 10
 ---
 **Problem:** Sharing iTunes library from home server running Solaris.
 
@@ -31,7 +33,7 @@ A couple of pre-requisites before running configure, make sure you have the Sun
 Studio compilers in your PATH. Otherwise it will try to use the gcc compiler or
 not find one at all.
 
-{% codeblock lang:bash %}
+``` shell
 export PATH=/opt/SUNWspro/bin:$PATH
 
 ./configure --enable-sqlite3 --with-sqlite3-includes=/opt/csw/include \
@@ -40,7 +42,7 @@ export PATH=/opt/SUNWspro/bin:$PATH
  LDFLAGS="-L/opt/csw/lib" \
 CPPFLAGS="-I/opt/csw/include" --prefix=/opt/local
 
-{% endcodeblock %}
+```
 
 Which looks for the sqlite3 and gdbm libraries from my Blastwave install, and
 will install the final binary under **/opt/local**. Change this if you want
@@ -49,11 +51,12 @@ to install elsewhere.
 **Step 4:** Compiling
 Run a quick make to compile everything,
 
-{% codeblock lang:bash %}
+``` shell
+
 gmake
 gmake install
 
-{% endcodeblock %}
+```
 
 ### NOTE Fri Feb  3 08:25:48 ###
 I no longer have a Solaris install available, or a SPARC machine for that

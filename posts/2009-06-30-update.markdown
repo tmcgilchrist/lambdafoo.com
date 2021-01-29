@@ -1,8 +1,9 @@
 ---
-layout: post
 title: Update
-categories:
-- Misc
+author: Tim McGilchrist
+date: 2009-06-30 00:00
+tags: Misc
+description: Update 2009
 ---
 
 Since I haven't posted anything here for a while. I wanted to give a quick

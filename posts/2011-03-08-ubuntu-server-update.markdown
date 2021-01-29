@@ -1,9 +1,9 @@
 ---
-layout: post
 title: Ubuntu Server update
-categories:
- - Unix
- - Linux
+author: Tim McGilchrist
+date: 2011-03-08 00:00
+tags: Unix Linux
+description: Ubuntu Server update
 ---
 
 I posted a while ago about switching to Ubtuntu for my home server.
@@ -21,8 +21,12 @@ caching DNS server.
 
 Some services I'm not bothering to migrate:
 
- * Subversion, I've switched to github and migrated anything I cared about out of subversion. It was useful at the time I set it up 6 or so years ago, but other/better options exist now.
- * MediaWiki, most of the stuff in there was either related to a project in Subversion. So I'll switch to using the github wiki associated with a project. No need to worry about security or keeping software up to date.
+ * Subversion, I've switched to github and migrated anything I cared about out of
+   subversion. It was useful at the time I set it up 6 or so years ago, but other/better
+   options exist now.
+ * MediaWiki, most of the stuff in there was either related to a project in Subversion.
+   So I'll switch to using the github wiki associated with a project. No need to worry
+   about security or keeping software up to date.
 
 So all in all a success switching to Ubuntu.
 

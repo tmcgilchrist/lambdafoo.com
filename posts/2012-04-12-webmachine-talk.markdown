@@ -1,12 +1,12 @@
 ---
-layout: post
-title: "WebMachine Talk"
+title: WebMachine Talk
+author: Tim McGilchrist
 date: 2012-04-12 12:44
-comments: true
-categories:
+tags:
  - WebMachine
  - Erlang
  - Talk
+description: WebMachine Talk
 ---
 
 I finally posting my slides for the WebMachine talk I gave at

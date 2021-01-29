@@ -1,10 +1,13 @@
 ---
-layout: post
 title: Creating an rsync copy of Nekoware
-categories:
+author: Tim McGilchrist
+date: 2008-01-06 00:00
+tags:
 - IRIX
 - SGI
+description: Creating an rsync copy of Nekoware
 ---
+
 If you're running an SGI at home or maybe at work, and you haven't heard of
 -Nekoware, then you must be new around here. It's a collection of opensource
 -software all compiled and ready to install for your SGI. Check out
@@ -26,7 +29,8 @@ Login as root and change to the directory where you downloaded rsync to.
 To install software from the command line you need to use the software
 installation tool **inst(1)**.
 
-{% codeblock %}
+``` shell
+
 inst
 
 Default distribution to install from: /var/tmp/tardista000i0
@@ -64,12 +68,12 @@ Reading product descriptions ..  25%
 Setting distribution to /var/tmp/tardista000F7
 Reading product descriptions .. 100% Done.
 
-</code>
-
+```
 
 List the files available in this package
 
-<code>
+``` shell
+
 Inst> list
   View:      distribution
   Status:    N=new, U=upgrade, S=same, D=downgrade
@@ -93,11 +97,12 @@ Current free space                 981640
 
 Final projected free space         981640
 
-{% endcodeblock %}
+```
 
 Now select the files you want installed, I went for the default which includes the executable and the man page.
 
-{% codeblock %}
+``` shell
+
 Inst> install d
 
 Inst> list
@@ -125,13 +130,12 @@ Final projected free space         981640
 
 Inst>
 
-{% endcodeblock %}
-
+```
 
 All that remains is the install, so type **go** and watch it go.  After it has
 finished installing, you can simply quit isnt.
 
-{% codeblock %}
+```
 
 You may continue with installations or quit now.
 
@@ -145,7 +149,7 @@ or remove it?
 Please enter a choice [2]: 2
 Requickstarting ELF files (see rqsall(1)) ..  25%
 
-{% endcodeblock %}
+```
 
 The requickstarting stage may take a while, so just leave it to do it's thing.
 

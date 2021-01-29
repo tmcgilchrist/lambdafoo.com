@@ -1,13 +1,13 @@
 ---
-layout: post
-title: "Riak, Ruby and Ripple Talk"
+title: Riak, Ruby and Ripple Talk
+author: Tim McGilchrist
 date: 2012-03-15 10:26
-comments: true
-categories:
+tags:
 - Ruby
 - Riak
 - NoSQL
 - Talk
+description: Riak, Ruby and Ripple Talk
 ---
 
 I recently presented a talk to

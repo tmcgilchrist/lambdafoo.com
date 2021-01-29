@@ -1,9 +1,11 @@
 ---
-layout: post
 title: IntelliJ IDEA Ubuntu Launcher
-categories:
-- Java
+author: Tim McGilchrist
+date: 2010-12-27 00:00
+tags: Java
+description: IntelliJ IDEA Ubuntu Launcher
 ---
+
 I've been using IntelliJ on Ubuntu 10.10 lately for work and rather than
 starting things from the terminal I wanted a pretty launcher in the top menu.
 

@@ -1,10 +1,11 @@
 ---
-layout: post
 title: .emacs publishing
-categories:
-- Coding
-- Emacs
+author: Tim McGilchrist
+date: 2010-06-25 00:00
+tags: Coding Emacs
+description: .emacs publishing
 ---
+
 I signed up for a BitBucket account earlier this month but I've only recently
 got around to using it. My first public project is my .emacs file. Check it out
 at [lambda_foo/.emacs](http://bitbucket.org/lambda_foo/.emacs).

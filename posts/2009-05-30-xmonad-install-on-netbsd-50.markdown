@@ -1,10 +1,12 @@
 ---
-layout: post
 title: XMonad Install on NetBSD 5.0
-categories:
+author: Tim McGilchrist
+date: 2009-05-30 00:00
+tags:
 - Haskell
 - NetBSD
 - xmonad
+description: XMonad Install on NetBSD 5.0
 ---
 I had some issues with getting XMonad and it's dependencies working on NetBSD
 5.0 with pkgsrc, so I thought I'd put this up to help out others and myself when
@@ -29,7 +31,7 @@ Running **ghc-pkg list** will show you what is already installed.
 
 Mine looked something like this:
 
-{% codeblock lang:bash %}
+``` shell
 
 micro# ghc-pkg list
 /usr/pkg/lib/ghc-6.8.3/package.conf:
@@ -44,7 +46,7 @@ micro# ghc-pkg list
     regex-base-0.72.0.1, regex-compat-0.71.0.1, regex-posix-0.72.0.2,
     rts-1.0, stm-2.1.1.1, template-haskell-2.2.0.0, time-1.1.2.1,
     unix-2.3.0.1, xhtml-3000.2.0.0
-{% endcodeblock %}
+```
 
 So I only needed X11 which I grabbed from
 [here](http://hackage.haskell.org/cgi-bin/hackage-scripts/package/X11). Untar
@@ -56,7 +58,7 @@ the X11 download, hop into that directory and run each of these commands in orde
 
 If it fails, **good** it's just like my install. I got the following stack trace:
 
-{% codeblock lang:bash %}
+``` shell
 
 Building X11-1.4.5...
 [22 of 24] Compiling Graphics.X11.Xlib.Extras ( dist/build/Graphics/X11/Xlib/Extras.hs, dist/build/Graphics/X11/Xlib/Extras.o )
@@ -90,7 +92,7 @@ In file included from dist/build/Graphics/X11/Xlib/Extras_stub.c:2:0:
 /usr/pkg/lib/ghc-6.8.3/include/Rts.h:204:0:
      error: expected ')' before '*' token
 
-{% endcodeblock %}
+```
 
 Seems that it's actually complaining that it can't see gmp.h.  So the quick 'n nasty fix for this is.
 

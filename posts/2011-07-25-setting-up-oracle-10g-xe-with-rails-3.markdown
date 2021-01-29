@@ -1,9 +1,9 @@
 ---
-layout: post
 title: Setting up Oracle 10g XE with Rails 3
-categories:
-- Rails
-- Ruby
+author: Tim McGilchrist
+date: 2011-07-25 00:00
+tags: Rails Ruby
+description: Setting up Oracle 10g XE with Rails 3
 ---
 Just linking to a gist I created about setting up Ubuntu with Oracle 10g XE and Rails 3.
 

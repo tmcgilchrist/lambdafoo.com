@@ -1,14 +1,17 @@
 ---
-layout: post
 title: Hacking the Meraki
-categories:
-- Coding
-- Meraki
+author: Tim McGilchrist
+date: 2008-02-28
+tags: Coding Meraki
+description: Hacking the Meraki
 ---
+
 Success!
 
 The Meraki Mini has now had it's internals revealed and a serial cable
 attached. It's ready for real work now!
+
+``` shell
 
     Ethernet eth0: MAC address 00:18:XX:XX:XX:XX
     IP: 192.168.XX.XX/255.255.255.0, Gateway: 0.0.0.0
@@ -117,6 +120,8 @@ attached. It's ready for real work now!
     init started:  BusyBox v1.1.0 (2007.03.05-17:58+0000) multi-call binary
 
     Please press Enter to activate this console.
+
+```
 
 Disassembly instructions and serial port layout taken from
 [OpenWRT Meraki](http://wiki.openwrt.org/OpenWrtDocs/Hardware/Meraki/Mini). Hardware

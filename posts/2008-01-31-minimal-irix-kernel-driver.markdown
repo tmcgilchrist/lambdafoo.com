@@ -1,8 +1,10 @@
 ---
-layout: post
 title: Minimal IRIX Kernel Driver
-categories:
+author: Tim McGilchrist
+date: 2008-01-31 00:00
+tags:
 - IRIX
+description: Minimal IRIX Kernel Driver
 ---
 There are loads of articles and examples about how to develop a simple device
 driver for Linux or any of the BSDs, but outside of that there are very few. So
@@ -47,7 +49,7 @@ MIPSPro 7.3.
 The driver is very simple but provides a starting point for investigation about
 IRIX.
 
-{% codeblock lang:c%}
+``` c++
 
 #include <sys/types.h>
 #include <sys/param.h>
@@ -129,19 +131,20 @@ int sim_close(dev_t dev, int oflag, int otyp, struct cred crp)
     return 0;
 }
 
-{% endcodeblock %}
+```
 
 ### 4. Compiling ###
 The major area missing from the SGI Driver manual is how to get your code to
 compile and load into the kernel. To help solve this problem a makefile has been
 provided and the important sections will be covered here.
 
-{% codeblock lang:sh %}
+``` shell
+
 #!smake
 
 CPUBOARD=IP32
 
-{% endcodeblock %}
+```
 
 The first line is pretty self explainatory, run smake, which is a slightly
 different version of the standard unix make command. The CPUBOARD indicates

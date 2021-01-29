@@ -1,9 +1,11 @@
 ---
-layout: post
 title: Rails, ORA-000972 and you
-categories:
+author: Tim McGilchrist
+date: 2011-06-24 00:00
+tags:
 - Rails
 - Ruby
+description: Rails, ORA-000972 and you
 ---
 
 Lately I've been running up against *"ORA-00972: identifier is too long"*, when
@@ -13,7 +15,8 @@ Oracle.
 
 It'll look something like this in your code:
 
-{% codeblock lang:ruby %}
+``` ruby
+
 class CreateLongTable < ActiveRecord::Migration
   def self.up
     create_table :long_table do |t|
@@ -23,15 +26,16 @@ class CreateLongTable < ActiveRecord::Migration
   end
   ...
 end
-{% endcodeblock %}
 
+```
 
 This migration will give you a foreign key id called
 **someother_really_long_identifier_id** which is obviously too long for
 Oracle. The solution is to use your own foreign key id name. In your migration
 add a shorter reference.
 
-{% codeblock lang:ruby %}
+``` ruby
+
 class CreateLongTable < ActiveRecord::Migration
   def self.up
     create_table :long_table do |t|
@@ -41,17 +45,20 @@ class CreateLongTable < ActiveRecord::Migration
   end
   ...
 end
-{% endcodeblock %}
+
+```
 
 Then in your model use the shorter foreign key name.
 
-{% codeblock lang:ruby %}
+``` ruby
+
 class LongTable < ActiveRecord::Base
   belongs_to :someother_really_long_identifier,
              :class_name => 'ClassName',
              :foreign_key => 'short_name_id'
 end
-{% endcodeblock %}
+
+```
 
 And everything should be sweet, your model will use
 **someother_really_long_identifier** and no-one need know that the table is

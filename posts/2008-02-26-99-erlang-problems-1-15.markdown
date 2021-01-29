@@ -1,9 +1,11 @@
 ---
-layout: post
 title: "99 Erlang Problems: 1 - 15"
-categories:
+author: Tim McGilchrist
+date: 2008-02-26 00:00
+tags:
 - Coding
 - Erlang
+description: "99 Erlang Problems: 1 - 15"
 ---
 Following in the tradition of 99 Lisp/Haskell/Prolog problems, I present my
 attempt at 99 Erlang problems. I'm writing these while I work my way through
@@ -19,7 +21,8 @@ email me or comment on this article.
 
 Answers for Problems 1 to 15 as adapted from the original Lisp version.
 
-{% codeblock lang:erlang %}
+``` erlang
+
 %%%  Ninety-Nine Erlang Problems
 -module(problems).
 -compile(export_all).
@@ -245,4 +248,5 @@ p15([], _) ->
     [];
 p15([H|T], Number) ->
     lists:append(repeat(H, Number), p15(T, Number)).
-{% endcodeblock %}
+
+```

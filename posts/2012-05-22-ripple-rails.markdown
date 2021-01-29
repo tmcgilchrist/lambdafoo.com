@@ -1,13 +1,9 @@
 ---
-layout: post
-title: "ripple_rails"
+title: Ripple on Rails
+author: Tim McGilchrist
 date: 2012-05-22 16:59
-comments: true
-published: false
-categories:
- - Riak
- - Ruby
- - NoSQL
+tags: Riak Ruby NoSQL
+description: Ripple on Rails
 ---
 
 ## Introduction ##

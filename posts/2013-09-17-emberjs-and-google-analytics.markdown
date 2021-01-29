@@ -1,9 +1,9 @@
 ---
-layout: post
-title: "Ember.js and Google Analytics"
+title: Ember.js and Google Analytics
+author: Tim McGilchrist
 date: 2013-09-17 11:07
-comments: true
-categories: emberjs
+tags: emberjs
+description: Ember.js and Google Analytics
 ---
 
 
@@ -15,7 +15,7 @@ transition between paths in the same route. eg '/lesson/1/activity/1' to '/lesso
 
 A better approach is to add the code to your router.
 
-{% codeblock lang:coffeescript %}
+``` coffeescript
 
 App.Router.reopen
 
@@ -28,7 +28,7 @@ App.Router.reopen
          'title': window.location.hash
       });
 
-{% endcodeblock %}
+```
 
 Matthew Beale also pointed out below that there may be a new API coming on the
 router to achieve the same result.
@@ -65,7 +65,8 @@ followed Google's instructions the library is available at `ga`.
 Next you want to observe whenever the hash path changes within your app. The
 code below assumes you're using hashes rather than HTML5 pushState.
 
-{% codeblock lang:coffeescript %}
+``` coffeescript
+
 App.ApplicationController = Em.Controller.extend
 
     routeChanged: (->
@@ -77,7 +78,7 @@ App.ApplicationController = Em.Controller.extend
                 });
     ).observes('currentPath')
 
-{% endcodeblock %}
+```
 
 The `routeChanged` function gets called when `currentPath` changes; it checks
 whether `ga` is defined and if it is it sends a pageview event with the current

@@ -1,11 +1,11 @@
 ---
-layout: post
-title: Leaving OpenBSD for
-categories:
-- Linux
-- OpenBSD
-- Unix
+title: Leaving OpenBSD for ...
+author: Tim McGilchrist
+date: 2010-09-30 00:00
+description: Leaving OpenBSD for ...
+tags: Linux OpenBSD Unix
 ---
+
 I'm migrating my home server away from OpenBSD.
 
 The things I was able to setup in OpenBSD have worked very well. Things like
@@ -24,19 +24,19 @@ software.
    computers. Not an ideal situation!
 
  2. The upgrade path for OpenBSD confuses me. When a new version comes out how do
-	I upgrade without nuking all my local configuration? I really don't want to
-	go back through the setup every 6 months when the BSD guys bring out a new
-	version.
+    I upgrade without nuking all my local configuration? I really don't want to
+    go back through the setup every 6 months when the BSD guys bring out a new
+    version.
 
  3. I wasn't able to get PHP + MySQL + Wordpress to play nicely together. Not
-	being a PHP person I didn't really grok how to setup the whole thing so I
-	was forced to follow guides written by others. OpenBSD doesn't really seem
-	to be a Wordpress/PHP platform of choice for many so I struggled to find
-	accurate docs on what to do.
+    being a PHP person I didn't really grok how to setup the whole thing so I
+    was forced to follow guides written by others. OpenBSD doesn't really seem
+    to be a Wordpress/PHP platform of choice for many so I struggled to find
+    accurate docs on what to do.
 
  4. I wanted to add new services to the server like Ruby/Rails, Java/EE,
- Python/Django and Erlang/OTP. Doing all this and keeping it current on OpenBSD
- is more work that I was willing to expend.
+    Python/Django and Erlang/OTP. Doing all this and keeping it current on OpenBSD
+    is more work that I was willing to expend.
 
 So the solution I'm turning to is Linux and specifically Ubuntu in all it's glory.
 

@@ -1,10 +1,9 @@
 ---
-layout: post
-title: "Unreliable guide to OCaml modules"
+title: Unreliable guide to OCaml modules
+author: Tim McGilchrist
 date: 2015-05-15 19:13
-comments: true
-categories:
-- ocaml
+tags: ocaml
+description: Unreliable guide to OCaml modules
 ---
 
 Being on the curious side of things I have been interested lately in the dualities

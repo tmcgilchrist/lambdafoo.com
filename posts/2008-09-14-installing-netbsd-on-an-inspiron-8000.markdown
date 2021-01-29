@@ -35,27 +35,33 @@ Now for the impressive part upgrading to 4.0.
 * Fetch a new kernel and the binary sets and store them /some/where/
 * Install the new kernel (but keep the old one!!)
 
-{% codeblock lang:bash %}
+``` shell
+
     mv /netbsd /netbsd.old
     pax -zrf /some/where/newkernel.tgz
     mv /some/where/newkernel /netbsd
-{% endcodeblock %}
+
+```
 
 * Reboot using **reboot**
 * Install all the sets *except* etc.tzg and xetc.tgz!!
 
-{% codeblock lang:bash %}
+``` shell
+
     cd /
     pax -zrf /some/where/set.tgz
     ...
-{% endcodeblock %}
+
+```
 
 * Run etcupdate to merge important changes:
 
-{% codeblock lang:bash %}
+``` shell
+
     cd /
     etcupdate -s /some/where/etc.tgz -s /some/where/xetc.tgz
-{% endcodeblock %}
+
+```
 
 * Upgrade finished, time to reboot.
 

@@ -1,9 +1,11 @@
 ---
-layout: post
-title: eBook Thoughts
-categories:
-- Opinion
+title: eBook thoughts
+author: Tim McGilchrist
+date: 2010-05-05
+tags: Opinion
+description: eBook thoughts
 ---
+
 I've become a convert to the whole ebook thing recently, but only in a limited
 capacity.
 

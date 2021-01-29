@@ -1,10 +1,9 @@
 ---
-layout: post
-title: "On EitherT"
+title: On EitherT
+author: Tim McGilchrist
 date: 2018-06-22 00:00
-comments: true
-categories:
- - haskell
+tags: haskell
+description: Thoughts on Haskell error handling and using EitherT.
 ---
 In choosing Haskell as a language you sign up for a certain class of features and behaviours.
 e.g. lazy evaluation, static typing
@@ -29,20 +28,20 @@ of trade offs around modelling *errors* as data types using EitherT/ExceptT.
 
 EitherT is a Monad Transformer built on the familar Either data type.
 
-{%codeblock lang:haskell%}
+``` haskell
 data Either a b
   = Left a
   | Right b
-{% endcodeblock %}
+```
 
 where typically `Left` represents some failure case in this context and `Right` represents success.
 Another formulation from OCaml community is:
 
-{%codeblock lang:ocaml%}
+``` ocaml
 type ('a,'b) result
   = Ok of 'a
   | Error of 'b
-{% endcodeblock %}
+```
 
 which is more explicit about what the two constructors represent.
 
@@ -68,7 +67,7 @@ We have exceptions; lets use them.
 
 To start doing that you need to define your own custom exception type.
 
-{%codeblock lang:haskell%}
+``` haskell
 data VapourError =
     InsufficientFunds
   | ItemUnavailable Text
@@ -83,10 +82,8 @@ instance Show VapourError where
     MachineMalfunction e -> "Hardware malfunction " ++ e ++ "."
 
 instance Exception VapourError
-{%endcodeblock%}
-
+```
 The three steps we need are:
-
 
  1. Build the custom error type as a data type
  2. Provide a show instance, this could be generated but your error messages would not be great.
@@ -94,18 +91,17 @@ The three steps we need are:
 
 At this point you can use `throw`, `catch` and `handle` with your custom error type.
 
-{%codeblock lang:haskell%}
+``` haskell
 runVendingMachine :: VendingMachineState -> Coin
                    -> IO Product
 runVendingMachine state coin = do
   unless (coin > 0) $ throw InsufficientFunds
   dispenseItem state coin
 
-
 dispenseItem :: VendingMachineState -> Coin
              -> IO VendingMachineState
 dispenseItem = ....
-{%endcodeblock%}
+```
 
 Looking at the signature of `runVendingMachine` you can see that it returns a `Product` by running a
 computation in `IO`. The problem you have when looking at that code is the signature doesn't
@@ -157,13 +153,13 @@ an `Either` where the monad could be anything.
 
 In context it would look something like:
 
-{%codeblock lang:haskell%}
+``` haskell
 crankHandle :: Int -> EitherT VapourError IO Product
 -- or
 crankHandle :: Monad m => Int -> EitherT VapourError m Product
 -- or
 crankHandle :: MonadIO m => Int -> EitherT VapourError m Product
-{%endcodeblock%}
+```
 
 The type of our error is present in the type of our function, a familar situation.
 If the monad `m` isn't IO then we have a good degree of confidence that
@@ -172,8 +168,7 @@ none of the base `exceptions` will be present.
 Solution
 ---------------
 
-{%codeblock lang:haskell%}
-
+``` haskell
 # Build a data type that represents the possible error states
 data VapourError =
     InsufficientFunds
@@ -187,7 +182,7 @@ renderVapourError = ...
 # Usage site
 runVendingMachine :: VendingMachineState -> Coin -> EitherT VapourError IO Product
 runVendingMachine = ...
-{% endcodeblock %}
+```
 
 Either - Examples
 ---------------

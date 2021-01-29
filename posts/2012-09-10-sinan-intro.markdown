@@ -1,11 +1,9 @@
 ---
-layout: post
-title: "Getting started with Sinan"
+title: Getting started with Sinan
+author: Tim McGilchrist
 date: 2012-09-10 21:00
-comments: true
-categories:
-    - Erlang
-    - Sinan
+tags: Erlang Sinan
+description: Getting started with Sinan
 ---
 
 ## Background
@@ -32,7 +30,7 @@ Let's see how well it delivers on the promise.
 First you'll need Erlang installed, which your friendly local package management tool
 should provide. I'm using Homebrew on OSX so I just did:
 
-{% codeblock %}
+``` shell
 $ brew install erlang
 ...
 $ erl -v
@@ -40,7 +38,7 @@ Erlang R15B01 (erts-5.9.1) [source] [64-bit] [smp:8:8] [async-threads:0] [hipe] 
 
 Eshell V5.9.1  (abort with ^G)
 1>
-{% endcodeblock %}
+```
 Linux should be similarly straight forward and Windows well you're on your own.
 
 Grab sinan from the
@@ -50,7 +48,8 @@ using version 4.1.1. Put it somewhere on your PATH, I've got mine in ~/bin which
 
 Now for the fun bit, type `sinan gen` and fill in the details.
 
-{% codeblock %}
+``` shell
+
 Please specify your name
 your name> Tim McGilchrist
 Please specify your email address
@@ -65,13 +64,15 @@ Please specify the ERTS version ("5.9.1")>
 Is this a single application project ("n")> y
 Would you like a build config? ("y")> y
 Project was created, you should be good to go!
-{% endcodeblock %}
+
+```
 
 From that Sinan has generated a project, filling in your details, with an OTP
 application and some build configuration. Your directories should look something
 similar to this.
 
-{% codeblock %}
+``` shell
+
 sinan_demo
   |-- config
   |    |-- sys.config
@@ -84,7 +85,8 @@ sinan_demo
   |    |-- sinan_demo.app.src
   |    |-- sinan_demo_app.erl
   |    |-- sinan_demo_sup.erl
-{% endcodeblock %}
+
+```
 
 It includes all the standard directories you'd expect plus a `sinan.config`
 file.
@@ -94,7 +96,8 @@ tells sinan to include the erlang runtime system when it generates a release.
 Open sinan.config and add `{include_erts, true}.` as the last line. It should
 look like this:
 
-{% codeblock lang:erlang %}
+``` erlang
+
 {project_name, sinan_demo}.
 {project_vsn, "0.0.1"}.
 
@@ -106,7 +109,7 @@ look like this:
 
 {include_erts, true}.
 
-{% endcodeblock %}
+```
 
 Back to making our generated code runnable.
 
@@ -114,7 +117,8 @@ By default the generated supervisor doesn't point to a valid module so you'll
 need to remedy that before trying to startup the application. Create a new file
 called `sinan_demo_server.erl` in `src` and drop the following code in.
 
-{% codeblock lang:erlang %}
+``` erlang
+
 -module(sinan_demo_server).
 
 -behaviour(gen_server).
@@ -170,7 +174,8 @@ terminate(_Reason, _State) ->
 
 code_change(_OldVsn, State, _Extra) ->
     {ok, State}.
-{% endcodeblock %}
+
+```
 
 
 It's a pretty standard OTP gen_server application with 2 API
@@ -182,7 +187,8 @@ to hit the OTP callback for `handle_call/3`.
 Next we need to fix the supervisor so it starts the correct module. Change
 `sinan_demo_sup.erl` so it looks like the code below:
 
-{% codeblock lang:erlang %}
+```erlang
+
 start_link() ->
     supervisor:start_link({local, ?SERVER}, ?MODULE, []).
 
@@ -208,7 +214,8 @@ init([]) ->
               Restart, Shutdown, Type, [sinan_demo_server]},
 
     {ok, {SupFlags, [AChild]}}.
-{% endcodeblock %}
+
+```
 
 The 2 changes we have make is to `start_link/0` so we can call the server
 directly, and fix the child spec so it starts our new module.
@@ -217,7 +224,8 @@ Now we need to add the sinan_demo_server module to `sinan_demo.app.src` so we
 know about it when generating the OTP application. Just add it to the list of
 modules like so:
 
-{% codeblock lang:erlang %}
+```erlang
+
 %% This is the application resource file (.app file) for the,
 %% application.
 {application, sinan_demo,
@@ -230,7 +238,8 @@ modules like so:
   {applications, [kernel, stdlib]},
   {mod, {sinan_demo_app,[]}},
   {start_phases, []}]}.
-{% endcodeblock %}
+
+```
 
 Compile with `sinan build` and hopefully everything works.
 
@@ -238,7 +247,8 @@ From here you've got a few options to get your application running,
 but the easiest is just to use the sinan shell and start your application from
 there.
 
-{% codeblock %}
+``` shell
+
 $ sinan shell
 Eshell V5.9.1  (abort with ^G)
 1> application:which_applications().
@@ -252,24 +262,25 @@ Eshell V5.9.1  (abort with ^G)
  {kernel,"ERTS  CXC 138 10","2.15.1"}]
 2> application:start(sinan_demo).
 ok
-{% endcodeblock %}
+
+```
 
 We've started a shell and checked what applications are started with
 `application:which_applications()`. Now start the demo application with:
 
-{% codeblock %}
+``` shell
 3> application:start(sinan_demo).
 ok
-{% endcodeblock %}
+```
 
 Now lets test that we can call the application.
 
-{% codeblock %}
+``` shell
 4> sinan_demo_server:add_one().
 {ok,{state,1}}
 5> sinan_demo_server:add_one().
 {ok,{state,2}}
-{% endcodeblock %}
+```
 
 As you can see it's calling the server and incrementing the call count.
 
@@ -277,7 +288,8 @@ The next step is to create a release, which is as simple as running `sinan relea
 
 Sinan has created a number of new directories under `_build`
 
-{% codeblock %}
+``` shell
+
 $ tree -d _build/
     _build/
     `-- sinan_demo
@@ -289,7 +301,8 @@ $ tree -d _build/
         |   `-- stdlib-1.18.1
         `-- releases
             `-- 0.0.1
-{% endcodeblock %}
+
+```
 
 The `bin` directory is still there from last time but now we have an erts, lib
 and releases directories. erts is there because earlier we asked sinan to
@@ -302,7 +315,7 @@ configuration files specific to a particular release of the application.
 
 Starting the release generated is as simple as
 
-{% codeblock %}
+``` shell
 $ ./_build/sinan_demo/bin/sinan_demo
 Erlang R15B01 (erts-5.9.1) [source] [64-bit] [smp:8:8] [async-threads:0] [hipe] [kernel-poll:false]
 
@@ -313,7 +326,8 @@ Eshell V5.9.1  (abort with ^G)
   {stdlib,"ERTS  CXC 138 10","1.18.1"},
   {kernel,"ERTS  CXC 138 10","2.15.1"}]
 2>
-{% endcodeblock %}
+
+```
 
 We'll leave it there for now, but if you're curious like me you'll probably have
 a bunch of questions of where to take sinan next.
