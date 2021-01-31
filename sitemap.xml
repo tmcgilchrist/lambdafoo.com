@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml"
+  xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0"
+  xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+  xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"
+>
+  <url>
+    <loc>https://lambdafoo.com</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2018-06-22-transformers-either.html</loc>
+    <lastmod>June 22, 2018</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2015-08-17-ocaml-ffi-bindings.html</loc>
+    <lastmod>August 17, 2015</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2015-05-20-first-month-of-haskell.html</loc>
+    <lastmod>May 20, 2015</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2015-05-17-unreliable-guide-to-ocaml-modules.html</loc>
+    <lastmod>May 17, 2015</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2015-01-16-ocaml-lenses.html</loc>
+    <lastmod>January 16, 2015</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2014-08-08-lambdajam-talk.html</loc>
+    <lastmod>August  8, 2014</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2013-09-17-emberjs-and-google-analytics.html</loc>
+    <lastmod>September 17, 2013</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2013-09-02-erlang-hot-code-loading.html</loc>
+    <lastmod>September  2, 2013</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2012-09-10-sinan-intro.html</loc>
+    <lastmod>September 10, 2012</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2012-05-22-ripple-rails.html</loc>
+    <lastmod>May 22, 2012</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2012-04-12-webmachine-talk.html</loc>
+    <lastmod>April 12, 2012</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2012-03-15-riak-ruby-ripple-talk.html</loc>
+    <lastmod>March 15, 2012</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2012-02-10-git-rebase-workflow.html</loc>
+    <lastmod>February 10, 2012</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2012-02-01-thoughts-on-gnu-hurd.html</loc>
+    <lastmod>February  1, 2012</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2012-01-22-site-update.html</loc>
+    <lastmod>January 22, 2012</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2011-10-08-git-and-mercurial-workflow-gist.html</loc>
+    <lastmod>October  8, 2011</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2011-10-05-agressive-emacs-spring-clean.html</loc>
+    <lastmod>October  5, 2011</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2011-08-12-emacs-reboot.html</loc>
+    <lastmod>August 12, 2011</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2011-07-25-setting-up-oracle-10g-xe-with-rails-3.html</loc>
+    <lastmod>July 25, 2011</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2011-07-05-the-rubinius-virtual-machine.html</loc>
+    <lastmod>July  5, 2011</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2011-06-24-rails-ora-000972-and-you.html</loc>
+    <lastmod>June 24, 2011</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2011-03-08-ubuntu-server-update.html</loc>
+    <lastmod>March  8, 2011</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2011-10-06-ipad-and-ebooks-galore.html</loc>
+    <lastmod>January  6, 2011</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2010-12-17-intellij-idea-ubuntu-launcher.html</loc>
+    <lastmod>December 17, 2010</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2010-09-30-leaving-openbsd-for.html</loc>
+    <lastmod>September 30, 2010</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2010-08-24-thoughts-on-objectivec-and-cocoa.html</loc>
+    <lastmod>August 24, 2010</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2010-06-25-emacs-publishing.html</loc>
+    <lastmod>June 25, 2010</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2010-06-25-declaring-.emacs-bankruptcy.html</loc>
+    <lastmod>June 25, 2010</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2010-05-05-ebook-thoughts.html</loc>
+    <lastmod>May  5, 2010</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2010-03-23-netbsd-5-0-on-an-aspireone-110l.html</loc>
+    <lastmod>March 23, 2010</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2009-09-13-forcing-snow-leopard-to-use-64bit-kernel.html</loc>
+    <lastmod>September 13, 2009</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2009-06-30-update.html</loc>
+    <lastmod>June 30, 2009</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2009-05-30-xmonad-install-on-netbsd-50.html</loc>
+    <lastmod>May 30, 2009</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2009-05-23-acer-aspire-one-with-netbsd-50.html</loc>
+    <lastmod>May 23, 2009</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2009-03-21-yarb-yet-another-ring-benchmark-part-i.html</loc>
+    <lastmod>March 21, 2009</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2009-03-05-compiler-update.html</loc>
+    <lastmod>March  5, 2009</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2009-01-25-lambdacats.html</loc>
+    <lastmod>January 25, 2009</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2008-12-29-streaming-itunes-from-solaris-10.html</loc>
+    <lastmod>December 29, 2008</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2008-12-27-start-a-side-project.html</loc>
+    <lastmod>December 27, 2008</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2008-12-26-reading-list-for-the-holidays.html</loc>
+    <lastmod>December 26, 2008</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2008-12-14-update-on-me.html</loc>
+    <lastmod>December 14, 2008</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2008-10-12-simple-tcp-server-in-erlang.html</loc>
+    <lastmod>October 12, 2008</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2008-10-06-quick-os-x-tip.html</loc>
+    <lastmod>October  6, 2008</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2008-09-20-netbsd-wireless-setup.html</loc>
+    <lastmod>September 20, 2008</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2008-09-14-installing-netbsd-on-an-inspiron-8000.html</loc>
+    <lastmod>September 14, 2008</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2008-09-06-haskell-things.html</loc>
+    <lastmod>September  6, 2008</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2008-08-11-posting-from-the-iphone.html</loc>
+    <lastmod>August 11, 2008</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2008-05-18-software-engineering-radio-interviews.html</loc>
+    <lastmod>May 18, 2008</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2008-05-07-99-erlang-problems-16-25.html</loc>
+    <lastmod>May  7, 2008</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2008-04-10-postfix-smf-update.html</loc>
+    <lastmod>April 10, 2008</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2008-04-07-erlang-techtalk.html</loc>
+    <lastmod>April  7, 2008</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2008-03-09-erlang-emacs-fun.html</loc>
+    <lastmod>March  9, 2008</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2008-03-01-meraki-internals.html</loc>
+    <lastmod>March  1, 2008</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2008-02-28-hacking-the-meraki.html</loc>
+    <lastmod>February 28, 2008</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2008-02-26-99-erlang-problems-1-15.html</loc>
+    <lastmod>February 26, 2008</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2008-01-31-minimal-irix-kernel-driver.html</loc>
+    <lastmod>January 31, 2008</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2008-01-06-creating-an-rsync-copy-of-nekoware.html</loc>
+    <lastmod>January  6, 2008</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2008-01-01-site-update.html</loc>
+    <lastmod>January  1, 2008</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2007-12-30-programming-erlang.html</loc>
+    <lastmod>December 30, 2007</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2007-12-14-collecting-failed-ssh-logins.html</loc>
+    <lastmod>December 14, 2007</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/posts/2007-12-08-postfix-smf.html</loc>
+    <lastmod>December  8, 2007</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/pages/about.html</loc>
+    <lastmod>2012-04-02 12:06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://lambdafoo.com/pages/talks.html</loc>
+    <lastmod></lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+</urlset>
