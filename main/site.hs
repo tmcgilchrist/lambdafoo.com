@@ -1,7 +1,6 @@
 --------------------------------------------------------------------------------
 {-# LANGUAGE OverloadedStrings #-}
 
-import Data.Monoid (mappend)
 import Hakyll
 
 --------------------------------------------------------------------------------
@@ -15,6 +14,9 @@ main = hakyll $ do
     route idRoute
     compile compressCssCompiler
 
+  -- Copy across static assets for talk slides.
+  -- Most of this content is written in HTML/JS that needs
+  -- to be served as is.
   match "talks/**/*" $ do
     route idRoute
     compile $ copyFileCompiler
@@ -56,7 +58,7 @@ main = hakyll $ do
   --   route idRoute
   --   compile copyFileCompiler
 
-  -- http://jaspervdj.be/hakyll/tutorials/05-snapshots-feeds.html
+  -- Create RSS and Atom feeds
   let rss name render' =
         create [name] $ do
           route idRoute
@@ -74,8 +76,8 @@ main = hakyll $ do
       posts <- recentFirst =<< loadAll "posts/*"
       let archiveCtx =
             listField "posts" postCtx (return posts)
-              `mappend` constField "title" "Archives"
-              `mappend` allContext
+              <> constField "title" "Archives"
+              <> allContext
 
       makeItem ""
         >>= loadAndApplyTemplate "templates/archive.html" archiveCtx
@@ -154,47 +156,56 @@ main = hakyll $ do
       posts <- fmap (take 10) . recentFirst =<< loadAll "posts/*"
       let indexCtx =
             listField "posts" postCtx (return posts)
-              `mappend` constField "title" "Home"
-              `mappend` allContext
+              <> constField "title" "Home"
+              <> allContext
 
       getResourceBody
         >>= applyAsTemplate indexCtx
         >>= loadAndApplyTemplate "templates/default.html" indexCtx
         >>= relativizeUrls
 
-  -- TODO Create a sitemap.xml
-  -- create ["sitemap.xml"] $ do
-  --   route idRoute
-  --   compile $ do
-  --     -- load and sort the posts
-  --     posts <- recentFirst =<< loadAll "posts/*"
+  -- Create a sitemap.xml
+  create ["sitemap.xml"] $ do
+    route idRoute
+    compile $ do
+      -- load and sort the posts
+      posts <- recentFirst =<< loadAll "posts/*"
 
-  --     -- load individual pages from a list (globs DO NOT work here)
-  --     singlePages <- loadAll (fromList ["about.rst", "contact.markdown"])
+      -- load individual pages from a list (globs DO NOT work here)
+      singlePages <- loadAll (fromList ["pages/about.md", "pages/talks.md"])
 
-  --     -- mappend the posts and singlePages together
-  --     let pages = posts <> singlePages
+      -- mappend the posts and singlePages together
+      let pages = posts <> singlePages
 
-  --         -- create the `pages` field with the postCtx
-  --         -- and return the `pages` value for it
-  --         sitemapCtx = listField "pages" postCtx (return pages)
+          -- create the `pages` field with the postCtx
+          -- and return the `pages` value for it
+          sitemapCtx =
+            constField "root" root
+              <> listField "pages" postCtx (return pages)
 
-  --     -- make the item and apply our sitemap template
-  --     makeItem ""
-  --       >>= loadAndApplyTemplate "templates/sitemap.xml" sitemapCtx
+      -- make the item and apply our sitemap template
+      makeItem ""
+        >>= loadAndApplyTemplate "templates/sitemap.xml" sitemapCtx
 
-  match "templates/*" $ compile templateCompiler
+  match
+    "templates/*"
+    $ compile templateCompiler
 
 --------------------------------------------------------------------------------
 postCtx :: Context String
 postCtx =
   allContext
 
+allContext :: Context String
 allContext =
-  field "siteTitle" (\_ -> return "Tim McGilchrist")
-    `mappend` field "baseurl" (\_ -> return "")
-    `mappend` dateField "date" "%B %e, %Y"
-    `mappend` defaultContext
+  field "siteTitle" (\_ -> return "Perpetually Curious Blog")
+    <> field "baseurl" (\_ -> return "")
+    <> constField "root" root
+    <> dateField "date" "%B %e, %Y"
+    <> defaultContext
+
+root :: String
+root = "https://lambdafoo.com"
 
 feedConfiguration :: FeedConfiguration
 feedConfiguration =
@@ -205,5 +216,5 @@ feedConfiguration =
         \functional programming and various systems topics.",
       feedAuthorName = "Tim McGilchrist",
       feedAuthorEmail = "timmcgil@gmail.com",
-      feedRoot = "https://lambdafoo.com"
+      feedRoot = root
     }
