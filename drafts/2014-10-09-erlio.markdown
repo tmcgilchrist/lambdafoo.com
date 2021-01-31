@@ -1,0 +1,87 @@
+---
+layout: post
+title: "erlio"
+date: 2014-10-09 09:52
+comments: true
+categories:
+ - erlang
+published: false
+---
+
+## Introduction
+
+
+## Outline
+* Define the application domain
+* Brief introduction to Erlang syntax
+* Brief introduction to web services
+# Building our application
+
+We're going to build a simple link shortening service as a way of exploring how
+to build webservices with Erlang and Webmachine.
+You provide a general url to a resource and the service returns a significantly
+shorter one that you can reuse in other places. eg bitly.com, git.io or goo.gl
+It's a pretty simple service but has enought moving parts to demonstate how to
+create and access resources.
+
+The resources we want to expose:
+
+Verb	Path    	Code	Response
+GET	    /link/:id	200 	JSON
+POST	/links  	201 	Location
+GET	    /:id    	302 	Redirect
+GET	    /       	200 	HTML
+GET	    /stats  	200 	JSON
+
+The root url, /, provides a HTML page for entering links and responding with the
+shortened link. The GET /:id is for accessing a shortened link. The /links takes
+a POST with the link to be shortened and responds when the link is created with
+it's new location. This is represented by either /link/:id or /:id where the
+former provides extra information about how many accesses a link has had. The
+/stats will provide statisitcs about all links present in the service and will
+stream them across to the receiver in real time.
+
+### HTTP Response Codes
+
+The main reason I link Webmchine so much is that it correctly models HTTP as a
+state machine, hence the name, so it makes it easy to provide the correct HTTP
+response codes and behaviour. The response codes we care about are:
+
+ * 200 Success
+ * 201 Resource Created
+ * 500 Server error, likely a programmer error
+ * 404 Resource not found
+ * 302 Redirect
+
+For example if we're creating a new short link, we POST to /links and we should
+get a 201 Resource Created if our request was successful plus a HTTP Header,
+Location that points to where we can find that newly created resource.
+
+
+### Project Layout
+
+Before diving into creating webmachine resources, lets briefly look at the
+directory structure of the app.
+
+```
+|-- src                - erlang source code
+|-- include            - header files for shared types
+|-- ebin               - compiled erlang aka BEAM files
+|-- docs               - project documentation
+|-- priv               - HTML/CSS/JS static files
+|   |-- log
+|   |-- www
+|
+|-- deps               - project dependencies
+|   |-- epgsql         - Postgres DB client
+|   |-- ibrowse        - HTTP client
+|   |-- mochiweb       - webserver
+|   |-- webmachine     - REST toolkit
+|-- test
+```
+
+git clone from a specific location to get this initial setup
+
+### Runtime Layout
+
+Now lets start looking at how the supervision tree is setup.
