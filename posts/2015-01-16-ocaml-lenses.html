@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+      
+        Lenses in OCaml &middot; Tim McGilchrist
+      
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="../css/poole.css">
+  <link rel="stylesheet" href="../css/syntax.css">
+  <link rel="stylesheet" href="../css/lanyon.css">
+  <link rel="stylesheet" href="../css/book.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="../images/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="../atom.xml">
+
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+
+  <div class="sidebar-item">
+    <img src="../images/tim-movember-2009.jpg" />
+    <p>Tim McGilchrist</p>
+    <p>Software Engineer at Digital Asset in Sydney</p>
+
+    <p>
+      Twitter: <a href="https://twitter.com/lambda_foo">@lambda_foo</a><br>
+      Github: <a href="https://github.com/tmcgilchrist">tmcgilchrist</a><br>
+      Email: <a href="mailto:timmcgil@gmail.com">timmcgil@gmail.com</a><br>
+      LinkedIn: <a href="https://www.linkedin.com/in/timmcgilchrist">Tim McGilchrist</a>
+    </p>
+
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="../">
+      Blog
+    </a>
+    <a class="sidebar-nav-item" href="../about">
+      About
+    </a>
+    <a class="sidebar-nav-item" href="../talks">
+      Talks
+    </a>
+    <p class="sidebar-nav-item">
+      Feed:
+      <a href="../rss.xml">
+        RSS
+      </a>
+      /
+      <a href="../atom.xml">
+        Atom
+      </a>
+    </p>
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; Tim McGilchrist 2007-2021
+    </p>
+    <p>
+      Powered by Hakyll
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="../" title="Home">Tim McGilchrist</a>
+            
+            <span class="masthead-links">
+              <a href="../">Blog</a> |
+              <a href="../pages/about.html">About</a> |
+              <a href="../archive.html">Archive</a> |
+              <a href="../pages/talks.html">Talks</a>
+            </span>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Lenses in OCaml</h1>
+  <span class="post-date">January 16, 2015</span>
+  <p>Lenses have been on my mind since encountering them last year in the context of Haskell. Much of the literature on lenses has a very Haskell slant so show how they can be used in OCaml.</p>
+<p>The theory of lenses and their accompanying prisms and traversals, have been better described by other people. <a href="https://www.fpcomplete.com/school/to-infinity-and-beyond/pick-of-the-week/a-little-lens-starter-tutorial">This</a> article at FPComplete was a particularly good one. I’m just going to cover how to use <a href="https://github.com/pdonadeo/ocaml-lens/">ocaml-lens</a> as a minimal lens implementation.</p>
+<p>First since ocaml-lens isn’t in opam, clone the repo locally and open up <code>utop</code>. Then load the <code>lens.ml</code> file into <code>utop</code>.</p>
+<p>{%codeblock lang:ocaml%} utop # #use “lens.ml”;; .. {% endcodeblock %}</p>
+<p>Starting with a few record types for a car, editor and book.</p>
+<p>{%codeblock lang:ocaml%} type car = { make : string; model: string; mileage: int; };;</p>
+<p>type editor = { name: string; salary: int; car: car; };;</p>
+<p>type book = { name: string; author: string; editor: editor; };; {%endcodeblock%}</p>
+<p>Creating a new book is as simple as.</p>
+<p>{%codeblock lang:ocaml%} let scifi_novel = { name = “Metro 2033”; author = “Dmitry Glukhovsky”; editor = { name = “Vitali Gubarev”; salary = 1300; car = { make = “Lada”; model = “VAZ-2103”; mileage = 310000 } } };;</p>
+<p>{% endcodeblock %}</p>
+<p>Given our <code>scifi_novel</code> we can access the editor’s car mileage:</p>
+<p>{%codeblock lang:ocaml%} let mileage = scifi_novel.editor.car.mileage;; {% endcodeblock %}</p>
+<p>Setting the mileage is a bit trickier, we need to unpack each record:</p>
+<p>{%codeblock lang:ocaml%} let second_edition = { scifi_novel with editor = { scifi_novel.editor with car = { scifi_novel.editor.car with mileage = 1000 } } };; {% endcodeblock %}</p>
+<p>That’s not really an appealing prospect, can we do better?</p>
+<p>Enter lenses, at the most simple level a lense is a pair of functions for getting and setting a property.</p>
+<p>{%codeblock lang:ocaml%} (** Lens type definition *) type (’a, ’b) t = { get : ’a -&gt; ’b; (** Functional getter *) set : ’b -&gt; ’a -&gt; ’a (** Functional setter *) } {% endcodeblock %}</p>
+<p>With this definition of a lens, modifying the mileage is now:</p>
+<p>{%codeblock lang:ocaml%} let a = compose mileage_lens (compose car_lens editor_lens) in _set 10 scifi_novel a;; {% endcodeblock %}</p>
+<p>In the background we need to define some lenses for the records above:</p>
+<p>{%codeblock lang:ocaml%} let car_lens = { get = (fun x -&gt; x.car); set = (fun v x -&gt; { x with car = v }) };;</p>
+<p>let editor_lens = { get = (fun x -&gt; x.editor); set = (fun v x -&gt; { x with editor = v }) };;</p>
+<p>let mileage_lens = { get = (fun x -&gt; x.mileage); set = (fun v x -&gt; { x with mileage = v })</p>
+<p>};; {% endcodeblock %}</p>
+<p>Using these definitions the original lens version of modify the editor’s car mileage works.</p>
+<p>The compose operator we used allows us to combine 2 lenses to go from the novel into the editor and then into the car. And compose can be combined with itself to build up arbitarily deep lenses into a structure.</p>
+<p>{%codeblock lang:ocaml%} let editor_car_lens = compose car_lens editor_lens;; {% endcodeblock %}</p>
+<p>This way of composing can seem backwards, you supply the inner lens first then the outer lens. We can fix that by using the infix operators, open the <code>Infix</code> module and define the same lens:</p>
+<p>{%codeblock lang:ocaml%} let editor_car_lens = editor_lens |– car_lens;; {% endcodeblock %}</p>
+<p>This feels more intuative reading it left to right. Revisiting our original <code>_set</code> mileage example we can now write it.</p>
+<p>{%codeblock lang:ocaml%} _set 10 scifi_novel (editor_lens |– car_lens |– mileage_lens);; (* or even *) ((editor_lens |– car_lens |– mileage_lens) ^= 10) @@ scifi_novel;; {% endcodeblock %}</p>
+<p>The infix module comes with some other helpful operators like <code>|.</code> for get and <code>^=</code> for set. All these operators avoid mutation so our code remains pure and referentially transparent.</p>
+<h3 id="conclusion">Conclusion</h3>
+<p>There are a heap more things that lenses can do, and while this ocaml-lens package is pretty basic, looking at the hundreds of functions exported by <a href="http://hackage.haskell.org/package/lens">Control.Lens</a> in Haskell you can get a good idea of the possibilities. <code>Control.Lens</code> includes all the basic lens functions plus things like:</p>
+<ul>
+<li><code>prisms</code> which are lenses but for sum types</li>
+<li><code>traversals</code> are lenses that focus on multiple targets simultaneously</li>
+</ul>
+<h3 id="resources">Resources</h3>
+<p>I made use of the following resources to write this and took some of the examples and definitions from the following articles. All mistakes are my own and probably accidental.</p>
+<ul>
+<li><a href="https://www.fpcomplete.com/school/to-infinity-and-beyond/pick-of-the-week/a-little-lens-starter-tutorial#okay--what-are-prisms-">A Little Lens Starter FPComplete</a></li>
+<li><a href="http://bugsquash.blogspot.com.au/2011/11/lenses-in-f.html">Lenses in F#</a></li>
+<li><a href="http://hackage.haskell.org/package/lens">Control.Lens on hackage</a></li>
+</ul>
+</div>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+    </body>
+</html>

@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+      
+        On EitherT &middot; Tim McGilchrist
+      
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="../css/poole.css">
+  <link rel="stylesheet" href="../css/syntax.css">
+  <link rel="stylesheet" href="../css/lanyon.css">
+  <link rel="stylesheet" href="../css/book.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="../images/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="../atom.xml">
+
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+
+  <div class="sidebar-item">
+    <img src="../images/tim-movember-2009.jpg" />
+    <p>Tim McGilchrist</p>
+    <p>Software Engineer at Digital Asset in Sydney</p>
+
+    <p>
+      Twitter: <a href="https://twitter.com/lambda_foo">@lambda_foo</a><br>
+      Github: <a href="https://github.com/tmcgilchrist">tmcgilchrist</a><br>
+      Email: <a href="mailto:timmcgil@gmail.com">timmcgil@gmail.com</a><br>
+      LinkedIn: <a href="https://www.linkedin.com/in/timmcgilchrist">Tim McGilchrist</a>
+    </p>
+
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="../">
+      Blog
+    </a>
+    <a class="sidebar-nav-item" href="../about">
+      About
+    </a>
+    <a class="sidebar-nav-item" href="../talks">
+      Talks
+    </a>
+    <p class="sidebar-nav-item">
+      Feed:
+      <a href="../rss.xml">
+        RSS
+      </a>
+      /
+      <a href="../atom.xml">
+        Atom
+      </a>
+    </p>
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; Tim McGilchrist 2007-2021
+    </p>
+    <p>
+      Powered by Hakyll
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="../" title="Home">Tim McGilchrist</a>
+            
+            <span class="masthead-links">
+              <a href="../">Blog</a> |
+              <a href="../pages/about.html">About</a> |
+              <a href="../archive.html">Archive</a> |
+              <a href="../pages/talks.html">Talks</a>
+            </span>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">On EitherT</h1>
+  <span class="post-date">June 22, 2018</span>
+  <p>In choosing Haskell as a language you sign up for a certain class of features and behaviours. e.g. lazy evaluation, static typing</p>
+<p>This gives you a general point in the design space for general purpose languages but like all languages you are still left with a number of choices in building software. These choices are broad, diverse and hotly debated, sometimes they get labelled with <strong>Best Practices</strong> or the <strong>Right way</strong>. Like any good engineer you should recognise that everything involves trade-offs and that these labels are trying to hide that. There is not always one best way, an approach has positives and negatives. Knowing those trade offs and deliberately choosing an approach based off them is good engineering.</p>
+<p>In programming language communities there are always bikeshedding arguments and Haskell is no different. I want to call out a particular point of view around using exceptions vs data types in Haskell when dealing with <em>errors</em>. Both are valid design points in a wider error handling design space. The exception path is widely associated with Snoyman, who has written much software and written extensively about this in <a href="https://www.fpcomplete.com/blog/2016/11/exceptions-best-practices-haskell">Exceptions Best Practices in Haskell</a> and in the <a href="http://hackage.haskell.org/package/safe-exceptions">Safe Exceptions</a> package.</p>
+<p>I’d like to highlight the negatives, as I see them, of that approach and suggest a different set of trade offs around modelling <em>errors</em> as data types using EitherT/ExceptT.</p>
+<p>EitherT is a Monad Transformer built on the familar Either data type.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="kw">data</span> <span class="dt">Either</span> a b</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a>  <span class="ot">=</span> <span class="dt">Left</span> a</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a>  <span class="op">|</span> <span class="dt">Right</span> b</span></code></pre></div>
+<p>where typically <code>Left</code> represents some failure case in this context and <code>Right</code> represents success. Another formulation from OCaml community is:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="kw">type</span> ('a,'b) result</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a>  = Ok <span class="kw">of</span> 'a</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a>  | Error <span class="kw">of</span> 'b</span></code></pre></div>
+<p>which is more explicit about what the two constructors represent.</p>
+<h2 id="async-exceptions">Async Exceptions</h2>
+<p>Back in the beginning, actually in 2000/01, asynchronous exceptions were added to Haskell. [2] Quoting Simon Marlow:</p>
+<blockquote>
+<p>Basically it comes down to this: if we want to be able to interrupt purely functional code, asynchronous exceptions are the only way, because polling would be a side-effect.</p>
+</blockquote>
+<p>So Haskell has async exceptions whether you like them or not, the ship has sailed. This means that any code in <code>IO</code> can throw a runtime exception, further any thread can receive an async exception.</p>
+<p>So, how should we best deal with this reality and structure our code?</p>
+<h2 id="exceptions">Exceptions</h2>
+<p>We have exceptions; lets use them.</p>
+<p>To start doing that you need to define your own custom exception type.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="kw">data</span> <span class="dt">VapourError</span> <span class="ot">=</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a>    <span class="dt">InsufficientFunds</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a>  <span class="op">|</span> <span class="dt">ItemUnavailable</span> <span class="dt">Text</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a>  <span class="op">|</span> <span class="dt">MachineMalfunction</span> <span class="dt">Text</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a>  <span class="kw">deriving</span> <span class="dt">Typeable</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a><span class="co">-- Write a reasonable Show instance for each error</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true"></a><span class="kw">instance</span> <span class="dt">Show</span> <span class="dt">VapourError</span> <span class="kw">where</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true"></a>  <span class="fu">show</span> a <span class="ot">=</span> <span class="kw">case</span> a <span class="kw">of</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true"></a>    <span class="dt">InsufficientFunds</span> <span class="ot">-&gt;</span> <span class="st">&quot;Insufficient funds.&quot;</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true"></a>    <span class="dt">ItemUnavailable</span> i <span class="ot">-&gt;</span> <span class="st">&quot;Item &quot;</span> <span class="op">++</span> i <span class="op">++</span> <span class="st">&quot; unavailable.&quot;</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true"></a>    <span class="dt">MachineMalfunction</span> e <span class="ot">-&gt;</span> <span class="st">&quot;Hardware malfunction &quot;</span> <span class="op">++</span> e <span class="op">++</span> <span class="st">&quot;.&quot;</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true"></a><span class="kw">instance</span> <span class="dt">Exception</span> <span class="dt">VapourError</span></span></code></pre></div>
+<p>The three steps we need are:</p>
+<ol type="1">
+<li>Build the custom error type as a data type</li>
+<li>Provide a show instance, this could be generated but your error messages would not be great.</li>
+<li>Make your custom error an instance of <code>Exception</code></li>
+</ol>
+<p>At this point you can use <code>throw</code>, <code>catch</code> and <code>handle</code> with your custom error type.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="ot">runVendingMachine ::</span> <span class="dt">VendingMachineState</span> <span class="ot">-&gt;</span> <span class="dt">Coin</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a>                   <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">Product</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a>runVendingMachine state coin <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a>  unless (coin <span class="op">&gt;</span> <span class="dv">0</span>) <span class="op">$</span> throw <span class="dt">InsufficientFunds</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a>  dispenseItem state coin</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true"></a><span class="ot">dispenseItem ::</span> <span class="dt">VendingMachineState</span> <span class="ot">-&gt;</span> <span class="dt">Coin</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true"></a>             <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">VendingMachineState</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true"></a>dispenseItem <span class="ot">=</span> <span class="op">....</span></span></code></pre></div>
+<p>Looking at the signature of <code>runVendingMachine</code> you can see that it returns a <code>Product</code> by running a computation in <code>IO</code>. The problem you have when looking at that code is the signature doesn’t give you any indication that it might fail outside of the <code>IO</code> which we saw earlier can fail with anything. So as a consumer of this function, how are you to know what exceptions to catch. Your options are:</p>
+<ul>
+<li>Catch all exceptions - clearly dangerous and wrong</li>
+<li>Catch a subset of exceptions - better but tricky to do correctly</li>
+</ul>
+<p>The first option is dangerous as catching all exceptions includes asynchronous exceptions like stack/heap overflow, thread killed and user interrupt. The documentation in <code>safe-exception</code> is particularly helpful here and I recommend you read it thoroughly, it is well written. The short version is you should only catch certain exceptions, trying to handle <code>StackOverflow</code>, <code>HeapOverflow</code> and <code>ThreadKilled</code> exceptions could cause your program to crash or behave in unexpected ways.</p>
+<p>The second option is error prone. The process for finding the possible exceptions involves reading the source code and reading the haddock docs, with the goal of finding the set of sensible exceptions you need to put into a <code>catch</code> or <code>handle</code> call. Have you found all the places an exception might be thrown? What about if you pull in a new dependency, does it throw exceptions? What about a sub-dependency of a dependency?</p>
+<p>What about the functions <code>runVendingMachine</code> calls? And their functions? To me it feels like going back to Javascript or Ruby land and giving up on some of the benefits of a typed language. I want the types to help me find the places I need to consider the errors, just like pattern matching does for data types.</p>
+<p>The other less obvious (perhaps) issue is that you force the consumers of your function to know all the gory details of exceptions in Haskell, which ones are safe to catch and what to do. Getting this right is hard and tricky, and really belongs in a library so that it can be written one and reused.</p>
+<p>Finally the behaviour of a Haskell system in production is such that throwing an exception would yield you exactly what the show instance for <code>VapourError</code> is. It wouldn’t give you a classic stack trace (unless you set that up) so you loose context where the exception was raised and what was happening around it. At a previous workplace we spend many weeks tracking down SSL and connection reset exceptions that occured in a base library but bubbled out through multiple layers of application code. It wasn’t fun.</p>
+<p>This style is perfect for a quick script to munge some data, or an ICFP programming contest</p>
+<p>If you really need exceptions, use <code>bracket</code> pattern or <code>safe-exceptions</code> like library. Keep the complexity contained and code needs to be written <em>very</em> carefully.</p>
+<h2 id="data-types">Data Types</h2>
+<p>We mentioned data types earlier, using data types to model your computation is the natural approach in Haskell. You build a data type that accurately reflects the data or states that you want to model. We even did it for the custom <code>VapourError</code> type earlier.</p>
+<p>Extending that we will use a particular data type <code>EitherT</code> to model errors. This is a <code>monad transformer</code> with an <code>Either</code> where the monad could be anything.</p>
+<p>In context it would look something like:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="ot">crankHandle ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">EitherT</span> <span class="dt">VapourError</span> <span class="dt">IO</span> <span class="dt">Product</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a><span class="co">-- or</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a><span class="ot">crankHandle ::</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">EitherT</span> <span class="dt">VapourError</span> m <span class="dt">Product</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a><span class="co">-- or</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true"></a><span class="ot">crankHandle ::</span> <span class="dt">MonadIO</span> m <span class="ot">=&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">EitherT</span> <span class="dt">VapourError</span> m <span class="dt">Product</span></span></code></pre></div>
+<p>The type of our error is present in the type of our function, a familar situation. If the monad <code>m</code> isn’t IO then we have a good degree of confidence that none of the base <code>exceptions</code> will be present.</p>
+<h2 id="solution">Solution</h2>
+<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="pp"># Build a data type that represents the possible error states</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a><span class="kw">data</span> <span class="dt">VapourError</span> <span class="ot">=</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a>    <span class="dt">InsufficientFunds</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a>  <span class="op">|</span> <span class="dt">ItemUnavailable</span> <span class="dt">Text</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true"></a>  <span class="op">|</span> <span class="dt">MachineMalfunction</span> <span class="dt">Text</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true"></a><span class="pp"># Provide a function for turning errors into text</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true"></a><span class="ot">renderVapourError ::</span> <span class="dt">VapourError</span> <span class="ot">-&gt;</span> <span class="dt">Text</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true"></a>renderVapourError <span class="ot">=</span> <span class="op">...</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true"></a><span class="pp"># Usage site</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true"></a><span class="ot">runVendingMachine ::</span> <span class="dt">VendingMachineState</span> <span class="ot">-&gt;</span> <span class="dt">Coin</span> <span class="ot">-&gt;</span> <span class="dt">EitherT</span> <span class="dt">VapourError</span> <span class="dt">IO</span> <span class="dt">Product</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true"></a>runVendingMachine <span class="ot">=</span> <span class="op">...</span></span></code></pre></div>
+<h2 id="either---examples">Either - Examples</h2>
+<p>Examples of substantial pieces of code using <code>EitherT</code> to organise errors.</p>
+<ul>
+<li>mafia - https://github.com/haskell-mafia/mafia/search?utf8=✓&amp;q=EitherT&amp;type=</li>
+<li>boris - https://github.com/markhibberd/boris/search?utf8=✓&amp;q=EitherT&amp;type=</li>
+<li>traction - https://github.com/markhibberd/traction/search?utf8=✓&amp;q=EitherT&amp;type=</li>
+<li>mismi - https://github.com/nhibberd/mismi/search?q=EitherT&amp;type=Code&amp;utf8=✓</li>
+</ul>
+<h2 id="either-advantages">Either Advantages</h2>
+<ul>
+<li>function signatures clearly indicate error states</li>
+<li>exhaustive pattern matching indicates where errors have/have not been handled</li>
+<li>requires explicit composition of error data types</li>
+</ul>
+<p>Basically the compiler helps you handle the various states required using the type system.</p>
+<h2 id="exception---examples">Exception - Examples</h2>
+<p>Example of code using <code>Exceptions</code> to organise errors</p>
+<ul>
+<li>http-client - using non-200 response codes as exceptions</li>
+<li>stack - internally follows an exception style</li>
+</ul>
+<h2 id="exception-disadvantages">Exception Disadvantages</h2>
+<p>The main downsides as I see it to exception oriented code are:</p>
+<ul>
+<li>exception throwing functions compose too easily you are not forced to think about what it means.</li>
+<li>no stack traces by default in Haskell mean you lose context.</li>
+<li>handling exceptions requires knowledge about the internals of dependencies and how they use exceptions.</li>
+</ul>
+<p>Here the compiler is less helpful in guiding you, giving little or no help with handling particular exceptions or giving compile errors for new exceptions that you might need to consider.</p>
+<h2 id="supporting-libraries">Supporting Libraries</h2>
+<p>The supporting libraries for this pattern of error handling are:</p>
+<ul>
+<li>transformers-either - Provides a type alias <code>type EitherT = ExceptT</code> plus addition operators.</li>
+<li>transformers-bifunctor - Provies bifunctors over a monad transformer.</li>
+</ul>
+<p>There is nothing revolutionary about <code>transformers-either</code>, you could roll your own version easily or use the <code>ExceptT</code> transformer provided in the <code>transformers</code> package (adding any helper functions you need). The value codes in a structured, consious handling of errors and using the Haskell compiler to help.</p>
+<h2 id="conclusion">Conclusion</h2>
+<blockquote>
+<p>The primary value of avoiding exceptions is that it makes error behavior explicit in the type of the function. If you’re in an environment where everything might fail, being explicit about it is probably a negative. But if most of your function calls are total, then knowing which ones might fail highlights places where you should consider what the correct behavior is in the case of that failure. Remember that the failure of an individual step in your program doesn’t generally mean the overall failure of your code.</p>
+<p>It’s a little bit like null-handling in languages without options. If everything might be null, well, option types probably don’t help you. But if most of the values you encounter in your program are guaranteed to be there, then tracking which ones might be null be tagging them as options is enormously helpful, since it draws your attention to the cases where it might be there, and so you get an opportunity to think about what the difference really is.</p>
+</blockquote>
+<blockquote>
+<ul>
+<li>Yaron Minsky</li>
+</ul>
+</blockquote>
+<h2 id="references">References</h2>
+<ol type="1">
+<li><a href="https://simonmar.github.io/posts/2017-01-24/asynchronous-exceptions.html">Asynchronous Exceptions in Practice</a></li>
+<li><a href="https://simonmar.github.io/bib/papers/async.pdf">Asynchronous Exceptions in Haskell</a></li>
+<li><a href="https://www.fpcomplete.com/blog/2016/11/exceptions-best-practices-haskell">Exceptions Best Practices in Haskell</a></li>
+<li><a href="https://www.fpcomplete/com/blog/2017/07/the-rio-monad">The RIO Monad</a></li>
+<li><a href="https://discuss.ocaml.org/t/specific-reason-for-not-embracing-the-use-of-exceptions-for-error-propagation/1666/15">Yaron’s Thoughts</a></li>
+<li><a href="https://www.well-typed.com/blog/2015/07/checked-exceptions/">Checked Exceptions</a></li>
+</ol>
+</div>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+    </body>
+</html>

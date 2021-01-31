@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Title</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style type="text/css">
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-container {
+        height: 100%;
+        width: 100%;
+      }
+      .remark-slide-content h1 { font-size: 60px; }
+      .remark-container { background: #CCCCCC; }
+      .remark-slide-content { font-size: 26px; }
+      .remark-code, .remark-inline-code {   font-size: 24px; font-family: 'Ubuntu Mono'; }
+      .remark-slide-number {opacity: 0.0;}
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Lightweight Higher-kinded Polymorphism
+
+Tim McGilchrist (@lambda_foo)
+.bottom[![lambda](/talks/fp-syd-higher-2015/lambda.png)]
+
+---
+# OCaml in 1 Minute
+
+ * Types are in lower case
+ * Type variables are written with a single quote `'a`
+ * Type constructors are reversed
+
+``` Haskell
+(Int, Int)       -- Haskell
+int * int        -- OCaml
+
+[Bool]           -- Haskell
+bool list        -- OCaml
+
+foldl :: (b -> a -> b) -> b -> [a] -> b
+fold_left : ('a -> 'b -> 'a) -> 'a -> 'b list -> 'a
+
+data Tree a = Node a (Tree a) (Tree a) | Leaf
+type 'a tree = Node of 'a * 'a tree * 'a tree | Leaf
+
+```
+---
+# OCaml in 1 Minute cont.
+
+ * structs group together data types and functions
+ * signature defines an interface for a struct
+ * functors are parameterised structs
+
+???
+ structs similar to modules in haskell
+ think about as lifting functions into the module language
+
+
+---
+# Introduction
+
+ * polymorphism abstracts types, just as functions abstract values
+ * higher-order functions abstract first-order values and type constructors
+ * higher-kinded polymorphism, abstracts both types and type constructors
+
+``` haskell
+    Prelude> let when b m = if b then m else return ()
+    Prelude> :t when
+    when :: Monad m => Bool -> m () -> m ()
+```
+
+???
+* implied forall on m in Haskell
+
+---
+# Introduction cont.
+``` ocaml
+    module type Monad = sig
+      type 'a t
+      val bind: 'a t -> ('a -> 'b t) -> 'b t
+      val return: 'a -> 'a t
+    end;;
+
+    module When (M : Monad) = struct
+      let f b m = if b then m else M.return ()
+    end;;
+
+    (* Gives the following type
+    module When :
+      functor (M : Monad) ->
+        sig val f : bool -> unit M.t -> unit M.t
+    end
+    *)
+```
+---
+# Introduction cont.
+
+``` ocaml
+    module Unless(M : Monad) = struct
+      module W = When(M)
+      let f b m = W.f (not b) m
+    end;;
+
+    let module U = Unless(StateM) in
+      U.unless (v < 0) (StateM.put v);;
+
+```
+???
+  * defined using functors
+  * work quite hard to get this result
+
+---
+# Why is OCaml being difficult?
+
+ * Lack of overloading
+   * OCaml implicits proposal
+
+ * Lack of higher kinded polymorphism
+   * addressing this issue here
+
+???
+ * we need to pass around dictionaries of functions
+ * functors are only way to abstract over type constructors
+ * first issue may be addressed by OCaml implicits
+ * addressing the second issue
+
+---
+# Alias Problem
+ * Why not just do a Haskell?
+ * `data` and `newtype` definitions create fresh data types
+ * Association bewteen type name and data type it denotes cannot be abstracted
+ * easy to check two types denote the same data type
+
+???
+ * fundamental difference between type constructors in the two langauges
+ * Straight forward to check two type names denote the same data type
+ * expand synonyms, type names denote the same data types when the names are the same
+
+---
+# OCaml is more flexible
+
+```ocaml
+
+  type t             (* type in a signature *)
+
+  type t = T of int  (* new data type *)
+
+  type t = int       (* alias to int *)
+
+  module Y = struct type t = int; end
+
+  module M (X: Y.t) = struct type t = Y.t; end
+```
+
+???
+ * OCaml is more flexible around creating abstract types
+ * Abstracting types via signature / functor can be temporary
+ * Checking type equality is a more subtle matter
+
+---
+# Alias Example
+
+``` ocaml
+  'a 't ~ (int * int) list
+
+
+  type 'a plist  = ('a * 'a) list
+  type 'a iplist = (int * int) list
+```
+???
+* first line, unifying is simple 'a with (int * int) and 'f with list
+* after introducing type aliases, it's not so simple.
+* no longer a most general unifier
+
+---
+# Defunctionalization
+
+ Problem: abstracting over type expressions of higher kind in a language where all type variables have base kind.
+
+???
+* where does that leave us?
+  * river, paddle, wrong spot right?
+
+
+---
+# Type Defunctionalization
+
+Change a program with higher-kinded type expressions (\* -> \*) into a program
+where all type expressions are of kind *, the kind of types.
+
+
+``` ocaml
+  type ('a, 'f) app
+
+  module type List = sig
+        type t
+        val inj : 'a list -> ('a, t) app
+        val prj : ('a, t) app -> 'a list
+  end
+
+  let when_ (d: _ #monad) b m = if b then m else d#return()
+```
+
+???
+* The type expression (s, t) app represents the application of the type expression t to the type expression s.
+* eliminate higher-kinded type expressions we associate each type expression with a distinct instantiation of app
+* #monad is a dictionary of monad operations (similar to type class dictionaries)
+
+---
+# Dictionary as Class
+
+``` ocaml
+class virtual ['m] monad = object
+  method virtual return : 'a. 'a -> ('a, 'm) app
+  method virtual bind : 'a 'b. ('a, 'm) app ->
+     ('a -> ('b, 'm) app) -> ('b, 'm) app
+end
+```
+
+---
+# Higher
+ * available as higher via opam
+
+``` ocaml
+type (’p, ’f) app
+
+module Newtype1 (T : sig type ’a t end) = struct
+  type ’a s = ’a T.t
+  type t
+  let inj : ’a s -> (’a, t) app = "%identity"
+  let prj : (’a, t) app -> ’a s = "%identity"
+end
+
+```
+???
+* unchecked cast, the module system ensures that type safety is preserved.
+* creating a value of ('a, t) app only via inj
+* nothing to do to change the function's parameter to its return value.
+  the identity function aka `Obj.magic`
+
+---
+# Example Higher-kinded folds
+
+``` ocaml
+open Higher
+
+type 'a perfect = Zero of 'a
+                | Succ of ('a * 'a) perfect
+
+type 'f perfect_folder = {
+  zero: 'a. 'a -> ('a, 'f) app;
+  succ: 'a. ('a * 'a, 'f) app -> ('a, 'f) app;
+}
+
+let rec foldp : 'f 'a. 'f perfect_folder ->
+  'a perfect -> ('a, 'f) app =
+    fun { zero; succ } -> function
+    | Zero l -> zero l
+    | Succ p -> succ (foldp { zero; succ } p)
+```
+---
+# Example Higher-kinded folds cont
+``` ocaml
+module Perfect =
+  Newtype1(struct type 'a t = 'a perfect end)
+
+let idp p = Perfect.(prj
+   (foldp { zero = (fun l -> inj (Zero l));
+            succ = (fun b -> inj (Succ (prj b)))} p))
+```
+
+---
+# Example the Codensity Transform
+
+see example-3-codensity.ml
+
+---
+# Resources
+
+* Lightweight Higher Kinded Polymorphism by Jeremy Yallop and Leo White
+* https://github.com/ocamllabs/higher
+* Oleg Kiselyov: Embedding and optimizing domain-specific languages in the typed final style
+http://cufp.org/2015/t4-oleg-kiselyov-dsl-in-typed.html
+
+---
+class: center, middle
+# Thanks!
+
+Tim McGilchrist @lambda_foo
+
+Software Engineer @ Ambiata
+
+Thanks!
+
+    </textarea>
+    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+    </script>
+    <!-- <script src="remark-custom.js"></script> -->
+    <script>
+var slideshow = remark.create({
+    highlightStyle: "obsidian"
+});
+    </script>
+  </body>
+</html>

@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+      
+        YARB: Yet Another Ring Benchmark, Part I &middot; Tim McGilchrist
+      
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="../css/poole.css">
+  <link rel="stylesheet" href="../css/syntax.css">
+  <link rel="stylesheet" href="../css/lanyon.css">
+  <link rel="stylesheet" href="../css/book.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="../images/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="../atom.xml">
+
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+
+  <div class="sidebar-item">
+    <img src="../images/tim-movember-2009.jpg" />
+    <p>Tim McGilchrist</p>
+    <p>Software Engineer at Digital Asset in Sydney</p>
+
+    <p>
+      Twitter: <a href="https://twitter.com/lambda_foo">@lambda_foo</a><br>
+      Github: <a href="https://github.com/tmcgilchrist">tmcgilchrist</a><br>
+      Email: <a href="mailto:timmcgil@gmail.com">timmcgil@gmail.com</a><br>
+      LinkedIn: <a href="https://www.linkedin.com/in/timmcgilchrist">Tim McGilchrist</a>
+    </p>
+
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="../">
+      Blog
+    </a>
+    <a class="sidebar-nav-item" href="../about">
+      About
+    </a>
+    <a class="sidebar-nav-item" href="../talks">
+      Talks
+    </a>
+    <p class="sidebar-nav-item">
+      Feed:
+      <a href="../rss.xml">
+        RSS
+      </a>
+      /
+      <a href="../atom.xml">
+        Atom
+      </a>
+    </p>
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; Tim McGilchrist 2007-2021
+    </p>
+    <p>
+      Powered by Hakyll
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="../" title="Home">Tim McGilchrist</a>
+            
+            <span class="masthead-links">
+              <a href="../">Blog</a> |
+              <a href="../pages/about.html">About</a> |
+              <a href="../archive.html">Archive</a> |
+              <a href="../pages/talks.html">Talks</a>
+            </span>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">YARB: Yet Another Ring Benchmark, Part I</h1>
+  <span class="post-date">March 21, 2009</span>
+  <p>In Joe Armstrong’s excellent Erlang book he has an exercise to:</p>
+<pre><code>Write a ring benchmark. Create N processes in a ring. Send a message round the
+ring M times so that a total or N*M messages get sent. Time how long it takes
+for different values of N and M. Write a similar program in some other language
+you are familar with. Compare the results. Write a blog and public the results
+on the Internet!</code></pre>
+<p>So far I’ve done the Erlang section of this. It turns out to be pretty straight forward in Erlang, not surprisingly. If it was difficult it wouldn’t be a great example now would it.</p>
+<p>So lets see how it’s done.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode erlang"><code class="sourceCode erlang"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a><span class="kw">-module</span><span class="fu">(</span><span class="ch">ring</span><span class="fu">).</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a><span class="op">-</span><span class="fu">compile(</span><span class="ch">export_all</span><span class="fu">).</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a><span class="op">-</span><span class="fu">import(</span><span class="ch">lists</span><span class="fu">,</span> <span class="fu">[</span><span class="ch">foreach</span><span class="op">/</span><span class="dv">2</span><span class="fu">,</span> <span class="ch">map</span><span class="op">/</span><span class="dv">2</span><span class="fu">,</span> <span class="ch">reverse</span><span class="op">/</span><span class="dv">1</span><span class="fu">]).</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a><span class="fu">main([</span><span class="va">A</span><span class="fu">,</span><span class="va">B</span><span class="fu">])</span> <span class="op">-&gt;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a>    <span class="va">N</span> <span class="op">=</span> <span class="fu">list_to_integer(</span><span class="va">A</span><span class="fu">),</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true"></a>    <span class="va">M</span> <span class="op">=</span> <span class="fu">list_to_integer(</span><span class="va">B</span><span class="fu">),</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true"></a>    <span class="fu">io:format(</span><span class="st">&quot;~w: ~w processes with ~w messages\n&quot;</span><span class="fu">,</span> <span class="fu">[self(),</span> <span class="va">N</span><span class="fu">,</span> <span class="va">M</span><span class="fu">]),</span></span></code></pre></div>
+<p>This section simply reads in the command-line arguments and uses <strong>list_to_integer()</strong> to convert them into numbers.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode erlang"><code class="sourceCode erlang"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="fu">[</span><span class="va">First</span><span class="fu">|</span>_<span class="fu">]</span> <span class="op">=</span> <span class="va">Pids</span> <span class="op">=</span> <span class="fu">for(</span><span class="dv">1</span><span class="fu">,</span> <span class="va">N</span><span class="fu">,</span> <span class="kw">fun</span><span class="fu">()</span> <span class="op">-&gt;</span> <span class="fu">spawn(</span><span class="kw">fun</span><span class="fu">()</span> <span class="op">-&gt;</span> <span class="fu">loop()</span> <span class="kw">end</span><span class="fu">)</span> <span class="kw">end</span><span class="fu">),</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a><span class="fu">setupLoop(</span><span class="va">Pids</span><span class="fu">),</span></span></code></pre></div>
+<p>Next we spawn the required number of threads and setup the loop, so that each thread knows the PID of the next thread in the loop.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode erlang"><code class="sourceCode erlang"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a><span class="fu">sendMsgs(</span><span class="va">M</span><span class="fu">,</span> <span class="va">First</span><span class="fu">),</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a><span class="co">% Cleanup!!</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a><span class="fu">map(</span><span class="kw">fun</span><span class="fu">(</span><span class="va">P</span><span class="fu">)</span> <span class="op">-&gt;</span> <span class="va">P</span> <span class="op">!</span> <span class="fu">{exit}</span> <span class="kw">end</span><span class="fu">,</span> <span class="va">Pids</span><span class="fu">).</span></span></code></pre></div>
+<p>SengMsgs does the work of sending messages around the loop. It starts with sending a <strong>{relay}</strong> message to the first thread in the loop and waits for a reply from the last thread in the loop. When it receives a message from the last thread, it decrements the message count and sends another <strong>{relay}</strong> message. Continuing until the message count reaches 0.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode erlang"><code class="sourceCode erlang"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a><span class="fu">sendMsgs(</span><span class="dv">0</span><span class="fu">,</span> <span class="va">First</span><span class="fu">)</span> <span class="op">-&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a>    <span class="va">First</span> <span class="op">!</span> <span class="fu">{</span><span class="ch">relay</span><span class="fu">},</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a>    <span class="kw">receive</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true"></a>        <span class="fu">{</span><span class="ch">relay</span><span class="fu">}</span> <span class="op">-&gt;</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true"></a>            <span class="fu">io:format(</span><span class="st">&quot;~w: Finished ~w loops.~n&quot;</span><span class="fu">,</span> <span class="fu">[self(),</span> <span class="dv">0</span><span class="fu">])</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true"></a>    <span class="kw">end</span><span class="fu">;</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true"></a><span class="fu">sendMsgs(</span><span class="va">N</span><span class="fu">,</span> <span class="va">First</span><span class="fu">)</span> <span class="op">-&gt;</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true"></a>    <span class="va">First</span> <span class="op">!</span> <span class="fu">{</span><span class="ch">relay</span><span class="fu">},</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true"></a>    <span class="kw">receive</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true"></a>        <span class="fu">{</span><span class="ch">relay</span><span class="fu">}</span> <span class="op">-&gt;</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true"></a>            <span class="fu">sendMsgs(</span><span class="va">N</span><span class="op">-</span><span class="dv">1</span><span class="fu">,</span> <span class="va">First</span><span class="fu">)</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true"></a>    <span class="kw">end</span><span class="fu">.</span></span></code></pre></div>
+<p>To setup the loop, we take the first 2 PIDs sending the second PID to the first as a message indicating that it’s the next thread in the loop. When we get down to the last PID, the next thread is the main thread.</p>
+<p>The second language to compare against, needs to be something with a similar threading model with support for something similar to message passing. I’m looking at doing it with either Haskell or Lisp but I haven’t worked out how to do the message passing just yet. It’ll have to wait for PartII.</p>
+<p>Hope this helps someone, and please ask questions if my explaination isn’t clear.</p>
+<p>Full source code follows, simply copy the code and place into a file called <strong>ring.erl</strong>. Compile using this command <strong>erlc ring.erl</strong> and run the resulting program like so</p>
+<pre class="shell"><code>erl -noshell -run ring main 1 2 -run init stop</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode erlang"><code class="sourceCode erlang"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a><span class="kw">-module</span><span class="fu">(</span><span class="ch">ring</span><span class="fu">).</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a><span class="op">-</span><span class="fu">compile(</span><span class="ch">export_all</span><span class="fu">).</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true"></a><span class="op">-</span><span class="fu">import(</span><span class="ch">lists</span><span class="fu">,</span> <span class="fu">[</span><span class="ch">foreach</span><span class="op">/</span><span class="dv">2</span><span class="fu">,</span> <span class="ch">map</span><span class="op">/</span><span class="dv">2</span><span class="fu">,</span> <span class="ch">reverse</span><span class="op">/</span><span class="dv">1</span><span class="fu">]).</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true"></a><span class="co">%%% Write a ring benchmark. Create N processes in a ring. Send a</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true"></a><span class="co">%%% message round the ring M times so that a total of N*M messages</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true"></a><span class="co">%%% get sent. Time how long this takes for different values of N and M.</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true"></a><span class="co">%%% Write a similar program in some other language you are familar with.</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true"></a><span class="co">%%% Compare the results. Write a blog, and publish the results on the Internet!</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true"></a><span class="co">%%% Compile: &quot;erlc ring.erl&quot; Run: &quot;erl -noshell -run ring main 1 2 -run init stop&quot;</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true"></a><span class="fu">main([</span><span class="va">A</span><span class="fu">,</span><span class="va">B</span><span class="fu">])</span> <span class="op">-&gt;</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true"></a>    <span class="va">N</span> <span class="op">=</span> <span class="fu">list_to_integer(</span><span class="va">A</span><span class="fu">),</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true"></a>    <span class="va">M</span> <span class="op">=</span> <span class="fu">list_to_integer(</span><span class="va">B</span><span class="fu">),</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true"></a>    <span class="fu">io:format(</span><span class="st">&quot;~w: ~w processes with ~w messages\n&quot;</span><span class="fu">,</span> <span class="fu">[self(),</span> <span class="va">N</span><span class="fu">,</span> <span class="va">M</span><span class="fu">]),</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true"></a>    <span class="co">% Spawn 'N' processes and link them together.</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true"></a>    <span class="fu">[</span><span class="va">First</span><span class="fu">|</span>_<span class="fu">]</span> <span class="op">=</span> <span class="va">Pids</span> <span class="op">=</span> <span class="fu">for(</span><span class="dv">1</span><span class="fu">,</span> <span class="va">N</span><span class="fu">,</span> <span class="kw">fun</span><span class="fu">()</span> <span class="op">-&gt;</span> <span class="fu">spawn(</span><span class="kw">fun</span><span class="fu">()</span> <span class="op">-</span>&amp;<span class="ch">gt</span><span class="fu">;</span> <span class="fu">loop()</span> <span class="kw">end</span><span class="fu">)</span> <span class="kw">end</span><span class="fu">),</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true"></a>    <span class="fu">setupLoop(</span><span class="va">Pids</span><span class="fu">),</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true"></a></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true"></a>    <span class="co">% Start sending messages.</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true"></a>    <span class="fu">sendMsgs(</span><span class="va">M</span><span class="fu">,</span> <span class="va">First</span><span class="fu">),</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true"></a></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true"></a>    <span class="co">% Cleanup!!</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true"></a>    <span class="fu">map(</span><span class="kw">fun</span><span class="fu">(</span><span class="va">P</span><span class="fu">)</span> <span class="op">-&gt;</span> <span class="va">P</span> <span class="op">!</span> <span class="fu">{exit}</span> <span class="kw">end</span><span class="fu">,</span> <span class="va">Pids</span><span class="fu">).</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true"></a></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true"></a><span class="fu">setupLoop([</span><span class="va">P</span><span class="fu">])</span> <span class="op">-&gt;</span></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true"></a>    <span class="va">P</span> <span class="op">!</span> <span class="fu">{</span><span class="ch">next</span><span class="fu">,</span> <span class="fu">self()};</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true"></a><span class="fu">setupLoop([</span><span class="va">P1</span><span class="fu">,</span><span class="va">P2</span><span class="fu">|</span><span class="va">Rest</span><span class="fu">])</span> <span class="op">-&gt;</span></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true"></a>    <span class="va">P1</span> <span class="op">!</span> <span class="fu">{</span><span class="ch">next</span><span class="fu">,</span> <span class="va">P2</span><span class="fu">},</span></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true"></a>    <span class="fu">setupLoop([</span><span class="va">P2</span><span class="fu">|</span><span class="va">Rest</span><span class="fu">]).</span></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true"></a></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true"></a><span class="fu">sendMsgs(</span><span class="dv">0</span><span class="fu">,</span> <span class="va">First</span><span class="fu">)</span> <span class="op">-&gt;</span></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true"></a>    <span class="va">First</span> <span class="op">!</span> <span class="fu">{</span><span class="ch">relay</span><span class="fu">},</span></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true"></a>    <span class="kw">receive</span></span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true"></a>        <span class="fu">{</span><span class="ch">relay</span><span class="fu">}</span> <span class="op">-&gt;</span></span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true"></a>            <span class="fu">io:format(</span><span class="st">&quot;~w: Finished ~w loops.~n&quot;</span><span class="fu">,</span> <span class="fu">[self(),</span> <span class="dv">0</span><span class="fu">])</span></span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true"></a>    <span class="kw">end</span><span class="fu">;</span></span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true"></a><span class="fu">sendMsgs(</span><span class="va">N</span><span class="fu">,</span> <span class="va">First</span><span class="fu">)</span> <span class="op">-&gt;</span></span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true"></a>    <span class="va">First</span> <span class="op">!</span> <span class="fu">{</span><span class="ch">relay</span><span class="fu">},</span></span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true"></a>    <span class="kw">receive</span></span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true"></a>        <span class="fu">{</span><span class="ch">relay</span><span class="fu">}</span> <span class="op">-&gt;</span></span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true"></a>            <span class="fu">sendMsgs(</span><span class="va">N</span><span class="op">-</span><span class="dv">1</span><span class="fu">,</span> <span class="va">First</span><span class="fu">)</span></span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true"></a>    <span class="kw">end</span><span class="fu">.</span></span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true"></a></span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true"></a><span class="fu">loop()</span> <span class="op">-&gt;</span></span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true"></a>    <span class="fu">io:format(</span><span class="st">&quot;~w: Starting node~w~n&quot;</span><span class="fu">,</span> <span class="fu">[self(),</span> <span class="fu">self()]),</span></span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true"></a>    <span class="kw">receive</span></span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true"></a>        <span class="fu">{</span><span class="ch">next</span><span class="fu">,</span> <span class="va">Pid</span><span class="fu">}</span> <span class="op">-&gt;</span></span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true"></a>            <span class="fu">loop(</span><span class="va">Pid</span><span class="fu">);</span></span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true"></a>        <span class="fu">{exit}</span> <span class="op">-&gt;</span></span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true"></a>            <span class="fu">io:format(</span><span class="st">&quot;~w: Exiting now! ~n&quot;</span><span class="fu">,</span> <span class="fu">[self()])</span></span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true"></a>    <span class="kw">end</span><span class="fu">.</span></span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true"></a></span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true"></a><span class="fu">loop(</span><span class="va">Pid</span><span class="fu">)</span> <span class="op">-&gt;</span></span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true"></a>    <span class="kw">receive</span></span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true"></a>        <span class="fu">{</span><span class="ch">relay</span><span class="fu">}</span> <span class="op">-&gt;</span></span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true"></a>            <span class="va">Pid</span> <span class="op">!</span> <span class="fu">{</span><span class="ch">relay</span><span class="fu">},</span></span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true"></a>            <span class="fu">loop(</span><span class="va">Pid</span><span class="fu">);</span></span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true"></a>        <span class="fu">{exit}</span> <span class="op">-&gt;</span></span>
+<span id="cb7-61"><a href="#cb7-61" aria-hidden="true"></a>            <span class="fu">io:format(</span><span class="st">&quot;~w: Exiting now!~n&quot;</span><span class="fu">,</span> <span class="fu">[self()])</span></span>
+<span id="cb7-62"><a href="#cb7-62" aria-hidden="true"></a>    <span class="kw">end</span><span class="fu">.</span></span>
+<span id="cb7-63"><a href="#cb7-63" aria-hidden="true"></a></span>
+<span id="cb7-64"><a href="#cb7-64" aria-hidden="true"></a><span class="fu">for(</span><span class="va">N</span><span class="fu">,</span> <span class="va">N</span><span class="fu">,</span> <span class="va">F</span><span class="fu">)</span> <span class="op">-&gt;</span></span>
+<span id="cb7-65"><a href="#cb7-65" aria-hidden="true"></a>     <span class="fu">[</span><span class="va">F</span><span class="fu">()];</span></span>
+<span id="cb7-66"><a href="#cb7-66" aria-hidden="true"></a><span class="fu">for(</span><span class="va">I</span><span class="fu">,</span> <span class="va">N</span><span class="fu">,</span> <span class="va">F</span><span class="fu">)</span> <span class="op">-&gt;</span></span>
+<span id="cb7-67"><a href="#cb7-67" aria-hidden="true"></a>    <span class="fu">[</span><span class="va">F</span><span class="fu">()</span> <span class="fu">|</span> <span class="ch">for</span> <span class="fu">(</span><span class="va">I</span><span class="op">+</span><span class="dv">1</span><span class="fu">,</span> <span class="va">N</span><span class="fu">,</span> <span class="va">F</span><span class="fu">)].</span></span></code></pre></div>
+</div>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+    </body>
+</html>

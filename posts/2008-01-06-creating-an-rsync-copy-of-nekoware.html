@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+      
+        Creating an rsync copy of Nekoware &middot; Tim McGilchrist
+      
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="../css/poole.css">
+  <link rel="stylesheet" href="../css/syntax.css">
+  <link rel="stylesheet" href="../css/lanyon.css">
+  <link rel="stylesheet" href="../css/book.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="../images/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="../atom.xml">
+
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+
+  <div class="sidebar-item">
+    <img src="../images/tim-movember-2009.jpg" />
+    <p>Tim McGilchrist</p>
+    <p>Software Engineer at Digital Asset in Sydney</p>
+
+    <p>
+      Twitter: <a href="https://twitter.com/lambda_foo">@lambda_foo</a><br>
+      Github: <a href="https://github.com/tmcgilchrist">tmcgilchrist</a><br>
+      Email: <a href="mailto:timmcgil@gmail.com">timmcgil@gmail.com</a><br>
+      LinkedIn: <a href="https://www.linkedin.com/in/timmcgilchrist">Tim McGilchrist</a>
+    </p>
+
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="../">
+      Blog
+    </a>
+    <a class="sidebar-nav-item" href="../about">
+      About
+    </a>
+    <a class="sidebar-nav-item" href="../talks">
+      Talks
+    </a>
+    <p class="sidebar-nav-item">
+      Feed:
+      <a href="../rss.xml">
+        RSS
+      </a>
+      /
+      <a href="../atom.xml">
+        Atom
+      </a>
+    </p>
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; Tim McGilchrist 2007-2021
+    </p>
+    <p>
+      Powered by Hakyll
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="../" title="Home">Tim McGilchrist</a>
+            
+            <span class="masthead-links">
+              <a href="../">Blog</a> |
+              <a href="../pages/about.html">About</a> |
+              <a href="../archive.html">Archive</a> |
+              <a href="../pages/talks.html">Talks</a>
+            </span>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Creating an rsync copy of Nekoware</h1>
+  <span class="post-date">January  6, 2008</span>
+  <p>If you’re running an SGI at home or maybe at work, and you haven’t heard of -Nekoware, then you must be new around here. It’s a collection of opensource -software all compiled and ready to install for your SGI. Check out -<a href="http://www.nekochan.net/downloads.php">Nekoware</a> for a complete list of what -is available .</p>
+<p>What I want to do here is show how you can have your very own copy of Nekoware locally.</p>
+<p>Download a copy of Nekoware rsync from one of the mirrors, I used this <a href="http://www.mechanics.citg.tudelft.nl/~everdij/nekoware/index.php?path=current/">Mirror</a> and downloaded the file in a browser.</p>
+<p>Installing rsync really depends on whether you have a monitor hooked up to your SGI or you’re using ssh/remote X , note that telnet is <strong>not</strong> an option. I’m using remote X so that’s what is shown here.</p>
+<p>Login as root and change to the directory where you downloaded rsync to.</p>
+<pre><code>cd /usr/people/me/downloads</code></pre>
+<p>To install software from the command line you need to use the software installation tool <strong>inst(1)</strong>.</p>
+<pre class="shell"><code>
+inst
+
+Default distribution to install from: /var/tmp/tardista000i0
+
+For help on inst commands, type &quot;help overview&quot;.
+
+
+Inst 4.1 Main Menu
+
+ 1. from [source ...]            Specify location of software to be installed
+ 2. open [source ...]            Specify additional software locations
+ 3. close [source ...]           Close a software distribution location
+ 4. list [keywords] [names]      Display information about software subsystems
+ 5. go                           Perform software installation and removal now
+ 6. install [keywords] [names]   Select subsystems to be installed
+ 7. remove [keywords] [names]    Select subsystems to be removed
+ 8. keep [keywords] [names]      Do not install or remove these subsystems
+ 9. step [keywords] [names]      Interactive mode for install/remove/keep
+10. conflicts [choice ...]       List or resolve installation conflicts
+11. help [topic]                 Get help in general or on a specific word
+12. view ...                     Go to the View Commands Menu
+13. admin ...                    Go to the Administrative Commands Menu
+14. quit                         Terminate software installation
+
+Inst&gt;
+
+# from /usr/people/me/downloads/neko_rsync-2.6.8.tardist
+
+Unpacking tardist file into temporary distribution directory /var/tmp/tardista0
+00F7
+Unpacking tardist file .. 100% Done.
+Reading product descriptions ..  13%
+Reading /var/inst/hist
+Reading product descriptions ..  25%
+Setting distribution to /var/tmp/tardista000F7
+Reading product descriptions .. 100% Done.
+</code></pre>
+<p>List the files available in this package</p>
+<pre class="shell"><code>
+Inst&gt; list
+  View:      distribution
+  Status:    N=new, U=upgrade, S=same, D=downgrade
+  Stream:    feature
+  Selection: i=install, r=remove, k=keep
+
+  Subsystem Types [bdro]:  b=reBoot needed, d=Default, r=Required, o=overlay
+
+  S  neko_rsync.man.manpages [d]        0   man pages
+  S  neko_rsync.opt.dist                0   distribution files
+  S  neko_rsync.opt.relnotes            0   release notes
+  S  neko_rsync.opt.src                 0   original source code
+  S  neko_rsync.sw.eoe [d]              0   execution only env
+
+Disk space summary (Kbytes):            /
+
+Current free space                 981640
+- Selections net change                 0
+- Temporary inst overhead               0
+= Minimum free during install      981640
+
+Final projected free space         981640
+</code></pre>
+<p>Now select the files you want installed, I went for the default which includes the executable and the man page.</p>
+<pre class="shell"><code>
+Inst&gt; install d
+
+Inst&gt; list
+  View:      distribution
+  Status:    N=new, U=upgrade, S=same, D=downgrade
+  Stream:    feature
+  Selection: i=install, r=remove, k=keep
+
+  Subsystem Types [bdro]:  b=reBoot needed, d=Default, r=Required, o=overlay
+
+i S  neko_rsync.man.manpages [d]        0   man pages
+  S  neko_rsync.opt.dist                0   distribution files
+  S  neko_rsync.opt.relnotes            0   release notes
+  S  neko_rsync.opt.src                 0   original source code
+i S  neko_rsync.sw.eoe [d]              0   execution only env
+
+Disk space summary (Kbytes):            /
+
+Current free space                 981640
+- Selections net change                 0
+- Temporary inst overhead            1628+
+= Minimum free during install      980012
+
+Final projected free space         981640
+
+Inst&gt;
+</code></pre>
+<p>All that remains is the install, so type <strong>go</strong> and watch it go. After it has finished installing, you can simply quit isnt.</p>
+<pre><code>
+You may continue with installations or quit now.
+
+Inst&gt; quit
+The tardist distribution neko_rsync-2.6.8.tardist has been unpacked as /var/tmp/
+tardista000Fq.
+Do you want to save this distribution for future installations,
+or remove it?
+1. Save this distribution
+2. Remove this distribution
+Please enter a choice [2]: 2
+Requickstarting ELF files (see rqsall(1)) ..  25%
+</code></pre>
+<p>The requickstarting stage may take a while, so just leave it to do it’s thing.</p>
+<p>Once finished it’s time to rsync some Nekoware. Open up a terminal, it doesn’t have to be as root, create a directory and change into it.</p>
+<pre><code>mkdir nekoware
+cd nekoware</code></pre>
+<p>I only wanted a copy of the current MIPS4 packages, you will most likely want the same, unless you have a really old SGI. So copy the following command and wait for it to finish, which may be a while for a new copy.</p>
+<pre><code>/usr/nekoware/bin/rsync -az --progress \
+mech001.citg.tudelft.nl::nekoware/current  /usr/people/me/nekoware</code></pre>
+<p>Once finished we have an rsync copy of nekoware, that we can install from and can be upgraded when new versions of packages come out. To upgrade simply run the previous command again, and it should only download the updated/changed packages.</p>
+<p>For futher information about rsync and all the brilliant things it can do visit <a href="http://samba.anu.edu.au/rsync/">rsync homepage</a></p>
+</div>
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+    </body>
+</html>

@@ -1,0 +1,10 @@
+.deck-container .slide blockquote {
+  font-size: 1em;
+  padding: 1em 2em;
+  color: #000;
+  border: 2px solid #ccc;
+}
+
+.deck-container a:visited {
+    color: #616366;
+}

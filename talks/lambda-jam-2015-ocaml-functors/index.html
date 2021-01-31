@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Title</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style type="text/css">
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-container {
+        height: 100%;
+        width: 100%;
+      }
+      .remark-slide-content h1 { font-size: 60px; }
+      .remark-container { background: #CCCCCC; }
+      .remark-slide-content { font-size: 26px; }
+      .remark-code, .remark-inline-code {   font-size: 24px; font-family: 'Ubuntu Mono'; }
+      .remark-slide-number {opacity: 0.0;}
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Crash Course in OCaml Modules
+
+Tim McGilchrist (@lambda_foo)
+.bottom[![lambda](/talks/lambda-jam-2015-ocaml-functors/lambda.png)]
+
+---
+
+# What to expect?
+
+1. What is OCaml?
+2. Module Concepts
+3. Comparison to Haskell
+4. Code, Code and more Code
+
+.bottom[![lambda](/talks/lambda-jam-2015-ocaml-functors/lambda.png)]
+???
+* Things to expect from this talk.
+
+* OCaml functors ain't Haskell functors.
+* Hey man, where's my fmap. Such confuse, much wow.
+* introduce people to the OCaml module system
+* What OCaml functors are
+* What sorts of problems they let us solve.
+
+---
+
+# Outcomes
+
+1. Understand OCaml's module system
+2. Appreciate difference between Modules and Type Classes
+3. Perhaps write some OCaml, it's awesome!
+
+
+.bottom[![Right-aligned image](/talks/lambda-jam-2015-ocaml-functors/colour-logo.svg)]
+
+???
+The ML module system comes up in conversations around Haskell needing a module
+system, why building a Haskell module system is hard and just how do I relate ML
+Modules to things in other languages like Traits in Scala or Type Classes in
+Haskell. Rather than having a bunch of handwaving about modules can do this and
+type classes can do that, it'd be better if everyone had a basic understanding
+of what ML modules are. So the discussion can come from a place of knowledge
+
+Anecdote about why I chose to learn OCaml rather than Haskell.
+be a contrarian
+
+Lets dive into some terminology
+---
+.bottom[![Right-aligned image](/talks/lambda-jam-2015-ocaml-functors/except-for-tim-comic.jpg)]
+---
+
+# Terminology
+The key parts of OCaml's Module System are:
+
+* Structures
+* Signatures
+* Functors
+
+.right[![lambda](/talks/lambda-jam-2015-ocaml-functors/lambda.png)]
+???
+
+OCaml has 2 levels or languages;
+1. language of functions and value.
+2. language of modules and functors
+
+---
+# OCaml type declarations
+
+* Types are in lowercase.
+* Type variables are written with a single quote `'a`
+* Type constructors are reversed
+
+``` Haskell
+(Int, Int)       -- Haskell
+int * int        -- OCaml
+
+[Bool]           -- Haskell
+bool list        -- OCaml
+
+foldl :: (b -> a -> b) -> b -> [a] -> b
+fold_left : ('a -> 'b -> 'a) -> 'a -> 'b list -> 'a
+
+data Tree a = Node a (Tree a) (Tree a) | Leaf
+type 'a tree = Node of 'a * 'a tree * 'a tree | Leaf
+
+```
+
+???
+Explain the code examples.
+
+---
+# Structures
+
+Structures provide units of organistion within OCaml
+
+``` ocaml
+module IntSet = struct
+  type t = int
+  type set = t list
+  let empty = []
+  let member i s = List.exists (fun x -> x = i) s
+  let insert i s = if member i s then s else (i::s)
+end
+```
+???
+* Values in the module language
+* Structures group together declarations of data types and functions. In a
+  similar way to what you'd be familar with in Haskell.
+* Introduce a structure using `struct` `end` keyword pair.
+* Implicit structure name from the file name.
+
+---
+# Calling Structures
+
+Called via dot notation
+
+``` ocaml
+IntSet.t
+
+IntSet.empty
+
+IntSet.member
+```
+???
+Pretty much as you'd expect coming from another language
+
+---
+# Nested Structures
+
+``` ocaml
+module IntSet = struct
+  module Compare = struct
+    type t = int
+    let eql x y = x = y
+  end
+end
+
+IntSet.Compare.eql 1 1
+```
+Nested structures can be nested.
+???
+
+
+---
+# Using Structures
+
+* `open` structure at top of the file
+* local open at the call site
+* use module alias
+
+``` ocaml
+open IntSet
+
+Compare.eql 1 1
+
+(* or *)
+
+IntSet.Compare.(eq 1 1)
+
+(* or *)
+
+let module S  = IntSet.Compare
+in S.eql 1 1
+```
+
+???
+
+* Using structures needs to more convenient that using the long form names
+especially if we want to use nested modules to organise our code.
+
+1. Opening the module at the top of a file. Using `open` then the name of the
+   module, everything that the module exports will be available in the opening
+   module. This is convenient, no need to pre-pend anything with module names,
+   the downside however is you pollute the namespace. Might not want to have
+   everything in this namespace, eg name clashes. Good idea to keep it small.
+
+2. Convenient option if you're only using the module in a few places within a file.
+   Especially if you're using the same module repeatedly in a a statement.
+
+3. Helpful to keep what the short name of a module is close to where it's being used.
+
+---
+# Signatures
+
+Defines an interface for a structure.
+
+``` ocaml
+module type Set = sig
+  type 't set
+  val empty : 't set
+  val member : 't set -> 't -> bool
+  val insert : 't set -> 't -> 't set option
+end
+```
+
+* List of declarations without any implementation
+
+???
+
+* List of declarations without any implementations
+* Definitions can be more abstract than structure
+* Introduced with `sig` `end` keywords
+* used to hide details. In this case we're not exporting the concrete type for
+  set, making it abstract.
+* Typically, you'll have your `struct` in one file say `set.ml` and the
+signature defined in another file called `set.mli`.
+
+---
+# Example
+
+
+``` ocaml
+module type Monad = sig
+  type t
+  val bind : 'a t -> ('a -> 'b t) -> 'b t
+  val return : 'a -> 'a t
+
+  val (>>=): 'a t -> ('a -> 'b t) -> 'b t
+  val (>>|): 'a t -> ('a -> 'b) -> 'b t
+end
+```
+???
+
+Lets introduce a signature for a Monad.
+
+---
+# Functors
+
+* No Haskell functors here comrades.
+* Functions from `struct` to `struct`
+* aka Paramterised Structures
+
+.right[![Right-aligned image](/talks/lambda-jam-2015-ocaml-functors/smugpig.png)]
+???
+
+Functors in OCaml aren't like Haskell functors, they don't provide an fmap
+across a particular structure. Though they do perform a similar purpose, just
+it's at the module level. Think of functors as `functions` from `struct` to
+`struct`.
+Another way, to think of it is lifting functions into the module language
+
+Let's look at an example!
+
+---
+# Example I
+
+``` ocaml
+module type ORDERING = sig
+  type t
+  val compare : t -> t -> int
+end
+
+module type Set = sig
+  type 't set
+  val empty : 't set
+  val member : 't set -> 't -> bool
+  val insert : 't set -> 't -> 't set option
+end
+```
+???
+* Introduce this new signature called `ORDERING`
+* Repeat our Set signature from before
+
+---
+# Example II
+
+``` ocaml
+module MakeSet (O : ORDERING) = struct
+  type t = O.t
+  let empty = []
+
+  let rec member s x =
+    match s with
+       [] -> false
+      | hd::tl ->
+        match O.compare x hd with
+           0  -> true
+         | 1  -> false
+         | -1 -> member tl x
+
+  let rec insert x s =
+    ...
+end
+```
+???
+* How is the functor defined?
+* Use O in implementation of other functions.
+* MkSet is completely defined in terms of it's argument O
+* Functors can be defined over multiple modules, just tack another set of
+  brackets after the first and before the equals
+
+---
+# Using Functor
+``` ocaml
+module IntOrdering = struct
+  type t = int
+  let compare = Int.compare
+end
+
+module IntSet = MakeSet(IntOrdering)
+
+let a = IntSet.insert 1 IntSet.empty
+IntSet.member 1 a
+
+(* Using local opens *)
+
+let a = IntSet.(insert 1 empty)
+```
+???
+
+1. Introduce an ordering for ints
+2. Call functor using our Int ordering
+3. make go now!
+
+---
+# Review
+
+* Structures group together types and functions with implementations
+* Signatures interface for a structure
+* Functors are functions from `struct` to `struct`
+.right[![lambda](/talks/lambda-jam-2015-ocaml-functors/lambda.png)]
+???
+
+So let's take a moment to review what we've covered so far. If nothing else, I'd
+be great if you can take these defintions away with you.
+
+---
+# Comparison to Type Classes
+
+* Type Classes provide adhoc polymorphism
+* Module system explicit configuration of program components and the use of data
+abstraction
+
+* Different purposes but significant overlap
+
+???
+Type classes focus on bringing implict program construction and adhoc
+polymorphism to Haskell. By implicit construction I mean in using type classes
+you don't need to say which instance of a type class to use. Haskell works that
+out for you. Providing some sort of guarantee that there is only 1 possible
+implementation (Though there are a snumber of ways around this if you're
+sufficiently devious)
+
+Modules on the other hand emphasise explicit configuration of program components
+and the use of data abstraction. Namely a means for decomposing large programs
+into smaller pieces.
+
+I'm probably oversimplifying the motivations on both sides, the point is
+they're not trying to solve the same problem. However there is  some
+overlap in functionality.
+
+So lets see some code showing how to translate Haskell Type Classes into OCaml
+
+---
+# Type Classes to Signatures
+
+Haskell
+``` haskell
+class Show a where
+    show :: a -> String
+```
+
+OCaml
+``` ocaml
+module type SHOW = sig
+  type t
+  val show : t -> string
+end
+```
+???
+
+So type classes in Haskell become signatures in OCaml. Lets look at the show
+type class as a simple example, though this applies to any type class.
+
+---
+# Instances to Structures
+
+Haskell
+``` haskell
+instance Show Int where
+    show = ... -- provided in ghc
+```
+
+OCaml
+``` ocaml
+module ShowInt = struct
+  type t = int
+  let show = string_of_int
+end
+```
+???
+* Haskell you declare an instance of Show for your type.
+* OCaml we create a `struct` that has the right interface
+
+---
+# Using Type Class
+
+Haskell
+``` Haskell
+csv :: Show a => [a] -> String
+csv []  = ""
+csv [x] = show x
+csv h:t = show h ++ "," ++ csv t
+
+csv [1,2,3] => "1,2,3"
+```
+Functions that use type classes do not need to do anything special
+---
+# Using Type Class Modules
+OCaml
+``` ocaml
+module Csv(S:SHOW) = struct
+  let rec to_csv : S.t list -> string =
+    function
+        []   -> ""
+      | [x]  -> S.show x
+      | h::t -> S.show h ^ "," ^ to_csv t
+end
+
+module X = Csv(ShowInt)
+X.to_csv [1;2;3] => "1,2,3"
+
+```
+* Callers Get Wrapped In Functors
+* Manually instantiate the version of the function
+
+???
+---
+# Verdict
+
+* Type Classes can be translated into Modules
+  * Type Classes become Signatures
+  * Instances become Structures
+  * Callers Get Wrapped In Functors
+  * Manually instantiate the version of the function
+* OCaml version is slightly more verbose
+* OCaml requires specifying the instance
+* Haskell finds the instance you want
+
+???
+* more verbose
+The OCaml code is more verbose that the corresponding Haskell code. Even if you
+use a less simplistic example where there isn't a built in implementation for
+the type class. For example using Aeson where you do need to create your own
+instance.
+* for non-trivial type classes, you'll need to define an instance
+* Having said that, modules aren't really built for ad-hoc polymorphism, so they
+don't fare too badly.
+* Very useful to translate Haskell code examples in papers into OCaml versions.
+* Verbosity due to passing around the instance of show for that type.
+* Haskell also tracks the mapping from type to implementation, it's just not exposed.
+
+
+---
+# Module Extras
+
+A few things that aren't quite possible in Haskell:
+
+* Type safe extensions to existing modules
+* Parameterising library by architecture/platform/compiler
+* Library parameterised by their dependencies (Backpack)
+* Instantiate modules with state
+
+???
+* talk through each of these in turn.
+* type safe extension, 2 standard library replacements use this technique to
+extend the basic standard library.
+* Cohttp library uses this technique to parameterise over 3 different
+concurrency platforms, Lwt, Async and Javascript
+
+
+---
+# Type Safe Extensions
+
+Using the `include` keyword we can extend an existing `struct` or signature.
+
+``` ocaml
+module Listy = struct
+  include List
+
+  let intersperse t sep =
+    match t with
+      | [] | [_] -> t
+      | x :: List.fold_right
+          (fun y acc -> sep :: y :: acc) xs []
+end
+
+module List = Listy
+
+include (module type of List)
+```
+???
+* Here include is bringing in contents of List into our Listy module
+* Then we're adding our own function `intersperse`
+* Export the module back out as List, effectively replacing List with our own version.
+* You can perform a similar thing with signatures, to bring in all the functions
+  and types, then re-exporting them.
+*
+
+---
+# Paramterising Library
+
+* `Cohttp` is a library for creating HTTP daemons.
+  * Supports 4 different asynchronous libraries
+  * LWT - Unix threads
+  * Async - Unix threads
+  * OS-independent used in Mirage unikernel
+  * Javascript / XMLHTTPRequests
+* `Mirage` Unikernel
+  * applications functorised across OS components
+* `Irmin`, a distributed database
+  * distributed storage functorised across storage implmentations
+* `OCamlgraph`, a generic graph library for OCaml
+
+???
+* Heavy use of functors to divide abstract parts of http from plaform specific
+ones.
+* 4 different async backends
+* Applications in MirageOS are functorized across all the operating system
+components that they depend on.
+
+* In Haskell you're forced to resort to CPP to do this sort of thing. While CPP
+is comparitively portable, it's untyped, has a different syntax than Haskell and
+is just kind of gross.
+
+What are we savages???
+
+---
+# Mirage OS
+
+``` ocaml
+module type DEVICE = sig
+  type error
+end
+
+module type CONSOLE = sig
+  type error = [ ‘Invalid_console of string ]
+  include DEVICE with type error := error
+  val log_s : t -> string -> unit io
+end
+
+module Main (C: V1_LWT.CONSOLE) = struct
+  let start c =
+    let rec print () =
+      C.log_s c "hello" >>= fun () ->
+      OS.Time.sleep 1.0 >>= fun () ->
+      C.log_s c "world" >>= print
+      in print ()
+end
+```
+???
+* Explain code
+* taken from Mirage OS
+* Some places use mutiple arguments inside a functor
+* see Metaprogramming with ML modules in the MirageOS
+
+---
+# Mirage OS II
+
+``` ocaml
+module Main
+  (C: V1_LWT.CONSOLE) (FS: V1_LWT.KV_RO) (TMPL:
+       V1_LWT.KV_RO)
+  (S: Cohttp_lwt.Server)
+  = struct ... end
+```
+
+---
+# Core Monad.make
+
+``` ocaml
+module type Basic = sig
+  type 'a t
+  val bind : 'a t -> ('a -> 'b t) -> 'b t
+  val return : 'a -> 'a t
+end
+
+module type S = sig .... end
+
+module Make (M : Basic) : S with
+  type 'a t := 'a M.t = struct
+    let bind   = M.bind
+    let return = M.return
+    let join t = t >>= fun t' -> t'
+    let ignore t = map t ~f:(fun _ -> ())
+    ...
+end
+```
+
+---
+# Modular Implicits
+
+Proposal to improve ad-hoc polymorphism in OCaml
+
+
+``` ocaml
+module type Show = sig
+    type t
+    val show : t -> unit
+end
+
+let print (implicit S : Show) x = S.show x
+
+implicit module Show_int = struct
+    type t = int
+    let show x = Printf.printf "Show_int: %i\n" x
+end
+
+print 3
+```
+???
+* Extension to OCaml to provide better support for adhoc polymorphism.
+* Follows the ML discipline of maintaining explicit control over the namespace
+* Ambiguities in resolving an implicit module type resulting in a type error.
+* Taking inspiration from Scala’s implicits.
+# Work in progress
+
+---
+# Records as Modules
+
+Haskell records-as-modules style
+
+``` haskell
+data Index f = Index {
+    record :: Descriptor -> f ()
+  , lookup :: LogKey ->
+      EitherT IndexError f (Maybe Descriptor)
+}
+
+makeS3Index root = Index {
+    record = record' root
+  , lookup = lookup' root
+}
+
+record' :: Address -> Descriptor -> S3Action ()
+record root d = ...
+
+```
+???
+
+* Define a record for accessing log files
+* Clunky, record selectors everywhere
+* Performance, double dispatch everywhere
+* No closure over the types involved in the record
+* Record names must be unique
+* Useful technique
+---
+# Summary
+
+* OCaml modules are worth knowing about
+* Structures combine types and function implementations
+* Signatures combine types and function signatures
+* Functors are functions from `struct` to `struct`
+* Simple translation of Type Classes to Modules
+
+???
+* OCaml Modules provide features Haskell can't.
+
+---
+class: center, middle
+# Thanks!
+
+Tim McGilchrist @lambda_foo
+
+Software Engineer @ Ambiata
+
+Thanks!
+
+---
+#Further Reading
+
+* ML Modules and Haskell Type Classes: A Constructive Comparison.
+* Lightweight higher-kinded polymorphism
+* Metaprogramming with ML modules in the MirageOS
+* Designing a Generic Graph Library using ML Functors
+* 1ML unifying the type level and module level in ML
+* github.com/mirage/mirage
+* github.com/mirage/ocaml-cohttp
+* github.com/mirage/irmin
+    </textarea>
+    <script src="/talks/lambda-jam-2015-ocaml-functors/remark-custom.js"></script>
+    <script>
+var slideshow = remark.create({
+    highlightStyle: "obsidian"
+});
+    </script>
+  </body>
+</html>
