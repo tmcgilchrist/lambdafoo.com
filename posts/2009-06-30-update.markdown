@@ -1,0 +1,38 @@
+---
+title: Update
+author: Tim McGilchrist
+date: 2009-06-30 00:00
+tags: Misc
+description: Update 2009
+---
+
+Since I haven't posted anything here for a while. I wanted to give a quick
+update on what's going on.
+
+My new **Unibody MacBookPro** is brilliant. I just missed out on
+the latest update with the inbuilt battery, but I don't feel I have missed out
+on much. I wouldn't use the SD reader but the extra battery life would be very
+nice. Either way I'm happy, I have more power than I need and it's a beautiful
+piece of engineering. Mmm.
+
+Since finishing off University for the semester I've really gotten into
+Objective-C / Cocoa programming for the Mac, and maybe the iPhone. I grabbed
+**Cocoa Programming for Mac OSX** which seems to be the standard
+book on the subject. So far I really like the book, it's a bit different in that
+you really cannot just sit down and read through it, instead you need a Mac
+handy and a spare hour or so to get hands on with the material. On reflection
+this is the natural format for someone like Aaron Hillegass, who runs training
+courses on this stuff. My approach so far has been to read a chapter or so on
+the train in the morning and work through the exercises in the evening. I'm
+making pretty good progress and I can really see why people get excited about
+Cocoa UI development, you can get a lot working with very little code. I'm maybe
+a third of the way through the book and given my pace I'll be finished within 2
+weeks.
+
+Alongside the Cocoa book, I've started downloading the **iPhone Application
+Programming Videos** from Stanford, via
+[iTunes](http://deimos3.apple.com/WebObjects/Core.woa/Browse/itunes.stanford.edu.2024353965.02024353968). The
+contrast with the heavy hands on approach of Hillegass is nice, meaning I can
+sit back and take things in slowly.
+
+Maybe I'll become an Objective-C hacker?

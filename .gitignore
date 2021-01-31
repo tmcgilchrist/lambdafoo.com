@@ -1,3 +1,5 @@
+dist/
+dist-newstyle/
 .bundle
 .DS_Store
 .sass-cache
@@ -11,3 +13,6 @@ source/_stash
 source/stylesheets/screen.css
 vendor
 node_modules
+TAGS
+_cache
+_site
