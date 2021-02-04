@@ -8,8 +8,68 @@
         <name>Tim McGilchrist</name>
         <email>timmcgil@gmail.com</email>
     </author>
-    <updated>2018-06-22T00:00:00Z</updated>
+    <updated>2021-02-02T00:00:00Z</updated>
     <entry>
+    <title>OCaml CI with CircleCI</title>
+    <link href="https://lambdafoo.com/posts/2021-02-02-ocaml-ci-with-circleci.html" />
+    <id>https://lambdafoo.com/posts/2021-02-02-ocaml-ci-with-circleci.html</id>
+    <published>2021-02-02T00:00:00Z</published>
+    <updated>2021-02-02T00:00:00Z</updated>
+    <summary type="html"><![CDATA[<div class="post">
+  <h1 class="post-title">OCaml CI with CircleCI</h1>
+  <span class="post-date">February  2, 2021</span>
+  <p>I wanted to share a simple configuration for running OCaml projects in CircleCI. CircleCI is what I’m using at work plus it supports a killer feature that you can re-run a build getting an SSH session into the failed machine. This one feature has saved me loads of time in debugging CI configuration and flakey tests. Most of the other features are similar to other cloud CI solutions.</p>
+<p>Our requirements are simple to build OCaml projects that use OPAM and have simple test requirements (just running unit tests).</p>
+<p>First we add a file <code>.circleci/config.yml</code> with:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="fu">version</span><span class="kw">:</span><span class="at"> </span><span class="dv">2</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="fu">jobs</span><span class="kw">:</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a><span class="at">  </span><span class="fu">build-4.10</span><span class="kw">:</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a><span class="at">    </span><span class="fu">docker</span><span class="kw">:</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">image</span><span class="kw">:</span><span class="at"> ocaml/opam2:4.10</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a><span class="at">    </span><span class="fu">steps</span><span class="kw">:</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a><span class="at">      </span><span class="kw">-</span><span class="at"> checkout</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">run</span><span class="kw">:</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true"></a><span class="at">          </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Build</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true"></a><span class="at">          </span><span class="fu">command</span><span class="kw">:</span><span class="at"> ./bin/ci</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true"></a><span class="fu">workflows</span><span class="kw">:</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true"></a><span class="at">  </span><span class="fu">version</span><span class="kw">:</span><span class="at"> </span><span class="dv">2</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true"></a><span class="at">  </span><span class="fu">build</span><span class="kw">:</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true"></a><span class="at">    </span><span class="fu">jobs</span><span class="kw">:</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true"></a><span class="at">      </span><span class="kw">-</span><span class="at"> build-4.10</span></span></code></pre></div>
+<p>This creates a job <code>build-4.10</code> using docker image <code>ocaml/opam2:4.10</code> published by the OCaml team. The <code>steps</code> defines the commands to run, we use a built in <code>checkout</code> command and then a <code>run</code> command that runs a shell script <code>./bin/ci</code>.</p>
+<p>You could use your own docker container in place of <code>ocaml/opam2:4.10</code>, maybe pre-installing some things or using a different linux distro. How to run the command could also be inlined rather than being its own file. I chose to make it a file for two reasons, when you SSH to debug a script you can just re-run <code>./bin/ci</code>, and you can re-use the steps between local and CI.</p>
+<p>Now to the shell script</p>
+<pre class="shell"><code>#!/bin/sh -eux
+
+WORKING_DIR=$(pwd)
+
+# Install some extras
+sudo apt-get install m4 -y
+
+# Make sure opam is setup in your environment.
+eval `opam config env`
+opam update
+
+# Install each package as a dev dependency
+find . -type f -name &#39;*.opam&#39; | sort -d | while read P; do
+  opam pin add -n &quot;$(basename -s .opam ${P})&quot; . -y --dev
+  opam install --deps-only &quot;$(basename -s .opam ${P})&quot;  -y
+  eval `opam config env`
+done
+
+# Run the builds and
+dune build
+dune runtest</code></pre>
+<p>This configuration is from a project with multiple <code>opam</code> files so we have a <code>find</code> to locate all those files. One gotcha with this is it’ll sort the file names which may not match the dependency order, if that is the case you will need to explicitly list them. If you have a single <code>opam</code> file then replace that with the following (replacing <code>project-name</code> with your project name).</p>
+<pre class="shell"><code>opam pin add -n &quot;project-name&quot; . -y --dev
+opam install --deps-only &quot;project-name&quot;  -y</code></pre>
+<p>Push that into your github main branch, then <code>Set up Project</code> in the circleci UI and you should be off and building. From here the circleci docs can help with setting up different builds based off branches. Adding other OCaml builds is as easy as duplicating the <code>build-4.10</code> section in YAML, pointing it to another docker container like <code>4.08</code> and adding the new build name to <code>workflows</code> under <code>jobs:</code>.</p>
+<p>There’s a working setup in my <a href="https://github.com/tmcgilchrist/ocaml-bitbucket">ocaml-bitbucket</a> project. Good luck!</p>
+</div>
+]]></summary>
+</entry>
+<entry>
     <title>On EitherT</title>
     <link href="https://lambdafoo.com/posts/2018-06-22-transformers-either.html" />
     <id>https://lambdafoo.com/posts/2018-06-22-transformers-either.html</id>
@@ -829,129 +889,6 @@ Eshell V5.9.1  (abort with ^G)
 <li>Downgrading to Version 1</li>
 </ul>
 <p>But if you’ve got other suggestions please leave them in the comments.</p>
-</div>
-]]></summary>
-</entry>
-<entry>
-    <title>Ripple on Rails</title>
-    <link href="https://lambdafoo.com/posts/2012-05-22-ripple-rails.html" />
-    <id>https://lambdafoo.com/posts/2012-05-22-ripple-rails.html</id>
-    <published>2012-05-22T00:00:00Z</published>
-    <updated>2012-05-22T00:00:00Z</updated>
-    <summary type="html"><![CDATA[<div class="post">
-  <h1 class="post-title">Ripple on Rails</h1>
-  <span class="post-date">May 22, 2012</span>
-  <h2 id="introduction">Introduction</h2>
-<p>Motivation?? Checkout the RailsCasts episode on Mongoid</p>
-<p>Started with the Seven DB in Seven weeks book. Wanted to see how Riak would mix with Rails / Ruby.</p>
-<h2 id="what-is-riak">What is Riak</h2>
-<p>Riak is a distributed key-value store based on the Amazon Dynamo papers. Written in Erlang by the people at Basho, it’s an exciting addition to the crowded NoSQL zoo.</p>
-<ul>
-<li>Map Reduce</li>
-<li>eventually consistent</li>
-<li>read / write balancing</li>
-</ul>
-<h2 id="installing-riak">Installing Riak</h2>
-<p>Installing Riak is pretty straight forward for development, if you’re on a Mac use the excellent Homebrew package and you’ll get the latest 1.2 release.</p>
-<pre><code>brew install riak</code></pre>
-<p>Similarly on Linux it should be a matter of invoking your local package manager and you should be set. I’m assuming you’re using a Mac here, cause that’s what I’ve got but Linux should work as well. And Windows, well use a VM :-)</p>
-<h2 id="ruby-environment">Ruby Environment</h2>
-<p>You’ll need some form of Ruby installed, I’d recommend installing via rvm over using your local ruby version. See rvm.io for details, it should simply be a matter of running a command in your terminal.</p>
-<p>Next we’ll create a gemset and install rails into that.</p>
-<pre><code>rvm --create use 1.9.3@ripple
-gem install rails</code></pre>
-<h2 id="creating-a-new-rails-application-with-ripple">Creating a new Rails Application with Ripple</h2>
-<p>Now that we have Riak installed we’ll create a new Rails 3 application that uses Riak. Continuing in the Rails tradition, lets create a blogging app.</p>
-<pre><code>$ rails new blog --skip-active-record --skip-bundle -T</code></pre>
-<p>Now the first thing to do is add the Ripple gem to the Gemfile. Currently the latest version doesn’t work with latest rails so lets use the latest from git.</p>
-<pre><code>source &#39;http://rubygems.org&#39;
-gem &#39;rails&#39;, &#39;3.2.2&#39;
-
-gem &#39;ripple&#39;, &#39;1.0.0.beta&#39;
-
-group :development, :test do
-    gem &#39;rspec&#39;
-    gem &#39;rspec-rails&#39;
-end</code></pre>
-<p>Then install the gems in the usual way.</p>
-<pre><code> $ bundle</code></pre>
-<p>Once the gems have installed we’ll need to generate the Ripple configuration.</p>
-<pre><code>$ rails g
-...
-Ripple:
-  ripple
-  ripple:configuration
-  ripple:js
-  ripple:model
-  ripple:observer
-  ripple:test</code></pre>
-<p>So we want the default ripple one.</p>
-<pre><code>$ rails g ripple
-create  config/ripple.yml
-create  app/mapreduce
-create  app/mapreduce/contrib.js
-create  app/mapreduce/iso8601.js
-create  app/mapreduce/ripple.js
-insert  spec/spec_helper.rb
-insert  spec/spec_helper.rb</code></pre>
-<p>As you can see it creates a ripple configuration file, some mapreduce assets and updates my spec_helper. Lets look just at the <code>config/ripple.yml</code> file for now.</p>
-<p>The default config file is shown below. You may have to modify or add the ‘source:’ property to point to where you’ve installed Riak. I’ve put mine in the same directory as the rails project so it looks like this</p>
-<pre><code># TODO use the default homebrew path here.
-# Configure Riak connections for the Ripple library.
-development:
-    http_port: 9000
-    pb_port: 9001
-    host: 127.0.0.1
-    source: /usr/local/bin   # Default for Homebrew.
-
-# The test environment has additional keys for configuring the
-# Riak::TestServer for your test/spec suite:
-#
-# * bin_dir specifies the path to the &quot;riak&quot; script that you use to
-#           start Riak (just the directory)
-# * js_source_dir specifies where your custom Javascript functions for
-#           MapReduce should be loaded from. Usually app/mapreduce.
-test:
-    http_port: 9000
-    pb_port: 9002
-    host: 127.0.0.1
-    source: /usr/local/bin   # Default for Homebrew.
-    js_source_dir: &lt;%= Rails.root + &quot;app/mapreduce&quot; %&gt;
-
-production:
-    http_port: 8098
-    pb_port: 8087
-    host: 127.0.0.1
-    source: /usr/local/bin   # Default for Homebrew.</code></pre>
-<p>With everything in place we can begin to build our application. We’ll start by generating an <code>Article</code> model with name and content fields and use the Rails scaffolding to create all the dependent bits.</p>
-<pre><code>$ rails g scaffold article name:string content:text</code></pre>
-<p>Ripple provides generators for models so that Ripple’s model generator is invoked when a model is created and ActiveRecord isn’t used. When we open up the model file we’ll see that it’s a simple class that includes <code>Ripple::Document</code>.</p>
-<pre><code>class Article
-    include Ripple::Document
-    property :name, String
-    property :content, String
-end</code></pre>
-<p>The big difference to an ActiveModel model is that the class defines each property, along with the type.</p>
-<p>Ripple also adds a number of helpful rake tasks for Riak.</p>
-<pre><code>$ rake -T
-...
-rake riak:create        # Creates a Riak cluster for the current environment in db/, e.g. d...
-rake riak:create:all    # Creates Riak clusters for all environments defined in config/ripp...
-rake riak:destroy       # Destroys the generated Riak cluster for the current environment.
-rake riak:drop          # Drops data only from the Riak cluster for the current environment.
-rake riak:drop:all      # Drops data Riak clusters for all environments defined in config/r...
-rake riak:start         # Starts the Riak cluster for the current environment
-rake riak:stop          # Stops the Riak cluster for the current environment</code></pre>
-<h2 id="load-the-controller-and-show-some-actions">Load the controller and show some actions</h2>
-<h2 id="make-the-controller-run-some-basic-rspec-things">Make the controller run some basic rspec things</h2>
-<h2 id="show-some-basic-validations-on-the-data.">Show some basic validations on the data.</h2>
-<h2 id="point-to-part2">Point to Part2</h2>
-<h2 id="running-mapreduce-queries-against-riak">Running MapReduce queries against Riak</h2>
-<h2 id="pulling-in-postgres">Pulling in Postgres</h2>
-<h2 id="writing-queries-in-coffeescript">Writing queries in CoffeeScript</h2>
-<h2 id="using-the-rails-console">Using the rails console</h2>
-<h2 id="using-the-riak-console">Using the Riak Console</h2>
-<h2 id="what-else-does-railscasts-mongoid-cover">What else does RailsCasts Mongoid cover?</h2>
 </div>
 ]]></summary>
 </entry>
