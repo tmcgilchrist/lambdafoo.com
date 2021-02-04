@@ -17,5 +17,5 @@ TODO
  * ~~html url redirects to new url structure~~
  * ~~serve js talks/slides directly from hakyll~~
  * configure dependabot for Haskell
- * add generated sitemap.xml
- * integrate Google Analytics
+ * ~~add generated sitemap.xml~~
+ * ~~integrate Google Analytics~~
