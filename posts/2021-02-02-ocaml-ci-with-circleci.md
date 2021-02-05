@@ -6,11 +6,12 @@ tags: ocaml ci
 description: How to setup OCaml CI using CircleCI
 ---
 
-I wanted to share a simple configuration for running OCaml projects in CircleCI.
+I wanted to share a simple configuration for running OCaml projects in [CircleCI](https://circleci.com).
 CircleCI is what I'm using at work plus it supports a killer feature
-that you can re-run a build getting an SSH session into the failed machine. This one
+that you can re-run a failing build getting an SSH session into the machine. This one
 feature has saved me loads of time in debugging CI configuration and flakey tests.
-Most of the other features are similar to other cloud CI solutions.
+Most of the other [features](https://circleci.com/docs/) are similar to other cloud CI solutions,
+the documentation is solid and setting up more advanced workflows is easy enough.
 
 Our requirements are simple to build OCaml projects that use OPAM and have simple
 test requirements (just running unit tests).
@@ -38,8 +39,8 @@ workflows:
 ```
 
 This creates a job `build-4.10` using docker image `ocaml/opam2:4.10` published by the OCaml team.
-The `steps` defines the commands to run, we use a built in `checkout` command and then a `run` command
-that runs a shell script `./bin/ci`.
+The `steps` defines the commands to run, we use a built in `checkout` command provided by CirclCI and
+then a `run` command that executes a shell script `./bin/ci`.
 
 You could use your own docker container in place of `ocaml/opam2:4.10`, maybe pre-installing
 some things or using a different linux distro. How to run the command could also be inlined
