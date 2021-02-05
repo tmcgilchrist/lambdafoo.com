@@ -122,7 +122,7 @@
         <div class="post">
   <h1 class="post-title">OCaml CI with CircleCI</h1>
   <span class="post-date">February  2, 2021</span>
-  <p>I wanted to share a simple configuration for running OCaml projects in CircleCI. CircleCI is what I’m using at work plus it supports a killer feature that you can re-run a build getting an SSH session into the failed machine. This one feature has saved me loads of time in debugging CI configuration and flakey tests. Most of the other features are similar to other cloud CI solutions.</p>
+  <p>I wanted to share a simple configuration for running OCaml projects in <a href="https://circleci.com">CircleCI</a>. CircleCI is what I’m using at work plus it supports a killer feature that you can re-run a failing build getting an SSH session into the machine. This one feature has saved me loads of time in debugging CI configuration and flakey tests. Most of the other <a href="https://circleci.com/docs/">features</a> are similar to other cloud CI solutions, the documentation is solid and setting up more advanced workflows is easy enough.</p>
 <p>Our requirements are simple to build OCaml projects that use OPAM and have simple test requirements (just running unit tests).</p>
 <p>First we add a file <code>.circleci/config.yml</code> with:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="fu">version</span><span class="kw">:</span><span class="at"> </span><span class="dv">2</span></span>
@@ -141,7 +141,7 @@
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true"></a><span class="at">  </span><span class="fu">build</span><span class="kw">:</span></span>
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true"></a><span class="at">    </span><span class="fu">jobs</span><span class="kw">:</span></span>
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true"></a><span class="at">      </span><span class="kw">-</span><span class="at"> build-4.10</span></span></code></pre></div>
-<p>This creates a job <code>build-4.10</code> using docker image <code>ocaml/opam2:4.10</code> published by the OCaml team. The <code>steps</code> defines the commands to run, we use a built in <code>checkout</code> command and then a <code>run</code> command that runs a shell script <code>./bin/ci</code>.</p>
+<p>This creates a job <code>build-4.10</code> using docker image <code>ocaml/opam2:4.10</code> published by the OCaml team. The <code>steps</code> defines the commands to run, we use a built in <code>checkout</code> command provided by CirclCI and then a <code>run</code> command that executes a shell script <code>./bin/ci</code>.</p>
 <p>You could use your own docker container in place of <code>ocaml/opam2:4.10</code>, maybe pre-installing some things or using a different linux distro. How to run the command could also be inlined rather than being its own file. I chose to make it a file for two reasons, when you SSH to debug a script you can just re-run <code>./bin/ci</code>, and you can re-use the steps between local and CI.</p>
 <p>Now to the shell script</p>
 <pre class="shell"><code>#!/bin/sh -eux
