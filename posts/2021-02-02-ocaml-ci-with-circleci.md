@@ -23,7 +23,7 @@ version: 2
 jobs:
   build-4.10:
     docker:
-      - image: ocaml/opam2:4.10
+      - image: ocaml/opam:ubuntu-18.04-ocaml-4.10
     steps:
       - checkout
       - run:
@@ -55,7 +55,7 @@ Now to the shell script
 WORKING_DIR=$(pwd)
 
 # Install some extras
-sudo apt-get install m4 -y
+sudo apt-get install m4 pkg-config -y
 
 # Make sure opam is setup in your environment.
 eval `opam config env`
