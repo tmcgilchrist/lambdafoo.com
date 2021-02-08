@@ -129,7 +129,7 @@
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="fu">jobs</span><span class="kw">:</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a><span class="at">  </span><span class="fu">build-4.10</span><span class="kw">:</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a><span class="at">    </span><span class="fu">docker</span><span class="kw">:</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">image</span><span class="kw">:</span><span class="at"> ocaml/opam2:4.10</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">image</span><span class="kw">:</span><span class="at"> ocaml/opam:ubuntu-18.04-ocaml-4.10</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a><span class="at">    </span><span class="fu">steps</span><span class="kw">:</span></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a><span class="at">      </span><span class="kw">-</span><span class="at"> checkout</span></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">run</span><span class="kw">:</span></span>
@@ -149,7 +149,7 @@
 WORKING_DIR=$(pwd)
 
 # Install some extras
-sudo apt-get install m4 -y
+sudo apt-get install m4 pkg-config -y
 
 # Make sure opam is setup in your environment.
 eval `opam config env`
