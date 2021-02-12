@@ -2,8 +2,7 @@
 title: Minimal IRIX Kernel Driver
 author: Tim McGilchrist
 date: 2008-01-31 00:00
-tags:
-- IRIX
+tags: IRIX
 description: Minimal IRIX Kernel Driver
 ---
 There are loads of articles and examples about how to develop a simple device

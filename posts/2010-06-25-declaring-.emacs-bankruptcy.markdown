@@ -2,7 +2,7 @@
 title: Declaring .emacs Bankruptcy
 author: Tim McGilchrist
 date: 2010-06-25 00:00
-tags: Emacs
+tags: emacs
 description: Declaring .emacs Bankruptcy
 ---
 Well really this is a post bankruptcy posting!

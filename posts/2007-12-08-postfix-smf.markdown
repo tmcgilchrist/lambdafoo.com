@@ -2,7 +2,7 @@
 title: Postfix & SMF
 author: Tim McGilchrist
 date: 2007-12-08 00:00
-tags: Postfix Solaris
+tags: postfix solaris
 description: Postfix & SMF
 ---
 Blastwave's Postfix doesn't currently use SMF, but I really wanted it to. So I

@@ -2,7 +2,7 @@
 title: NetBSD 5.0 On An AspireOne 110L
 author: Tim McGilchrist
 date: 2010-03-23 00:00
-tags: NetBSD
+tags: netbsd
 description: NetBSD 5.0 On An AspireOne 110L
 ---
 

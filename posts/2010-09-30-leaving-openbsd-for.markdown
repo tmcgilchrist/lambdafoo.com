@@ -3,7 +3,7 @@ title: Leaving OpenBSD for ...
 author: Tim McGilchrist
 date: 2010-09-30 00:00
 description: Leaving OpenBSD for ...
-tags: Linux OpenBSD Unix
+tags: linux openbsd unix
 ---
 
 I'm migrating my home server away from OpenBSD.

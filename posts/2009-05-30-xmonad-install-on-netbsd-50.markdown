@@ -2,10 +2,7 @@
 title: XMonad Install on NetBSD 5.0
 author: Tim McGilchrist
 date: 2009-05-30 00:00
-tags:
-- Haskell
-- NetBSD
-- xmonad
+tags: haskell netbsd xmonad
 description: XMonad Install on NetBSD 5.0
 ---
 I had some issues with getting XMonad and it's dependencies working on NetBSD

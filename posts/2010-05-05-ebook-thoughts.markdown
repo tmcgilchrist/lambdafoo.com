@@ -2,7 +2,7 @@
 title: eBook thoughts
 author: Tim McGilchrist
 date: 2010-05-05
-tags: Opinion
+tags: opinion
 description: eBook thoughts
 ---
 

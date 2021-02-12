@@ -2,7 +2,7 @@
 title: Reading List for the Holidays
 author: Tim McGilchrist
 date: 2008-12-26 00:00
-tags: Books
+tags: books
 description: Reading List for the Holidays
 ---
 My holiday reading list.

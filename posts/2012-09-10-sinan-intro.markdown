@@ -2,7 +2,7 @@
 title: Getting started with Sinan
 author: Tim McGilchrist
 date: 2012-09-10 21:00
-tags: Erlang Sinan
+tags: erlang sinan
 description: Getting started with Sinan
 ---
 

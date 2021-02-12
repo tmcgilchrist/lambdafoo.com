@@ -2,11 +2,7 @@
 title: Riak, Ruby and Ripple Talk
 author: Tim McGilchrist
 date: 2012-03-15 10:26
-tags:
-- Ruby
-- Riak
-- NoSQL
-- Talk
+tags: Ruby Riak NoSQL Talk
 description: Riak, Ruby and Ripple Talk
 ---
 

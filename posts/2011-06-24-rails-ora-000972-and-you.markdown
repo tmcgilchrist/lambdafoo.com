@@ -2,9 +2,7 @@
 title: Rails, ORA-000972 and you
 author: Tim McGilchrist
 date: 2011-06-24 00:00
-tags:
-- Rails
-- Ruby
+tags: rails ruby
 description: Rails, ORA-000972 and you
 ---
 

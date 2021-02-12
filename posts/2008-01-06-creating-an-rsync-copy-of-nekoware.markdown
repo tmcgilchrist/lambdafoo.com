@@ -2,9 +2,7 @@
 title: Creating an rsync copy of Nekoware
 author: Tim McGilchrist
 date: 2008-01-06 00:00
-tags:
-- IRIX
-- SGI
+tags: irix SGI
 description: Creating an rsync copy of Nekoware
 ---
 

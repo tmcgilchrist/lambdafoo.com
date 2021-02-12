@@ -2,7 +2,7 @@
 title: Collecting Failed SSH Logins
 author: Tim McGilchrist
 date: 2007-12-14 00:00
-tags: Solaris
+tags: solaris
 description: Collecting Failed SSH Logins
 ---
 

@@ -2,9 +2,7 @@
 title: "99 Erlang Problems: 16 - 25"
 author: Tim McGilchrist
 date: 2008-05-07 00:00
-tags:
-- Coding
-- Erlang
+tags: Erlang
 description: "99 Erlang Problems: 16 - 25"
 ---
 

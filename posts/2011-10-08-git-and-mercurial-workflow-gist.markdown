@@ -3,7 +3,7 @@ title: Git and Mercurial Workflow Gist
 author: Tim McGilchrist
 date: 2011-10-08
 description: Git and Mercurial Workflow Gist
-tags: Coding github
+tags: github
 ---
 Just added some gist notes on my git and mercurial workflow.
 

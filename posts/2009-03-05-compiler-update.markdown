@@ -2,7 +2,7 @@
 title: Compiler Update
 author: Tim McGilchrist
 date: 2009-03-05 00:00
-tags: Coding Haskell
+tags: haskell
 description: Compiler Update
 ---
 

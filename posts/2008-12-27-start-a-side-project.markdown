@@ -2,7 +2,7 @@
 title: Start a side project!
 author: Tim McGilchrist
 date: 2008-12-27 00:00
-tags: Coding Ruby
+tags: ruby
 description: Start a side project!
 ---
 

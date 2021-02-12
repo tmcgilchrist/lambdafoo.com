@@ -1,8 +1,9 @@
 ---
-layout: post
 title: Installing NetBSD on a Dell Inspiron 8000
-tags:
-- NetBSD
+author: Tim McGilchrist
+date: 2008-09-14 00:00
+tags: netbsd
+description: Installing NetBSD on a Dell Inspiron 8000
 ---
 
 I just finished installing NetBSD on my old laptop and I must say it's quite an

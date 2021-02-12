@@ -2,9 +2,7 @@
 title: "99 Erlang Problems: 1 - 15"
 author: Tim McGilchrist
 date: 2008-02-26 00:00
-tags:
-- Coding
-- Erlang
+tags: erlang
 description: "99 Erlang Problems: 1 - 15"
 ---
 Following in the tradition of 99 Lisp/Haskell/Prolog problems, I present my

@@ -2,7 +2,7 @@
 title: Erlang hot code loading
 author: Tim McGilchrist
 date: 2013-09-02
-tags: Erlang
+tags: erlang
 description: Erlang hot code loading
 ---
 

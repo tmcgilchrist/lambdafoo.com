@@ -2,7 +2,7 @@
 title: Ubuntu Server update
 author: Tim McGilchrist
 date: 2011-03-08 00:00
-tags: Unix Linux
+tags: unix linux
 description: Ubuntu Server update
 ---
 
