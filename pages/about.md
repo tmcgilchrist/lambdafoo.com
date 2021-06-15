@@ -7,7 +7,8 @@ sharing: false
 footer: true
 ---
 
-I am Tim McGilchrist. I currently work as a Functional Programmer and Squad Lead at Digital Asset in Sydney.
+I am Tim McGilchrist. I currently work as a Software Engineer/Functional Programmer with [Tarides](https://tarides.com) working
+with OCaml.
 
 I find functional programming interesting and effective for solving problems. Mostly I use OCaml and Haskell
 but have known Erlang, Elixir, Lisp and Standard ML at various times. My interests are compilers,
@@ -17,7 +18,7 @@ I help organise the Sydney based Functional Programming group, [FP-Syd](https://
 
 My open source contributions are mostly on [github.com/tmcgilchrist](https://github.com/tmcgilchrist).
 
-I occasionally use Twitter via [lambda_foo](https://twitter.com/lambda_foo) and LinkedIn at [linkedin.com/timmcgilchrist ](http://au.linkedin.com/in/timmcgilchrist)
+I occasionally use Twitter via [lambda_foo](https://twitter.com/lambda_foo) and [Linkedin](http://au.linkedin.com/in/timmcgilchrist)
 
 Sometimes I look like this:
 
@@ -25,4 +26,4 @@ Sometimes I look like this:
 
 Outside of computing I enjoy music, MTB riding, growing plants and being outdoors.
 
-I can be contacted at [lambda_foo](https://twitter.com/lambda_foo) on Twitter or Email timmcgil@gmail.com.
+I can be contacted at [lambda_foo](https://twitter.com/lambda_foo) on Twitter or email timmcgil@gmail.com.
