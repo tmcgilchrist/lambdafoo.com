@@ -39,18 +39,6 @@ main = hakyll $ do
         >>= loadAndApplyTemplate "templates/default.html" postCtx
         >>= relativizeUrls
 
-  -- match "bib/*.md" $ do
-  --   route $ setExtension "html"
-  --   compile $
-  --     pandocCompiler
-  --       >>= loadAndApplyTemplate "templates/page.html" postCtx
-  --       >>= loadAndApplyTemplate "templates/default.html" postCtx
-  --       >>= relativizeUrls
-
-  -- match "bib/*.bib" $ do
-  --   route idRoute
-  --   compile copyFileCompiler
-
   -- Create RSS and Atom feeds
   let rss name render' =
         create [name] $ do
