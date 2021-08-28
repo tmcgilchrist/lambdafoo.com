@@ -13,10 +13,10 @@ jobs:
     strategy:
       matrix:
         cabal: ["3.2.0.0"]
-        ghc: ["8.10.3"]
+        ghc: ["8.10.7"]
     steps:
       - uses: actions/checkout@v2
-      - uses: haskell/actions/setup@v1.2.3
+      - uses: haskell/actions/setup@v1.2.4
         id: setup-haskell-cabal
         with:
           ghc-version: ${{ matrix.ghc }}
@@ -38,10 +38,10 @@ jobs:
           cabal v2-build $CONFIG
           cabal exec site build
       - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@3.7.1
+        uses: JamesIves/github-pages-deploy-action@4.1.5
         if: github.ref == 'refs/heads/master'
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: gh-pages # The branch the action should deploy to.
-          FOLDER: _site # The folder the action should deploy.
-          CLEAN: true # Automatically remove deleted files from the deploy branch
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-pages # The branch the action should deploy to.
+          folder: _site # The folder the action should deploy.
+          clean: true # Automatically remove deleted files from the deploy branch
