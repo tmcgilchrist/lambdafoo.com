@@ -8,8 +8,231 @@
         <name>Tim McGilchrist</name>
         <email>timmcgil@gmail.com</email>
     </author>
-    <updated>2021-02-02T00:00:00Z</updated>
+    <updated>2021-08-27T00:00:00Z</updated>
     <entry>
+    <title>Hakyll Blog setup</title>
+    <link href="https://lambdafoo.com/posts/2021-08-27-hakyll-blog.html" />
+    <id>https://lambdafoo.com/posts/2021-08-27-hakyll-blog.html</id>
+    <published>2021-08-27T00:00:00Z</published>
+    <updated>2021-08-27T00:00:00Z</updated>
+    <summary type="html"><![CDATA[<div class="post">
+  <h1 class="post-title">Hakyll Blog setup</h1>
+  <span class="post-date">August 27, 2021</span>
+  <p>I wanted to port my blog across from an old Jeykll setup to Haykll. The Jekyll was out of date and keeping the required ruby tools installed when I swapped machines was a huge pain. I don’t write ruby much anymore.</p>
+<p>Considering my options, I looked at Hugo and Hakyll, discarding Hugo because I don’t want to keep up with the JS churn, even though they have lots of great resources and themes available. So Hakyll seems like the best option. I already regularily write Haskell so the tools will be up to date and I can make it do everything I want by digging into the source code.</p>
+<p>My requirements are:</p>
+<ul>
+<li>Markdown based workflow</li>
+<li>support basic pages</li>
+<li>individual post with code highlighting</li>
+<li>RSS/Atom feed</li>
+<li>GitHub action based build and deploy</li>
+<li>support old blog URLs (HTML URL redirects to new url structure)</li>
+<li>serve js talks/slides directly from Hakyll</li>
+<li>generated sitemap.xml</li>
+<li>integrate Google Analytics</li>
+</ul>
+<h2 id="getting-hakyll-setup">Getting Hakyll Setup</h2>
+<p>First things first! I like the following layout when setting up a basic Haskell project:</p>
+<pre><code>$ tree -L 1
+.
+├── CNAME
+├── LICENSE
+├── README.md
+├── css
+├── drafts
+├── images
+├── index.html
+├── lambdafoo.cabal
+├── main
+├── pages
+├── posts
+├── talks
+└── templates</code></pre>
+<p>Initially I used <code>cabal init --cabal-version=2.4 --license=BSD3 -p lambdafoo.com</code> to get a skeleton project with a reasonable cabal file. Then I moved things around, making <code>main/site.hs</code> the entry point for running Hakyll and adding a TODO list of features into the README.md</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="at"> * ~~basic pages~~</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a><span class="at">   * ~~about~~</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a><span class="at">   * ~~talks~~</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a><span class="at">   * ~~archive~~</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a><span class="at"> * ~~individual post with code highlighting~~</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a><span class="at"> * ~~rss/atom feed~~</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a><span class="at"> * ~~add rss/atom feed to archive page~~</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true"></a><span class="at"> * ~~github action build and deploy~~</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true"></a><span class="at"> * ~~html url redirects to new url structure~~</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true"></a><span class="at"> * ~~serve js talks/slides directly from Hakyll~~</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true"></a><span class="at"> * configure dependabot for Haskell</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true"></a><span class="at"> * ~~add generated sitemap.xml~~</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true"></a><span class="at"> * ~~integrate Google Analytics~~</span></span></code></pre></div>
+<p>These directories are used for Hakyll content:</p>
+<ul>
+<li>pages - includes various regular pages on the site like talks or about me</li>
+<li>css - includes the style sheets for the HTML</li>
+<li>images - is the static images for the site</li>
+<li>drafts - containts the draft posts I’m writing</li>
+<li>talks - contains static JS/HTML based slides from presentations that I want to serve directly from the site</li>
+<li>templates - site templates in a markup language for doing page layouts</li>
+<li>CNAME - is Github Pages hosting to tell it the DNS name for the site</li>
+</ul>
+<p>The trickiest part was getting a version of the cabal file that worked with GHC 8.10 and a recent version of Hakyll. I ended up needing to pin Hakyll as <code>hakyll ^&gt;= 4.13</code> and left the other dependencies floating.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="at">executable site</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="at">  </span><span class="fu">main-is</span><span class="kw">:</span><span class="at">             site.hs</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a><span class="at">  </span><span class="fu">hs-source-dirs</span><span class="kw">:</span><span class="at">      main</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a><span class="at">  </span><span class="fu">default-language</span><span class="kw">:</span><span class="at">    Haskell2010</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a><span class="at">  </span><span class="fu">build-depends</span><span class="kw">:</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a><span class="at">                       base      &gt;= 4.6  &amp;&amp; &lt; 5</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a><span class="at">                     , binary    &gt;= 0.5</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true"></a><span class="at">                     , directory &gt;= 1.2</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true"></a><span class="at">                     , filepath  &gt;= 1.3</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true"></a><span class="at">                     , hakyll    ^&gt;= 4.13</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true"></a><span class="at">                     , blaze-html</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true"></a><span class="at">                     , lens</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true"></a><span class="at">                     , time</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true"></a><span class="at">                     , aeson</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true"></a><span class="at">                     , lens-aeson</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true"></a><span class="at">                     , containers</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true"></a><span class="at">                     , pandoc</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true"></a><span class="at">                     , process   &gt;= 1.6</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true"></a><span class="at">                     , text      &gt;= 1.2</span></span></code></pre></div>
+<p>At this point, I could have either continued setting up Hakyll or setup CI. I usually prefer setting up CI as early as possible in a project, so I stared there. Here is what that looks like:</p>
+<h2 id="hakyll-ci">Hakyll CI</h2>
+<p>There are a few options for cloud CI, and my requirements were simple: no cost, easy setup, and integration with GitHub pages where I host my site. It was a toss up between CircleCI and Github Actions, as I’ve had good experience with CircleCI, but Idecided to try Github Actions.</p>
+<p>First, create a directory <code>mkdir -p .github/workflows/</code> with a <code>ci.yml</code> file</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> CI</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a><span class="fu">on</span><span class="kw">:</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a><span class="at">  </span><span class="fu">push</span><span class="kw">:</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a><span class="at">    </span><span class="fu">branches</span><span class="kw">:</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a><span class="at">      </span><span class="kw">-</span><span class="at"> master</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a><span class="at">  </span><span class="fu">pull_request</span><span class="kw">:</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true"></a><span class="at">    </span><span class="fu">types</span><span class="kw">:</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true"></a><span class="at">      </span><span class="kw">-</span><span class="at"> opened</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true"></a><span class="at">      </span><span class="kw">-</span><span class="at"> synchronize</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true"></a><span class="fu">jobs</span><span class="kw">:</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true"></a><span class="at">  </span><span class="fu">build</span><span class="kw">:</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true"></a><span class="at">    </span><span class="fu">runs-on</span><span class="kw">:</span><span class="at"> ubuntu-latest</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true"></a><span class="at">    </span><span class="fu">strategy</span><span class="kw">:</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true"></a><span class="at">      </span><span class="fu">matrix</span><span class="kw">:</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true"></a><span class="at">        </span><span class="fu">cabal</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">&quot;3.4.0.0&quot;</span><span class="kw">]</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true"></a><span class="at">        </span><span class="fu">ghc</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">&quot;8.10.7&quot;</span><span class="kw">]</span></span></code></pre></div>
+<p>The <code>matrix</code> section sets up a build for <code>ghc 8.10.7</code> and cabal <code>3.4</code>, which is enough for a simple blog, but is where you’d add extra options, for say a library. Next, we use some community GitHub Actions to <code>checkout</code> and setup Haskell.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a><span class="at">    </span><span class="fu">steps</span><span class="kw">:</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/checkout@v2</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> haskell/actions/setup@v1</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true"></a><span class="at">        </span><span class="fu">id</span><span class="kw">:</span><span class="at"> setup-haskell-cabal</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true"></a><span class="at">          </span><span class="fu">ghc-version</span><span class="kw">:</span><span class="at"> ${{ matrix.ghc }}</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true"></a><span class="at">          </span><span class="fu">cabal-version</span><span class="kw">:</span><span class="at"> ${{ matrix.cabal }}</span></span></code></pre></div>
+<p>Here we run <code>cabal update</code> to update our Hackage index and then setup some build caching for our dependencies. You can copy this directly and it should work:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Cabal Update</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a><span class="fu">        run</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a>          cabal v2-update</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true"></a>          cabal v2-freeze $CONFIG</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/cache@v2.1.4</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true"></a><span class="fu">          path</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true"></a>            ${{ steps.setup-haskell-cabal.outputs.cabal-store }}</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true"></a>            dist-newstyle</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true"></a><span class="at">          </span><span class="fu">key</span><span class="kw">:</span><span class="at"> ${{ runner.os }}-${{ matrix.ghc }}-${{ hashFiles(&#39;cabal.project.freeze&#39;) }}</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true"></a><span class="fu">          restore-keys</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true"></a>            ${{ runner.os }}-${{ matrix.ghc }}-</span></code></pre></div>
+<p>Then we run the cabal build and Hakyll site build.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Build Site</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a><span class="fu">        run</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true"></a>          cabal v2-build $CONFIG</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true"></a>          cabal exec site build</span></code></pre></div>
+<p>Adding that into your repo’s main branch of your repo should yield a working CI. On top of that, I added a dependabot configuration to check that my GitHub Actions config was up to date.</p>
+<p>Add a file <code>dependabot.yml</code> to <code>.github</code>:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a><span class="fu">version</span><span class="kw">:</span><span class="at"> </span><span class="dv">2</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a><span class="fu">updates</span><span class="kw">:</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">package-ecosystem</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;github-actions&quot;</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true"></a><span class="at">    </span><span class="fu">directory</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;/&quot;</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true"></a><span class="at">    </span><span class="fu">schedule</span><span class="kw">:</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true"></a><span class="at">      </span><span class="fu">interval</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;daily&quot;</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true"></a><span class="at">    </span><span class="fu">commit-message</span><span class="kw">:</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true"></a><span class="at">      </span><span class="fu">prefix</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;GA&quot;</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true"></a><span class="at">      </span><span class="fu">include</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;scope&quot;</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true"></a><span class="at">    </span><span class="fu">labels</span><span class="kw">:</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="st">&quot;CI&quot;</span></span></code></pre></div>
+<p>This will check that your GitHub Actions use the latest version and open a PR to bump versions if you aren’t. Something like this for Haskell would be super sweet.</p>
+<h2 id="generating-the-site">Generating the Site</h2>
+<p>Let’s quickly walk through the contents of <code>main/site.hs</code>, but there are more in-depth tutorials on the main <a href="https://jaspervdj.be/hakyll/tutorials.html">Hakyll site</a></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a><span class="ot">{-# LANGUAGE OverloadedStrings #-}</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Hakyll</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true"></a><span class="ot">main ::</span> <span class="dt">IO</span> ()</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true"></a>main <span class="ot">=</span> hakyll <span class="op">$</span> <span class="kw">do</span></span></code></pre></div>
+<p>Here we import Hakyll, setup overloaded strings, and create a main function:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a>  match <span class="st">&quot;images/*&quot;</span> <span class="op">$</span> <span class="kw">do</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true"></a>    route idRoute</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true"></a>    compile copyFileCompiler</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true"></a>  match <span class="st">&quot;css/*&quot;</span> <span class="op">$</span> <span class="kw">do</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true"></a>    route idRoute</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true"></a>    compile compressCssCompiler</span></code></pre></div>
+<p>Serve stylesheets and images from directories <code>css</code> and <code>images</code>, respectively. This is standard code that can be copied directly, it basically copies the files into the final static site directory <code>_site</code>.</p>
+<p>Next I wanted to serve some old talk slides written in HTML and JavaScript directly from my site. I couldn’t find any posts talking about how to do this, but after thinking about it, I realized that I just wanted to serve static assets again like the <code>css</code> and <code>images</code> above. So that’s exactly what was required! If course, I lie. I had to fix a few hard coded paths in the HTML but otherwise it worked.</p>
+<p>The layout for <code>talks</code> looks like:</p>
+<pre><code>talks
+├── erl-syd-2012-webmachine
+├── fp-syd-freer-2016
+├── fp-syd-higher-2015
+├── lambda-jam-2014-raft
+├── lambda-jam-2015-ocaml-functors
+├── lambda-jam-2016-performance
+├── roro-2012-riak
+└── scala-syd-2015-modules</code></pre>
+<p>So I needed an extra wildcard in my <code>match</code> statement:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a>  match <span class="st">&quot;talks/**/*&quot;</span> <span class="op">$</span> <span class="kw">do</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true"></a>    route idRoute</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true"></a>    compile <span class="op">$</span> copyFileCompiler</span></code></pre></div>
+<p>This content then gets served under <code>lambdafoo.com/talks/scala-syd-2015-modules/</code>. In retrospect, this is an obvious solution to serving any static content generated outside of Hakyll, but it did take me a while to realise it.</p>
+<p>Next we load the individual blog posts:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a>  match <span class="st">&quot;posts/*&quot;</span> <span class="op">$</span> <span class="kw">do</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true"></a>    route <span class="op">$</span> setExtension <span class="st">&quot;html&quot;</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true"></a>    compile <span class="op">$</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true"></a>      pandocCompiler</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true"></a>        <span class="op">&gt;&gt;=</span> loadAndApplyTemplate <span class="st">&quot;templates/post.html&quot;</span> postCtx</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true"></a>        <span class="co">-- Used by the RSS/Atom feed</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true"></a>        <span class="op">&gt;&gt;=</span> saveSnapshot <span class="st">&quot;content&quot;</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true"></a>        <span class="op">&gt;&gt;=</span> loadAndApplyTemplate <span class="st">&quot;templates/default.html&quot;</span> postCtx</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true"></a>        <span class="op">&gt;&gt;=</span> relativizeUrls</span></code></pre></div>
+<h2 id="authoring-posts">Authoring Posts</h2>
+<p>After getting a few simple things out of the way, the Markdown-based workflow already worked with Hakyll, so there’s nothing really to see there. Creating a simple YAML file with the following meta-data and content is enough to get a simple post working.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a><span class="pp">---</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true"></a><span class="fu">title</span><span class="kw">:</span><span class="at"> Hakyll Blog setup</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true"></a><span class="fu">author</span><span class="kw">:</span><span class="at"> Tim McGilchrist</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true"></a><span class="fu">date</span><span class="kw">:</span><span class="at"> 2021-02-01 00:00</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true"></a><span class="fu">tags</span><span class="kw">:</span><span class="at"> haskell</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true"></a><span class="fu">description</span><span class="kw">:</span><span class="at"> How I setup my blog with Hakyll</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true"></a><span class="pp">---</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true"></a><span class="at">Content of post</span></span></code></pre></div>
+<h2 id="deploying">Deploying</h2>
+<p>I have a domain <code>lambdafoo.com</code> that I use to serve my blog. Github pages has up-to-date information on how to set this up with your DNS provider.</p>
+<p>Here is where choosing Github Actions really pays off! There is a community action to do it all! Assuming you’ve turned on GitHub Pages in the settings for you repo, add this to the end of the <code>ci.yml</code>:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Deploy 🚀</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true"></a><span class="at">        </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> JamesIves/github-pages-deploy-action@4.1.5</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true"></a><span class="at">        </span><span class="fu">if</span><span class="kw">:</span><span class="at"> github.ref == &#39;refs/heads/master&#39;</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true"></a><span class="at">          </span><span class="fu">token</span><span class="kw">:</span><span class="at"> ${{ secrets.GITHUB_TOKEN }}</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true"></a><span class="at">          </span><span class="fu">branch</span><span class="kw">:</span><span class="at"> gh-pages</span><span class="co"> # The branch the action should deploy to.</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true"></a><span class="at">          </span><span class="fu">folder</span><span class="kw">:</span><span class="at"> _site</span><span class="co"> # The folder the action should deploy.</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true"></a><span class="at">          </span><span class="fu">clean</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span><span class="co"> # Automatically remove deleted files from the deploy branch</span></span></code></pre></div>
+<p>This deploys the output of the <code>Build Site</code> step from folder <code>_site</code> to the branch <code>gh-pages</code> on all <code>master</code> builds (controlled via <code>if: github.ref == 'refs/heads/master'</code>).</p>
+<p>On the first build, there is a bit of lag to deploy. I had issues with my DNS setup and two personal repositories using the same CNAME values. Apart from that, the process was smooth, and I quickly had a new version working. Again, if you setup dependabot, it will check that this action is up-to-date.</p>
+<h2 id="resources">Resources</h2>
+<ul>
+<li><a href="https://github.com/tmcgilchrist/lambdafoo.com">Blog source</a></li>
+<li><a href="https://markkarpov.com/post/github-actions-for-haskell-ci.html">GitHub Actions for Haskell</a></li>
+<li><a href="https://kodimensional.dev/github-actions#dependabot">Dependabot</a></li>
+</ul>
+</div>
+]]></summary>
+</entry>
+<entry>
     <title>OCaml CI with CircleCI</title>
     <link href="https://lambdafoo.com/posts/2021-02-02-ocaml-ci-with-circleci.html" />
     <id>https://lambdafoo.com/posts/2021-02-02-ocaml-ci-with-circleci.html</id>
@@ -653,242 +876,6 @@ Sum is 0
 {print}
 </code></pre>
 <p>The ‘code_switch’ message makes the process load the new version of code. So using this you can upgrade the running process without losing state. Cool.</p>
-</div>
-]]></summary>
-</entry>
-<entry>
-    <title>Getting started with Sinan</title>
-    <link href="https://lambdafoo.com/posts/2012-09-10-sinan-intro.html" />
-    <id>https://lambdafoo.com/posts/2012-09-10-sinan-intro.html</id>
-    <published>2012-09-10T00:00:00Z</published>
-    <updated>2012-09-10T00:00:00Z</updated>
-    <summary type="html"><![CDATA[<div class="post">
-  <h1 class="post-title">Getting started with Sinan</h1>
-  <span class="post-date">September 10, 2012</span>
-  <h2 id="background">Background</h2>
-<p>When I started with Erlang I used a simple Makefile to call <code>erlc</code> and pretty much did things by hand. After a number of years in the wilderness I found out about <a href="http://github.com/basho/rebar">rebar</a> from Basho and started using that to compile my code. Everything was good, rebar knew how to compile OTP apps and pull down external dependencies. Except when I needed to generate releases. It’s not necessarily straight forward to get rebar to build you a nice release, <a href="http://www.metabrew.com/article/erlang-rebar-tutorial-generating-releases-upgrades">not that it’s impossible</a> it’s just not as simple as I’d like.</p>
-<p>Enter Sinan, the somewhat forgotten erlang build tool.</p>
-<p>Sinan is a build tool designed to build Erlang/OTP projects, releases and applications. It claims to be more OTP than rebar and uses the OTP metadata artefacts to build your project with little configuration needed.</p>
-<p>Let’s see how well it delivers on the promise.</p>
-<h2 id="sinan-from-scratch">Sinan From Scratch</h2>
-<p>First you’ll need Erlang installed, which your friendly local package management tool should provide. I’m using Homebrew on OSX so I just did:</p>
-<pre class="shell"><code>$ brew install erlang
-...
-$ erl -v
-Erlang R15B01 (erts-5.9.1) [source] [64-bit] [smp:8:8] [async-threads:0] [hipe] [kernel-poll:false]
-
-Eshell V5.9.1  (abort with ^G)
-1&gt;</code></pre>
-<p>Linux should be similarly straight forward and Windows well you’re on your own.</p>
-<p>Grab sinan from the <a href="https://github.com/erlware/sinan/downloads">downloads page</a> on github, I’m using version 4.1.1. Put it somewhere on your PATH, I’ve got mine in ~/bin which is on my PATH, and chmod +x it so it’s executable.</p>
-<p>Now for the fun bit, type <code>sinan gen</code> and fill in the details.</p>
-<pre class="shell"><code>
-Please specify your name
-your name&gt; Tim McGilchrist
-Please specify your email address
-your email&gt; timmcgil@gmail.com
-Please specify the copyright holder
-copyright holder (&quot;Tim McGilchrist&quot;)&gt;
-Please specify name of your project
-project name&gt; sinan_demo
-Please specify version of your project
-project version&gt; 0.0.1
-Please specify the ERTS version (&quot;5.9.1&quot;)&gt;
-Is this a single application project (&quot;n&quot;)&gt; y
-Would you like a build config? (&quot;y&quot;)&gt; y
-Project was created, you should be good to go!
-</code></pre>
-<p>From that Sinan has generated a project, filling in your details, with an OTP application and some build configuration. Your directories should look something similar to this.</p>
-<pre class="shell"><code>
-sinan_demo
-  |-- config
-  |    |-- sys.config
-  |-- doc
-  |-- ebin
-  |    |-- overview.edoc
-  |-- include
-  |-- sinan.config
-  |-- src
-  |    |-- sinan_demo.app.src
-  |    |-- sinan_demo_app.erl
-  |    |-- sinan_demo_sup.erl
-</code></pre>
-<p>It includes all the standard directories you’d expect plus a <code>sinan.config</code> file.</p>
-<p>First a little diversion, we need to add a line to the sinan config file, which tells sinan to include the erlang runtime system when it generates a release. Open sinan.config and add <code>{include_erts, true}.</code> as the last line. It should look like this:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode erlang"><code class="sourceCode erlang"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a><span class="fu">{</span><span class="ch">project_name</span><span class="fu">,</span> <span class="ch">sinan_demo</span><span class="fu">}.</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a><span class="fu">{</span><span class="ch">project_vsn</span><span class="fu">,</span> <span class="st">&quot;0.0.1&quot;</span><span class="fu">}.</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a><span class="fu">{</span><span class="ch">build_dir</span><span class="fu">,</span>  <span class="st">&quot;_build&quot;</span><span class="fu">}.</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true"></a><span class="fu">{</span><span class="ch">ignore_dirs</span><span class="fu">,</span> <span class="fu">[</span><span class="st">&quot;_&quot;</span><span class="fu">,</span> <span class="st">&quot;.&quot;</span><span class="fu">]}.</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true"></a></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true"></a><span class="fu">{</span><span class="ch">ignore_apps</span><span class="fu">,</span> <span class="fu">[]}.</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true"></a></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true"></a><span class="fu">{</span><span class="ch">include_erts</span><span class="fu">,</span> <span class="ch">true</span><span class="fu">}.</span></span></code></pre></div>
-<p>Back to making our generated code runnable.</p>
-<p>By default the generated supervisor doesn’t point to a valid module so you’ll need to remedy that before trying to startup the application. Create a new file called <code>sinan_demo_server.erl</code> in <code>src</code> and drop the following code in.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode erlang"><code class="sourceCode erlang"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a><span class="kw">-module</span><span class="fu">(</span><span class="ch">sinan_demo_server</span><span class="fu">).</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a><span class="op">-</span><span class="fu">behaviour(</span><span class="ch">gen_server</span><span class="fu">).</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true"></a></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true"></a><span class="co">%% API</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true"></a><span class="kw">-export</span><span class="fu">([</span><span class="ch">start_link</span><span class="op">/</span><span class="dv">0</span><span class="fu">,</span> <span class="ch">add_one</span><span class="op">/</span><span class="dv">0</span><span class="fu">,</span> <span class="ch">total</span><span class="op">/</span><span class="dv">0</span><span class="fu">]).</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true"></a></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true"></a><span class="co">%% Callbacks</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true"></a><span class="kw">-export</span><span class="fu">([</span><span class="ch">init</span><span class="op">/</span><span class="dv">1</span><span class="fu">,</span> <span class="ch">handle_call</span><span class="op">/</span><span class="dv">3</span><span class="fu">,</span> <span class="ch">handle_cast</span><span class="op">/</span><span class="dv">2</span><span class="fu">,</span> <span class="ch">handle_info</span><span class="op">/</span><span class="dv">2</span><span class="fu">,</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true"></a>         <span class="ch">terminate</span><span class="op">/</span><span class="dv">2</span><span class="fu">,</span> <span class="ch">code_change</span><span class="op">/</span><span class="dv">3</span><span class="fu">]).</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true"></a></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true"></a><span class="op">-</span><span class="fu">record(</span><span class="ch">state</span><span class="fu">,</span> <span class="fu">{</span><span class="ch">count</span><span class="fu">}).</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true"></a></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true"></a><span class="co">%%%===================================================================</span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true"></a><span class="co">%%% API functions</span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true"></a><span class="co">%%%===================================================================</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true"></a></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true"></a><span class="fu">start_link()</span> <span class="op">-&gt;</span></span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true"></a>    <span class="fu">gen_server:start_link({</span><span class="ch">local</span><span class="fu">,</span> <span class="fu">?</span><span class="va">MODULE</span><span class="fu">},</span> <span class="fu">?</span><span class="va">MODULE</span><span class="fu">,</span> <span class="fu">[],</span> <span class="fu">[]).</span></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true"></a></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true"></a><span class="fu">total()</span> <span class="op">-&gt;</span></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true"></a>    <span class="fu">gen_server:call(?</span><span class="va">MODULE</span><span class="fu">,</span> <span class="ch">total</span><span class="fu">).</span></span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true"></a></span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true"></a><span class="fu">add_one()</span> <span class="op">-&gt;</span></span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true"></a>    <span class="fu">gen_server:call(?</span><span class="va">MODULE</span><span class="fu">,</span> <span class="ch">add</span><span class="fu">).</span></span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true"></a></span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true"></a><span class="co">%%%===================================================================</span></span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true"></a><span class="co">%%% Callbacks</span></span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true"></a><span class="co">%%%===================================================================</span></span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true"></a></span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true"></a><span class="fu">init([])</span> <span class="op">-&gt;</span></span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true"></a>    <span class="fu">io:format(</span><span class="st">&quot;starting~n&quot;</span><span class="fu">,</span> <span class="fu">[]),</span></span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true"></a>    <span class="fu">{</span><span class="ch">ok</span><span class="fu">,</span> <span class="fu">#</span><span class="ch">state</span><span class="fu">{</span><span class="ch">count</span> <span class="op">=</span> <span class="dv">0</span><span class="fu">},</span> <span class="dv">0</span><span class="fu">}.</span></span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true"></a></span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true"></a><span class="fu">handle_call(</span><span class="ch">add</span><span class="fu">,</span> <span class="va">_From</span><span class="fu">,</span> <span class="va">State</span><span class="fu">)</span> <span class="op">-&gt;</span></span>
-<span id="cb5-37"><a href="#cb5-37" aria-hidden="true"></a>    <span class="va">NewCount</span> <span class="op">=</span> <span class="va">State</span><span class="fu">#</span><span class="ch">state</span><span class="fu">.</span><span class="ch">count</span> <span class="op">+</span> <span class="dv">1</span><span class="fu">,</span></span>
-<span id="cb5-38"><a href="#cb5-38" aria-hidden="true"></a>    <span class="va">NewState</span> <span class="op">=</span> <span class="va">State</span><span class="fu">#</span><span class="ch">state</span><span class="fu">{</span><span class="ch">count</span> <span class="op">=</span> <span class="va">NewCount</span><span class="fu">},</span></span>
-<span id="cb5-39"><a href="#cb5-39" aria-hidden="true"></a>    <span class="va">Reply</span>    <span class="op">=</span> <span class="fu">{</span><span class="ch">ok</span><span class="fu">,</span> <span class="va">NewState</span><span class="fu">},</span></span>
-<span id="cb5-40"><a href="#cb5-40" aria-hidden="true"></a>    <span class="fu">{</span><span class="ch">reply</span><span class="fu">,</span> <span class="va">Reply</span><span class="fu">,</span> <span class="va">NewState</span><span class="fu">};</span></span>
-<span id="cb5-41"><a href="#cb5-41" aria-hidden="true"></a><span class="fu">handle_call(</span><span class="ch">total</span><span class="fu">,</span> <span class="va">_From</span><span class="fu">,</span> <span class="va">State</span> <span class="op">=</span> <span class="fu">#</span><span class="ch">state</span><span class="fu">{</span> <span class="ch">count</span> <span class="op">=</span> <span class="va">Count</span> <span class="fu">})</span> <span class="op">-&gt;</span></span>
-<span id="cb5-42"><a href="#cb5-42" aria-hidden="true"></a>    <span class="fu">{</span><span class="ch">reply</span><span class="fu">,</span> <span class="va">Count</span><span class="fu">,</span> <span class="va">State</span><span class="fu">};</span></span>
-<span id="cb5-43"><a href="#cb5-43" aria-hidden="true"></a><span class="fu">handle_call(</span><span class="va">Msg</span><span class="fu">,</span> <span class="va">_From</span><span class="fu">,</span> <span class="va">State</span><span class="fu">)</span> <span class="op">-&gt;</span></span>
-<span id="cb5-44"><a href="#cb5-44" aria-hidden="true"></a>    <span class="fu">{</span><span class="ch">reply</span><span class="fu">,</span> <span class="fu">{</span><span class="ch">ok</span><span class="fu">,</span> <span class="va">Msg</span><span class="fu">},</span> <span class="va">State</span><span class="fu">}.</span></span>
-<span id="cb5-45"><a href="#cb5-45" aria-hidden="true"></a></span>
-<span id="cb5-46"><a href="#cb5-46" aria-hidden="true"></a><span class="fu">handle_cast(</span>_<span class="va">Msg</span><span class="fu">,</span> <span class="va">State</span><span class="fu">)</span> <span class="op">-&gt;</span></span>
-<span id="cb5-47"><a href="#cb5-47" aria-hidden="true"></a>    <span class="fu">{</span><span class="ch">noreply</span><span class="fu">,</span> <span class="va">State</span><span class="fu">}.</span></span>
-<span id="cb5-48"><a href="#cb5-48" aria-hidden="true"></a></span>
-<span id="cb5-49"><a href="#cb5-49" aria-hidden="true"></a><span class="fu">handle_info(</span>_<span class="va">Info</span><span class="fu">,</span> <span class="va">State</span><span class="fu">)</span> <span class="op">-&gt;</span></span>
-<span id="cb5-50"><a href="#cb5-50" aria-hidden="true"></a>    <span class="fu">{</span><span class="ch">noreply</span><span class="fu">,</span> <span class="va">State</span><span class="fu">}.</span></span>
-<span id="cb5-51"><a href="#cb5-51" aria-hidden="true"></a></span>
-<span id="cb5-52"><a href="#cb5-52" aria-hidden="true"></a><span class="fu">terminate(</span>_<span class="va">Reason</span><span class="fu">,</span> <span class="va">_State</span><span class="fu">)</span> <span class="op">-&gt;</span></span>
-<span id="cb5-53"><a href="#cb5-53" aria-hidden="true"></a>    <span class="ch">ok</span><span class="fu">.</span></span>
-<span id="cb5-54"><a href="#cb5-54" aria-hidden="true"></a></span>
-<span id="cb5-55"><a href="#cb5-55" aria-hidden="true"></a><span class="fu">code_change(</span>_<span class="va">OldVsn</span><span class="fu">,</span> <span class="va">State</span><span class="fu">,</span> <span class="va">_Extra</span><span class="fu">)</span> <span class="op">-&gt;</span></span>
-<span id="cb5-56"><a href="#cb5-56" aria-hidden="true"></a>    <span class="fu">{</span><span class="ch">ok</span><span class="fu">,</span> <span class="va">State</span><span class="fu">}.</span></span></code></pre></div>
-<p>It’s a pretty standard OTP gen_server application with 2 API methods. <code>add_one/0</code> adds 1 to the counter and <code>total/0</code> returns the value of the counter. The record definition setups up the state record for this server with just a <code>count</code> attribute. The 2 API functions use the <code>gen_server:call/2</code> method to hit the OTP callback for <code>handle_call/3</code>.</p>
-<p>Next we need to fix the supervisor so it starts the correct module. Change <code>sinan_demo_sup.erl</code> so it looks like the code below:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode erlang"><code class="sourceCode erlang"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a><span class="fu">start_link()</span> <span class="op">-&gt;</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a>    <span class="fu">supervisor:start_link({</span><span class="ch">local</span><span class="fu">,</span> <span class="fu">?</span><span class="va">SERVER</span><span class="fu">},</span> <span class="fu">?</span><span class="va">MODULE</span><span class="fu">,</span> <span class="fu">[]).</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true"></a><span class="co">%%%===================================================================</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true"></a><span class="co">%%% Supervisor callbacks</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true"></a><span class="co">%%%===================================================================</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true"></a></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true"></a><span class="co">%% @private</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true"></a><span class="op">-</span><span class="ch">spec</span> <span class="fu">init(list())</span> <span class="op">-&gt;</span> <span class="fu">{</span><span class="ch">ok</span><span class="fu">,</span> <span class="fu">{</span><span class="va">SupFlags</span><span class="fu">::any(),</span> <span class="fu">[</span><span class="va">ChildSpec</span><span class="fu">::any()]}}</span> <span class="fu">|</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true"></a>                            <span class="ch">ignore</span> <span class="fu">|</span> <span class="fu">{</span><span class="ch">error</span><span class="fu">,</span> <span class="va">Reason</span><span class="fu">::any()}.</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true"></a><span class="fu">init([])</span> <span class="op">-&gt;</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true"></a>    <span class="va">RestartStrategy</span> <span class="op">=</span> <span class="ch">one_for_one</span><span class="fu">,</span></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true"></a>    <span class="va">MaxRestarts</span> <span class="op">=</span> <span class="dv">1000</span><span class="fu">,</span></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true"></a>    <span class="va">MaxSecondsBetweenRestarts</span> <span class="op">=</span> <span class="dv">3600</span><span class="fu">,</span></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true"></a></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true"></a>    <span class="va">SupFlags</span> <span class="op">=</span> <span class="fu">{</span><span class="va">RestartStrategy</span><span class="fu">,</span> <span class="va">MaxRestarts</span><span class="fu">,</span> <span class="va">MaxSecondsBetweenRestarts</span><span class="fu">},</span></span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true"></a></span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true"></a>    <span class="va">Restart</span> <span class="op">=</span> <span class="ch">permanent</span><span class="fu">,</span></span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true"></a>    <span class="va">Shutdown</span> <span class="op">=</span> <span class="dv">2000</span><span class="fu">,</span></span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true"></a>    <span class="va">Type</span> <span class="op">=</span> <span class="ch">worker</span><span class="fu">,</span></span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true"></a></span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true"></a>    <span class="va">AChild</span> <span class="op">=</span> <span class="fu">{</span><span class="ch">sinan_demo_server</span><span class="fu">,</span> <span class="fu">{</span><span class="ch">sinan_demo_server</span><span class="fu">,</span> <span class="ch">start_link</span><span class="fu">,</span> <span class="fu">[]},</span></span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true"></a>              <span class="va">Restart</span><span class="fu">,</span> <span class="va">Shutdown</span><span class="fu">,</span> <span class="va">Type</span><span class="fu">,</span> <span class="fu">[</span><span class="ch">sinan_demo_server</span><span class="fu">]},</span></span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true"></a></span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true"></a>    <span class="fu">{</span><span class="ch">ok</span><span class="fu">,</span> <span class="fu">{</span><span class="va">SupFlags</span><span class="fu">,</span> <span class="fu">[</span><span class="va">AChild</span><span class="fu">]}}.</span></span></code></pre></div>
-<p>The 2 changes we have make is to <code>start_link/0</code> so we can call the server directly, and fix the child spec so it starts our new module.</p>
-<p>Now we need to add the sinan_demo_server module to <code>sinan_demo.app.src</code> so we know about it when generating the OTP application. Just add it to the list of modules like so:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode erlang"><code class="sourceCode erlang"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a><span class="co">%% This is the application resource file (.app file) for the,</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a><span class="co">%% application.</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true"></a><span class="fu">{</span><span class="ch">application</span><span class="fu">,</span> <span class="ch">sinan_demo</span><span class="fu">,</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true"></a> <span class="fu">[{</span><span class="ch">description</span><span class="fu">,</span> <span class="st">&quot;Sinan demo application.&quot;</span><span class="fu">},</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true"></a>  <span class="fu">{</span><span class="ch">vsn</span><span class="fu">,</span> <span class="st">&quot;0.0.1&quot;</span><span class="fu">},</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true"></a>  <span class="fu">{</span><span class="ch">modules</span><span class="fu">,</span> <span class="fu">[</span><span class="ch">sinan_demo_app</span><span class="fu">,</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true"></a>             <span class="ch">sinan_demo_sup</span><span class="fu">,</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true"></a>             <span class="ch">sinan_demo_server</span><span class="fu">]},</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true"></a>  <span class="fu">{registered,[</span><span class="ch">sinan_demo_sup</span><span class="fu">]},</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true"></a>  <span class="fu">{</span><span class="ch">applications</span><span class="fu">,</span> <span class="fu">[</span><span class="ch">kernel</span><span class="fu">,</span> <span class="ch">stdlib</span><span class="fu">]},</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true"></a>  <span class="fu">{</span><span class="ch">mod</span><span class="fu">,</span> <span class="fu">{</span><span class="ch">sinan_demo_app</span><span class="fu">,[]}},</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true"></a>  <span class="fu">{</span><span class="ch">start_phases</span><span class="fu">,</span> <span class="fu">[]}]}.</span></span></code></pre></div>
-<p>Compile with <code>sinan build</code> and hopefully everything works.</p>
-<p>From here you’ve got a few options to get your application running, but the easiest is just to use the sinan shell and start your application from there.</p>
-<pre class="shell"><code>
-$ sinan shell
-Eshell V5.9.1  (abort with ^G)
-1&gt; application:which_applications().
-[{parsetools,&quot;XLATETOOLS  CXC 138 xx&quot;,&quot;2.0.7&quot;},
- {syntax_tools,&quot;Syntax tools&quot;,&quot;1.6.8&quot;},
- {compiler,&quot;ERTS  CXC 138 10&quot;,&quot;4.8.1&quot;},
- {getopt,&quot;Command-line options parser for Erlang&quot;,&quot;0.4.2&quot;},
- {erlware_commons,&quot;Additional standard library for Erlang&quot;,
-                  &quot;0.6.1&quot;},
- {stdlib,&quot;ERTS  CXC 138 10&quot;,&quot;1.18.1&quot;},
- {kernel,&quot;ERTS  CXC 138 10&quot;,&quot;2.15.1&quot;}]
-2&gt; application:start(sinan_demo).
-ok
-</code></pre>
-<p>We’ve started a shell and checked what applications are started with <code>application:which_applications()</code>. Now start the demo application with:</p>
-<pre class="shell"><code>3&gt; application:start(sinan_demo).
-ok</code></pre>
-<p>Now lets test that we can call the application.</p>
-<pre class="shell"><code>4&gt; sinan_demo_server:add_one().
-{ok,{state,1}}
-5&gt; sinan_demo_server:add_one().
-{ok,{state,2}}</code></pre>
-<p>As you can see it’s calling the server and incrementing the call count.</p>
-<p>The next step is to create a release, which is as simple as running <code>sinan release</code></p>
-<p>Sinan has created a number of new directories under <code>_build</code></p>
-<pre class="shell"><code>
-$ tree -d _build/
-    _build/
-    `-- sinan_demo
-        |-- bin
-        |-- erts-5.9.1
-        |-- lib
-        |   |-- kernel-2.15.1
-        |   |-- sinan_demo-0.0.1
-        |   `-- stdlib-1.18.1
-        `-- releases
-            `-- 0.0.1
-</code></pre>
-<p>The <code>bin</code> directory is still there from last time but now we have an erts, lib and releases directories. erts is there because earlier we asked sinan to include an erlang runtime, so you can copy everything under _build/sinan_demo to another machine without erlang installed and run this application. The limitation being that the CPU and OS needs to match the machine you’ve built on. <code>lib</code> includes all the applications you asked sinan to include, they’ll match what you have in your collective .app.src files. <code>releases</code> contains configuration files specific to a particular release of the application.</p>
-<p>Starting the release generated is as simple as</p>
-<pre class="shell"><code>$ ./_build/sinan_demo/bin/sinan_demo
-Erlang R15B01 (erts-5.9.1) [source] [64-bit] [smp:8:8] [async-threads:0] [hipe] [kernel-poll:false]
-
-starting
-Eshell V5.9.1  (abort with ^G)
-1&gt; application:which_applications().
- [{sinan_demo,&quot;Sinan demo application.&quot;,&quot;0.0.1&quot;},
-  {stdlib,&quot;ERTS  CXC 138 10&quot;,&quot;1.18.1&quot;},
-  {kernel,&quot;ERTS  CXC 138 10&quot;,&quot;2.15.1&quot;}]
-2&gt;
-</code></pre>
-<p>We’ll leave it there for now, but if you’re curious like me you’ll probably have a bunch of questions of where to take sinan next.</p>
-<p>Next time I’m going to cover:</p>
-<ul>
-<li>Generating Version 2</li>
-<li>Doing an OTP upgrade to Version 2</li>
-<li>Downgrading to Version 1</li>
-</ul>
-<p>But if you’ve got other suggestions please leave them in the comments.</p>
 </div>
 ]]></summary>
 </entry>
