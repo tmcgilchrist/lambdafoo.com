@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+      
+        Getting Started with OCaml in 2021 &middot; Perpetually Curious Blog
+      
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="../css/poole.css">
+  <link rel="stylesheet" href="../css/syntax.css">
+  <link rel="stylesheet" href="../css/lanyon.css">
+  <link rel="stylesheet" href="../css/book.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="../images/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="../atom.xml">
+
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-28532776-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+<!-- End Google Analytics -->
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+
+  <div class="sidebar-item">
+    <img src="../images/tim-movember-2009.jpg" />
+    <p>Tim McGilchrist</p>
+    <p>Principal Software Engineer at Tarides</p>
+
+    <p>
+      Twitter: <a href="https://twitter.com/lambda_foo">@lambda_foo</a><br>
+      Github: <a href="https://github.com/tmcgilchrist">tmcgilchrist</a><br>
+      Email: <a href="mailto:timmcgil@gmail.com">timmcgil@gmail.com</a><br>
+      LinkedIn: <a href="https://www.linkedin.com/in/timmcgilchrist">Tim McGilchrist</a>
+    </p>
+
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="../">
+      Blog
+    </a>
+    <a class="sidebar-nav-item" href="../about">
+      About
+    </a>
+    <a class="sidebar-nav-item" href="../talks">
+      Talks
+    </a>
+    <p class="sidebar-nav-item">
+      Feed:
+      <a href="../rss.xml">
+        RSS
+      </a>
+      /
+      <a href="../atom.xml">
+        Atom
+      </a>
+    </p>
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; Tim McGilchrist 2007-2021
+    </p>
+    <p>
+      Powered by Hakyll
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="../" title="Home">Perpetually Curious Blog</a>
+            
+            <span class="masthead-links">
+              <a href="../">Blog</a> |
+              <a href="../pages/about.html">About</a> |
+              <a href="../archive.html">Archive</a> |
+              <a href="../pages/talks.html">Talks</a>
+            </span>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Getting Started with OCaml in 2021</h1>
+  <span class="post-date">October 29, 2021</span>
+  <p>OCaml is an awesome language with many fine features. I enjoy using it immensely!</p>
+<p>Unfortunately, it suffers from a perceived weakness in how to get started. Like any new skill, there can be a learning curve. The tools are all there, but combining them for a good developer experience might seem difficult at first.</p>
+<p>Often I’ve found that the barrier for getting into a new langauge is less about the new features of that language and more about learning the tools to become productive in that language. The package managers, build tools, and editor integration of a new language can be confusing, making for an awful experience.</p>
+<p>Perhaps my opinionated guide to getting started with OCaml in 2021 will help reduce any mental blocks against trying out this excellent language.</p>
+<h2 id="install-opam">Install Opam</h2>
+<p>First it’s necessary to install OCaml and Opam. <a href="https://opam.ocaml.org">Opam</a> is the default package manager for OCaml projects. Ignore the other options for now, once you know more about what you want, you can make an informed choice. For now if you speak OPAM, you’ll get the most out of the community.</p>
+<p>On Linux, use your local package manger, e.g., <code>apt-get install opam</code> for Debian and <code>apt install opam</code> for Ubuntu. For MacOS, use homebrew <code>brew install opam</code>. I’ll assume if you run something else, you can handle looking up <a href="https://opam.ocaml.org/doc/Install.html#Using-your-distribution-39-s-package-system">how to install things</a>.</p>
+<p>On my Mac I get Opam 2.1.0:</p>
+<pre class="shell"><code>$ opam --version
+2.1.0</code></pre>
+<p>Once you’ve got Opam installed, you should be able to move on to the next step.</p>
+<h2 id="choose-an-ocaml-version">Choose an OCaml Version</h2>
+<p>I strongly recommended that you pick a single OCaml version that your project will compile against. Supporting multiple compiler versions is possible and usually not too diffcult, but it complicates the process right now.</p>
+<p>Running <code>opam switch list-available</code> will show you a long list of every possible OCaml compiler. Choose the latest mainline compiler identifed by <code>Official release X.XX.X</code> where currently the latest is <code>4.13.0</code>. Ignore the others.</p>
+<pre class="shell"><code>opam switch list-available
+...
+ocaml-variants                         4.12.0+domains                         OCaml 4.12.0, with support for multicore domains
+ocaml-variants                         4.12.0+domains+effects                 OCaml 4.12.0, with support for multicore domains and effects
+ocaml-variants                         4.12.0+options                         Official release of OCaml 4.12.0
+ocaml-base-compiler                    4.12.1                                 Official release 4.12.1
+ocaml-variants                         4.12.1+options                         Official release of OCaml 4.12.1
+ocaml-variants                         4.12.2+trunk                           Latest 4.12 development
+ocaml-base-compiler                    4.13.0~alpha1                          First alpha release of OCaml 4.13.0
+ocaml-variants                         4.13.0~alpha1+options                  First alpha release of OCaml 4.13.0
+ocaml-base-compiler                    4.13.0~alpha2                          Second alpha release of OCaml 4.13.0
+ocaml-variants                         4.13.0~alpha2+options                  Second alpha release of OCaml 4.13.0
+ocaml-base-compiler                    4.13.0~beta1                           First beta release of OCaml 4.13.0
+ocaml-variants                         4.13.0~beta1+options                   First beta release of OCaml 4.13.0
+ocaml-base-compiler                    4.13.0~rc1                             First release candidate of OCaml 4.13.0
+ocaml-variants                         4.13.0~rc1+options                     First release candidate of OCaml 4.13.0
+ocaml-base-compiler                    4.13.0~rc2                             Second release candidate of OCaml 4.13.0
+ocaml-variants                         4.13.0~rc2+options                     Second release candidate of OCaml 4.13.0
+ocaml-base-compiler                    4.13.0                                 Official release 4.13.0
+ocaml-variants                         4.13.0+options                         Official release of OCaml 4.13.0
+ocaml-variants                         4.13.1+trunk                           Latest 4.13 developmet
+ocaml-variants                         4.14.0+trunk                           Current trunk
+...</code></pre>
+<p>At this point, install the latest OCaml 4.13.0:</p>
+<pre class="shell"><code>$ opam switch create 4.13.0
+
+&lt;&gt;&lt;&gt; Installing new switch packages &lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;  🐫
+Switch invariant: [&quot;ocaml-base-compiler&quot; {= &quot;4.13.0&quot;} | &quot;ocaml-system&quot; {= &quot;4.13.0&quot;}]
+
+&lt;&gt;&lt;&gt; Processing actions &lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;  🐫
+∗ installed base-bigarray.base
+∗ installed base-threads.base
+∗ installed base-unix.base
+∗ installed ocaml-options-vanilla.1
+⬇ retrieved ocaml-base-compiler.4.13.0  (https://opam.ocaml.org/cache)
+∗ installed ocaml-base-compiler.4.13.0
+∗ installed ocaml-config.2
+∗ installed ocaml.4.13.0
+Done.</code></pre>
+<p>You can start using this version by typing the following:</p>
+<pre class="shell"><code>$ opam switch set 4.13.0</code></pre>
+<p>And verify which switch you are using:</p>
+<pre class="shell"><code>$ opam switch show
+4.13.0</code></pre>
+<p>When you work with several OCaml projects, it’s best to create a switch per project, as it keeps each project isolated and prevents issues with installing conflicting versions of libraries. For example, I use a naming scheme of <code>ocaml-version-project-name</code>, e.g., <code>4.13.0-ocurrent</code>. Then in each project directory, run <code>opam switch link 4.13.0-ocurrent</code> to setup that named switch for that specific directory. Opam will take care of setting that switch in your shell when you change into that directory.</p>
+<h2 id="creating-your-project-directory">Creating Your Project Directory</h2>
+<p>For this step we need the <a href="https://dune.readthedocs.io">Dune</a> build tool, so go ahead and install it with <code>opam install dune</code>. Dune comes with a simple scaffolding command to create an empty project that is really useful to get started.</p>
+<p>I’m calling my project <code>box</code>, so run:</p>
+<pre class="shell"><code>$ dune init proj box
+Success: initialized project component named box</code></pre>
+<p>In the project generated, we get a library component, a CLI, and a test component, which will all compile out of the box.</p>
+<pre class="shell"><code>$ cd box
+$ tree
+.
+├── bin
+│   ├── dune
+│   └── main.ml
+├── box.opam
+├── lib
+│   └── dune
+└── test
+    ├── box.ml
+    └── dune
+
+3 directories, 6 files</code></pre>
+<p>Lets try a compile:</p>
+<pre class="shell"><code>$ dune build @all
+Info: Creating file dune-project with this contents:
+| (lang dune 2.8)
+| (name box)
+</code></pre>
+<p>Running the CLI:</p>
+<pre class="shell"><code>$ dune exec bin/main.exe
+Hello, World!</code></pre>
+<p>Each of the <code>bin</code>, <code>lib</code>, and <code>test</code> directories contains the source code in the form of <code>*.ml</code> files, along with a <code>dune</code> file which tells Dune how to build the source and on what libraries it depends. The box <code>bin\dune</code> file declares it’s an <code>executable</code> with a name <code>box</code> and depends on the <code>box</code> library.</p>
+<pre class="shell"><code>(executable
+ (public_name box)
+ (name main)
+ (libraries box))</code></pre>
+<h2 id="adding-a-dependency">Adding a Dependency</h2>
+<p>CLI tools require command line parsing, <code>Cmdliner</code> is a common library that implements CLI parsing. We need to add it in two places: first in the <code>dune-project</code> file, to get it installed, and then in <code>bin/dune</code>, to say where we’re using it.</p>
+<p>One small digression, when generating our project, <code>dune</code> created an <code>box.opam</code> file. This describes our project to Opam, telling it what libraries it requires and what the project does. You need this if you ever publish a package for other people to use. Newer versions of Dune can generate the <code>box.opam</code> file from a <code>dune-project</code> file. Having a single source of information is helpful, so lets create that file:</p>
+<pre class="shell"><code>(lang dune 2.8)
+(name box)
+
+(generate_opam_files true)
+
+(package
+ (name box)
+ (depends
+  (ocaml (&gt;= 4.13.0))
+  (cmdliner (&gt;= 0.9.8)))
+ (synopsis &quot;Box cli&quot;))</code></pre>
+<p>Remove the <code>rm box.opam</code> file to test the generation. Now run <code>dune build @all</code> to regenerate the Opam file. This file should be checked in, and any further edits should be at the top-level <code>dune-project</code> file, which should look like this:</p>
+<pre class="shell"><code>$ cat box.opam
+# This file is generated by dune, edit dune-project instead
+opam-version: &quot;2.0&quot;
+synopsis: &quot;Box cli&quot;
+depends: [
+  &quot;dune&quot; {&gt;= &quot;2.8&quot;}
+  &quot;ocaml&quot; {&gt;= &quot;4.13.0&quot;}
+  &quot;cmdliner&quot; {&gt;= &quot;0.9.8&quot;}
+  &quot;odoc&quot; {with-doc}
+]
+build: [
+  [&quot;dune&quot; &quot;subst&quot;] {dev}
+  [
+    &quot;dune&quot;
+    &quot;build&quot;
+    &quot;-p&quot;
+    name
+    &quot;-j&quot;
+    jobs
+    &quot;@install&quot;
+    &quot;@runtest&quot; {with-test}
+    &quot;@doc&quot; {with-doc}
+  ]
+]
+</code></pre>
+<p>The final step is to actually install the <code>cmdliner</code> library. Run <code>opam install . --deps-only -ty</code>, which will look at the <code>*.opam</code> files present and install just their dependencies with the correct version bounds. The <code>-y</code> says yes to installing the packages. You can remove it if you like by pressing <code>Y</code> or if you want to review what will be installed. <code>-t</code> will run the package tests, which isn’t always necessary, but it’s sometimes useful for certain packages with native C components.</p>
+<p>Alternatively you could run <code>opam install cmdliner</code>, as this doesn’t look at version constraints in <code>*.opam</code> files, you might not get what you expect.</p>
+<h2 id="editor-tooling">Editor Tooling</h2>
+<p>Finally, you’ll want to get comfy with your chosen editor. If you have a preference, you should use the native LSP support in that editor, along with installing <code>opam install ocaml-lsp-server</code>. OCaml is standardising on the LSP protocol for editor interaction. If you have no editor preference, then start with <a href="https://code.visualstudio.com">VSCode</a> and install the OCaml LSP package from the Marketplace.</p>
+<p>Personally, I’m using Emacs with the LSP mode <code>eglot</code>, which works really nicely, along with some customisations to bind certain LSP actions to keys. I highly recommend getting into Emacs as an editor because the customisation via a fully-featured language, like Lisp, is fantastic if you live in your editor like I do.</p>
+<p>This post is an update to an earlier post by <a href="https://adambard.com/blog/getting-started-with-ocaml/">Adam</a> in 2017, and I hope this short tutorial helps get you started with OCaml!</p>
+</div>
+
+
+        <div class="container content">
+          <small>Copyright © Tim McGilchrist 2007-2021</small>
+          <br>
+          <small>Powered by <a href="https://github.com/tmcgilchrist/lambdafoo.com">Hakyll</a></small>
+        </div>
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+    </body>
+</html>
