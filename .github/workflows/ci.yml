@@ -16,7 +16,7 @@ jobs:
         ghc: ["8.10.7"]
     steps:
       - uses: actions/checkout@v3
-      - uses: haskell/actions/setup@v2.0.0
+      - uses: haskell/actions/setup@v2
         id: setup-haskell-cabal
         with:
           ghc-version: ${{ matrix.ghc }}
@@ -25,7 +25,7 @@ jobs:
         run: |
           cabal v2-update
           cabal v2-freeze $CONFIG
-      - uses: actions/cache@v3.0.5
+      - uses: actions/cache@v3
         with:
           path: |
             ${{ steps.setup-haskell-cabal.outputs.cabal-store }}
@@ -38,7 +38,7 @@ jobs:
           cabal v2-build $CONFIG
           cabal exec site build
       - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@v4.4.0
+        uses: JamesIves/github-pages-deploy-action@v4
         if: github.ref == 'refs/heads/master'
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
