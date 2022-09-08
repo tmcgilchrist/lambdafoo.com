@@ -8,8 +8,81 @@
         <name>Tim McGilchrist</name>
         <email>timmcgil@gmail.com</email>
     </author>
-    <updated>2021-10-29T00:00:00Z</updated>
+    <updated>2022-09-07T00:00:00Z</updated>
     <entry>
+    <title>OCaml with Emacs in 2022</title>
+    <link href="https://lambdafoo.com/posts/2022-09-07-ocaml-with-emacs-2022.html" />
+    <id>https://lambdafoo.com/posts/2022-09-07-ocaml-with-emacs-2022.html</id>
+    <published>false</published>
+    <updated>2022-09-07T00:00:00Z</updated>
+    <summary type="html"><![CDATA[<div class="post">
+  <h1 class="post-title">OCaml with Emacs in 2022</h1>
+  <span class="post-date">September  7, 2022</span>
+  <p>I am revisiting my <a href="https://lambdafoo.com/posts/2021-10-29-getting-started-with-ocaml.html">OCaml setup post from 2021</a> because I needed to setup a new macOS machine. The official OCaml site points newcomers to <a href="https://ocaml.org/docs/up-and-running#editor-support-for-ocaml">Visual Studio Code</a> which is a fine choice to get started. However I am using <a href="https://www.gnu.org/s/emacs/">Emacs</a> and have done so for over 20 years, and did not find a good description of how to set things up with Emacs. Here I could digress into why Emacs but I will just strongly encourage any developers to invest heavily in learning their editor with Emacs being a fine choice.</p>
+<h2 id="beginnings">Beginnings</h2>
+<p>On macOS I use the pre-compiled GUI version of Emacs from <a href="https://emacsformacosx.com">emacsformacosx</a> preferring that over compiling it by hand or using the version in <a href="https://brew.sh">homebrew</a>. Both of which I have done previously but find the emacsformacos version saves me time and effort, plus the GUI version was removed from homebrew at some point in the past.</p>
+<p>Next I choose to use an Emacs distro over the base Emacs setup, again this is a time saving choice and especially useful if you are new to Emacs. Use <a href="https://github.com/bbatsov/prelude">Prelude</a>, which is an enhanced Emacs 25.1+ distribution that should make your experience with Emacs both more pleasant and more powerful. It gives a great modern setup for Emacs with minimal fuss. Once that is cloned and installed the Lisp config begins.</p>
+<h2 id="prelude-onfiguration">Prelude onfiguration</h2>
+<p>Prelude provides a base experience of packages available with some configuration. The configuration goes into <code>~/.emacs.d/tsmc/prelude-modules.el</code> where <code>tsmc</code> is your macOS user. The same path would apply for Linux. A sample prelude-modules.ml is provided in https://github.com/bbatsov/prelude/blob/master/sample/prelude-modules.el</p>
+<p>I choose the following modules to enable with <code>prelude-lsp</code> and <code>prelude-ocaml</code> being the core OCaml related choices. The other bits are optional but useful for editing lisp or navigating code.</p>
+<pre class="emacs-lisp"><code>(require &#39;prelude-ivy) ;; A mighty modern alternative to ido
+(require &#39;prelude-company)
+(require &#39;prelude-emacs-lisp)
+(require &#39;prelude-lisp) ;; Common setup for Lisp-like languages
+(require &#39;prelude-lsp) ;; Base setup for the Language Server Protocol
+(require &#39;prelude-ocaml)</code></pre>
+<p>Now for the customisation to get LSP working properly. There are 3 main pieces:</p>
+<ul>
+<li>direnv - for automatically configuring shell environments</li>
+<li>ocaml-lsp-server - the core lsp implementation for OCaml</li>
+<li>lsp-mode - the Emacs mode that drives everything</li>
+</ul>
+<h2 id="direnv-the-necessary-magic">direnv the necessary magic</h2>
+<p>direnv is a small program to load/unload environment variables based on $PWD (current working directory). This program ensures that when you open an OCaml file the correct opam switch is chosen and the tools installed in that switch are made available to Emacs. Opam is the <a href="https://opam.ocaml.org">OCaml package manager</a> and manages local sandboxes of packages called switches. Without direnv Emacs will not find the correct tools and you would need to mess with Emacs PATHS to get it right. I have done that and it is much simplier with direnv.</p>
+<p>So <code>brew install direnv</code> and create a <code>.envrc</code> file in an OCaml project with <code>eval $(opam env --set-switch)</code> inside. Compared to my previous post I have been using local opam switches which exist inside an OCaml project. They are created as <code>opam switch create . 4.14.0 --with-test --deps-only -y</code> and appear as an <code>_opam</code> directory in the project root. Next run <code>direnv allow</code> to tell direnv it is safe to use the <code>.envrc</code> file in this directory. The reason I have switched is I often need to test different OCaml versions so removing the <code>_opam</code> directory and recreating it is the simplier option.</p>
+<h2 id="ocaml-lsp-server">OCaml LSP Server</h2>
+<p>OCaml LSP server needs to be installed in the current switch so run <code>opam update &amp;&amp; opam install ocaml-lsp-server -y</code>, this will make ocaml-lsp-server available to Emacs via direnv.</p>
+<p>There is an opportunity here to use Emacs Lisp to install <code>ocaml-lsp-server</code> if it was missing or to allow lsp-mode to download and install it itself. I would like to have this working in future. Next back into Lisp.</p>
+<h2 id="emacs-lsp-mode">Emacs LSP mode</h2>
+<p>Create a file init.el in <code>~/.emacs.d/tsmc/</code> substituting your Unix user name for <code>tsmc</code>. Thanks to emacs-prelude the configuration is very small.</p>
+<pre class="emacs-lisp"><code>;;; init.el --- @tsmc configuration entry point.
+
+(prelude-require-packages &#39;(use-package direnv))
+;; Use direnv to select the correct opam switch and set the path
+;; that Emacs will use to run commands like ocamllsp, merlin or dune build.
+
+(use-package lsp-mode
+  :hook
+  (tuareg-mode . lsp))
+;; Attach lsp hook to modes that require it, here we bind to tuareg-mode rather than
+;; prelude-ocaml. For unknown reasons the latter does not bind properly and does not
+;; start lsp-mode
+
+(provide &#39;tsmc)
+;;; init.el ends here</code></pre>
+<p>We require a few packages <code>use-package</code> and <code>direnv</code>, and then tell Emacs to start lsp-mode when <code>tuareg-mode</code> is started. Tuareg-mode is one of the OCaml modes available for Emacs, the other being <code>caml-mode</code> which I have not really used. Now quit and restart Emacs. Opening an ml file inside the project you started earlier and ocaml-lsp should startup.</p>
+<p>The types for expressions and modules will display on mouse hover or beside the definition. Hovering the mouse over a function or type will display the type plus the documentation comments for it. A successful <code>dune build</code> for the project is required to generate the data used by ocaml-lsp-server. At this point in time <code>prelude</code> relies on <code>merlin</code> an assistant for editing OCaml code, that is used by <code>ocaml-lsp-server</code> internally but also available as standalone tool. So I often have both installed, <code>opam install merlin</code> should be enough to get it installed too.</p>
+<p>At this point I am mostly happy, the types and documentation displays as required. Navigating using <code>M-.</code> shows a preview of the type / function under point and return will take me to the definition. This is vastly improved in OCaml 4.14 (with the work on Shapes) which I have switched to for everything I can. Switching between ml and mli files is <code>C-c C-a</code> and more, simply visit the <code>M-x describe-mode</code> to show everything available.</p>
+<p>The annoyances are more fundamental to how LSP wants to work. It uses what I am calling a push based interaction, where it generates the information for types and documentation in the background and pushes it into the Emacs buffer. You never need to ask what is the type, it will display for you. Sometimes I want to ask for what a type is inside an expression, with LSP you are encouraged to mouse hover over something rather than having a key binding for it. So far I haven’t found the lisp function that drives the hover functionality but when I do I will bind it to a key. The second issue is also around mouse usage to drive LSP functionality like rename or annotate types. I would strongly prefer a key chord driven approach to that. Again I will set this up once I find the right lsp functions. For now I use <code>C-c C-t</code> from merlin to summon the types for things.</p>
+<p>Overall the experience is solid. Types and docs appear as required. Navigation works. The speed has been good so far. LSP mode is less janky than it was 1 year ago.</p>
+<h2 id="alternatives">Alternatives</h2>
+<p>There is a fine alternative LSP mode, <a href="https://github.com/joaotavora/eglot">Eglot</a> for Emacs. It takes a more minimal approach and uses a pull based interaction. Where you ask for the information based on key bindings vs the information being pushed at you via UI elements. For example, the type of a function is requested rather than shown by default.</p>
+<p>The corresponding configuration I was using previously is:</p>
+<pre class="emacs-lisp"><code>(use-package eglot
+  :config
+  (define-key eglot-mode-map 
+    (kbd &quot;C-c C-t&quot;) #&#39;eldoc-print-current-symbol-info)
+
+  :hook
+  ((tuareg-mode . eglot-ensure)))</code></pre>
+<p>Again using <code>use-package</code> to configure the mode, the hooks are triggering Eglot to be loaded when <code>tuareg-mode</code> is. Using the <code>eglot-ensure</code> function which starts an Eglot session for current buffer if there isn’t one. No further configuration is needed in Emacs as Eglot knows the LSP server is called <code>ocamllsp</code> and will look for it on the Unix PATH.</p>
+<h2 id="summary">Summary</h2>
+<p>Getting started with OCaml using Emacs can be a struggle. Emacs is a fine editor but the documentation can be difficult to handle. Hopefully following through this setup will yield a working Emacs / LSP setup for OCaml.</p>
+<p>In future I want to try binding more things to keys so I use the mouse less and streamline the installing of the ocaml lsp server. Then after that adding support for more interesting code interactions like extracting modules or hoisting let bindings would be nice to have. Happy hacking!</p>
+</div>
+]]></summary>
+</entry>
+<entry>
     <title>Getting Started with OCaml in 2021</title>
     <link href="https://lambdafoo.com/posts/2021-10-29-getting-started-with-ocaml.html" />
     <id>https://lambdafoo.com/posts/2021-10-29-getting-started-with-ocaml.html</id>
@@ -894,53 +967,6 @@ Version: 0.1.6
 <p>On the first morning of the conference I spoke about the RAFT distributed consensus algorithm and how it could be implemented in Erlang/OTP. The slides are <a href="http://yowconference.com.au/slides/yowlambdajam2014/McGilchrist-RAFTImplementingDistributedConsensusWithErlang.pdf">here</a> with the video to follow sometime later. I was very happy with how the talk went despite many pre-conference nerves and will surely be submitting something next year.</p>
 <p>In the final workshop slot of the conference I presented an Erlang workshop on building a Webmachine system for shortening urls. The source code on github <a href="https://github.com/tmcgilchrist/erlang_from_scratch">here</a>.</p>
 <p>Yow! LambdaJam is a great conference that brings together the functional programmers from across Australia. I personally had a great time and would encourage anyone who is interested in functional programming to come along next year. We had talks on Erlang, Haskell, Idris, Scala and Clojure. I’m hoping next year we see something on OCaml and F#.</p>
-</div>
-]]></summary>
-</entry>
-<entry>
-    <title>Ember.js and Google Analytics</title>
-    <link href="https://lambdafoo.com/posts/2013-09-17-emberjs-and-google-analytics.html" />
-    <id>https://lambdafoo.com/posts/2013-09-17-emberjs-and-google-analytics.html</id>
-    <published>2013-09-17T00:00:00Z</published>
-    <updated>2013-09-17T00:00:00Z</updated>
-    <summary type="html"><![CDATA[<div class="post">
-  <h1 class="post-title">Ember.js and Google Analytics</h1>
-  <span class="post-date">September 17, 2013</span>
-  <h2 id="update">Update</h2>
-<p>As iStefo pointed out in the comments the code I gave has a bug in it. The <code>observes('currentPath')</code> on an application controller doesn’t fire when you transition between paths in the same route. eg ‘/lesson/1/activity/1’ to ‘/lesson/1/activity/2’</p>
-<p>A better approach is to add the code to your router.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode coffeescript"><code class="sourceCode coffee"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a>App<span class="kw">.</span>Router<span class="kw">.</span>reopen</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a>  didTransition<span class="kw">:</span> <span class="fu">(infos) -&gt;</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a>    <span class="dt">@_super</span><span class="kw">(</span>infos<span class="kw">);</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a>    <span class="kw">return</span> <span class="kw">unless</span> window<span class="kw">.</span>ga</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a>    Em<span class="kw">.</span>run<span class="kw">.</span>next <span class="fu">-&gt;</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a>      ga<span class="kw">(</span><span class="st">&#39;send&#39;</span><span class="kw">,</span> <span class="st">&#39;pageview&#39;</span><span class="kw">,</span> <span class="kw">{</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true"></a>         <span class="st">&#39;page&#39;</span><span class="kw">:</span> window<span class="kw">.</span>location<span class="kw">.</span>hash<span class="kw">,</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true"></a>         <span class="st">&#39;title&#39;</span><span class="kw">:</span> window<span class="kw">.</span>location<span class="kw">.</span>hash</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true"></a>      <span class="kw">});</span></span></code></pre></div>
-<p>Matthew Beale also pointed out below that there may be a new API coming on the router to achieve the same result. <a href="https://github.com/emberjs/ember.js/pull/3452">PR#3452</a> and <a href="https://github.com/emberjs/ember.js/pull/3453">PR#3453</a></p>
-<hr />
-<h2 id="original">Original</h2>
-<p>Single Page Javascript Applications and specifically Ember.js applications don’t always expose the right information to Google Analytics. Usually you’ll see 100% traffic to <code>/</code> and nothing else.</p>
-<p>What I wanted to be able to see what areas of the site people were using in real time. A bit of searching led to various solutions with <a href="http://www.pansapien.com/ember/2013/01/using-google-analytics-with-ember-js/">this post</a> having the most upto date solution. Working in Ember you quickly become wary of older solutions posted and start filtering search results based on time. Hopefully now that 1.0 is out the correct solutions will start bubbling to the top of Google searches.</p>
-<p>To make your Ember.js application more visible to Google Analytics you need to expose the value of your application state. I’m using the hash scheme (eg <code>#/album</code>) so whatever is after the hash in the url shows where a person is in the application.</p>
-<p>First you’ll need to have the Google Analytics Javascript library loaded, I’ve been using the more recent <a href="https://developers.google.com/analytics/devguides/collection/analyticsjs/">analytics.js</a> library which has a different API to the older ga.js library. After you’ve followed Google’s instructions the library is available at <code>ga</code>.</p>
-<p>Next you want to observe whenever the hash path changes within your app. The code below assumes you’re using hashes rather than HTML5 pushState.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode coffeescript"><code class="sourceCode coffee"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a>App<span class="kw">.</span>ApplicationController <span class="kw">=</span> Em<span class="kw">.</span>Controller<span class="kw">.</span>extend</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a>    routeChanged<span class="kw">:</span> <span class="kw">(</span><span class="fu">-&gt;</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a>        <span class="kw">return</span> <span class="kw">unless</span> window<span class="kw">.</span>ga</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a>        Em<span class="kw">.</span>run<span class="kw">.</span>next <span class="fu">-&gt;</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a>            ga<span class="kw">(</span><span class="st">&#39;send&#39;</span><span class="kw">,</span> <span class="st">&#39;pageview&#39;</span><span class="kw">,</span> <span class="kw">{</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true"></a>                <span class="st">&#39;page&#39;</span><span class="kw">:</span> window<span class="kw">.</span>location<span class="kw">.</span>hash<span class="kw">,</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true"></a>                <span class="st">&#39;title&#39;</span><span class="kw">:</span> window<span class="kw">.</span>location<span class="kw">.</span>hash</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true"></a>                <span class="kw">});</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true"></a>    <span class="kw">).</span>observes<span class="kw">(</span><span class="st">&#39;currentPath&#39;</span><span class="kw">)</span></span></code></pre></div>
-<p>The <code>routeChanged</code> function gets called when <code>currentPath</code> changes; it checks whether <code>ga</code> is defined and if it is it sends a pageview event with the current value of location.hash. The <code>Em.run.next</code> is there to make sure all the routing has occured and the hash value is final before using it.</p>
-<p><code>page</code> and <code>title</code> are just strings so you could provide meaningful formatting based on what your application does. The next obvious step is to add <a href="https://developers.google.com/analytics/devguides/collection/analyticsjs/events">event tracking</a> to really see how people interact with the app.</p>
 </div>
 ]]></summary>
 </entry>
