@@ -77,7 +77,7 @@
 <p>In future I want to try binding more things to keys so I use the mouse less and streamline the installing of the ocaml lsp server. Then after that adding support for more interesting code interactions like extracting modules or hoisting let bindings would be nice to have. Happy hacking!</p>
 </div>
 ]]></description>
-    <pubDate>false</pubDate>
+    <pubDate>true</pubDate>
     <guid>https://lambdafoo.com/posts/2022-09-07-ocaml-with-emacs-2022.html</guid>
     <dc:creator>Tim McGilchrist</dc:creator>
 </item>
