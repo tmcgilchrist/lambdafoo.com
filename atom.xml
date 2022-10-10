@@ -8,8 +8,28 @@
         <name>Tim McGilchrist</name>
         <email>timmcgil@gmail.com</email>
     </author>
-    <updated>2022-09-07T00:00:00Z</updated>
+    <updated>2022-10-11T00:00:00Z</updated>
     <entry>
+    <title>ICFP 2022 Review</title>
+    <link href="https://lambdafoo.com/posts/2022-10-11-icfp-2022-review.html" />
+    <id>https://lambdafoo.com/posts/2022-10-11-icfp-2022-review.html</id>
+    <published>true</published>
+    <updated>2022-10-11T00:00:00Z</updated>
+    <summary type="html"><![CDATA[<div class="post">
+  <h1 class="post-title">ICFP 2022 Review</h1>
+  <span class="post-date">October 11, 2022</span>
+  <p>I wrote up a <a href="https://tarides.com/blog/2022-10-10-icfp-2022-review">highlights of ICFP 2022</a> for the Tarides blog. It was great to get back to in-person conferences again and getting the chance to meet people. Thanks to my employer Tarides for covering the cost.</p>
+<p>For me personally the OCaml Workshop was fantastic beginning to end, read the blog post for the full details. Outside of OCaml I spent time in the Haskell Implementors Workshop, hearing about the new features for GHC and excited by the progress that Cabal is making.</p>
+<p>My take away research topics are:</p>
+<ul>
+<li>Typed Effect Systems especially <a href="https://github.com/koka-lang/koka">Koka</a>.</li>
+<li>Delimited Continuations for both OCaml and Haskell.</li>
+<li>Lockfree data structures, <a href="https://github.com/ocaml-multicore/reagents">Reagents</a> and <a href="https://hackage.haskell.org/package/stm">STM</a>.</li>
+</ul>
+</div>
+]]></summary>
+</entry>
+<entry>
     <title>OCaml with Emacs in 2022</title>
     <link href="https://lambdafoo.com/posts/2022-09-07-ocaml-with-emacs-2022.html" />
     <id>https://lambdafoo.com/posts/2022-09-07-ocaml-with-emacs-2022.html</id>
@@ -951,22 +971,6 @@ Version: 0.1.6
 <li><a href="http://bugsquash.blogspot.com.au/2011/11/lenses-in-f.html">Lenses in F#</a></li>
 <li><a href="http://hackage.haskell.org/package/lens">Control.Lens on hackage</a></li>
 </ul>
-</div>
-]]></summary>
-</entry>
-<entry>
-    <title>Lambdajam Talks</title>
-    <link href="https://lambdafoo.com/posts/2014-08-08-lambdajam-talk.html" />
-    <id>https://lambdafoo.com/posts/2014-08-08-lambdajam-talk.html</id>
-    <published>2014-08-08T00:00:00Z</published>
-    <updated>2014-08-08T00:00:00Z</updated>
-    <summary type="html"><![CDATA[<div class="post">
-  <h1 class="post-title">Lambdajam Talks</h1>
-  <span class="post-date">August  8, 2014</span>
-  <p>Earlier this year I spoke at <a href="http://lambdajam.yowconference.com.au">Yow! LambdaJam</a> about RAFT and Erlang. I thought I should link to my talk descriptions and slides <a href="https://a.confui.com/-kpclGeyK">here</a>.</p>
-<p>On the first morning of the conference I spoke about the RAFT distributed consensus algorithm and how it could be implemented in Erlang/OTP. The slides are <a href="http://yowconference.com.au/slides/yowlambdajam2014/McGilchrist-RAFTImplementingDistributedConsensusWithErlang.pdf">here</a> with the video to follow sometime later. I was very happy with how the talk went despite many pre-conference nerves and will surely be submitting something next year.</p>
-<p>In the final workshop slot of the conference I presented an Erlang workshop on building a Webmachine system for shortening urls. The source code on github <a href="https://github.com/tmcgilchrist/erlang_from_scratch">here</a>.</p>
-<p>Yow! LambdaJam is a great conference that brings together the functional programmers from across Australia. I personally had a great time and would encourage anyone who is interested in functional programming to come along next year. We had talks on Erlang, Haskell, Idris, Scala and Clojure. I’m hoping next year we see something on OCaml and F#.</p>
 </div>
 ]]></summary>
 </entry>
