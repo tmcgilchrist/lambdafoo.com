@@ -8,7 +8,7 @@ footer: true
 
 I like giving talks to User groups and Conferences, along with helping to organise our local Functional Programming User Group. At the moment I'm interested in FP Programming in the large and building maintainable / reliable systems in FP.
 
- * 16-09-2022 - [Homogeneous builds with OBuilder and OCaml](https://github.com/tmcgilchrist/ocaml-2022-submission/tree/master) @ OCaml Workshop 2022 (Colocated with ICFP)
+ * 16-09-2022 - [Homogeneous builds with OBuilder and OCaml](https://github.com/tmcgilchrist/ocaml-2022-submission/tree/master) @ OCaml Workshop 2022 (Colocated with ICFP) [(Video)](https://youtu.be/XopV5Gd6hPo)
  * 25-05-2022 - [Parallel and Concurrent programming in OCaml](https://github.com/tmcgilchrist/ocaml5-tutorial) 5.0 @ [FP-SYD](https://www.meetup.com/fp-syd/events/rdzwmsydchbhc/)
  * 22-06-2020 - 1ML Core and Modules United paper review @ FP-SYD
  * 26-06-2019 - Row Polymorphism in Action @ FP-SYD
