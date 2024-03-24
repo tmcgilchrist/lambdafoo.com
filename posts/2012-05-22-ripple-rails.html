@@ -124,27 +124,37 @@
   <span class="post-date">May 22, 2012</span>
   <h2 id="introduction">Introduction</h2>
 <p>Motivation?? Checkout the RailsCasts episode on Mongoid</p>
-<p>Started with the Seven DB in Seven weeks book. Wanted to see how Riak would mix with Rails / Ruby.</p>
+<p>Started with the Seven DB in Seven weeks book.
+Wanted to see how Riak would mix with Rails / Ruby.</p>
 <h2 id="what-is-riak">What is Riak</h2>
-<p>Riak is a distributed key-value store based on the Amazon Dynamo papers. Written in Erlang by the people at Basho, it’s an exciting addition to the crowded NoSQL zoo.</p>
+<p>Riak is a distributed key-value store based on the Amazon Dynamo papers. Written
+in Erlang by the people at Basho, it’s an exciting addition to the crowded NoSQL
+zoo.</p>
 <ul>
 <li>Map Reduce</li>
 <li>eventually consistent</li>
 <li>read / write balancing</li>
 </ul>
 <h2 id="installing-riak">Installing Riak</h2>
-<p>Installing Riak is pretty straight forward for development, if you’re on a Mac use the excellent Homebrew package and you’ll get the latest 1.2 release.</p>
+<p>Installing Riak is pretty straight forward for development, if you’re on a Mac
+use the excellent Homebrew package and you’ll get the latest 1.2 release.</p>
 <pre><code>brew install riak</code></pre>
-<p>Similarly on Linux it should be a matter of invoking your local package manager and you should be set. I’m assuming you’re using a Mac here, cause that’s what I’ve got but Linux should work as well. And Windows, well use a VM :-)</p>
+<p>Similarly on Linux it should be a matter of invoking your local package manager
+and you should be set. I’m assuming you’re using a Mac here, cause that’s what
+I’ve got but Linux should work as well. And Windows, well use a VM :-)</p>
 <h2 id="ruby-environment">Ruby Environment</h2>
-<p>You’ll need some form of Ruby installed, I’d recommend installing via rvm over using your local ruby version. See rvm.io for details, it should simply be a matter of running a command in your terminal.</p>
+<p>You’ll need some form of Ruby installed, I’d recommend installing via rvm over
+using your local ruby version. See rvm.io for details, it should simply be a
+matter of running a command in your terminal.</p>
 <p>Next we’ll create a gemset and install rails into that.</p>
 <pre><code>rvm --create use 1.9.3@ripple
 gem install rails</code></pre>
 <h2 id="creating-a-new-rails-application-with-ripple">Creating a new Rails Application with Ripple</h2>
-<p>Now that we have Riak installed we’ll create a new Rails 3 application that uses Riak. Continuing in the Rails tradition, lets create a blogging app.</p>
+<p>Now that we have Riak installed we’ll create a new Rails 3 application that uses
+Riak. Continuing in the Rails tradition, lets create a blogging app.</p>
 <pre><code>$ rails new blog --skip-active-record --skip-bundle -T</code></pre>
-<p>Now the first thing to do is add the Ripple gem to the Gemfile. Currently the latest version doesn’t work with latest rails so lets use the latest from git.</p>
+<p>Now the first thing to do is add the Ripple gem to the Gemfile. Currently the
+latest version doesn’t work with latest rails so lets use the latest from git.</p>
 <pre><code>source 'http://rubygems.org'
 gem 'rails', '3.2.2'
 
@@ -175,8 +185,11 @@ create  app/mapreduce/iso8601.js
 create  app/mapreduce/ripple.js
 insert  spec/spec_helper.rb
 insert  spec/spec_helper.rb</code></pre>
-<p>As you can see it creates a ripple configuration file, some mapreduce assets and updates my spec_helper. Lets look just at the <code>config/ripple.yml</code> file for now.</p>
-<p>The default config file is shown below. You may have to modify or add the ‘source:’ property to point to where you’ve installed Riak. I’ve put mine in the same directory as the rails project so it looks like this</p>
+<p>As you can see it creates a ripple configuration file, some mapreduce assets and
+updates my spec_helper. Lets look just at the <code>config/ripple.yml</code> file for now.</p>
+<p>The default config file is shown below. You may have to modify or add the ‘source:’
+property to point to where you’ve installed Riak. I’ve put mine in the same
+directory as the rails project so it looks like this</p>
 <pre><code># TODO use the default homebrew path here.
 # Configure Riak connections for the Ripple library.
 development:
@@ -204,15 +217,20 @@ production:
     pb_port: 8087
     host: 127.0.0.1
     source: /usr/local/bin   # Default for Homebrew.</code></pre>
-<p>With everything in place we can begin to build our application. We’ll start by generating an <code>Article</code> model with name and content fields and use the Rails scaffolding to create all the dependent bits.</p>
+<p>With everything in place we can begin to build our application. We’ll start by
+generating an <code>Article</code> model with name and content fields and use the Rails
+scaffolding to create all the dependent bits.</p>
 <pre><code>$ rails g scaffold article name:string content:text</code></pre>
-<p>Ripple provides generators for models so that Ripple’s model generator is invoked when a model is created and ActiveRecord isn’t used. When we open up the model file we’ll see that it’s a simple class that includes <code>Ripple::Document</code>.</p>
+<p>Ripple provides generators for models so that Ripple’s model generator is
+invoked when a model is created and ActiveRecord isn’t used. When we open up the
+model file we’ll see that it’s a simple class that includes <code>Ripple::Document</code>.</p>
 <pre><code>class Article
     include Ripple::Document
     property :name, String
     property :content, String
 end</code></pre>
-<p>The big difference to an ActiveModel model is that the class defines each property, along with the type.</p>
+<p>The big difference to an ActiveModel model is that the class defines each
+property, along with the type.</p>
 <p>Ripple also adds a number of helpful rake tasks for Riak.</p>
 <pre><code>$ rake -T
 ...

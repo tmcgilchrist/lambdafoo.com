@@ -15,7 +15,8 @@
   <h1 class="post-title">ICFP 2022 Review</h1>
   <span class="post-date">October 11, 2022</span>
   <p>I wrote up a <a href="https://tarides.com/blog/2022-10-10-icfp-2022-review">highlights of ICFP 2022</a> for the Tarides blog. It was great to get back to in-person conferences again and getting the chance to meet people. Thanks to my employer Tarides for covering the cost.</p>
-<p>For me personally the OCaml Workshop was fantastic beginning to end, read the blog post for the full details. Outside of OCaml I spent time in the Haskell Implementors Workshop, hearing about the new features for GHC and excited by the progress that Cabal is making.</p>
+<p>For me personally the OCaml Workshop was fantastic beginning to end, read the blog post for the full details.
+Outside of OCaml I spent time in the Haskell Implementors Workshop, hearing about the new features for GHC and excited by the progress that Cabal is making.</p>
 <p>My take away research topics are:</p>
 <ul>
 <li>Typed Effect Systems especially <a href="https://github.com/koka-lang/koka">Koka</a>.</li>
@@ -47,7 +48,8 @@
 (require &#39;prelude-lisp) ;; Common setup for Lisp-like languages
 (require &#39;prelude-lsp) ;; Base setup for the Language Server Protocol
 (require &#39;prelude-ocaml)</code></pre>
-<p>Now for the customisation to get LSP working properly. There are 3 main pieces:</p>
+<p>Now for the customisation to get LSP working properly.
+There are 3 main pieces:</p>
 <ul>
 <li>direnv - for automatically configuring shell environments</li>
 <li>ocaml-lsp-server - the core lsp implementation for OCaml</li>
@@ -109,18 +111,29 @@
   <span class="post-date">October 29, 2021</span>
   <p>OCaml is an awesome language with many fine features. I enjoy using it immensely!</p>
 <p>Unfortunately, it suffers from a perceived weakness in how to get started. Like any new skill, there can be a learning curve. The tools are all there, but combining them for a good developer experience might seem difficult at first.</p>
-<p>Often I’ve found that the barrier for getting into a new langauge is less about the new features of that language and more about learning the tools to become productive in that language. The package managers, build tools, and editor integration of a new language can be confusing, making for an awful experience.</p>
+<p>Often I’ve found that the barrier for getting into a new langauge is less about the
+new features of that language and more about learning the tools to become productive in that
+language. The package managers, build tools, and editor integration of a new language can be confusing, making for an awful experience.</p>
 <p>Perhaps my opinionated guide to getting started with OCaml in 2021 will help reduce any mental blocks against trying out this excellent language.</p>
 <h2 id="install-opam">Install Opam</h2>
-<p>First it’s necessary to install OCaml and Opam. <a href="https://opam.ocaml.org">Opam</a> is the default package manager for OCaml projects. Ignore the other options for now, once you know more about what you want, you can make an informed choice. For now if you speak OPAM, you’ll get the most out of the community.</p>
-<p>On Linux, use your local package manger, e.g., <code>apt-get install opam</code> for Debian and <code>apt install opam</code> for Ubuntu. For MacOS, use homebrew <code>brew install opam</code>. I’ll assume if you run something else, you can handle looking up <a href="https://opam.ocaml.org/doc/Install.html#Using-your-distribution-39-s-package-system">how to install things</a>.</p>
+<p>First it’s necessary to install OCaml and Opam.
+<a href="https://opam.ocaml.org">Opam</a> is the default package manager for OCaml projects.
+Ignore the other options for now, once you know more about what you want, you can make
+an informed choice. For now if you speak OPAM, you’ll get the most out of the community.</p>
+<p>On Linux, use your local package manger, e.g., <code>apt-get install opam</code> for Debian and <code>apt install opam</code>
+for Ubuntu. For MacOS, use homebrew <code>brew install opam</code>. I’ll assume if you run
+something else, you can handle looking up <a href="https://opam.ocaml.org/doc/Install.html#Using-your-distribution-39-s-package-system">how to install things</a>.</p>
 <p>On my Mac I get Opam 2.1.0:</p>
 <pre class="shell"><code>$ opam --version
 2.1.0</code></pre>
 <p>Once you’ve got Opam installed, you should be able to move on to the next step.</p>
 <h2 id="choose-an-ocaml-version">Choose an OCaml Version</h2>
-<p>I strongly recommended that you pick a single OCaml version that your project will compile against. Supporting multiple compiler versions is possible and usually not too diffcult, but it complicates the process right now.</p>
-<p>Running <code>opam switch list-available</code> will show you a long list of every possible OCaml compiler. Choose the latest mainline compiler identifed by <code>Official release X.XX.X</code> where currently the latest is <code>4.13.0</code>. Ignore the others.</p>
+<p>I strongly recommended that you pick a single OCaml version that your project will compile against.
+Supporting multiple compiler versions is possible and usually not too diffcult, but it complicates
+the process right now.</p>
+<p>Running <code>opam switch list-available</code> will show you a long list of every possible OCaml compiler.
+Choose the latest mainline compiler identifed by <code>Official release X.XX.X</code> where currently the latest
+is <code>4.13.0</code>. Ignore the others.</p>
 <pre class="shell"><code>opam switch list-available
 ...
 ocaml-variants                         4.12.0+domains                         OCaml 4.12.0, with support for multicore domains
@@ -165,13 +178,21 @@ Done.</code></pre>
 <p>And verify which switch you are using:</p>
 <pre class="shell"><code>$ opam switch show
 4.13.0</code></pre>
-<p>When you work with several OCaml projects, it’s best to create a switch per project, as it keeps each project isolated and prevents issues with installing conflicting versions of libraries. For example, I use a naming scheme of <code>ocaml-version-project-name</code>, e.g., <code>4.13.0-ocurrent</code>. Then in each project directory, run <code>opam switch link 4.13.0-ocurrent</code> to setup that named switch for that specific directory. Opam will take care of setting that switch in your shell when you change into that directory.</p>
+<p>When you work with several OCaml projects, it’s best to create a switch per project, as it keeps
+each project isolated and prevents issues with installing conflicting versions of libraries.
+For example, I use a naming scheme of <code>ocaml-version-project-name</code>,
+e.g., <code>4.13.0-ocurrent</code>. Then in each project directory, run <code>opam switch link 4.13.0-ocurrent</code>
+to setup that named switch for that specific directory. Opam will take care of setting that switch
+in your shell when you change into that directory.</p>
 <h2 id="creating-your-project-directory">Creating Your Project Directory</h2>
-<p>For this step we need the <a href="https://dune.readthedocs.io">Dune</a> build tool, so go ahead and install it with <code>opam install dune</code>. Dune comes with a simple scaffolding command to create an empty project that is really useful to get started.</p>
+<p>For this step we need the <a href="https://dune.readthedocs.io">Dune</a> build tool, so go ahead and install it with <code>opam install dune</code>.
+Dune comes with a simple scaffolding command to create an empty project that is really useful
+to get started.</p>
 <p>I’m calling my project <code>box</code>, so run:</p>
 <pre class="shell"><code>$ dune init proj box
 Success: initialized project component named box</code></pre>
-<p>In the project generated, we get a library component, a CLI, and a test component, which will all compile out of the box.</p>
+<p>In the project generated, we get a library component, a CLI, and a test component, which will
+all compile out of the box.</p>
 <pre class="shell"><code>$ cd box
 $ tree
 .
@@ -195,14 +216,22 @@ Info: Creating file dune-project with this contents:
 <p>Running the CLI:</p>
 <pre class="shell"><code>$ dune exec bin/main.exe
 Hello, World!</code></pre>
-<p>Each of the <code>bin</code>, <code>lib</code>, and <code>test</code> directories contains the source code in the form of <code>*.ml</code> files, along with a <code>dune</code> file which tells Dune how to build the source and on what libraries it depends. The box <code>bin\dune</code> file declares it’s an <code>executable</code> with a name <code>box</code> and depends on the <code>box</code> library.</p>
+<p>Each of the <code>bin</code>, <code>lib</code>, and <code>test</code> directories contains the source code in the form of <code>*.ml</code> files,
+along with a <code>dune</code> file which tells Dune how to build the source and on what libraries it depends.
+The box <code>bin\dune</code> file declares it’s an <code>executable</code> with a name <code>box</code> and depends on the <code>box</code>
+library.</p>
 <pre class="shell"><code>(executable
  (public_name box)
  (name main)
  (libraries box))</code></pre>
 <h2 id="adding-a-dependency">Adding a Dependency</h2>
-<p>CLI tools require command line parsing, <code>Cmdliner</code> is a common library that implements CLI parsing. We need to add it in two places: first in the <code>dune-project</code> file, to get it installed, and then in <code>bin/dune</code>, to say where we’re using it.</p>
-<p>One small digression, when generating our project, <code>dune</code> created an <code>box.opam</code> file. This describes our project to Opam, telling it what libraries it requires and what the project does. You need this if you ever publish a package for other people to use. Newer versions of Dune can generate the <code>box.opam</code> file from a <code>dune-project</code> file. Having a single source of information is helpful, so lets create that file:</p>
+<p>CLI tools require command line parsing, <code>Cmdliner</code> is a common library that implements CLI parsing.
+We need to add it in two places: first in the <code>dune-project</code> file, to get it installed, and then
+in <code>bin/dune</code>, to say where we’re using it.</p>
+<p>One small digression, when generating our project, <code>dune</code> created an <code>box.opam</code> file. This describes
+our project to Opam, telling it what libraries it requires and what the project does. You need this
+if you ever publish a package for other people to use. Newer versions of Dune can generate the <code>box.opam</code>
+file from a <code>dune-project</code> file. Having a single source of information is helpful, so lets create that file:</p>
 <pre class="shell"><code>(lang dune 2.8)
 (name box)
 
@@ -214,7 +243,9 @@ Hello, World!</code></pre>
   (ocaml (&gt;= 4.13.0))
   (cmdliner (&gt;= 0.9.8)))
  (synopsis &quot;Box cli&quot;))</code></pre>
-<p>Remove the <code>rm box.opam</code> file to test the generation. Now run <code>dune build @all</code> to regenerate the Opam file. This file should be checked in, and any further edits should be at the top-level <code>dune-project</code> file, which should look like this:</p>
+<p>Remove the <code>rm box.opam</code> file to test the generation. Now run <code>dune build @all</code> to regenerate the Opam
+file. This file should be checked in, and any further edits should be at the top-level <code>dune-project</code>
+file, which should look like this:</p>
 <pre class="shell"><code>$ cat box.opam
 # This file is generated by dune, edit dune-project instead
 opam-version: &quot;2.0&quot;
@@ -240,7 +271,13 @@ build: [
   ]
 ]
 </code></pre>
-<p>The final step is to actually install the <code>cmdliner</code> library. Run <code>opam install . --deps-only -ty</code>, which will look at the <code>*.opam</code> files present and install just their dependencies with the correct version bounds. The <code>-y</code> says yes to installing the packages. You can remove it if you like by pressing <code>Y</code> or if you want to review what will be installed. <code>-t</code> will run the package tests, which isn’t always necessary, but it’s sometimes useful for certain packages with native C components.</p>
+<p>The final step is to actually install the <code>cmdliner</code> library. Run <code>opam install . --deps-only -ty</code>,
+which will look at the <code>*.opam</code> files present and install just their dependencies with the correct
+version bounds.
+The <code>-y</code> says yes to installing the packages. You can remove it if you like by pressing <code>Y</code> or if
+you want to review what will be installed.
+<code>-t</code> will run the package tests, which isn’t always necessary, but it’s sometimes useful for certain
+packages with native C components.</p>
 <p>Alternatively you could run <code>opam install cmdliner</code>, as this doesn’t look at version constraints in <code>*.opam</code> files, you might not get what you expect.</p>
 <h2 id="editor-tooling">Editor Tooling</h2>
 <p>Finally, you’ll want to get comfy with your chosen editor. If you have a preference, you should use the native LSP support in that editor, along with installing <code>opam install ocaml-lsp-server</code>. OCaml is standardising on the LSP protocol for editor interaction. If you have no editor preference, then start with <a href="https://code.visualstudio.com">VSCode</a> and install the OCaml LSP package from the Marketplace.</p>
@@ -258,8 +295,14 @@ build: [
     <description><![CDATA[<div class="post">
   <h1 class="post-title">Hakyll Blog setup</h1>
   <span class="post-date">August 27, 2021</span>
-  <p>I wanted to port my blog across from an old Jeykll setup to Haykll. The Jekyll was out of date and keeping the required ruby tools installed when I swapped machines was a huge pain. I don’t write ruby much anymore.</p>
-<p>Considering my options, I looked at Hugo and Hakyll, discarding Hugo because I don’t want to keep up with the JS churn, even though they have lots of great resources and themes available. So Hakyll seems like the best option. I already regularily write Haskell so the tools will be up to date and I can make it do everything I want by digging into the source code.</p>
+  <p>I wanted to port my blog across from an old Jeykll setup to Haykll.
+The Jekyll was out of date and keeping the required ruby tools installed
+when I swapped machines was a huge pain. I don’t write ruby much anymore.</p>
+<p>Considering my options, I looked at Hugo and Hakyll, discarding Hugo because
+I don’t want to keep up with the JS churn, even though they have lots of
+great resources and themes available. So Hakyll seems like the best option. I
+already regularily write Haskell so the tools will be up to date and I can make
+it do everything I want by digging into the source code.</p>
 <p>My requirements are:</p>
 <ul>
 <li>Markdown based workflow</li>
@@ -289,131 +332,151 @@ build: [
 ├── posts
 ├── talks
 └── templates</code></pre>
-<p>Initially I used <code>cabal init --cabal-version=2.4 --license=BSD3 -p lambdafoo.com</code> to get a skeleton project with a reasonable cabal file. Then I moved things around, making <code>main/site.hs</code> the entry point for running Hakyll and adding a TODO list of features into the README.md</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="at"> * ~~basic pages~~</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a><span class="at">   * ~~about~~</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a><span class="at">   * ~~talks~~</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a><span class="at">   * ~~archive~~</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a><span class="at"> * ~~individual post with code highlighting~~</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a><span class="at"> * ~~rss/atom feed~~</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a><span class="at"> * ~~add rss/atom feed to archive page~~</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true"></a><span class="at"> * ~~github action build and deploy~~</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true"></a><span class="at"> * ~~html url redirects to new url structure~~</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true"></a><span class="at"> * ~~serve js talks/slides directly from Hakyll~~</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true"></a><span class="at"> * configure dependabot for Haskell</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true"></a><span class="at"> * ~~add generated sitemap.xml~~</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true"></a><span class="at"> * ~~integrate Google Analytics~~</span></span></code></pre></div>
+<p>Initially I used <code>cabal init --cabal-version=2.4 --license=BSD3 -p lambdafoo.com</code> to get a skeleton
+project with a reasonable cabal file. Then I moved things around, making <code>main/site.hs</code> the
+entry point for running Hakyll and adding a TODO list of features into the README.md</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="at"> * ~~basic pages~~</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="at">   * ~~about~~</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="at">   * ~~talks~~</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="at">   * ~~archive~~</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="at"> * ~~individual post with code highlighting~~</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="at"> * ~~rss/atom feed~~</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="at"> * ~~add rss/atom feed to archive page~~</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="at"> * ~~github action build and deploy~~</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="at"> * ~~html url redirects to new url structure~~</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="at"> * ~~serve js talks/slides directly from Hakyll~~</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="at"> * configure dependabot for Haskell</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="at"> * ~~add generated sitemap.xml~~</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="at"> * ~~integrate Google Analytics~~</span></span></code></pre></div>
 <p>These directories are used for Hakyll content:</p>
 <ul>
 <li>pages - includes various regular pages on the site like talks or about me</li>
 <li>css - includes the style sheets for the HTML</li>
 <li>images - is the static images for the site</li>
 <li>drafts - containts the draft posts I’m writing</li>
-<li>talks - contains static JS/HTML based slides from presentations that I want to serve directly from the site</li>
+<li>talks - contains static JS/HTML based slides from presentations that I want to serve directly
+from the site</li>
 <li>templates - site templates in a markup language for doing page layouts</li>
 <li>CNAME - is Github Pages hosting to tell it the DNS name for the site</li>
 </ul>
-<p>The trickiest part was getting a version of the cabal file that worked with GHC 8.10 and a recent version of Hakyll. I ended up needing to pin Hakyll as <code>hakyll ^&gt;= 4.13</code> and left the other dependencies floating.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="at">executable site</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="at">  </span><span class="fu">main-is</span><span class="kw">:</span><span class="at">             site.hs</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a><span class="at">  </span><span class="fu">hs-source-dirs</span><span class="kw">:</span><span class="at">      main</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a><span class="at">  </span><span class="fu">default-language</span><span class="kw">:</span><span class="at">    Haskell2010</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a><span class="at">  </span><span class="fu">build-depends</span><span class="kw">:</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a><span class="at">                       base      &gt;= 4.6  &amp;&amp; &lt; 5</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a><span class="at">                     , binary    &gt;= 0.5</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true"></a><span class="at">                     , directory &gt;= 1.2</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true"></a><span class="at">                     , filepath  &gt;= 1.3</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true"></a><span class="at">                     , hakyll    ^&gt;= 4.13</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true"></a><span class="at">                     , blaze-html</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true"></a><span class="at">                     , lens</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true"></a><span class="at">                     , time</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true"></a><span class="at">                     , aeson</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true"></a><span class="at">                     , lens-aeson</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true"></a><span class="at">                     , containers</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true"></a><span class="at">                     , pandoc</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true"></a><span class="at">                     , process   &gt;= 1.6</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true"></a><span class="at">                     , text      &gt;= 1.2</span></span></code></pre></div>
-<p>At this point, I could have either continued setting up Hakyll or setup CI. I usually prefer setting up CI as early as possible in a project, so I stared there. Here is what that looks like:</p>
+<p>The trickiest part was getting a version of the cabal file that worked with GHC 8.10 and a
+recent version of Hakyll. I ended up needing to pin Hakyll as <code>hakyll ^&gt;= 4.13</code> and left the
+other dependencies floating.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="at">executable site</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">main-is</span><span class="kw">:</span><span class="at">             site.hs</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">hs-source-dirs</span><span class="kw">:</span><span class="at">      main</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">default-language</span><span class="kw">:</span><span class="at">    Haskell2010</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">build-depends</span><span class="kw">:</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="at">                       base      &gt;= 4.6  &amp;&amp; &lt; 5</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="at">                     , binary    &gt;= 0.5</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="at">                     , directory &gt;= 1.2</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="at">                     , filepath  &gt;= 1.3</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="at">                     , hakyll    ^&gt;= 4.13</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="at">                     , blaze-html</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="at">                     , lens</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="at">                     , time</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="at">                     , aeson</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="at">                     , lens-aeson</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="at">                     , containers</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="at">                     , pandoc</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="at">                     , process   &gt;= 1.6</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="at">                     , text      &gt;= 1.2</span></span></code></pre></div>
+<p>At this point, I could have either continued setting up Hakyll or setup CI. I usually
+prefer setting up CI as early as possible in a project, so I stared there.
+Here is what that looks like:</p>
 <h2 id="hakyll-ci">Hakyll CI</h2>
-<p>There are a few options for cloud CI, and my requirements were simple: no cost, easy setup, and integration with GitHub pages where I host my site. It was a toss up between CircleCI and Github Actions, as I’ve had good experience with CircleCI, but Idecided to try Github Actions.</p>
+<p>There are a few options for cloud CI, and my requirements were simple: no cost, easy setup, and integration
+with GitHub pages where I host my site. It was a toss up between CircleCI and Github Actions, as I’ve had
+good experience with CircleCI, but Idecided to try Github Actions.</p>
 <p>First, create a directory <code>mkdir -p .github/workflows/</code> with a <code>ci.yml</code> file</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> CI</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a><span class="fu">on</span><span class="kw">:</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a><span class="at">  </span><span class="fu">push</span><span class="kw">:</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a><span class="at">    </span><span class="fu">branches</span><span class="kw">:</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a><span class="at">      </span><span class="kw">-</span><span class="at"> master</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a><span class="at">  </span><span class="fu">pull_request</span><span class="kw">:</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true"></a><span class="at">    </span><span class="fu">types</span><span class="kw">:</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true"></a><span class="at">      </span><span class="kw">-</span><span class="at"> opened</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true"></a><span class="at">      </span><span class="kw">-</span><span class="at"> synchronize</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true"></a><span class="fu">jobs</span><span class="kw">:</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true"></a><span class="at">  </span><span class="fu">build</span><span class="kw">:</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true"></a><span class="at">    </span><span class="fu">runs-on</span><span class="kw">:</span><span class="at"> ubuntu-latest</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true"></a><span class="at">    </span><span class="fu">strategy</span><span class="kw">:</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true"></a><span class="at">      </span><span class="fu">matrix</span><span class="kw">:</span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true"></a><span class="at">        </span><span class="fu">cabal</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">&quot;3.4.0.0&quot;</span><span class="kw">]</span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true"></a><span class="at">        </span><span class="fu">ghc</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">&quot;8.10.7&quot;</span><span class="kw">]</span></span></code></pre></div>
-<p>The <code>matrix</code> section sets up a build for <code>ghc 8.10.7</code> and cabal <code>3.4</code>, which is enough for a simple blog, but is where you’d add extra options, for say a library. Next, we use some community GitHub Actions to <code>checkout</code> and setup Haskell.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a><span class="at">    </span><span class="fu">steps</span><span class="kw">:</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/checkout@v2</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> haskell/actions/setup@v1</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true"></a><span class="at">        </span><span class="fu">id</span><span class="kw">:</span><span class="at"> setup-haskell-cabal</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true"></a><span class="at">          </span><span class="fu">ghc-version</span><span class="kw">:</span><span class="at"> ${{ matrix.ghc }}</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true"></a><span class="at">          </span><span class="fu">cabal-version</span><span class="kw">:</span><span class="at"> ${{ matrix.cabal }}</span></span></code></pre></div>
-<p>Here we run <code>cabal update</code> to update our Hackage index and then setup some build caching for our dependencies. You can copy this directly and it should work:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Cabal Update</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a><span class="fu">        run</span><span class="kw">: </span><span class="ch">|</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a>          cabal v2-update</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true"></a>          cabal v2-freeze $CONFIG</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/cache@v2.1.4</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true"></a><span class="fu">          path</span><span class="kw">: </span><span class="ch">|</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true"></a>            ${{ steps.setup-haskell-cabal.outputs.cabal-store }}</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true"></a>            dist-newstyle</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true"></a><span class="at">          </span><span class="fu">key</span><span class="kw">:</span><span class="at"> ${{ runner.os }}-${{ matrix.ghc }}-${{ hashFiles(&#39;cabal.project.freeze&#39;) }}</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true"></a><span class="fu">          restore-keys</span><span class="kw">: </span><span class="ch">|</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true"></a>            ${{ runner.os }}-${{ matrix.ghc }}-</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> CI</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">on</span><span class="kw">:</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">push</span><span class="kw">:</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">branches</span><span class="kw">:</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> master</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">pull_request</span><span class="kw">:</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">types</span><span class="kw">:</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> opened</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> synchronize</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="fu">jobs</span><span class="kw">:</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">build</span><span class="kw">:</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">runs-on</span><span class="kw">:</span><span class="at"> ubuntu-latest</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">strategy</span><span class="kw">:</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">matrix</span><span class="kw">:</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">cabal</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">&quot;3.4.0.0&quot;</span><span class="kw">]</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">ghc</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">&quot;8.10.7&quot;</span><span class="kw">]</span></span></code></pre></div>
+<p>The <code>matrix</code> section sets up a build for <code>ghc 8.10.7</code> and cabal <code>3.4</code>, which is enough for a simple blog,
+but is where you’d add extra options, for say a library. Next, we use some community GitHub Actions to
+<code>checkout</code> and setup Haskell.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">steps</span><span class="kw">:</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/checkout@v2</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> haskell/actions/setup@v1</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">id</span><span class="kw">:</span><span class="at"> setup-haskell-cabal</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">ghc-version</span><span class="kw">:</span><span class="at"> ${{ matrix.ghc }}</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">cabal-version</span><span class="kw">:</span><span class="at"> ${{ matrix.cabal }}</span></span></code></pre></div>
+<p>Here we run <code>cabal update</code> to update our Hackage index and then setup some build caching for
+our dependencies. You can copy this directly and it should work:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Cabal Update</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">        run</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>          cabal v2-update</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>          cabal v2-freeze $CONFIG</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/cache@v2.1.4</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">          path</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>            ${{ steps.setup-haskell-cabal.outputs.cabal-store }}</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>            dist-newstyle</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">key</span><span class="kw">:</span><span class="at"> ${{ runner.os }}-${{ matrix.ghc }}-${{ hashFiles(&#39;cabal.project.freeze&#39;) }}</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="fu">          restore-keys</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>            ${{ runner.os }}-${{ matrix.ghc }}-</span></code></pre></div>
 <p>Then we run the cabal build and Hakyll site build.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Build Site</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a><span class="fu">        run</span><span class="kw">: </span><span class="ch">|</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true"></a>          cabal v2-build $CONFIG</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true"></a>          cabal exec site build</span></code></pre></div>
-<p>Adding that into your repo’s main branch of your repo should yield a working CI. On top of that, I added a dependabot configuration to check that my GitHub Actions config was up to date.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Build Site</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">        run</span><span class="kw">: </span><span class="ch">|</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>          cabal v2-build $CONFIG</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>          cabal exec site build</span></code></pre></div>
+<p>Adding that into your repo’s main branch of your repo should yield a working CI.
+On top of that, I added a dependabot configuration to check that my GitHub Actions
+config was up to date.</p>
 <p>Add a file <code>dependabot.yml</code> to <code>.github</code>:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a><span class="fu">version</span><span class="kw">:</span><span class="at"> </span><span class="dv">2</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a><span class="fu">updates</span><span class="kw">:</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">package-ecosystem</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;github-actions&quot;</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true"></a><span class="at">    </span><span class="fu">directory</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;/&quot;</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true"></a><span class="at">    </span><span class="fu">schedule</span><span class="kw">:</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true"></a><span class="at">      </span><span class="fu">interval</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;daily&quot;</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true"></a><span class="at">    </span><span class="fu">commit-message</span><span class="kw">:</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true"></a><span class="at">      </span><span class="fu">prefix</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;GA&quot;</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true"></a><span class="at">      </span><span class="fu">include</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;scope&quot;</span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true"></a><span class="at">    </span><span class="fu">labels</span><span class="kw">:</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="st">&quot;CI&quot;</span></span></code></pre></div>
-<p>This will check that your GitHub Actions use the latest version and open a PR to bump versions if you aren’t. Something like this for Haskell would be super sweet.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">version</span><span class="kw">:</span><span class="at"> </span><span class="dv">2</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">updates</span><span class="kw">:</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">package-ecosystem</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;github-actions&quot;</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">directory</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;/&quot;</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">schedule</span><span class="kw">:</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">interval</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;daily&quot;</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">commit-message</span><span class="kw">:</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">prefix</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;GA&quot;</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">include</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;scope&quot;</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">labels</span><span class="kw">:</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="st">&quot;CI&quot;</span></span></code></pre></div>
+<p>This will check that your GitHub Actions use the latest version and open a PR to bump versions
+if you aren’t. Something like this for Haskell would be super sweet.</p>
 <h2 id="generating-the-site">Generating the Site</h2>
-<p>Let’s quickly walk through the contents of <code>main/site.hs</code>, but there are more in-depth tutorials on the main <a href="https://jaspervdj.be/hakyll/tutorials.html">Hakyll site</a></p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a><span class="ot">{-# LANGUAGE OverloadedStrings #-}</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Hakyll</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true"></a></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true"></a><span class="ot">main ::</span> <span class="dt">IO</span> ()</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true"></a>main <span class="ot">=</span> hakyll <span class="op">$</span> <span class="kw">do</span></span></code></pre></div>
+<p>Let’s quickly walk through the contents of <code>main/site.hs</code>, but there are more in-depth tutorials on the
+main <a href="https://jaspervdj.be/hakyll/tutorials.html">Hakyll site</a></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE OverloadedStrings #-}</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Hakyll</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="ot">main ::</span> <span class="dt">IO</span> ()</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> hakyll <span class="op">$</span> <span class="kw">do</span></span></code></pre></div>
 <p>Here we import Hakyll, setup overloaded strings, and create a main function:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a>  match <span class="st">&quot;images/*&quot;</span> <span class="op">$</span> <span class="kw">do</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true"></a>    route idRoute</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true"></a>    compile copyFileCompiler</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true"></a></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true"></a>  match <span class="st">&quot;css/*&quot;</span> <span class="op">$</span> <span class="kw">do</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true"></a>    route idRoute</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true"></a>    compile compressCssCompiler</span></code></pre></div>
-<p>Serve stylesheets and images from directories <code>css</code> and <code>images</code>, respectively. This is standard code that can be copied directly, it basically copies the files into the final static site directory <code>_site</code>.</p>
-<p>Next I wanted to serve some old talk slides written in HTML and JavaScript directly from my site. I couldn’t find any posts talking about how to do this, but after thinking about it, I realized that I just wanted to serve static assets again like the <code>css</code> and <code>images</code> above. So that’s exactly what was required! If course, I lie. I had to fix a few hard coded paths in the HTML but otherwise it worked.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>  match <span class="st">&quot;images/*&quot;</span> <span class="op">$</span> <span class="kw">do</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    route idRoute</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    compile copyFileCompiler</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  match <span class="st">&quot;css/*&quot;</span> <span class="op">$</span> <span class="kw">do</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    route idRoute</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    compile compressCssCompiler</span></code></pre></div>
+<p>Serve stylesheets and images from directories <code>css</code> and <code>images</code>, respectively. This is standard code
+that can be copied directly, it basically copies the files into the final static site directory <code>_site</code>.</p>
+<p>Next I wanted to serve some old talk slides written in HTML and JavaScript directly from my site.
+I couldn’t find any posts talking about how to do this, but after thinking about it, I realized that I
+just wanted to serve static assets again like the <code>css</code> and <code>images</code> above. So that’s exactly what was required!
+If course, I lie. I had to fix a few hard coded paths in the HTML but otherwise it worked.</p>
 <p>The layout for <code>talks</code> looks like:</p>
 <pre><code>talks
 ├── erl-syd-2012-webmachine
@@ -425,44 +488,54 @@ build: [
 ├── roro-2012-riak
 └── scala-syd-2015-modules</code></pre>
 <p>So I needed an extra wildcard in my <code>match</code> statement:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a>  match <span class="st">&quot;talks/**/*&quot;</span> <span class="op">$</span> <span class="kw">do</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true"></a>    route idRoute</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true"></a>    compile <span class="op">$</span> copyFileCompiler</span></code></pre></div>
-<p>This content then gets served under <code>lambdafoo.com/talks/scala-syd-2015-modules/</code>. In retrospect, this is an obvious solution to serving any static content generated outside of Hakyll, but it did take me a while to realise it.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>  match <span class="st">&quot;talks/**/*&quot;</span> <span class="op">$</span> <span class="kw">do</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    route idRoute</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    compile <span class="op">$</span> copyFileCompiler</span></code></pre></div>
+<p>This content then gets served under <code>lambdafoo.com/talks/scala-syd-2015-modules/</code>.
+In retrospect, this is an obvious solution to serving any static content generated outside of Hakyll,
+but it did take me a while to realise it.</p>
 <p>Next we load the individual blog posts:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a>  match <span class="st">&quot;posts/*&quot;</span> <span class="op">$</span> <span class="kw">do</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true"></a>    route <span class="op">$</span> setExtension <span class="st">&quot;html&quot;</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true"></a>    compile <span class="op">$</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true"></a>      pandocCompiler</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true"></a>        <span class="op">&gt;&gt;=</span> loadAndApplyTemplate <span class="st">&quot;templates/post.html&quot;</span> postCtx</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true"></a>        <span class="co">-- Used by the RSS/Atom feed</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true"></a>        <span class="op">&gt;&gt;=</span> saveSnapshot <span class="st">&quot;content&quot;</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true"></a>        <span class="op">&gt;&gt;=</span> loadAndApplyTemplate <span class="st">&quot;templates/default.html&quot;</span> postCtx</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true"></a>        <span class="op">&gt;&gt;=</span> relativizeUrls</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>  match <span class="st">&quot;posts/*&quot;</span> <span class="op">$</span> <span class="kw">do</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    route <span class="op">$</span> setExtension <span class="st">&quot;html&quot;</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    compile <span class="op">$</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>      pandocCompiler</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>        <span class="op">&gt;&gt;=</span> loadAndApplyTemplate <span class="st">&quot;templates/post.html&quot;</span> postCtx</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>        <span class="co">-- Used by the RSS/Atom feed</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>        <span class="op">&gt;&gt;=</span> saveSnapshot <span class="st">&quot;content&quot;</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>        <span class="op">&gt;&gt;=</span> loadAndApplyTemplate <span class="st">&quot;templates/default.html&quot;</span> postCtx</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>        <span class="op">&gt;&gt;=</span> relativizeUrls</span></code></pre></div>
 <h2 id="authoring-posts">Authoring Posts</h2>
-<p>After getting a few simple things out of the way, the Markdown-based workflow already worked with Hakyll, so there’s nothing really to see there. Creating a simple YAML file with the following meta-data and content is enough to get a simple post working.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a><span class="pp">---</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true"></a><span class="fu">title</span><span class="kw">:</span><span class="at"> Hakyll Blog setup</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true"></a><span class="fu">author</span><span class="kw">:</span><span class="at"> Tim McGilchrist</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true"></a><span class="fu">date</span><span class="kw">:</span><span class="at"> 2021-02-01 00:00</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true"></a><span class="fu">tags</span><span class="kw">:</span><span class="at"> haskell</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true"></a><span class="fu">description</span><span class="kw">:</span><span class="at"> How I setup my blog with Hakyll</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true"></a><span class="pp">---</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true"></a></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true"></a><span class="at">Content of post</span></span></code></pre></div>
+<p>After getting a few simple things out of the way, the Markdown-based workflow already worked with
+Hakyll, so there’s nothing really to see there. Creating a simple YAML file with the following meta-data
+and content is enough to get a simple post working.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span><span class="kw">:</span><span class="at"> Hakyll Blog setup</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">author</span><span class="kw">:</span><span class="at"> Tim McGilchrist</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="fu">date</span><span class="kw">:</span><span class="at"> 2021-02-01 00:00</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tags</span><span class="kw">:</span><span class="at"> haskell</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="fu">description</span><span class="kw">:</span><span class="at"> How I setup my blog with Hakyll</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="at">Content of post</span></span></code></pre></div>
 <h2 id="deploying">Deploying</h2>
-<p>I have a domain <code>lambdafoo.com</code> that I use to serve my blog. Github pages has up-to-date information on how to set this up with your DNS provider.</p>
-<p>Here is where choosing Github Actions really pays off! There is a community action to do it all! Assuming you’ve turned on GitHub Pages in the settings for you repo, add this to the end of the <code>ci.yml</code>:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Deploy 🚀</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true"></a><span class="at">        </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> JamesIves/github-pages-deploy-action@4.1.5</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true"></a><span class="at">        </span><span class="fu">if</span><span class="kw">:</span><span class="at"> github.ref == &#39;refs/heads/master&#39;</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true"></a><span class="at">          </span><span class="fu">token</span><span class="kw">:</span><span class="at"> ${{ secrets.GITHUB_TOKEN }}</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true"></a><span class="at">          </span><span class="fu">branch</span><span class="kw">:</span><span class="at"> gh-pages</span><span class="co"> # The branch the action should deploy to.</span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true"></a><span class="at">          </span><span class="fu">folder</span><span class="kw">:</span><span class="at"> _site</span><span class="co"> # The folder the action should deploy.</span></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true"></a><span class="at">          </span><span class="fu">clean</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span><span class="co"> # Automatically remove deleted files from the deploy branch</span></span></code></pre></div>
-<p>This deploys the output of the <code>Build Site</code> step from folder <code>_site</code> to the branch <code>gh-pages</code> on all <code>master</code> builds (controlled via <code>if: github.ref == 'refs/heads/master'</code>).</p>
-<p>On the first build, there is a bit of lag to deploy. I had issues with my DNS setup and two personal repositories using the same CNAME values. Apart from that, the process was smooth, and I quickly had a new version working. Again, if you setup dependabot, it will check that this action is up-to-date.</p>
+<p>I have a domain <code>lambdafoo.com</code> that I use to serve my blog. Github pages has up-to-date
+information on how to set this up with your DNS provider.</p>
+<p>Here is where choosing Github Actions really pays off! There is a community action to do it all!
+Assuming you’ve turned on GitHub Pages in the settings for you repo, add this to the end of the <code>ci.yml</code>:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Deploy 🚀</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> JamesIves/github-pages-deploy-action@4.1.5</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">if</span><span class="kw">:</span><span class="at"> github.ref == &#39;refs/heads/master&#39;</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">token</span><span class="kw">:</span><span class="at"> ${{ secrets.GITHUB_TOKEN }}</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">branch</span><span class="kw">:</span><span class="at"> gh-pages</span><span class="co"> # The branch the action should deploy to.</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">folder</span><span class="kw">:</span><span class="at"> _site</span><span class="co"> # The folder the action should deploy.</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">clean</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span><span class="co"> # Automatically remove deleted files from the deploy branch</span></span></code></pre></div>
+<p>This deploys the output of the <code>Build Site</code> step from folder <code>_site</code> to the branch <code>gh-pages</code>
+on all <code>master</code> builds (controlled via <code>if: github.ref == 'refs/heads/master'</code>).</p>
+<p>On the first build, there is a bit of lag to deploy. I had issues with my DNS setup and two
+personal repositories using the same CNAME values. Apart from that, the process was smooth, and I
+quickly had a new version working. Again, if you setup dependabot, it will check that this action is
+up-to-date.</p>
 <h2 id="resources">Resources</h2>
 <ul>
 <li><a href="https://github.com/tmcgilchrist/lambdafoo.com">Blog source</a></li>
@@ -481,27 +554,38 @@ build: [
     <description><![CDATA[<div class="post">
   <h1 class="post-title">OCaml CI with CircleCI</h1>
   <span class="post-date">February  2, 2021</span>
-  <p>I wanted to share a simple configuration for running OCaml projects in <a href="https://circleci.com">CircleCI</a>. CircleCI is what I’m using at work plus it supports a killer feature that you can re-run a failing build getting an SSH session into the machine. This one feature has saved me loads of time in debugging CI configuration and flakey tests. Most of the other <a href="https://circleci.com/docs/">features</a> are similar to other cloud CI solutions, the documentation is solid and setting up more advanced workflows is easy enough.</p>
-<p>Our requirements are simple to build OCaml projects that use OPAM and have simple test requirements (just running unit tests).</p>
+  <p>I wanted to share a simple configuration for running OCaml projects in <a href="https://circleci.com">CircleCI</a>.
+CircleCI is what I’m using at work plus it supports a killer feature
+that you can re-run a failing build getting an SSH session into the machine. This one
+feature has saved me loads of time in debugging CI configuration and flakey tests.
+Most of the other <a href="https://circleci.com/docs/">features</a> are similar to other cloud CI solutions,
+the documentation is solid and setting up more advanced workflows is easy enough.</p>
+<p>Our requirements are simple to build OCaml projects that use OPAM and have simple
+test requirements (just running unit tests).</p>
 <p>First we add a file <code>.circleci/config.yml</code> with:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="fu">version</span><span class="kw">:</span><span class="at"> </span><span class="dv">2</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="fu">jobs</span><span class="kw">:</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a><span class="at">  </span><span class="fu">build-4.10</span><span class="kw">:</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a><span class="at">    </span><span class="fu">docker</span><span class="kw">:</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">image</span><span class="kw">:</span><span class="at"> ocaml/opam:ubuntu-18.04-ocaml-4.10</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a><span class="at">    </span><span class="fu">steps</span><span class="kw">:</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a><span class="at">      </span><span class="kw">-</span><span class="at"> checkout</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">run</span><span class="kw">:</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true"></a><span class="at">          </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Build</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true"></a><span class="at">          </span><span class="fu">command</span><span class="kw">:</span><span class="at"> ./bin/ci</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true"></a><span class="fu">workflows</span><span class="kw">:</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true"></a><span class="at">  </span><span class="fu">version</span><span class="kw">:</span><span class="at"> </span><span class="dv">2</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true"></a><span class="at">  </span><span class="fu">build</span><span class="kw">:</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true"></a><span class="at">    </span><span class="fu">jobs</span><span class="kw">:</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true"></a><span class="at">      </span><span class="kw">-</span><span class="at"> build-4.10</span></span></code></pre></div>
-<p>This creates a job <code>build-4.10</code> using docker image <code>ocaml/opam2:4.10</code> published by the OCaml team. The <code>steps</code> defines the commands to run, we use a built in <code>checkout</code> command provided by CirclCI and then a <code>run</code> command that executes a shell script <code>./bin/ci</code>.</p>
-<p>You could use your own docker container in place of <code>ocaml/opam2:4.10</code>, maybe pre-installing some things or using a different linux distro. How to run the command could also be inlined rather than being its own file. I chose to make it a file for two reasons, when you SSH to debug a script you can just re-run <code>./bin/ci</code>, and you can re-use the steps between local and CI.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">version</span><span class="kw">:</span><span class="at"> </span><span class="dv">2</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">jobs</span><span class="kw">:</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">build-4.10</span><span class="kw">:</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">docker</span><span class="kw">:</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">image</span><span class="kw">:</span><span class="at"> ocaml/opam:ubuntu-18.04-ocaml-4.10</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">steps</span><span class="kw">:</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> checkout</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">run</span><span class="kw">:</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Build</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">command</span><span class="kw">:</span><span class="at"> ./bin/ci</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">workflows</span><span class="kw">:</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">version</span><span class="kw">:</span><span class="at"> </span><span class="dv">2</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">build</span><span class="kw">:</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">jobs</span><span class="kw">:</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> build-4.10</span></span></code></pre></div>
+<p>This creates a job <code>build-4.10</code> using docker image <code>ocaml/opam2:4.10</code> published by the OCaml team.
+The <code>steps</code> defines the commands to run, we use a built in <code>checkout</code> command provided by CirclCI and
+then a <code>run</code> command that executes a shell script <code>./bin/ci</code>.</p>
+<p>You could use your own docker container in place of <code>ocaml/opam2:4.10</code>, maybe pre-installing
+some things or using a different linux distro. How to run the command could also be inlined
+rather than being its own file. I chose to make it a file for two reasons, when you SSH to debug a
+script you can just re-run <code>./bin/ci</code>, and you can re-use the steps between local and CI.</p>
 <p>Now to the shell script</p>
 <pre class="shell"><code>#!/bin/sh -eux
 
@@ -524,11 +608,20 @@ done
 # Run the builds and
 dune build
 dune runtest</code></pre>
-<p>This configuration is from a project with multiple <code>opam</code> files so we have a <code>find</code> to locate all those files. One gotcha with this is it’ll sort the file names which may not match the dependency order, if that is the case you will need to explicitly list them. If you have a single <code>opam</code> file then replace that with the following (replacing <code>project-name</code> with your project name).</p>
+<p>This configuration is from a project with multiple <code>opam</code> files so we have a <code>find</code>
+to locate all those files. One gotcha with this is it’ll sort the file names which may not
+match the dependency order, if that is the case you will need to explicitly list them.
+If you have a single <code>opam</code> file then replace that with
+the following (replacing <code>project-name</code> with your project name).</p>
 <pre class="shell"><code>opam pin add -n &quot;project-name&quot; . -y --dev
 opam install --deps-only &quot;project-name&quot;  -y</code></pre>
-<p>Push that into your github main branch, then <code>Set up Project</code> in the circleci UI and you should be off and building. From here the circleci docs can help with setting up different builds based off branches. Adding other OCaml builds is as easy as duplicating the <code>build-4.10</code> section in YAML, pointing it to another docker container like <code>4.08</code> and adding the new build name to <code>workflows</code> under <code>jobs:</code>.</p>
-<p>There’s a working setup in my <a href="https://github.com/tmcgilchrist/ocaml-bitbucket">ocaml-bitbucket</a> project. Good luck!</p>
+<p>Push that into your github main branch, then <code>Set up Project</code> in the circleci UI and
+you should be off and building. From here the circleci docs can help with setting up
+different builds based off branches. Adding other OCaml builds is as easy as duplicating
+the <code>build-4.10</code> section in YAML, pointing it to another docker container like <code>4.08</code> and
+adding the new build name to <code>workflows</code> under <code>jobs:</code>.</p>
+<p>There’s a working setup in my <a href="https://github.com/tmcgilchrist/ocaml-bitbucket">ocaml-bitbucket</a> project.
+Good luck!</p>
 </div>
 ]]></description>
     <pubDate>Tue, 02 Feb 2021 00:00:00 UT</pubDate>
@@ -541,43 +634,61 @@ opam install --deps-only &quot;project-name&quot;  -y</code></pre>
     <description><![CDATA[<div class="post">
   <h1 class="post-title">On EitherT</h1>
   <span class="post-date">June 22, 2018</span>
-  <p>In choosing Haskell as a language you sign up for a certain class of features and behaviours. e.g. lazy evaluation, static typing</p>
-<p>This gives you a general point in the design space for general purpose languages but like all languages you are still left with a number of choices in building software. These choices are broad, diverse and hotly debated, sometimes they get labelled with <strong>Best Practices</strong> or the <strong>Right way</strong>. Like any good engineer you should recognise that everything involves trade-offs and that these labels are trying to hide that. There is not always one best way, an approach has positives and negatives. Knowing those trade offs and deliberately choosing an approach based off them is good engineering.</p>
-<p>In programming language communities there are always bikeshedding arguments and Haskell is no different. I want to call out a particular point of view around using exceptions vs data types in Haskell when dealing with <em>errors</em>. Both are valid design points in a wider error handling design space. The exception path is widely associated with Snoyman, who has written much software and written extensively about this in <a href="https://www.fpcomplete.com/blog/2016/11/exceptions-best-practices-haskell">Exceptions Best Practices in Haskell</a> and in the <a href="http://hackage.haskell.org/package/safe-exceptions">Safe Exceptions</a> package.</p>
-<p>I’d like to highlight the negatives, as I see them, of that approach and suggest a different set of trade offs around modelling <em>errors</em> as data types using EitherT/ExceptT.</p>
+  <p>In choosing Haskell as a language you sign up for a certain class of features and behaviours.
+e.g. lazy evaluation, static typing</p>
+<p>This gives you a general point in the design space for general purpose languages but like
+all languages you are still left with a number of choices in building software. These choices
+are broad, diverse and hotly debated, sometimes they get labelled with <strong>Best Practices</strong> or the
+<strong>Right way</strong>. Like any good engineer you should recognise that everything involves
+trade-offs and that these labels are trying to hide that. There is not always one best way, an
+approach has positives and negatives. Knowing those trade offs and deliberately choosing an
+approach based off them is good engineering.</p>
+<p>In programming language communities there are always bikeshedding arguments and Haskell is no different.
+I want to call out a particular point of view around using exceptions vs data types in
+Haskell when dealing with <em>errors</em>. Both are valid design points in a wider error handling design
+space. The exception path is widely associated with Snoyman, who has written much software and
+written extensively about this in <a href="https://www.fpcomplete.com/blog/2016/11/exceptions-best-practices-haskell">Exceptions Best Practices in Haskell</a>
+and in the <a href="http://hackage.haskell.org/package/safe-exceptions">Safe Exceptions</a> package.</p>
+<p>I’d like to highlight the negatives, as I see them, of that approach and suggest a different set
+of trade offs around modelling <em>errors</em> as data types using EitherT/ExceptT.</p>
 <p>EitherT is a Monad Transformer built on the familar Either data type.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="kw">data</span> <span class="dt">Either</span> a b</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a>  <span class="ot">=</span> <span class="dt">Left</span> a</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a>  <span class="op">|</span> <span class="dt">Right</span> b</span></code></pre></div>
-<p>where typically <code>Left</code> represents some failure case in this context and <code>Right</code> represents success. Another formulation from OCaml community is:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="kw">type</span> (&#39;a,&#39;b) result</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a>  = Ok <span class="kw">of</span> &#39;a</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a>  | Error <span class="kw">of</span> &#39;b</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Either</span> a b</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="ot">=</span> <span class="dt">Left</span> a</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="dt">Right</span> b</span></code></pre></div>
+<p>where typically <code>Left</code> represents some failure case in this context and <code>Right</code> represents success.
+Another formulation from OCaml community is:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> (&#39;a,&#39;b) <span class="dt">result</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  = <span class="dt">Ok</span> <span class="kw">of</span> &#39;a</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  | <span class="dt">Error</span> <span class="kw">of</span> &#39;b</span></code></pre></div>
 <p>which is more explicit about what the two constructors represent.</p>
 <h2 id="async-exceptions">Async Exceptions</h2>
-<p>Back in the beginning, actually in 2000/01, asynchronous exceptions were added to Haskell. [2] Quoting Simon Marlow:</p>
+<p>Back in the beginning, actually in 2000/01, asynchronous exceptions were added to Haskell. [2]
+Quoting Simon Marlow:</p>
 <blockquote>
-<p>Basically it comes down to this: if we want to be able to interrupt purely functional code, asynchronous exceptions are the only way, because polling would be a side-effect.</p>
+<p>Basically it comes down to this: if we want to be able to interrupt purely functional code,
+asynchronous exceptions are the only way, because polling would be a side-effect.</p>
 </blockquote>
-<p>So Haskell has async exceptions whether you like them or not, the ship has sailed. This means that any code in <code>IO</code> can throw a runtime exception, further any thread can receive an async exception.</p>
+<p>So Haskell has async exceptions whether you like them or not, the ship has sailed.
+This means that any code in <code>IO</code> can throw a runtime exception, further any thread can receive an
+async exception.</p>
 <p>So, how should we best deal with this reality and structure our code?</p>
 <h2 id="exceptions">Exceptions</h2>
 <p>We have exceptions; lets use them.</p>
 <p>To start doing that you need to define your own custom exception type.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="kw">data</span> <span class="dt">VapourError</span> <span class="ot">=</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a>    <span class="dt">InsufficientFunds</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a>  <span class="op">|</span> <span class="dt">ItemUnavailable</span> <span class="dt">Text</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a>  <span class="op">|</span> <span class="dt">MachineMalfunction</span> <span class="dt">Text</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a>  <span class="kw">deriving</span> <span class="dt">Typeable</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a><span class="co">-- Write a reasonable Show instance for each error</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true"></a><span class="kw">instance</span> <span class="dt">Show</span> <span class="dt">VapourError</span> <span class="kw">where</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true"></a>  <span class="fu">show</span> a <span class="ot">=</span> <span class="kw">case</span> a <span class="kw">of</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true"></a>    <span class="dt">InsufficientFunds</span> <span class="ot">-&gt;</span> <span class="st">&quot;Insufficient funds.&quot;</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true"></a>    <span class="dt">ItemUnavailable</span> i <span class="ot">-&gt;</span> <span class="st">&quot;Item &quot;</span> <span class="op">++</span> i <span class="op">++</span> <span class="st">&quot; unavailable.&quot;</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true"></a>    <span class="dt">MachineMalfunction</span> e <span class="ot">-&gt;</span> <span class="st">&quot;Hardware malfunction &quot;</span> <span class="op">++</span> e <span class="op">++</span> <span class="st">&quot;.&quot;</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true"></a></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true"></a><span class="kw">instance</span> <span class="dt">Exception</span> <span class="dt">VapourError</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">VapourError</span> <span class="ot">=</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">InsufficientFunds</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="dt">ItemUnavailable</span> <span class="dt">Text</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="dt">MachineMalfunction</span> <span class="dt">Text</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">deriving</span> <span class="dt">Typeable</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">-- Write a reasonable Show instance for each error</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Show</span> <span class="dt">VapourError</span> <span class="kw">where</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">show</span> a <span class="ot">=</span> <span class="kw">case</span> a <span class="kw">of</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">InsufficientFunds</span> <span class="ot">-&gt;</span> <span class="st">&quot;Insufficient funds.&quot;</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">ItemUnavailable</span> i <span class="ot">-&gt;</span> <span class="st">&quot;Item &quot;</span> <span class="op">++</span> i <span class="op">++</span> <span class="st">&quot; unavailable.&quot;</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">MachineMalfunction</span> e <span class="ot">-&gt;</span> <span class="st">&quot;Hardware malfunction &quot;</span> <span class="op">++</span> e <span class="op">++</span> <span class="st">&quot;.&quot;</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Exception</span> <span class="dt">VapourError</span></span></code></pre></div>
 <p>The three steps we need are:</p>
 <ol type="1">
 <li>Build the custom error type as a data type</li>
@@ -585,51 +696,75 @@ opam install --deps-only &quot;project-name&quot;  -y</code></pre>
 <li>Make your custom error an instance of <code>Exception</code></li>
 </ol>
 <p>At this point you can use <code>throw</code>, <code>catch</code> and <code>handle</code> with your custom error type.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="ot">runVendingMachine ::</span> <span class="dt">VendingMachineState</span> <span class="ot">-&gt;</span> <span class="dt">Coin</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a>                   <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">Product</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a>runVendingMachine state coin <span class="ot">=</span> <span class="kw">do</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a>  unless (coin <span class="op">&gt;</span> <span class="dv">0</span>) <span class="op">$</span> throw <span class="dt">InsufficientFunds</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a>  dispenseItem state coin</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true"></a><span class="ot">dispenseItem ::</span> <span class="dt">VendingMachineState</span> <span class="ot">-&gt;</span> <span class="dt">Coin</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true"></a>             <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">VendingMachineState</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true"></a>dispenseItem <span class="ot">=</span> <span class="op">....</span></span></code></pre></div>
-<p>Looking at the signature of <code>runVendingMachine</code> you can see that it returns a <code>Product</code> by running a computation in <code>IO</code>. The problem you have when looking at that code is the signature doesn’t give you any indication that it might fail outside of the <code>IO</code> which we saw earlier can fail with anything. So as a consumer of this function, how are you to know what exceptions to catch. Your options are:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ot">runVendingMachine ::</span> <span class="dt">VendingMachineState</span> <span class="ot">-&gt;</span> <span class="dt">Coin</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                   <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">Product</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>runVendingMachine state coin <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  unless (coin <span class="op">&gt;</span> <span class="dv">0</span>) <span class="op">$</span> throw <span class="dt">InsufficientFunds</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  dispenseItem state coin</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="ot">dispenseItem ::</span> <span class="dt">VendingMachineState</span> <span class="ot">-&gt;</span> <span class="dt">Coin</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>             <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">VendingMachineState</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>dispenseItem <span class="ot">=</span> <span class="op">....</span></span></code></pre></div>
+<p>Looking at the signature of <code>runVendingMachine</code> you can see that it returns a <code>Product</code> by running a
+computation in <code>IO</code>. The problem you have when looking at that code is the signature doesn’t
+give you any indication that it might fail outside of the <code>IO</code> which we saw earlier can fail with anything.
+So as a consumer of this function, how are you to know what exceptions to catch. Your options are:</p>
 <ul>
 <li>Catch all exceptions - clearly dangerous and wrong</li>
 <li>Catch a subset of exceptions - better but tricky to do correctly</li>
 </ul>
-<p>The first option is dangerous as catching all exceptions includes asynchronous exceptions like stack/heap overflow, thread killed and user interrupt. The documentation in <code>safe-exception</code> is particularly helpful here and I recommend you read it thoroughly, it is well written. The short version is you should only catch certain exceptions, trying to handle <code>StackOverflow</code>, <code>HeapOverflow</code> and <code>ThreadKilled</code> exceptions could cause your program to crash or behave in unexpected ways.</p>
-<p>The second option is error prone. The process for finding the possible exceptions involves reading the source code and reading the haddock docs, with the goal of finding the set of sensible exceptions you need to put into a <code>catch</code> or <code>handle</code> call. Have you found all the places an exception might be thrown? What about if you pull in a new dependency, does it throw exceptions? What about a sub-dependency of a dependency?</p>
-<p>What about the functions <code>runVendingMachine</code> calls? And their functions? To me it feels like going back to Javascript or Ruby land and giving up on some of the benefits of a typed language. I want the types to help me find the places I need to consider the errors, just like pattern matching does for data types.</p>
-<p>The other less obvious (perhaps) issue is that you force the consumers of your function to know all the gory details of exceptions in Haskell, which ones are safe to catch and what to do. Getting this right is hard and tricky, and really belongs in a library so that it can be written one and reused.</p>
-<p>Finally the behaviour of a Haskell system in production is such that throwing an exception would yield you exactly what the show instance for <code>VapourError</code> is. It wouldn’t give you a classic stack trace (unless you set that up) so you loose context where the exception was raised and what was happening around it. At a previous workplace we spend many weeks tracking down SSL and connection reset exceptions that occured in a base library but bubbled out through multiple layers of application code. It wasn’t fun.</p>
+<p>The first option is dangerous as catching all exceptions includes asynchronous exceptions like
+stack/heap overflow, thread killed and user interrupt. The documentation in <code>safe-exception</code> is
+particularly helpful here and I recommend you read it thoroughly, it is well written. The short version is
+you should only catch certain exceptions, trying to handle <code>StackOverflow</code>, <code>HeapOverflow</code> and <code>ThreadKilled</code>
+exceptions could cause your program to crash or behave in unexpected ways.</p>
+<p>The second option is error prone. The process for finding the possible exceptions involves reading the source code
+and reading the haddock docs, with the goal of finding the set of sensible exceptions you need to put into
+a <code>catch</code> or <code>handle</code> call. Have you found all the places an exception might be thrown? What about if you
+pull in a new dependency, does it throw exceptions? What about a sub-dependency of a dependency?</p>
+<p>What about the functions <code>runVendingMachine</code> calls? And their functions? To me it feels like going
+back to Javascript or Ruby land and giving up on some of the benefits of a typed language. I want the types to
+help me find the places I need to consider the errors, just like pattern matching does for data types.</p>
+<p>The other less obvious (perhaps) issue is that you force the consumers of your function to know all
+the gory details of exceptions in Haskell, which ones are safe to catch and what to do. Getting this right is
+hard and tricky, and really belongs in a library so that it can be written one and reused.</p>
+<p>Finally the behaviour of a Haskell system in production is such that throwing an exception would yield you exactly
+what the show instance for <code>VapourError</code> is. It wouldn’t give you a classic stack trace (unless you set that up)
+so you loose context where the exception was raised and what was happening around it. At a previous workplace we
+spend many weeks tracking down SSL and connection reset exceptions that occured in a base library but bubbled
+out through multiple layers of application code. It wasn’t fun.</p>
 <p>This style is perfect for a quick script to munge some data, or an ICFP programming contest</p>
-<p>If you really need exceptions, use <code>bracket</code> pattern or <code>safe-exceptions</code> like library. Keep the complexity contained and code needs to be written <em>very</em> carefully.</p>
+<p>If you really need exceptions, use <code>bracket</code> pattern or <code>safe-exceptions</code> like library. Keep the
+complexity contained and code needs to be written <em>very</em> carefully.</p>
 <h2 id="data-types">Data Types</h2>
-<p>We mentioned data types earlier, using data types to model your computation is the natural approach in Haskell. You build a data type that accurately reflects the data or states that you want to model. We even did it for the custom <code>VapourError</code> type earlier.</p>
-<p>Extending that we will use a particular data type <code>EitherT</code> to model errors. This is a <code>monad transformer</code> with an <code>Either</code> where the monad could be anything.</p>
+<p>We mentioned data types earlier, using data types to model your computation is the natural approach in Haskell.
+You build a data type that accurately reflects the data or states that you want to model. We even
+did it for the custom <code>VapourError</code> type earlier.</p>
+<p>Extending that we will use a particular data type <code>EitherT</code> to model errors. This is a <code>monad transformer</code> with
+an <code>Either</code> where the monad could be anything.</p>
 <p>In context it would look something like:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="ot">crankHandle ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">EitherT</span> <span class="dt">VapourError</span> <span class="dt">IO</span> <span class="dt">Product</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a><span class="co">-- or</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a><span class="ot">crankHandle ::</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">EitherT</span> <span class="dt">VapourError</span> m <span class="dt">Product</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a><span class="co">-- or</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true"></a><span class="ot">crankHandle ::</span> <span class="dt">MonadIO</span> m <span class="ot">=&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">EitherT</span> <span class="dt">VapourError</span> m <span class="dt">Product</span></span></code></pre></div>
-<p>The type of our error is present in the type of our function, a familar situation. If the monad <code>m</code> isn’t IO then we have a good degree of confidence that none of the base <code>exceptions</code> will be present.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ot">crankHandle ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">EitherT</span> <span class="dt">VapourError</span> <span class="dt">IO</span> <span class="dt">Product</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- or</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="ot">crankHandle ::</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">EitherT</span> <span class="dt">VapourError</span> m <span class="dt">Product</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- or</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="ot">crankHandle ::</span> <span class="dt">MonadIO</span> m <span class="ot">=&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">EitherT</span> <span class="dt">VapourError</span> m <span class="dt">Product</span></span></code></pre></div>
+<p>The type of our error is present in the type of our function, a familar situation.
+If the monad <code>m</code> isn’t IO then we have a good degree of confidence that
+none of the base <code>exceptions</code> will be present.</p>
 <h2 id="solution">Solution</h2>
-<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="pp"># Build a data type that represents the possible error states</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a><span class="kw">data</span> <span class="dt">VapourError</span> <span class="ot">=</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a>    <span class="dt">InsufficientFunds</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a>  <span class="op">|</span> <span class="dt">ItemUnavailable</span> <span class="dt">Text</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true"></a>  <span class="op">|</span> <span class="dt">MachineMalfunction</span> <span class="dt">Text</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true"></a></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true"></a><span class="pp"># Provide a function for turning errors into text</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true"></a><span class="ot">renderVapourError ::</span> <span class="dt">VapourError</span> <span class="ot">-&gt;</span> <span class="dt">Text</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true"></a>renderVapourError <span class="ot">=</span> <span class="op">...</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true"></a></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true"></a><span class="pp"># Usage site</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true"></a><span class="ot">runVendingMachine ::</span> <span class="dt">VendingMachineState</span> <span class="ot">-&gt;</span> <span class="dt">Coin</span> <span class="ot">-&gt;</span> <span class="dt">EitherT</span> <span class="dt">VapourError</span> <span class="dt">IO</span> <span class="dt">Product</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true"></a>runVendingMachine <span class="ot">=</span> <span class="op">...</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="pp"># Build a data type that represents the possible error states</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">VapourError</span> <span class="ot">=</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">InsufficientFunds</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="dt">ItemUnavailable</span> <span class="dt">Text</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="dt">MachineMalfunction</span> <span class="dt">Text</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="pp"># Provide a function for turning errors into text</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="ot">renderVapourError ::</span> <span class="dt">VapourError</span> <span class="ot">-&gt;</span> <span class="dt">Text</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>renderVapourError <span class="ot">=</span> <span class="op">...</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="pp"># Usage site</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="ot">runVendingMachine ::</span> <span class="dt">VendingMachineState</span> <span class="ot">-&gt;</span> <span class="dt">Coin</span> <span class="ot">-&gt;</span> <span class="dt">EitherT</span> <span class="dt">VapourError</span> <span class="dt">IO</span> <span class="dt">Product</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>runVendingMachine <span class="ot">=</span> <span class="op">...</span></span></code></pre></div>
 <h2 id="either---examples">Either - Examples</h2>
 <p>Examples of substantial pieces of code using <code>EitherT</code> to organise errors.</p>
 <ul>
@@ -658,18 +793,32 @@ opam install --deps-only &quot;project-name&quot;  -y</code></pre>
 <li>no stack traces by default in Haskell mean you lose context.</li>
 <li>handling exceptions requires knowledge about the internals of dependencies and how they use exceptions.</li>
 </ul>
-<p>Here the compiler is less helpful in guiding you, giving little or no help with handling particular exceptions or giving compile errors for new exceptions that you might need to consider.</p>
+<p>Here the compiler is less helpful in guiding you, giving little or no help with
+handling particular exceptions or giving compile errors for new exceptions that you might
+need to consider.</p>
 <h2 id="supporting-libraries">Supporting Libraries</h2>
 <p>The supporting libraries for this pattern of error handling are:</p>
 <ul>
 <li>transformers-either - Provides a type alias <code>type EitherT = ExceptT</code> plus addition operators.</li>
 <li>transformers-bifunctor - Provies bifunctors over a monad transformer.</li>
 </ul>
-<p>There is nothing revolutionary about <code>transformers-either</code>, you could roll your own version easily or use the <code>ExceptT</code> transformer provided in the <code>transformers</code> package (adding any helper functions you need). The value codes in a structured, consious handling of errors and using the Haskell compiler to help.</p>
+<p>There is nothing revolutionary about <code>transformers-either</code>, you could roll your own version
+easily or use the <code>ExceptT</code> transformer provided in the <code>transformers</code> package (adding any helper
+functions you need). The value codes in a structured, consious handling of errors and using the
+Haskell compiler to help.</p>
 <h2 id="conclusion">Conclusion</h2>
 <blockquote>
-<p>The primary value of avoiding exceptions is that it makes error behavior explicit in the type of the function. If you’re in an environment where everything might fail, being explicit about it is probably a negative. But if most of your function calls are total, then knowing which ones might fail highlights places where you should consider what the correct behavior is in the case of that failure. Remember that the failure of an individual step in your program doesn’t generally mean the overall failure of your code.</p>
-<p>It’s a little bit like null-handling in languages without options. If everything might be null, well, option types probably don’t help you. But if most of the values you encounter in your program are guaranteed to be there, then tracking which ones might be null be tagging them as options is enormously helpful, since it draws your attention to the cases where it might be there, and so you get an opportunity to think about what the difference really is.</p>
+<p>The primary value of avoiding exceptions is that it makes error behavior explicit in the
+type of the function. If you’re in an environment where everything might fail, being explicit
+about it is probably a negative. But if most of your function calls are total, then knowing
+which ones might fail highlights places where you should consider what the correct behavior
+is in the case of that failure. Remember that the failure of an individual step in your program
+doesn’t generally mean the overall failure of your code.</p>
+<p>It’s a little bit like null-handling in languages without options. If everything might
+be null, well, option types probably don’t help you. But if most of the values you encounter
+in your program are guaranteed to be there, then tracking which ones might be null be tagging
+them as options is enormously helpful, since it draws your attention to the cases where it might
+be there, and so you get an opportunity to think about what the difference really is.</p>
 </blockquote>
 <blockquote>
 <ul>
@@ -697,36 +846,47 @@ opam install --deps-only &quot;project-name&quot;  -y</code></pre>
     <description><![CDATA[<div class="post">
   <h1 class="post-title">OCaml FFI bindings</h1>
   <span class="post-date">August 17, 2015</span>
-  <p>One thing that always comes up with your favourite language is how do you use libraries written in another language. Typically this involves needing to talk to a particular C library, either because it’s faster than a native one or just that it is already written.</p>
-<p>For OCaml there is the ctypes library for binding to C libraries using pure OCaml. Written by the people at the good people at OCaml Labs <a href="http://ocaml.io">http://ocaml.io</a></p>
-<p>The core of ctypes is a set of combinators for describing the structure of C types – numeric types, arrays, pointers, structs, unions and functions. You can use these combinators to describe the types of the functions that you want to call, then bind directly to those functions – all without writing or generating any C!</p>
-<p>Lets go through a simple example binding to libyaml. Here’s a declaration form libyaml to get the version string.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="co">/**</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="co"> * Get the library version as a string.</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a><span class="co"> *</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a><span class="co"> * </span><span class="an">@returns</span><span class="co"> The function returns the pointer to a static string of the form</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a><span class="co"> * </span><span class="an">@c</span><span class="co"> </span><span class="cv">&quot;X.Y.Z&quot;</span><span class="co">, where </span><span class="an">@c</span><span class="co"> </span><span class="cv">X</span><span class="co"> is the major version number, </span><span class="an">@c</span><span class="co"> </span><span class="cv">Y</span><span class="co"> is a minor version</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a><span class="co"> * number, and </span><span class="an">@c</span><span class="co"> </span><span class="cv">Z</span><span class="co"> is the patch version number.</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a><span class="co"> */</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true"></a>YAML_DECLARE(<span class="dt">const</span> <span class="dt">char</span> *)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true"></a>yaml_get_version_string(<span class="dt">void</span>);</span></code></pre></div>
+  <p>One thing that always comes up with your favourite language is how do you use
+libraries written in another language. Typically this involves needing to talk
+to a particular C library, either because it’s faster than a native one or just
+that it is already written.</p>
+<p>For OCaml there is the ctypes library for binding to C libraries using pure
+OCaml. Written by the people at the good people at OCaml Labs
+<a href="http://ocaml.io">http://ocaml.io</a></p>
+<p>The core of ctypes is a set of combinators for describing the structure of C
+types – numeric types, arrays, pointers, structs, unions and functions. You can
+use these combinators to describe the types of the functions that you want to
+call, then bind directly to those functions – all without writing or generating
+any C!</p>
+<p>Lets go through a simple example binding to libyaml. Here’s a declaration form
+libyaml to get the version string.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">/**</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"> * Get the library version as a string.</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"> *</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"> * </span><span class="an">@returns</span><span class="co"> The function returns the pointer to a static string of the form</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"> * </span><span class="an">@c</span><span class="co"> </span><span class="cv">&quot;X.Y.Z&quot;</span><span class="co">, where </span><span class="an">@c</span><span class="co"> </span><span class="cv">X</span><span class="co"> is the major version number, </span><span class="an">@c</span><span class="co"> </span><span class="cv">Y</span><span class="co"> is a minor version</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"> * number, and </span><span class="an">@c</span><span class="co"> </span><span class="cv">Z</span><span class="co"> is the patch version number.</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"> */</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>YAML_DECLARE<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*)</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>yaml_get_version_string<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span></code></pre></div>
 <p>To bind to this we need to declare a compatible signature for our OCaml code.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a><span class="kw">open</span> Ctypes</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a><span class="kw">open</span> Foreign</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a><span class="kw">let</span> get_version_string =</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a>  foreign <span class="st">&quot;yaml_get_version_string&quot;</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a>    (void @-&gt; returning <span class="dt">string</span>)</span></code></pre></div>
-<p>We’re pulling in Ctypes and Foreign. Then the let binding is using foreign with the name of the c method we want to call plus a type signature for that method.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">open</span> Ctypes</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">open</span> Foreign</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> get_version_string =</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  foreign <span class="st">&quot;yaml_get_version_string&quot;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    (void @-&gt; returning <span class="dt">string</span>)</span></code></pre></div>
+<p>We’re pulling in Ctypes and Foreign. Then the let binding is using foreign with
+the name of the c method we want to call plus a type signature for that method.</p>
 <p>Next we need some calling code to print out the version string.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="kw">open</span> Core.Std</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a><span class="kw">let</span> () =</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a>  <span class="kw">let</span> version_string = get_version_string() <span class="kw">in</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a>  printf <span class="st">&quot;Version: %s</span><span class="ch">\n</span><span class="st">&quot;</span> version_string</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">open</span> Core.Std</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> () =</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> version_string = get_version_string() <span class="kw">in</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  printf <span class="st">&quot;Version: %s</span><span class="ch">\n</span><span class="st">&quot;</span> version_string</span></code></pre></div>
 <p>Assuming you’ve got opam installed you can get the dependencies <code>opam install core ctypes</code> and compile the whole thing.</p>
 <pre class="shell"><code>
 &gt; corebuild -pkg ctypes.foreign -lflags -cclib,-lyaml version_string.native
@@ -735,16 +895,22 @@ opam install --deps-only &quot;project-name&quot;  -y</code></pre>
 Version: 0.1.6
 </code></pre>
 <p>We’ve got bindings to a native C library without writing any C.</p>
-<p>More complicated example involving passing an allocated string back from C, lets look at the <code>proc_pidpath</code> call from OSX. This particular library call takes a process id (PID) and returns back</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="dt">int</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a>proc_pidpath(<span class="dt">int</span> pid, <span class="dt">void</span> * buffer, <span class="dt">uint32_t</span>  buffersize)</span></code></pre></div>
+<p>More complicated example involving passing an allocated string back from C, lets
+look at the <code>proc_pidpath</code> call from OSX. This particular library call takes a
+process id (PID) and returns back</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>proc_pidpath<span class="op">(</span><span class="dt">int</span> pid<span class="op">,</span> <span class="dt">void</span> <span class="op">*</span> buffer<span class="op">,</span> <span class="dt">uint32_t</span>  buffersize<span class="op">)</span></span></code></pre></div>
 <p>To bind to this call we again define a compatible signature.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="kw">let</span> pidpath =</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a>    foreign ~check_errno:<span class="kw">true</span> <span class="st">&quot;proc_pidpath&quot;</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a>            (<span class="dt">int</span> @-&gt; ptr <span class="dt">char</span> @-&gt; <span class="dt">int</span> @-&gt; returning <span class="dt">int</span>)</span></code></pre></div>
-<p>The arguments simply mirror those for the C library call, along with a new argument <code>check_errno</code> which indicates the c library sets errno if it encounters a problem.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> pidpath =</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    foreign ~check_errno:<span class="kw">true</span> <span class="st">&quot;proc_pidpath&quot;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>            (<span class="dt">int</span> @-&gt; ptr <span class="dt">char</span> @-&gt; <span class="dt">int</span> @-&gt; returning <span class="dt">int</span>)</span></code></pre></div>
+<p>The arguments simply mirror those for the C library call, along with a new
+argument <code>check_errno</code> which indicates the c library sets errno if it encounters
+a problem.</p>
 <p>http://stackoverflow.com/questions/22651910/returning-a-string-from-a-c-library-to-ocaml-using-ctypes-and-foreign</p>
-<p>Ctypes provides native bindings for most things you’ll need. There’s all sorts of pointers and types matching pretty much every native C type you’ll need <a href="https://github.com/ocamllabs/ocaml-ctypes/blob/master/src/ctypes/ctypes.mli">here</a>.</p>
+<p>Ctypes provides native bindings for most things you’ll need. There’s all sorts
+of pointers and types matching pretty much every native C type you’ll need
+<a href="https://github.com/ocamllabs/ocaml-ctypes/blob/master/src/ctypes/ctypes.mli">here</a>.</p>
 </div>
 ]]></description>
     <pubDate>Mon, 17 Aug 2015 00:00:00 UT</pubDate>
@@ -757,14 +923,42 @@ Version: 0.1.6
     <description><![CDATA[<div class="post">
   <h1 class="post-title">First month of Haskell</h1>
   <span class="post-date">May 20, 2015</span>
-  <p>I’ve been excpetionally fortunate in the past month to accomplish a long held goal of mine. As of the 13th of April I’ve been employed full time as a functional programmer. In particular I’ve taken the deepest of dives into Haskell. I thought it might be interesting, at least for me, to write up my thoughts after completing a month of Haskell.</p>
-<p>First the depth of the dive has been overwhelming and the learning curve more equivalent to a vertical rock climb. But the entire time, no matter the exhaustion and believe me there was a lot of that, has been extrodinary. When I take a moment to reflect, I’ve had a smile on my face.</p>
-<p>First thing, the degree to which types are ingrained in Haskell. That might seem surprising in itself, Haskell is afterall a strongly typed langauge and it was surprising to me too. I’ve used Erlang, with dialyzer, and OCaml a great deal before starting, and both these languages have reasonable type systems. Ocaml is even described as strongly typed. So what am I getting at?</p>
-<p>Everything in Haskell feels typed to the nth degree. Every possible abstraction is pulled out into a common place, either Applicatives, Monads, Bimaps or Monad Transformers. Which is great that you can abstract like that. Using any Haskell library will require you to know about some of these things.</p>
-<p>Coming from a background where I’d done Lisp, Erlang and OCaml, and some Haskell I thought I was totally prepared to start working in Haskell full time.</p>
-<p>Learning Haskell the language is a good first step, but knowing the syntax and being comfortable reading code is one thing. What really surprised me was that knowing Haskell isn’t sufficient, you need to learn the set of typical Haskell libraries before you can really start making progress and feel at home in Haskell. Of course I’d used things like Monads in OCaml and read</p>
-<p>No equivalent to Monad, Monad transformers, lenses, applicative, traversable library eco-system in OCaml. I naievely wonder why this hasn’t been built before and whether it’s even a good idea. The parallels to Scala and scalaz are all too apparent to me. Scala is a mixed OO/FP langauge in a similar way to OCaml. It also doesn’t enforce the same level of strictness with respect to side effects that Haskell does. So in both langauges if you want you can create a mess of side effectey code if you;re not careful. Also both langauges allow mutation, again another side effect, without tracking this via the type system.</p>
-<p>I want to thank Mark Hibberd and Charles O’Farrell for being such great mentors over the last month, may they never grow tired of my endless questions.</p>
+  <p>I’ve been excpetionally fortunate in the past month to accomplish a long held
+goal of mine. As of the 13th of April I’ve been employed full time as a
+functional programmer. In particular I’ve taken the deepest of dives into
+Haskell. I thought it might be interesting, at least for me, to write up my
+thoughts after completing a month of Haskell.</p>
+<p>First the depth of the dive has been overwhelming and the learning curve more
+equivalent to a vertical rock climb. But the entire time, no matter the
+exhaustion and believe me there was a lot of that, has been extrodinary. When I
+take a moment to reflect, I’ve had a smile on my face.</p>
+<p>First thing, the degree to which types are ingrained in Haskell. That might seem
+surprising in itself, Haskell is afterall a strongly typed langauge and it was
+surprising to me too. I’ve used Erlang, with dialyzer, and OCaml a great deal
+before starting, and both these languages have reasonable type systems. Ocaml is
+even described as strongly typed. So what am I getting at?</p>
+<p>Everything in Haskell feels typed to the nth degree. Every possible abstraction
+is pulled out into a common place, either Applicatives, Monads, Bimaps or Monad
+Transformers. Which is great that you can abstract like that. Using any Haskell
+library will require you to know about some of these things.</p>
+<p>Coming from a background where I’d done Lisp, Erlang and OCaml, and some Haskell
+I thought I was totally prepared to start working in Haskell full time.</p>
+<p>Learning Haskell the language is a good first step, but knowing the syntax and
+being comfortable reading code is one thing. What really surprised me was that
+knowing Haskell isn’t sufficient, you need to learn the set of typical Haskell
+libraries before you can really start making progress and feel at home in
+Haskell. Of course I’d used things like Monads in OCaml and read</p>
+<p>No equivalent to Monad, Monad transformers, lenses, applicative, traversable
+library eco-system in OCaml. I naievely wonder why this hasn’t been built
+before and whether it’s even a good idea. The parallels to Scala and scalaz
+are all too apparent to me. Scala is a mixed OO/FP langauge in a similar way
+to OCaml. It also doesn’t enforce the same level of strictness with respect to
+side effects that Haskell does. So in both langauges if you want you can
+create a mess of side effectey code if you;re not careful. Also both langauges
+allow mutation, again another side effect, without tracking this via the type
+system.</p>
+<p>I want to thank Mark Hibberd and Charles O’Farrell for being such great mentors
+over the last month, may they never grow tired of my endless questions.</p>
 </div>
 ]]></description>
     <pubDate>Wed, 20 May 2015 00:00:00 UT</pubDate>
@@ -777,11 +971,25 @@ Version: 0.1.6
     <description><![CDATA[<div class="post">
   <h1 class="post-title">Unreliable guide to OCaml modules</h1>
   <span class="post-date">May 17, 2015</span>
-  <p>Being on the curious side of things I have been interested lately in the dualities between programming languages. Like how one feature say Type Classes in Haskell compares to what is available in Scala or OCaml. This has lead to me reading a substantial amount of academic papers about the subject.</p>
-<p>So with that in mind I would like to give a brief introduction to OCaml style modules. Perhaps in another post going into how can you encode something like rank n types from Haskell in OCaml which natively doesn’t support them.</p>
-<p>Preface, the use of the word module can be confusing, and it sometimes seems that module is used to refer to structures interchangeably. I’ve tried to avoid that but it’s helpful to keep in mind for further reading. Look at what’s on the right hand side of the equals in the code. Let start.</p>
+  <p>Being on the curious side of things I have been interested lately in the dualities
+between programming languages. Like how one feature say Type Classes in
+Haskell compares to what is available in Scala or OCaml. This has lead to me
+reading a substantial amount of academic papers about the subject.</p>
+<p>So with that in mind I would like to give a brief introduction to OCaml style
+modules. Perhaps in another post going into how can you encode something like
+rank n types from Haskell in OCaml which natively doesn’t support them.</p>
+<p>Preface, the use of the word module can be confusing, and it sometimes seems
+that module is used to refer to structures interchangeably. I’ve tried to avoid
+that but it’s helpful to keep in mind for further reading. Look at what’s on the
+right hand side of the equals in the code. Let start.</p>
 <h2 id="terminology">Terminology</h2>
-<p>OCaml is a member of the ML family of languages, sharing common features like modules, <a href="http://en.wikipedia.org/wiki/Hindley-Milner_type_system">Hindley-Milner type sytem</a> and strict evaluation. OCaml as a language can be though of 2 distinct part; one a core language that’s values and types and a second module language that revolves around modules and signatures. While OCaml does provide some support for bridging these parts in the form of First Class Modules, I won’t cover them here.</p>
+<p>OCaml is a member of the ML family of languages, sharing common features like
+modules,
+<a href="http://en.wikipedia.org/wiki/Hindley-Milner_type_system">Hindley-Milner type sytem</a>
+and strict evaluation. OCaml as a language can be though of 2 distinct part; one
+a core language that’s values and types and a second module language that
+revolves around modules and signatures. While OCaml does provide some support
+for bridging these parts in the form of First Class Modules, I won’t cover them here.</p>
 <p>The key parts of the module system in OCaml are:</p>
 <ul>
 <li>Structures</li>
@@ -789,126 +997,185 @@ Version: 0.1.6
 <li>Functors</li>
 </ul>
 <h2 id="structures">Structures</h2>
-<p>Structures provide a way for grouping together related declarations like data types and functions the operate on them; they also provide the values in the module langauge. Below is a module for integer Sets:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a>    <span class="kw">module</span> IntSet = <span class="kw">struct</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a>      <span class="kw">type</span> t = <span class="dt">int</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a>      <span class="kw">type</span> set = t <span class="dt">list</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a>      <span class="kw">let</span> empty = []</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a>      <span class="kw">let</span> member i s = <span class="dt">List</span>.exists (<span class="kw">fun</span> x -&gt; x = i) s</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a>      <span class="kw">let</span> insert i s = <span class="kw">if</span> member i s <span class="kw">then</span> s <span class="kw">else</span> (i::s)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a>    <span class="kw">end</span></span></code></pre></div>
-<p>This code defines a new structure using the <code>struct</code> keyword and binds it to a name using module. It’s useful to note that OCaml types are written in lowercase (<code>t</code>, <code>list</code> and <code>set</code>) and type variables are written with a single quote <code>'a</code>. Also type constructors are written differently to Haskell, in Haskell you’d have <code>List a</code> while in OCaml the order is reveresed <code>t list</code>.</p>
-<p>Basically a struct is an opening <code>struct</code> followed by a bunch of <code>type</code> and <code>let</code> bindings, and closed with an <code>end</code>.</p>
+<p>Structures provide a way for grouping together related declarations like data
+types and functions the operate on them; they also provide the values in the
+module langauge. Below is a module for integer Sets:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>    <span class="kw">module</span> IntSet = <span class="kw">struct</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>      <span class="kw">type</span> t = <span class="dt">int</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>      <span class="kw">type</span> set = t <span class="dt">list</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>      <span class="kw">let</span> empty = []</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>      <span class="kw">let</span> member i s = <span class="dt">List</span>.exists (<span class="kw">fun</span> x -&gt; x = i) s</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>      <span class="kw">let</span> insert i s = <span class="kw">if</span> member i s <span class="kw">then</span> s <span class="kw">else</span> (i::s)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span></span></code></pre></div>
+<p>This code defines a new structure using the <code>struct</code> keyword and binds it to a name
+using module. It’s useful to note that OCaml types are written in lowercase (<code>t</code>,
+<code>list</code> and <code>set</code>) and type variables are written with a single quote <code>'a</code>. Also
+type constructors are written differently to Haskell, in Haskell you’d have
+<code>List a</code> while in OCaml the order is reveresed <code>t list</code>.</p>
+<p>Basically a struct is an opening <code>struct</code> followed by a bunch of <code>type</code> and
+<code>let</code> bindings, and closed with an <code>end</code>.</p>
 <p>At the call site exposed declarations are referred to by dot notation:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a>    IntSet.t</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a>    IntSet.empty</span></code></pre></div>
-<p>If no module name is defined within a file, say you have a file called <code>set.ml</code> with:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a>      <span class="kw">type</span> t = <span class="dt">int</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a>      <span class="kw">type</span> set = t <span class="dt">list</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a>      <span class="kw">let</span> empty = []</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a>      <span class="kw">let</span> member i s = <span class="dt">List</span>.exists (<span class="kw">fun</span> x -&gt; x = i) s</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a>      <span class="kw">let</span> insert i s = <span class="kw">if</span> member i s <span class="kw">then</span> s <span class="kw">else</span> (i::s)</span></code></pre></div>
-<p>It will implicitly be given a structure name derived from the file name <code>Set</code> but as you may have worked out module names are not bound to file names. Further structures can be nested within other structures, leading to more freedom than just having 1 file becoming 1 module.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a>    <span class="kw">module</span> IntSet = <span class="kw">struct</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a>      <span class="kw">module</span> Compare = <span class="kw">struct</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a>         <span class="kw">type</span> t = <span class="dt">int</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a>         <span class="kw">let</span> eql x y = x = y</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a>      <span class="kw">end</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a>    <span class="kw">end</span>;;</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>    IntSet.t</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    IntSet.empty</span></code></pre></div>
+<p>If no module name is defined within a file, say you have a file called <code>set.ml</code>
+with:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>      <span class="kw">type</span> t = <span class="dt">int</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>      <span class="kw">type</span> set = t <span class="dt">list</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>      <span class="kw">let</span> empty = []</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>      <span class="kw">let</span> member i s = <span class="dt">List</span>.exists (<span class="kw">fun</span> x -&gt; x = i) s</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>      <span class="kw">let</span> insert i s = <span class="kw">if</span> member i s <span class="kw">then</span> s <span class="kw">else</span> (i::s)</span></code></pre></div>
+<p>It will implicitly be given a structure name derived from the file name <code>Set</code> but
+as you may have worked out module names are not bound to file names. Further
+structures can be nested within other structures, leading to more freedom than
+just having 1 file becoming 1 module.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>    <span class="kw">module</span> IntSet = <span class="kw">struct</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>      <span class="kw">module</span> Compare = <span class="kw">struct</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>         <span class="kw">type</span> t = <span class="dt">int</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>         <span class="kw">let</span> eql x y = x = y</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>      <span class="kw">end</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span>;;</span></code></pre></div>
 <p>The values within the nested module are referred to like so:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a>    IntSet.Compare.eql <span class="dv">1</span> <span class="dv">1</span>;;</span></code></pre></div>
-<p>While it is great to have functions namespaced like so, it would become tedious if you needed to use the longer name to refer to a nested module. OCaml provides a couple of solutions, first local opens.</p>
-<p>Rather than having an <code>open</code> statement at the top of the file and bringing every thing into scope for that file we can do a local open and restrict the scope to between the two brackets.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a>     IntSet.Compare.(eql <span class="dv">1</span> <span class="dv">1</span>);;</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>    IntSet.Compare.eql <span class="dv">1</span> <span class="dv">1</span>;;</span></code></pre></div>
+<p>While it is great to have functions namespaced like so, it would become tedious
+if you needed to use the longer name to refer to a nested module. OCaml provides
+a couple of solutions, first local opens.</p>
+<p>Rather than having an <code>open</code> statement at the top of the file and bringing
+every thing into scope for that file we can do a local open and restrict the
+scope to between the two brackets.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>     IntSet.Compare.(eql <span class="dv">1</span> <span class="dv">1</span>);;</span></code></pre></div>
 <p>The other option available is aliasing the module name to something shorter</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a>     <span class="kw">module</span> X = IntSet.Compare;;</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a>     X.eql <span class="dv">1</span> <span class="dv">1</span>;;</span></code></pre></div>
-<p>I mentioned <code>open</code> before without saying what it does. Simply open brings the contents of a module within another module, so they can be referred to without the module name prefix.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>     <span class="kw">module</span> X = IntSet.Compare;;</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>     X.eql <span class="dv">1</span> <span class="dv">1</span>;;</span></code></pre></div>
+<p>I mentioned <code>open</code> before without saying what it does. Simply open brings the
+contents of a module within another module, so they can be referred to without
+the module name prefix.</p>
 <h2 id="signatures">Signatures</h2>
-<p>Signatures are the interfaces for structures, a signature defines what parts of a structure is visable from the outside. A signature can be used to hide components of a structure or export some definitions with more general types.</p>
+<p>Signatures are the interfaces for structures, a signature defines what parts of
+a structure is visable from the outside. A signature can be used to hide
+components of a structure or export some definitions with more general types.</p>
 <p>A signature is introduced with the <code>sig</code> keyword</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a>    <span class="kw">module</span> <span class="kw">type</span> <span class="dt">Set</span> =</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a>      <span class="kw">sig</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true"></a>        <span class="kw">type</span> elt</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true"></a>        <span class="kw">type</span> t</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true"></a></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true"></a>        <span class="kw">val</span> empty : t</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true"></a>        <span class="kw">val</span> member : elt -&gt; t -&gt; <span class="dt">bool</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true"></a>        <span class="kw">val</span> insert : elt-&gt; t -&gt; t</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true"></a>      <span class="kw">end</span></span></code></pre></div>
-<p>As you can see looking at our definition of Set, it lists a type and function signatures without specifying a concrete implementation. It’s also bound to a name <code>Set</code> using <code>module type</code>.</p>
-<p>As I metnioned before signatures are typically used to hide or change the interface a module exposes. By default all types and functions are exported from a module. Useful for doing things like hiding implementation details or only construct the data type via the invariant-preserving operations that the module provides.</p>
-<p>Typically in OCaml you’ll define your <code>struct</code> in one file <code>set.ml</code> and then create a second file <code>set.mli</code> which contains the signature for the module set. Only occasionally will you see the signature and structure defined together.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>    <span class="kw">module</span> <span class="kw">type</span> <span class="dt">Set</span> =</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>      <span class="kw">sig</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>        <span class="kw">type</span> elt</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>        <span class="kw">type</span> t</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>        <span class="kw">val</span> empty : t</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>        <span class="kw">val</span> member : elt -&gt; t -&gt; <span class="dt">bool</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>        <span class="kw">val</span> insert : elt-&gt; t -&gt; t</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>      <span class="kw">end</span></span></code></pre></div>
+<p>As you can see looking at our definition of Set, it lists a type and function
+signatures without specifying a concrete implementation. It’s also bound to a
+name <code>Set</code> using <code>module type</code>.</p>
+<p>As I metnioned before signatures are typically used to hide or change the
+interface a module exposes. By default all types and functions are exported from
+a module. Useful for doing things like hiding implementation details or only
+construct the data type via the invariant-preserving operations that the module
+provides.</p>
+<p>Typically in OCaml you’ll define your <code>struct</code> in one file <code>set.ml</code> and then
+create a second file <code>set.mli</code> which contains the signature for the module set.
+Only occasionally will you see the signature and structure defined together.</p>
 <h2 id="functors">Functors</h2>
-<p>Now to the functors, they’re not exactly like Haskell’s though they do perform a kind of mapping.</p>
-<p>Functors are for lifting functions into the module language, or another way they are <code>functions</code> from structures to structures. Which brings the abstract idea of functors from category theory back to 2 concrete examples, where Haskell functors are <code>functions</code> from types to types, OCaml’s functors are <code>functions</code> from structures to structures.</p>
-<p>Following out set example we can make set operations abstract across both the type inside the set and the equality comparison.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a>    <span class="kw">module</span> <span class="kw">type</span> ORDERING =</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a>      <span class="kw">sig</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true"></a>        <span class="kw">type</span> t</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true"></a>        <span class="kw">val</span> <span class="dt">compare</span> : t -&gt; t -&gt; <span class="dt">int</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true"></a>      <span class="kw">end</span>;;</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true"></a></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true"></a>    <span class="kw">module</span> <span class="kw">type</span> <span class="dt">Set</span> =</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true"></a>      <span class="kw">sig</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true"></a>        <span class="kw">type</span> elt</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true"></a>        <span class="kw">type</span> t</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true"></a>        <span class="kw">val</span> empty : t</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true"></a>        <span class="kw">val</span> member : elt -&gt; t -&gt; <span class="dt">bool</span></span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true"></a>        <span class="kw">val</span> insert : elt-&gt; t -&gt; t</span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true"></a>      <span class="kw">end</span>;;</span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true"></a></span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true"></a>    <span class="kw">module</span> MkSet (Ord : ORDERING) : (<span class="dt">Set</span> <span class="kw">with</span> <span class="kw">type</span> elt := Ord.t) =</span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true"></a>      <span class="kw">struct</span></span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true"></a>        <span class="kw">type</span> elt = Ord.t</span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true"></a>        <span class="kw">type</span> t = Empty | Node <span class="kw">of</span> t * elt * t</span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true"></a></span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true"></a>        <span class="kw">let</span> empty = Empty</span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true"></a></span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true"></a>        <span class="kw">let</span> <span class="kw">rec</span> insert x = <span class="kw">function</span></span>
-<span id="cb9-24"><a href="#cb9-24" aria-hidden="true"></a>          | Empty -&gt; Node(Empty, x, Empty)</span>
-<span id="cb9-25"><a href="#cb9-25" aria-hidden="true"></a>          | Node(a, y, b) <span class="kw">when</span> Ord.<span class="dt">compare</span> x y &lt; <span class="dv">0</span> -&gt; Node(insert x a, y, b)</span>
-<span id="cb9-26"><a href="#cb9-26" aria-hidden="true"></a>          | Node(a, y, b) <span class="kw">when</span> Ord.<span class="dt">compare</span> x y &gt; <span class="dv">0</span> -&gt; Node(a, y, insert x b)</span>
-<span id="cb9-27"><a href="#cb9-27" aria-hidden="true"></a>          | Node(a, y, b) <span class="kw">as</span> s -&gt; s</span>
-<span id="cb9-28"><a href="#cb9-28" aria-hidden="true"></a></span>
-<span id="cb9-29"><a href="#cb9-29" aria-hidden="true"></a>        <span class="kw">let</span> <span class="kw">rec</span> member x = <span class="kw">function</span></span>
-<span id="cb9-30"><a href="#cb9-30" aria-hidden="true"></a>          | Empty -&gt; <span class="kw">false</span></span>
-<span id="cb9-31"><a href="#cb9-31" aria-hidden="true"></a>          | Node(l, v, r) -&gt;</span>
-<span id="cb9-32"><a href="#cb9-32" aria-hidden="true"></a>              <span class="kw">let</span> c = Ord.<span class="dt">compare</span> x v <span class="kw">in</span></span>
-<span id="cb9-33"><a href="#cb9-33" aria-hidden="true"></a>              c = <span class="dv">0</span> || member x (<span class="kw">if</span> c &lt; <span class="dv">0</span> <span class="kw">then</span> l <span class="kw">else</span> r)</span>
-<span id="cb9-34"><a href="#cb9-34" aria-hidden="true"></a>    <span class="kw">end</span>;;</span>
-<span id="cb9-35"><a href="#cb9-35" aria-hidden="true"></a></span>
-<span id="cb9-36"><a href="#cb9-36" aria-hidden="true"></a>    <span class="kw">module</span> IntOrdering = <span class="kw">struct</span></span>
-<span id="cb9-37"><a href="#cb9-37" aria-hidden="true"></a>        <span class="kw">type</span> t = <span class="dt">int</span></span>
-<span id="cb9-38"><a href="#cb9-38" aria-hidden="true"></a>        <span class="kw">let</span> <span class="dt">compare</span> x y = Pervasives.<span class="dt">compare</span> x y</span>
-<span id="cb9-39"><a href="#cb9-39" aria-hidden="true"></a>      <span class="kw">end</span>;;</span>
-<span id="cb9-40"><a href="#cb9-40" aria-hidden="true"></a></span>
-<span id="cb9-41"><a href="#cb9-41" aria-hidden="true"></a>    <span class="kw">module</span> IntSet&#39; = MkSet(IntOrdering);;</span></code></pre></div>
-<p>Here we define <code>ORDERING</code> and <code>Set</code> as signatures, similar to our previous definitons. Then a functor is defined <code>MkSet</code> that takes the <code>ORDERING</code> signature and defines the types and functions for set based off that interface. So the definition of <code>MkSet</code> is completely abstracted away from the type used in the set and the functions used on those types. As long as it implements <code>ORDERING</code>.</p>
-<p>The last part defines a particular ordering for <code>int</code> using, binding t to <code>int</code> and compare to <code>Int.compare</code>.</p>
+<p>Now to the functors, they’re not exactly like Haskell’s though they do perform a
+kind of mapping.</p>
+<p>Functors are for lifting functions into the module language, or another way
+they are <code>functions</code> from structures to structures. Which brings the abstract
+idea of functors from category theory back to 2 concrete examples, where
+Haskell functors are <code>functions</code> from types to types, OCaml’s functors are
+<code>functions</code> from structures to structures.</p>
+<p>Following out set example we can make set operations abstract across both the
+type inside the set and the equality comparison.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>    <span class="kw">module</span> <span class="kw">type</span> ORDERING =</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>      <span class="kw">sig</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>        <span class="kw">type</span> t</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>        <span class="kw">val</span> <span class="dt">compare</span> : t -&gt; t -&gt; <span class="dt">int</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>      <span class="kw">end</span>;;</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">module</span> <span class="kw">type</span> <span class="dt">Set</span> =</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>      <span class="kw">sig</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>        <span class="kw">type</span> elt</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>        <span class="kw">type</span> t</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>        <span class="kw">val</span> empty : t</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>        <span class="kw">val</span> member : elt -&gt; t -&gt; <span class="dt">bool</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>        <span class="kw">val</span> insert : elt-&gt; t -&gt; t</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>      <span class="kw">end</span>;;</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">module</span> MkSet (Ord : ORDERING) : (<span class="dt">Set</span> <span class="kw">with</span> <span class="kw">type</span> elt := Ord.t) =</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>      <span class="kw">struct</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>        <span class="kw">type</span> elt = Ord.t</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>        <span class="kw">type</span> t = Empty | Node <span class="kw">of</span> t * elt * t</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>        <span class="kw">let</span> empty = Empty</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>        <span class="kw">let</span> <span class="kw">rec</span> insert x = <span class="kw">function</span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>          | Empty -&gt; Node(Empty, x, Empty)</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>          | Node(a, y, b) <span class="kw">when</span> Ord.<span class="dt">compare</span> x y &lt; <span class="dv">0</span> -&gt; Node(insert x a, y, b)</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>          | Node(a, y, b) <span class="kw">when</span> Ord.<span class="dt">compare</span> x y &gt; <span class="dv">0</span> -&gt; Node(a, y, insert x b)</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>          | Node(a, y, b) <span class="kw">as</span> s -&gt; s</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>        <span class="kw">let</span> <span class="kw">rec</span> member x = <span class="kw">function</span></span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>          | Empty -&gt; <span class="kw">false</span></span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>          | Node(l, v, r) -&gt;</span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>              <span class="kw">let</span> c = Ord.<span class="dt">compare</span> x v <span class="kw">in</span></span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>              c = <span class="dv">0</span> || member x (<span class="kw">if</span> c &lt; <span class="dv">0</span> <span class="kw">then</span> l <span class="kw">else</span> r)</span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span>;;</span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>    <span class="kw">module</span> IntOrdering = <span class="kw">struct</span></span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>        <span class="kw">type</span> t = <span class="dt">int</span></span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>        <span class="kw">let</span> <span class="dt">compare</span> x y = Pervasives.<span class="dt">compare</span> x y</span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>      <span class="kw">end</span>;;</span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a>    <span class="kw">module</span> IntSet&#39; = MkSet(IntOrdering);;</span></code></pre></div>
+<p>Here we define <code>ORDERING</code> and <code>Set</code> as signatures, similar to our previous
+definitons. Then a functor is defined <code>MkSet</code> that takes the <code>ORDERING</code>
+signature and defines the types and functions for set based off that interface.
+So the definition of <code>MkSet</code> is completely abstracted away from the type used in
+the set and the functions used on those types. As long as it implements
+<code>ORDERING</code>.</p>
+<p>The last part defines a particular ordering for <code>int</code> using, binding t to <code>int</code>
+and compare to <code>Int.compare</code>.</p>
 <h2 id="using-modules">Using Modules</h2>
-<p>After covering what is in the OCaml module system, what exactly do we use it for. At the very basic level we collect together types and functions, which is pretty much what all modules do. Outside of that we can:</p>
+<p>After covering what is in the OCaml module system, what exactly do we use it
+for. At the very basic level we collect together types and functions, which is
+pretty much what all modules do. Outside of that we can:</p>
 <ol type="1">
-<li>Hide implementation details, like the types exported by the module. If we wanted to hide how our Set was implemented we could redefine the functor as:</li>
+<li>Hide implementation details, like the types exported by the module. If we
+wanted to hide how our Set was implemented we could redefine the functor as:</li>
 </ol>
-<div class="sourceCode" id="cb10"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a><span class="kw">module</span> <span class="kw">type</span> SETFUNCTOR =</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true"></a>    <span class="kw">functor</span> (O: ORDERING) -&gt;</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true"></a>      <span class="kw">sig</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true"></a>        <span class="kw">type</span> t = O.t      <span class="co">(* concrete *)</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true"></a>        <span class="kw">type</span> set          <span class="co">(* abstract *)</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true"></a>        <span class="kw">val</span> empty : set</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true"></a>        <span class="kw">val</span> add : t -&gt; set -&gt; set</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true"></a>        <span class="kw">val</span> member : t -&gt; set -&gt; <span class="dt">bool</span></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true"></a>      <span class="kw">end</span>;;</span></code></pre></div>
-<p>Here we expose the elements within the set via <code>type t = O.t</code> so they’re a concrete type, while <code>set</code> isn’t given a definition so the consumers of this module can’t look into that type without using the functions provided in the Set module. This hiding using abstract types lets us swap out different implementations for testing purposes or if requirements change.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="kw">type</span> SETFUNCTOR =</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">functor</span> (O: ORDERING) -&gt;</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>      <span class="kw">sig</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>        <span class="kw">type</span> t = O.t      <span class="co">(* concrete *)</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>        <span class="kw">type</span> set          <span class="co">(* abstract *)</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>        <span class="kw">val</span> empty : set</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>        <span class="kw">val</span> add : t -&gt; set -&gt; set</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>        <span class="kw">val</span> member : t -&gt; set -&gt; <span class="dt">bool</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>      <span class="kw">end</span>;;</span></code></pre></div>
+<p>Here we expose the elements within the set via <code>type t = O.t</code> so they’re a
+concrete type, while <code>set</code> isn’t given a definition so the consumers of this
+module can’t look into that type without using the functions provided in the Set
+module. This hiding using abstract types lets us swap out different
+implementations for testing purposes or if requirements change.</p>
 <ol start="2" type="1">
-<li><p>Namespace functions and type, all types and functions live within some module.</p></li>
-<li><p>Extending existing modules in a type safe way. You may want to extend a module from a library with extra derived functions. For example the <code>Core</code> library from Jane Street extends the built in OCaml library with a number of new and different functions. eg Say Lists didn’t provide a <code>transpose</code> function.</p></li>
-<li><p>Instantiating modules with State, OCaml allows modules to include mutable state (while we may not particularly like mutable things) sometimes it’s necessary and you may want multiple instances of a particular module with their own state. Functors make doing this more succinct.</p></li>
-<li><p>Collecting definitions and exporting as a single module, e.g. Core.Std inside Jane Street Core library.</p></li>
+<li><p>Namespace functions and type, all types and functions live within some
+module.</p></li>
+<li><p>Extending existing modules in a type safe way. You may want to extend a
+module from a library with extra derived functions. For example the <code>Core</code>
+library from Jane Street extends the built in OCaml library with a number of
+new and different functions. eg Say Lists didn’t provide a <code>transpose</code>
+function.</p></li>
+<li><p>Instantiating modules with State, OCaml allows modules to include mutable
+state (while we may not particularly like mutable things) sometimes it’s
+necessary and you may want multiple instances of a particular module with
+their own state. Functors make doing this more succinct.</p></li>
+<li><p>Collecting definitions and exporting as a single module, e.g. Core.Std inside
+Jane Street Core library.</p></li>
 </ol>
 <h2 id="further-reading">Further Reading</h2>
-<p>The best reference is really <a href="http://realworldocaml.org">Real World OCaml</a>. If you’ve got some Haskell experience and don’t mind reading a paper then “ML Modules and Haskell Type Classes: A Constructive Comparison” by Stefan Wehr and Manuel Chakravarty gives a thorough coverage of how ML modules stack up to Type Classes.</p>
+<p>The best reference is really <a href="http://realworldocaml.org">Real World OCaml</a>. If
+you’ve got some Haskell experience and don’t mind reading a paper then “ML
+Modules and Haskell Type Classes: A Constructive Comparison” by Stefan Wehr and
+Manuel Chakravarty gives a thorough coverage of how ML modules stack up to Type
+Classes.</p>
 </div>
 ]]></description>
     <pubDate>Sun, 17 May 2015 00:00:00 UT</pubDate>
@@ -921,47 +1188,135 @@ Version: 0.1.6
     <description><![CDATA[<div class="post">
   <h1 class="post-title">Lenses in OCaml</h1>
   <span class="post-date">January 16, 2015</span>
-  <p>Lenses have been on my mind since encountering them last year in the context of Haskell. Much of the literature on lenses has a very Haskell slant so show how they can be used in OCaml.</p>
-<p>The theory of lenses and their accompanying prisms and traversals, have been better described by other people. <a href="https://www.fpcomplete.com/school/to-infinity-and-beyond/pick-of-the-week/a-little-lens-starter-tutorial">This</a> article at FPComplete was a particularly good one. I’m just going to cover how to use <a href="https://github.com/pdonadeo/ocaml-lens/">ocaml-lens</a> as a minimal lens implementation.</p>
-<p>First since ocaml-lens isn’t in opam, clone the repo locally and open up <code>utop</code>. Then load the <code>lens.ml</code> file into <code>utop</code>.</p>
-<p>{%codeblock lang:ocaml%} utop # #use “lens.ml”;; .. {% endcodeblock %}</p>
+  <p>Lenses have been on my mind since encountering them last year in the context of
+Haskell. Much of the literature on lenses has a very Haskell slant so show how
+they can be used in OCaml.</p>
+<p>The theory of lenses and their accompanying prisms and traversals, have been
+better described by other people.
+<a href="https://www.fpcomplete.com/school/to-infinity-and-beyond/pick-of-the-week/a-little-lens-starter-tutorial">This</a>
+article at FPComplete was a particularly good one. I’m just going to cover how
+to use <a href="https://github.com/pdonadeo/ocaml-lens/">ocaml-lens</a> as a minimal lens
+implementation.</p>
+<p>First since ocaml-lens isn’t in opam, clone the repo locally and open up
+<code>utop</code>. Then load the <code>lens.ml</code> file into <code>utop</code>.</p>
+<p>{%codeblock lang:ocaml%}
+utop # #use “lens.ml”;;
+..
+{% endcodeblock %}</p>
 <p>Starting with a few record types for a car, editor and book.</p>
-<p>{%codeblock lang:ocaml%} type car = { make : string; model: string; mileage: int; };;</p>
-<p>type editor = { name: string; salary: int; car: car; };;</p>
-<p>type book = { name: string; author: string; editor: editor; };; {%endcodeblock%}</p>
+<p>{%codeblock lang:ocaml%}
+type car = {
+make : string;
+model: string;
+mileage: int;
+};;</p>
+<p>type editor = {
+name: string;
+salary: int;
+car: car;
+};;</p>
+<p>type book = {
+name: string;
+author: string;
+editor: editor;
+};;
+{%endcodeblock%}</p>
 <p>Creating a new book is as simple as.</p>
-<p>{%codeblock lang:ocaml%} let scifi_novel = { name = “Metro 2033”; author = “Dmitry Glukhovsky”; editor = { name = “Vitali Gubarev”; salary = 1300; car = { make = “Lada”; model = “VAZ-2103”; mileage = 310000 } } };;</p>
+<p>{%codeblock lang:ocaml%}
+let scifi_novel = {
+name = “Metro 2033”;
+author = “Dmitry Glukhovsky”;
+editor = {
+name = “Vitali Gubarev”;
+salary = 1300;
+car = {
+make = “Lada”;
+model = “VAZ-2103”;
+mileage = 310000
+}
+}
+};;</p>
 <p>{% endcodeblock %}</p>
 <p>Given our <code>scifi_novel</code> we can access the editor’s car mileage:</p>
-<p>{%codeblock lang:ocaml%} let mileage = scifi_novel.editor.car.mileage;; {% endcodeblock %}</p>
+<p>{%codeblock lang:ocaml%}
+let mileage = scifi_novel.editor.car.mileage;;
+{% endcodeblock %}</p>
 <p>Setting the mileage is a bit trickier, we need to unpack each record:</p>
-<p>{%codeblock lang:ocaml%} let second_edition = { scifi_novel with editor = { scifi_novel.editor with car = { scifi_novel.editor.car with mileage = 1000 } } };; {% endcodeblock %}</p>
+<p>{%codeblock lang:ocaml%}
+let second_edition = { scifi_novel with editor =
+{ scifi_novel.editor with car =
+{ scifi_novel.editor.car with mileage = 1000 } } };;
+{% endcodeblock %}</p>
 <p>That’s not really an appealing prospect, can we do better?</p>
-<p>Enter lenses, at the most simple level a lense is a pair of functions for getting and setting a property.</p>
-<p>{%codeblock lang:ocaml%} (** Lens type definition *) type (’a, ’b) t = { get : ’a -&gt; ’b; (** Functional getter *) set : ’b -&gt; ’a -&gt; ’a (** Functional setter *) } {% endcodeblock %}</p>
+<p>Enter lenses, at the most simple level a lense is a pair of functions for
+getting and setting a property.</p>
+<p>{%codeblock lang:ocaml%}
+(** Lens type definition *)
+type (’a, ’b) t = {
+get : ’a -&gt; ’b;
+(** Functional getter *)
+set : ’b -&gt; ’a -&gt; ’a
+(** Functional setter *)
+}
+{% endcodeblock %}</p>
 <p>With this definition of a lens, modifying the mileage is now:</p>
-<p>{%codeblock lang:ocaml%} let a = compose mileage_lens (compose car_lens editor_lens) in _set 10 scifi_novel a;; {% endcodeblock %}</p>
+<p>{%codeblock lang:ocaml%}
+let a = compose mileage_lens (compose car_lens editor_lens) in
+_set 10 scifi_novel a;;
+{% endcodeblock %}</p>
 <p>In the background we need to define some lenses for the records above:</p>
-<p>{%codeblock lang:ocaml%} let car_lens = { get = (fun x -&gt; x.car); set = (fun v x -&gt; { x with car = v }) };;</p>
-<p>let editor_lens = { get = (fun x -&gt; x.editor); set = (fun v x -&gt; { x with editor = v }) };;</p>
-<p>let mileage_lens = { get = (fun x -&gt; x.mileage); set = (fun v x -&gt; { x with mileage = v })</p>
-<p>};; {% endcodeblock %}</p>
-<p>Using these definitions the original lens version of modify the editor’s car mileage works.</p>
-<p>The compose operator we used allows us to combine 2 lenses to go from the novel into the editor and then into the car. And compose can be combined with itself to build up arbitarily deep lenses into a structure.</p>
-<p>{%codeblock lang:ocaml%} let editor_car_lens = compose car_lens editor_lens;; {% endcodeblock %}</p>
-<p>This way of composing can seem backwards, you supply the inner lens first then the outer lens. We can fix that by using the infix operators, open the <code>Infix</code> module and define the same lens:</p>
-<p>{%codeblock lang:ocaml%} let editor_car_lens = editor_lens |– car_lens;; {% endcodeblock %}</p>
-<p>This feels more intuative reading it left to right. Revisiting our original <code>_set</code> mileage example we can now write it.</p>
-<p>{%codeblock lang:ocaml%} _set 10 scifi_novel (editor_lens |– car_lens |– mileage_lens);; (* or even *) ((editor_lens |– car_lens |– mileage_lens) ^= 10) @@ scifi_novel;; {% endcodeblock %}</p>
-<p>The infix module comes with some other helpful operators like <code>|.</code> for get and <code>^=</code> for set. All these operators avoid mutation so our code remains pure and referentially transparent.</p>
+<p>{%codeblock lang:ocaml%}
+let car_lens = {
+get = (fun x -&gt; x.car);
+set = (fun v x -&gt; { x with car = v })
+};;</p>
+<p>let editor_lens = {
+get = (fun x -&gt; x.editor);
+set = (fun v x -&gt; { x with editor = v })
+};;</p>
+<p>let mileage_lens = {
+get = (fun x -&gt; x.mileage);
+set = (fun v x -&gt; { x with mileage = v })</p>
+<p>};;
+{% endcodeblock %}</p>
+<p>Using these definitions the original lens version of modify the editor’s car
+mileage works.</p>
+<p>The compose operator we used allows us to combine 2 lenses to go from the novel
+into the editor and then into the car. And compose can be combined with itself
+to build up arbitarily deep lenses into a structure.</p>
+<p>{%codeblock lang:ocaml%}
+let editor_car_lens = compose car_lens editor_lens;;
+{% endcodeblock %}</p>
+<p>This way of composing can seem backwards, you supply the inner lens first then
+the outer lens. We can fix that by using the infix operators, open the <code>Infix</code>
+module and define the same lens:</p>
+<p>{%codeblock lang:ocaml%}
+let editor_car_lens = editor_lens |– car_lens;;
+{% endcodeblock %}</p>
+<p>This feels more intuative reading it left to right. Revisiting our original
+<code>_set</code> mileage example we can now write it.</p>
+<p>{%codeblock lang:ocaml%}
+_set 10 scifi_novel (editor_lens |– car_lens |– mileage_lens);;
+(* or even *)
+((editor_lens |– car_lens |– mileage_lens) ^= 10) @@ scifi_novel;;
+{% endcodeblock %}</p>
+<p>The infix module comes with some other helpful operators like
+<code>|.</code> for get and <code>^=</code> for set. All these operators avoid mutation so our
+code remains pure and referentially transparent.</p>
 <h3 id="conclusion">Conclusion</h3>
-<p>There are a heap more things that lenses can do, and while this ocaml-lens package is pretty basic, looking at the hundreds of functions exported by <a href="http://hackage.haskell.org/package/lens">Control.Lens</a> in Haskell you can get a good idea of the possibilities. <code>Control.Lens</code> includes all the basic lens functions plus things like:</p>
+<p>There are a heap more things that lenses can do, and while this ocaml-lens
+package is pretty basic, looking at the hundreds of functions exported by
+<a href="http://hackage.haskell.org/package/lens">Control.Lens</a>
+in Haskell you can get a good idea of the possibilities. <code>Control.Lens</code> includes
+all the basic lens functions plus things like:</p>
 <ul>
 <li><code>prisms</code> which are lenses but for sum types</li>
 <li><code>traversals</code> are lenses that focus on multiple targets simultaneously</li>
 </ul>
 <h3 id="resources">Resources</h3>
-<p>I made use of the following resources to write this and took some of the examples and definitions from the following articles. All mistakes are my own and probably accidental.</p>
+<p>I made use of the following resources to write this and took some of the
+examples and definitions from the following articles. All mistakes are my own
+and probably accidental.</p>
 <ul>
 <li><a href="https://www.fpcomplete.com/school/to-infinity-and-beyond/pick-of-the-week/a-little-lens-starter-tutorial#okay--what-are-prisms-">A Little Lens Starter FPComplete</a></li>
 <li><a href="http://bugsquash.blogspot.com.au/2011/11/lenses-in-f.html">Lenses in F#</a></li>

@@ -122,35 +122,38 @@
         <div class="post">
   <h1 class="post-title">Erlang hot code loading</h1>
   <span class="post-date">September  2, 2013</span>
-  <p>Nearly every posting about Erlang that you come across mentions the hot code loading feature, aka dynamic code loading. But so far I have had problems finding a simple example of how to add this to my code. So here is one.</p>
+  <p>Nearly every posting about Erlang that you come across mentions the hot code
+loading feature, aka dynamic code loading. But so far I have had problems
+finding a simple example of how to add this to my code. So here is one.</p>
 <p>Copy this code into an editor. I’m using Emacs here, so all instructions use it’s keybindings.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode erlang"><code class="sourceCode erlang"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="co">%% A process whose only job is to keep a counter.</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a><span class="kw">-module</span><span class="fu">(</span><span class="ch">counter</span><span class="fu">).</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a><span class="kw">-export</span><span class="fu">([</span><span class="ch">start</span><span class="op">/</span><span class="dv">0</span><span class="fu">,</span> <span class="ch">codeswitch</span><span class="op">/</span><span class="dv">1</span><span class="fu">]).</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a><span class="fu">start()</span> <span class="op">-&gt;</span> <span class="fu">loop(</span><span class="dv">0</span><span class="fu">).</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a><span class="fu">loop(</span><span class="va">Sum</span><span class="fu">)</span> <span class="op">-&gt;</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true"></a>  <span class="kw">receive</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true"></a>    <span class="fu">{</span><span class="ch">increment</span><span class="fu">,</span> <span class="va">Count</span><span class="fu">}</span> <span class="op">-&gt;</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true"></a>      <span class="fu">loop(</span><span class="va">Sum</span><span class="op">+</span><span class="va">Count</span><span class="fu">);</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true"></a>    <span class="fu">{</span><span class="ch">print</span><span class="fu">}</span> <span class="op">-&gt;</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true"></a>      <span class="fu">io:format(</span><span class="st">&quot;Sum is ~p~n&quot;</span><span class="fu">,</span> <span class="fu">[</span><span class="va">Sum</span><span class="fu">]),</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true"></a>      <span class="fu">loop(</span><span class="va">Sum</span><span class="fu">);</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true"></a>    <span class="fu">{</span><span class="ch">counter</span><span class="fu">,</span> <span class="va">Pid</span><span class="fu">}</span> <span class="op">-&gt;</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true"></a>      <span class="va">Pid</span> <span class="op">!</span> <span class="fu">{</span><span class="ch">counter</span><span class="fu">,</span> <span class="va">Sum</span><span class="fu">},</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true"></a>      <span class="fu">loop(</span><span class="va">Sum</span><span class="fu">);</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true"></a>    <span class="ch">code_switch</span> <span class="op">-&gt;</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true"></a>      <span class="fu">?</span><span class="va">MODULE</span><span class="fu">:codeswitch(</span><span class="va">Sum</span><span class="fu">);</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true"></a>    <span class="va">M</span> <span class="op">-&gt;</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true"></a>      <span class="fu">io:format(</span><span class="st">&quot;Unhandled message ~p~n&quot;</span><span class="fu">,</span> <span class="fu">[</span><span class="va">M</span><span class="fu">]),</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true"></a>      <span class="fu">loop(</span><span class="va">Sum</span><span class="fu">)</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true"></a>   <span class="kw">end</span><span class="fu">.</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true"></a></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true"></a><span class="fu">codeswitch(</span><span class="va">Sum</span><span class="fu">)</span> <span class="op">-&gt;</span> <span class="fu">loop(</span><span class="va">Sum</span><span class="fu">).</span></span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode erlang"><code class="sourceCode erlang"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">%% A process whose only job is to keep a counter.</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">-module</span><span class="fu">(</span><span class="ch">counter</span><span class="fu">).</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">-export</span><span class="fu">([</span><span class="ch">start</span><span class="op">/</span><span class="dv">0</span><span class="fu">,</span> <span class="ch">codeswitch</span><span class="op">/</span><span class="dv">1</span><span class="fu">]).</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">start()</span> <span class="op">-&gt;</span> <span class="fu">loop(</span><span class="dv">0</span><span class="fu">).</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">loop(</span><span class="va">Sum</span><span class="fu">)</span> <span class="op">-&gt;</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">receive</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span><span class="ch">increment</span><span class="fu">,</span> <span class="va">Count</span><span class="fu">}</span> <span class="op">-&gt;</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">loop(</span><span class="va">Sum</span><span class="op">+</span><span class="va">Count</span><span class="fu">);</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span><span class="ch">print</span><span class="fu">}</span> <span class="op">-&gt;</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">io:format(</span><span class="st">&quot;Sum is ~p~n&quot;</span><span class="fu">,</span> <span class="fu">[</span><span class="va">Sum</span><span class="fu">]),</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">loop(</span><span class="va">Sum</span><span class="fu">);</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span><span class="ch">counter</span><span class="fu">,</span> <span class="va">Pid</span><span class="fu">}</span> <span class="op">-&gt;</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>      <span class="va">Pid</span> <span class="op">!</span> <span class="fu">{</span><span class="ch">counter</span><span class="fu">,</span> <span class="va">Sum</span><span class="fu">},</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">loop(</span><span class="va">Sum</span><span class="fu">);</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="ch">code_switch</span> <span class="op">-&gt;</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>      <span class="fu">?</span><span class="va">MODULE</span><span class="fu">:codeswitch(</span><span class="va">Sum</span><span class="fu">);</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="va">M</span> <span class="op">-&gt;</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>      <span class="fu">io:format(</span><span class="st">&quot;Unhandled message ~p~n&quot;</span><span class="fu">,</span> <span class="fu">[</span><span class="va">M</span><span class="fu">]),</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>      <span class="fu">loop(</span><span class="va">Sum</span><span class="fu">)</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>   <span class="kw">end</span><span class="fu">.</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="fu">codeswitch(</span><span class="va">Sum</span><span class="fu">)</span> <span class="op">-&gt;</span> <span class="fu">loop(</span><span class="va">Sum</span><span class="fu">).</span></span></code></pre></div>
 <p>Compile and start a new erlang shell, Ctrl-C Ctrl-K.</p>
-<p>Now we want to start a new process running this code. Startup and enter the following code into the erlang shell.</p>
+<p>Now we want to start a new process running this code. Startup and enter the
+following code into the erlang shell.</p>
 <pre class="shell"><code>
 Erlang R15B (erts-5.9) [source] [64-bit] [smp:8:8] [async-threads:0] [hipe] [kernel-poll:false]
 
@@ -166,17 +169,19 @@ Eshell V5.9  (abort with ^G)
 Sum is 3
 {print}
 </code></pre>
-<p>Now that we have the first version of the process running, add a new clause to the receive like so.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode erlang"><code class="sourceCode erlang"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a>  <span class="fu">{</span><span class="ch">print</span><span class="fu">}</span> <span class="op">-&gt;</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a>    <span class="fu">io:format(</span><span class="st">&quot;Sum is ~p~n&quot;</span><span class="fu">,</span> <span class="fu">[</span><span class="va">Sum</span><span class="fu">]),</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a>    <span class="fu">loop(</span><span class="va">Sum</span><span class="fu">);</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a>  <span class="fu">{</span><span class="ch">reset</span><span class="fu">}</span> <span class="op">-&gt;</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a>    <span class="fu">loop(</span><span class="dv">0</span><span class="fu">);</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true"></a>  <span class="fu">{</span><span class="ch">counter</span><span class="fu">,</span> <span class="va">Pid</span><span class="fu">}</span> <span class="op">-&gt;</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true"></a>    <span class="va">Pid</span> <span class="op">!</span> <span class="fu">{</span><span class="ch">counter</span><span class="fu">,</span> <span class="va">Sum</span><span class="fu">},</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true"></a>    <span class="fu">loop(</span><span class="va">Sum</span><span class="fu">);</span></span></code></pre></div>
-<p>Compile this version, Ctrl-C Ctrl-K and send a message to the process that only the new version can handle.</p>
+<p>Now that we have the first version of the process running, add a new clause to
+the receive like so.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode erlang"><code class="sourceCode erlang"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">{</span><span class="ch">print</span><span class="fu">}</span> <span class="op">-&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">io:format(</span><span class="st">&quot;Sum is ~p~n&quot;</span><span class="fu">,</span> <span class="fu">[</span><span class="va">Sum</span><span class="fu">]),</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">loop(</span><span class="va">Sum</span><span class="fu">);</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">{</span><span class="ch">reset</span><span class="fu">}</span> <span class="op">-&gt;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">loop(</span><span class="dv">0</span><span class="fu">);</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">{</span><span class="ch">counter</span><span class="fu">,</span> <span class="va">Pid</span><span class="fu">}</span> <span class="op">-&gt;</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="va">Pid</span> <span class="op">!</span> <span class="fu">{</span><span class="ch">counter</span><span class="fu">,</span> <span class="va">Sum</span><span class="fu">},</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">loop(</span><span class="va">Sum</span><span class="fu">);</span></span></code></pre></div>
+<p>Compile this version, Ctrl-C Ctrl-K and send a message to the process that only
+the new version can handle.</p>
 <pre class="shell"><code>
 6&gt; Pid ! {reset}.
 Unhandled message {reset}
@@ -195,7 +200,8 @@ Sum is 3
 Sum is 0
 {print}
 </code></pre>
-<p>The ‘code_switch’ message makes the process load the new version of code. So using this you can upgrade the running process without losing state. Cool.</p>
+<p>The ‘code_switch’ message makes the process load the new version of code. So
+using this you can upgrade the running process without losing state. Cool.</p>
 </div>
 
 

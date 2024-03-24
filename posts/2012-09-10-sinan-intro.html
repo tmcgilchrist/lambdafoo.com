@@ -123,12 +123,22 @@
   <h1 class="post-title">Getting started with Sinan</h1>
   <span class="post-date">September 10, 2012</span>
   <h2 id="background">Background</h2>
-<p>When I started with Erlang I used a simple Makefile to call <code>erlc</code> and pretty much did things by hand. After a number of years in the wilderness I found out about <a href="http://github.com/basho/rebar">rebar</a> from Basho and started using that to compile my code. Everything was good, rebar knew how to compile OTP apps and pull down external dependencies. Except when I needed to generate releases. It’s not necessarily straight forward to get rebar to build you a nice release, <a href="http://www.metabrew.com/article/erlang-rebar-tutorial-generating-releases-upgrades">not that it’s impossible</a> it’s just not as simple as I’d like.</p>
+<p>When I started with Erlang I used a simple Makefile to call <code>erlc</code> and pretty
+much did things by hand. After a number of years in the wilderness I found out
+about <a href="http://github.com/basho/rebar">rebar</a> from Basho and started using that
+to compile my code. Everything was good, rebar knew how to compile OTP apps and pull down external
+dependencies. Except when I needed to generate releases. It’s
+not necessarily straight forward to get rebar to build you a nice release,
+<a href="http://www.metabrew.com/article/erlang-rebar-tutorial-generating-releases-upgrades">not that it’s impossible</a>
+it’s just not as simple as I’d like.</p>
 <p>Enter Sinan, the somewhat forgotten erlang build tool.</p>
-<p>Sinan is a build tool designed to build Erlang/OTP projects, releases and applications. It claims to be more OTP than rebar and uses the OTP metadata artefacts to build your project with little configuration needed.</p>
+<p>Sinan is a build tool designed to build Erlang/OTP projects, releases and
+applications. It claims to be more OTP than rebar and uses the OTP metadata
+artefacts to build your project with little configuration needed.</p>
 <p>Let’s see how well it delivers on the promise.</p>
 <h2 id="sinan-from-scratch">Sinan From Scratch</h2>
-<p>First you’ll need Erlang installed, which your friendly local package management tool should provide. I’m using Homebrew on OSX so I just did:</p>
+<p>First you’ll need Erlang installed, which your friendly local package management tool
+should provide. I’m using Homebrew on OSX so I just did:</p>
 <pre class="shell"><code>$ brew install erlang
 ...
 $ erl -v
@@ -137,7 +147,10 @@ Erlang R15B01 (erts-5.9.1) [source] [64-bit] [smp:8:8] [async-threads:0] [hipe] 
 Eshell V5.9.1  (abort with ^G)
 1&gt;</code></pre>
 <p>Linux should be similarly straight forward and Windows well you’re on your own.</p>
-<p>Grab sinan from the <a href="https://github.com/erlware/sinan/downloads">downloads page</a> on github, I’m using version 4.1.1. Put it somewhere on your PATH, I’ve got mine in ~/bin which is on my PATH, and chmod +x it so it’s executable.</p>
+<p>Grab sinan from the
+<a href="https://github.com/erlware/sinan/downloads">downloads page</a> on github, I’m
+using version 4.1.1. Put it somewhere on your PATH, I’ve got mine in ~/bin which is on my PATH, and chmod
++x it so it’s executable.</p>
 <p>Now for the fun bit, type <code>sinan gen</code> and fill in the details.</p>
 <pre class="shell"><code>
 Please specify your name
@@ -155,7 +168,9 @@ Is this a single application project (&quot;n&quot;)&gt; y
 Would you like a build config? (&quot;y&quot;)&gt; y
 Project was created, you should be good to go!
 </code></pre>
-<p>From that Sinan has generated a project, filling in your details, with an OTP application and some build configuration. Your directories should look something similar to this.</p>
+<p>From that Sinan has generated a project, filling in your details, with an OTP
+application and some build configuration. Your directories should look something
+similar to this.</p>
 <pre class="shell"><code>
 sinan_demo
   |-- config
@@ -170,122 +185,138 @@ sinan_demo
   |    |-- sinan_demo_app.erl
   |    |-- sinan_demo_sup.erl
 </code></pre>
-<p>It includes all the standard directories you’d expect plus a <code>sinan.config</code> file.</p>
-<p>First a little diversion, we need to add a line to the sinan config file, which tells sinan to include the erlang runtime system when it generates a release. Open sinan.config and add <code>{include_erts, true}.</code> as the last line. It should look like this:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode erlang"><code class="sourceCode erlang"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a><span class="fu">{</span><span class="ch">project_name</span><span class="fu">,</span> <span class="ch">sinan_demo</span><span class="fu">}.</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a><span class="fu">{</span><span class="ch">project_vsn</span><span class="fu">,</span> <span class="st">&quot;0.0.1&quot;</span><span class="fu">}.</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a><span class="fu">{</span><span class="ch">build_dir</span><span class="fu">,</span>  <span class="st">&quot;_build&quot;</span><span class="fu">}.</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true"></a><span class="fu">{</span><span class="ch">ignore_dirs</span><span class="fu">,</span> <span class="fu">[</span><span class="st">&quot;_&quot;</span><span class="fu">,</span> <span class="st">&quot;.&quot;</span><span class="fu">]}.</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true"></a></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true"></a><span class="fu">{</span><span class="ch">ignore_apps</span><span class="fu">,</span> <span class="fu">[]}.</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true"></a></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true"></a><span class="fu">{</span><span class="ch">include_erts</span><span class="fu">,</span> <span class="ch">true</span><span class="fu">}.</span></span></code></pre></div>
+<p>It includes all the standard directories you’d expect plus a <code>sinan.config</code>
+file.</p>
+<p>First a little diversion, we need to add a line to the sinan config file, which
+tells sinan to include the erlang runtime system when it generates a release.
+Open sinan.config and add <code>{include_erts, true}.</code> as the last line. It should
+look like this:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode erlang"><code class="sourceCode erlang"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="ch">project_name</span><span class="fu">,</span> <span class="ch">sinan_demo</span><span class="fu">}.</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="ch">project_vsn</span><span class="fu">,</span> <span class="st">&quot;0.0.1&quot;</span><span class="fu">}.</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="ch">build_dir</span><span class="fu">,</span>  <span class="st">&quot;_build&quot;</span><span class="fu">}.</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="ch">ignore_dirs</span><span class="fu">,</span> <span class="fu">[</span><span class="st">&quot;_&quot;</span><span class="fu">,</span> <span class="st">&quot;.&quot;</span><span class="fu">]}.</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="ch">ignore_apps</span><span class="fu">,</span> <span class="fu">[]}.</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="ch">include_erts</span><span class="fu">,</span> <span class="ch">true</span><span class="fu">}.</span></span></code></pre></div>
 <p>Back to making our generated code runnable.</p>
-<p>By default the generated supervisor doesn’t point to a valid module so you’ll need to remedy that before trying to startup the application. Create a new file called <code>sinan_demo_server.erl</code> in <code>src</code> and drop the following code in.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode erlang"><code class="sourceCode erlang"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a><span class="kw">-module</span><span class="fu">(</span><span class="ch">sinan_demo_server</span><span class="fu">).</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a><span class="op">-</span><span class="fu">behaviour(</span><span class="ch">gen_server</span><span class="fu">).</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true"></a></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true"></a><span class="co">%% API</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true"></a><span class="kw">-export</span><span class="fu">([</span><span class="ch">start_link</span><span class="op">/</span><span class="dv">0</span><span class="fu">,</span> <span class="ch">add_one</span><span class="op">/</span><span class="dv">0</span><span class="fu">,</span> <span class="ch">total</span><span class="op">/</span><span class="dv">0</span><span class="fu">]).</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true"></a></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true"></a><span class="co">%% Callbacks</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true"></a><span class="kw">-export</span><span class="fu">([</span><span class="ch">init</span><span class="op">/</span><span class="dv">1</span><span class="fu">,</span> <span class="ch">handle_call</span><span class="op">/</span><span class="dv">3</span><span class="fu">,</span> <span class="ch">handle_cast</span><span class="op">/</span><span class="dv">2</span><span class="fu">,</span> <span class="ch">handle_info</span><span class="op">/</span><span class="dv">2</span><span class="fu">,</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true"></a>         <span class="ch">terminate</span><span class="op">/</span><span class="dv">2</span><span class="fu">,</span> <span class="ch">code_change</span><span class="op">/</span><span class="dv">3</span><span class="fu">]).</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true"></a></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true"></a><span class="op">-</span><span class="fu">record(</span><span class="ch">state</span><span class="fu">,</span> <span class="fu">{</span><span class="ch">count</span><span class="fu">}).</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true"></a></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true"></a><span class="co">%%%===================================================================</span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true"></a><span class="co">%%% API functions</span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true"></a><span class="co">%%%===================================================================</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true"></a></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true"></a><span class="fu">start_link()</span> <span class="op">-&gt;</span></span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true"></a>    <span class="fu">gen_server:start_link({</span><span class="ch">local</span><span class="fu">,</span> <span class="fu">?</span><span class="va">MODULE</span><span class="fu">},</span> <span class="fu">?</span><span class="va">MODULE</span><span class="fu">,</span> <span class="fu">[],</span> <span class="fu">[]).</span></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true"></a></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true"></a><span class="fu">total()</span> <span class="op">-&gt;</span></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true"></a>    <span class="fu">gen_server:call(?</span><span class="va">MODULE</span><span class="fu">,</span> <span class="ch">total</span><span class="fu">).</span></span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true"></a></span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true"></a><span class="fu">add_one()</span> <span class="op">-&gt;</span></span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true"></a>    <span class="fu">gen_server:call(?</span><span class="va">MODULE</span><span class="fu">,</span> <span class="ch">add</span><span class="fu">).</span></span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true"></a></span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true"></a><span class="co">%%%===================================================================</span></span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true"></a><span class="co">%%% Callbacks</span></span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true"></a><span class="co">%%%===================================================================</span></span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true"></a></span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true"></a><span class="fu">init([])</span> <span class="op">-&gt;</span></span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true"></a>    <span class="fu">io:format(</span><span class="st">&quot;starting~n&quot;</span><span class="fu">,</span> <span class="fu">[]),</span></span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true"></a>    <span class="fu">{</span><span class="ch">ok</span><span class="fu">,</span> <span class="fu">#</span><span class="ch">state</span><span class="fu">{</span><span class="ch">count</span> <span class="op">=</span> <span class="dv">0</span><span class="fu">},</span> <span class="dv">0</span><span class="fu">}.</span></span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true"></a></span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true"></a><span class="fu">handle_call(</span><span class="ch">add</span><span class="fu">,</span> <span class="va">_From</span><span class="fu">,</span> <span class="va">State</span><span class="fu">)</span> <span class="op">-&gt;</span></span>
-<span id="cb5-37"><a href="#cb5-37" aria-hidden="true"></a>    <span class="va">NewCount</span> <span class="op">=</span> <span class="va">State</span><span class="fu">#</span><span class="ch">state</span><span class="fu">.</span><span class="ch">count</span> <span class="op">+</span> <span class="dv">1</span><span class="fu">,</span></span>
-<span id="cb5-38"><a href="#cb5-38" aria-hidden="true"></a>    <span class="va">NewState</span> <span class="op">=</span> <span class="va">State</span><span class="fu">#</span><span class="ch">state</span><span class="fu">{</span><span class="ch">count</span> <span class="op">=</span> <span class="va">NewCount</span><span class="fu">},</span></span>
-<span id="cb5-39"><a href="#cb5-39" aria-hidden="true"></a>    <span class="va">Reply</span>    <span class="op">=</span> <span class="fu">{</span><span class="ch">ok</span><span class="fu">,</span> <span class="va">NewState</span><span class="fu">},</span></span>
-<span id="cb5-40"><a href="#cb5-40" aria-hidden="true"></a>    <span class="fu">{</span><span class="ch">reply</span><span class="fu">,</span> <span class="va">Reply</span><span class="fu">,</span> <span class="va">NewState</span><span class="fu">};</span></span>
-<span id="cb5-41"><a href="#cb5-41" aria-hidden="true"></a><span class="fu">handle_call(</span><span class="ch">total</span><span class="fu">,</span> <span class="va">_From</span><span class="fu">,</span> <span class="va">State</span> <span class="op">=</span> <span class="fu">#</span><span class="ch">state</span><span class="fu">{</span> <span class="ch">count</span> <span class="op">=</span> <span class="va">Count</span> <span class="fu">})</span> <span class="op">-&gt;</span></span>
-<span id="cb5-42"><a href="#cb5-42" aria-hidden="true"></a>    <span class="fu">{</span><span class="ch">reply</span><span class="fu">,</span> <span class="va">Count</span><span class="fu">,</span> <span class="va">State</span><span class="fu">};</span></span>
-<span id="cb5-43"><a href="#cb5-43" aria-hidden="true"></a><span class="fu">handle_call(</span><span class="va">Msg</span><span class="fu">,</span> <span class="va">_From</span><span class="fu">,</span> <span class="va">State</span><span class="fu">)</span> <span class="op">-&gt;</span></span>
-<span id="cb5-44"><a href="#cb5-44" aria-hidden="true"></a>    <span class="fu">{</span><span class="ch">reply</span><span class="fu">,</span> <span class="fu">{</span><span class="ch">ok</span><span class="fu">,</span> <span class="va">Msg</span><span class="fu">},</span> <span class="va">State</span><span class="fu">}.</span></span>
-<span id="cb5-45"><a href="#cb5-45" aria-hidden="true"></a></span>
-<span id="cb5-46"><a href="#cb5-46" aria-hidden="true"></a><span class="fu">handle_cast(</span>_<span class="va">Msg</span><span class="fu">,</span> <span class="va">State</span><span class="fu">)</span> <span class="op">-&gt;</span></span>
-<span id="cb5-47"><a href="#cb5-47" aria-hidden="true"></a>    <span class="fu">{</span><span class="ch">noreply</span><span class="fu">,</span> <span class="va">State</span><span class="fu">}.</span></span>
-<span id="cb5-48"><a href="#cb5-48" aria-hidden="true"></a></span>
-<span id="cb5-49"><a href="#cb5-49" aria-hidden="true"></a><span class="fu">handle_info(</span>_<span class="va">Info</span><span class="fu">,</span> <span class="va">State</span><span class="fu">)</span> <span class="op">-&gt;</span></span>
-<span id="cb5-50"><a href="#cb5-50" aria-hidden="true"></a>    <span class="fu">{</span><span class="ch">noreply</span><span class="fu">,</span> <span class="va">State</span><span class="fu">}.</span></span>
-<span id="cb5-51"><a href="#cb5-51" aria-hidden="true"></a></span>
-<span id="cb5-52"><a href="#cb5-52" aria-hidden="true"></a><span class="fu">terminate(</span>_<span class="va">Reason</span><span class="fu">,</span> <span class="va">_State</span><span class="fu">)</span> <span class="op">-&gt;</span></span>
-<span id="cb5-53"><a href="#cb5-53" aria-hidden="true"></a>    <span class="ch">ok</span><span class="fu">.</span></span>
-<span id="cb5-54"><a href="#cb5-54" aria-hidden="true"></a></span>
-<span id="cb5-55"><a href="#cb5-55" aria-hidden="true"></a><span class="fu">code_change(</span>_<span class="va">OldVsn</span><span class="fu">,</span> <span class="va">State</span><span class="fu">,</span> <span class="va">_Extra</span><span class="fu">)</span> <span class="op">-&gt;</span></span>
-<span id="cb5-56"><a href="#cb5-56" aria-hidden="true"></a>    <span class="fu">{</span><span class="ch">ok</span><span class="fu">,</span> <span class="va">State</span><span class="fu">}.</span></span></code></pre></div>
-<p>It’s a pretty standard OTP gen_server application with 2 API methods. <code>add_one/0</code> adds 1 to the counter and <code>total/0</code> returns the value of the counter. The record definition setups up the state record for this server with just a <code>count</code> attribute. The 2 API functions use the <code>gen_server:call/2</code> method to hit the OTP callback for <code>handle_call/3</code>.</p>
-<p>Next we need to fix the supervisor so it starts the correct module. Change <code>sinan_demo_sup.erl</code> so it looks like the code below:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode erlang"><code class="sourceCode erlang"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a><span class="fu">start_link()</span> <span class="op">-&gt;</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a>    <span class="fu">supervisor:start_link({</span><span class="ch">local</span><span class="fu">,</span> <span class="fu">?</span><span class="va">SERVER</span><span class="fu">},</span> <span class="fu">?</span><span class="va">MODULE</span><span class="fu">,</span> <span class="fu">[]).</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true"></a><span class="co">%%%===================================================================</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true"></a><span class="co">%%% Supervisor callbacks</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true"></a><span class="co">%%%===================================================================</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true"></a></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true"></a><span class="co">%% @private</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true"></a><span class="op">-</span><span class="ch">spec</span> <span class="fu">init(list())</span> <span class="op">-&gt;</span> <span class="fu">{</span><span class="ch">ok</span><span class="fu">,</span> <span class="fu">{</span><span class="va">SupFlags</span><span class="fu">::any(),</span> <span class="fu">[</span><span class="va">ChildSpec</span><span class="fu">::any()]}}</span> <span class="fu">|</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true"></a>                            <span class="ch">ignore</span> <span class="fu">|</span> <span class="fu">{</span><span class="ch">error</span><span class="fu">,</span> <span class="va">Reason</span><span class="fu">::any()}.</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true"></a><span class="fu">init([])</span> <span class="op">-&gt;</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true"></a>    <span class="va">RestartStrategy</span> <span class="op">=</span> <span class="ch">one_for_one</span><span class="fu">,</span></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true"></a>    <span class="va">MaxRestarts</span> <span class="op">=</span> <span class="dv">1000</span><span class="fu">,</span></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true"></a>    <span class="va">MaxSecondsBetweenRestarts</span> <span class="op">=</span> <span class="dv">3600</span><span class="fu">,</span></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true"></a></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true"></a>    <span class="va">SupFlags</span> <span class="op">=</span> <span class="fu">{</span><span class="va">RestartStrategy</span><span class="fu">,</span> <span class="va">MaxRestarts</span><span class="fu">,</span> <span class="va">MaxSecondsBetweenRestarts</span><span class="fu">},</span></span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true"></a></span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true"></a>    <span class="va">Restart</span> <span class="op">=</span> <span class="ch">permanent</span><span class="fu">,</span></span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true"></a>    <span class="va">Shutdown</span> <span class="op">=</span> <span class="dv">2000</span><span class="fu">,</span></span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true"></a>    <span class="va">Type</span> <span class="op">=</span> <span class="ch">worker</span><span class="fu">,</span></span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true"></a></span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true"></a>    <span class="va">AChild</span> <span class="op">=</span> <span class="fu">{</span><span class="ch">sinan_demo_server</span><span class="fu">,</span> <span class="fu">{</span><span class="ch">sinan_demo_server</span><span class="fu">,</span> <span class="ch">start_link</span><span class="fu">,</span> <span class="fu">[]},</span></span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true"></a>              <span class="va">Restart</span><span class="fu">,</span> <span class="va">Shutdown</span><span class="fu">,</span> <span class="va">Type</span><span class="fu">,</span> <span class="fu">[</span><span class="ch">sinan_demo_server</span><span class="fu">]},</span></span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true"></a></span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true"></a>    <span class="fu">{</span><span class="ch">ok</span><span class="fu">,</span> <span class="fu">{</span><span class="va">SupFlags</span><span class="fu">,</span> <span class="fu">[</span><span class="va">AChild</span><span class="fu">]}}.</span></span></code></pre></div>
-<p>The 2 changes we have make is to <code>start_link/0</code> so we can call the server directly, and fix the child spec so it starts our new module.</p>
-<p>Now we need to add the sinan_demo_server module to <code>sinan_demo.app.src</code> so we know about it when generating the OTP application. Just add it to the list of modules like so:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode erlang"><code class="sourceCode erlang"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a><span class="co">%% This is the application resource file (.app file) for the,</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a><span class="co">%% application.</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true"></a><span class="fu">{</span><span class="ch">application</span><span class="fu">,</span> <span class="ch">sinan_demo</span><span class="fu">,</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true"></a> <span class="fu">[{</span><span class="ch">description</span><span class="fu">,</span> <span class="st">&quot;Sinan demo application.&quot;</span><span class="fu">},</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true"></a>  <span class="fu">{</span><span class="ch">vsn</span><span class="fu">,</span> <span class="st">&quot;0.0.1&quot;</span><span class="fu">},</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true"></a>  <span class="fu">{</span><span class="ch">modules</span><span class="fu">,</span> <span class="fu">[</span><span class="ch">sinan_demo_app</span><span class="fu">,</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true"></a>             <span class="ch">sinan_demo_sup</span><span class="fu">,</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true"></a>             <span class="ch">sinan_demo_server</span><span class="fu">]},</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true"></a>  <span class="fu">{registered,[</span><span class="ch">sinan_demo_sup</span><span class="fu">]},</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true"></a>  <span class="fu">{</span><span class="ch">applications</span><span class="fu">,</span> <span class="fu">[</span><span class="ch">kernel</span><span class="fu">,</span> <span class="ch">stdlib</span><span class="fu">]},</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true"></a>  <span class="fu">{</span><span class="ch">mod</span><span class="fu">,</span> <span class="fu">{</span><span class="ch">sinan_demo_app</span><span class="fu">,[]}},</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true"></a>  <span class="fu">{</span><span class="ch">start_phases</span><span class="fu">,</span> <span class="fu">[]}]}.</span></span></code></pre></div>
+<p>By default the generated supervisor doesn’t point to a valid module so you’ll
+need to remedy that before trying to startup the application. Create a new file
+called <code>sinan_demo_server.erl</code> in <code>src</code> and drop the following code in.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode erlang"><code class="sourceCode erlang"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">-module</span><span class="fu">(</span><span class="ch">sinan_demo_server</span><span class="fu">).</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="op">-</span><span class="fu">behaviour(</span><span class="ch">gen_server</span><span class="fu">).</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">%% API</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="kw">-export</span><span class="fu">([</span><span class="ch">start_link</span><span class="op">/</span><span class="dv">0</span><span class="fu">,</span> <span class="ch">add_one</span><span class="op">/</span><span class="dv">0</span><span class="fu">,</span> <span class="ch">total</span><span class="op">/</span><span class="dv">0</span><span class="fu">]).</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">%% Callbacks</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="kw">-export</span><span class="fu">([</span><span class="ch">init</span><span class="op">/</span><span class="dv">1</span><span class="fu">,</span> <span class="ch">handle_call</span><span class="op">/</span><span class="dv">3</span><span class="fu">,</span> <span class="ch">handle_cast</span><span class="op">/</span><span class="dv">2</span><span class="fu">,</span> <span class="ch">handle_info</span><span class="op">/</span><span class="dv">2</span><span class="fu">,</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>         <span class="ch">terminate</span><span class="op">/</span><span class="dv">2</span><span class="fu">,</span> <span class="ch">code_change</span><span class="op">/</span><span class="dv">3</span><span class="fu">]).</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="op">-</span><span class="fu">record(</span><span class="ch">state</span><span class="fu">,</span> <span class="fu">{</span><span class="ch">count</span><span class="fu">}).</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co">%%%===================================================================</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co">%%% API functions</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">%%%===================================================================</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="fu">start_link()</span> <span class="op">-&gt;</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gen_server:start_link({</span><span class="ch">local</span><span class="fu">,</span> <span class="fu">?</span><span class="va">MODULE</span><span class="fu">},</span> <span class="fu">?</span><span class="va">MODULE</span><span class="fu">,</span> <span class="fu">[],</span> <span class="fu">[]).</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="fu">total()</span> <span class="op">-&gt;</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gen_server:call(?</span><span class="va">MODULE</span><span class="fu">,</span> <span class="ch">total</span><span class="fu">).</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="fu">add_one()</span> <span class="op">-&gt;</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gen_server:call(?</span><span class="va">MODULE</span><span class="fu">,</span> <span class="ch">add</span><span class="fu">).</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="co">%%%===================================================================</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="co">%%% Callbacks</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a><span class="co">%%%===================================================================</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="fu">init([])</span> <span class="op">-&gt;</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">io:format(</span><span class="st">&quot;starting~n&quot;</span><span class="fu">,</span> <span class="fu">[]),</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span><span class="ch">ok</span><span class="fu">,</span> <span class="fu">#</span><span class="ch">state</span><span class="fu">{</span><span class="ch">count</span> <span class="op">=</span> <span class="dv">0</span><span class="fu">},</span> <span class="dv">0</span><span class="fu">}.</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a><span class="fu">handle_call(</span><span class="ch">add</span><span class="fu">,</span> <span class="va">_From</span><span class="fu">,</span> <span class="va">State</span><span class="fu">)</span> <span class="op">-&gt;</span></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>    <span class="va">NewCount</span> <span class="op">=</span> <span class="va">State</span><span class="fu">#</span><span class="ch">state</span><span class="fu">.</span><span class="ch">count</span> <span class="op">+</span> <span class="dv">1</span><span class="fu">,</span></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>    <span class="va">NewState</span> <span class="op">=</span> <span class="va">State</span><span class="fu">#</span><span class="ch">state</span><span class="fu">{</span><span class="ch">count</span> <span class="op">=</span> <span class="va">NewCount</span><span class="fu">},</span></span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>    <span class="va">Reply</span>    <span class="op">=</span> <span class="fu">{</span><span class="ch">ok</span><span class="fu">,</span> <span class="va">NewState</span><span class="fu">},</span></span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span><span class="ch">reply</span><span class="fu">,</span> <span class="va">Reply</span><span class="fu">,</span> <span class="va">NewState</span><span class="fu">};</span></span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a><span class="fu">handle_call(</span><span class="ch">total</span><span class="fu">,</span> <span class="va">_From</span><span class="fu">,</span> <span class="va">State</span> <span class="op">=</span> <span class="fu">#</span><span class="ch">state</span><span class="fu">{</span> <span class="ch">count</span> <span class="op">=</span> <span class="va">Count</span> <span class="fu">})</span> <span class="op">-&gt;</span></span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span><span class="ch">reply</span><span class="fu">,</span> <span class="va">Count</span><span class="fu">,</span> <span class="va">State</span><span class="fu">};</span></span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a><span class="fu">handle_call(</span><span class="va">Msg</span><span class="fu">,</span> <span class="va">_From</span><span class="fu">,</span> <span class="va">State</span><span class="fu">)</span> <span class="op">-&gt;</span></span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span><span class="ch">reply</span><span class="fu">,</span> <span class="fu">{</span><span class="ch">ok</span><span class="fu">,</span> <span class="va">Msg</span><span class="fu">},</span> <span class="va">State</span><span class="fu">}.</span></span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a><span class="fu">handle_cast(</span><span class="va">_Msg</span><span class="fu">,</span> <span class="va">State</span><span class="fu">)</span> <span class="op">-&gt;</span></span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span><span class="ch">noreply</span><span class="fu">,</span> <span class="va">State</span><span class="fu">}.</span></span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a><span class="fu">handle_info(</span><span class="va">_Info</span><span class="fu">,</span> <span class="va">State</span><span class="fu">)</span> <span class="op">-&gt;</span></span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span><span class="ch">noreply</span><span class="fu">,</span> <span class="va">State</span><span class="fu">}.</span></span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a><span class="fu">terminate(</span><span class="va">_Reason</span><span class="fu">,</span> <span class="va">_State</span><span class="fu">)</span> <span class="op">-&gt;</span></span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>    <span class="ch">ok</span><span class="fu">.</span></span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a><span class="fu">code_change(</span><span class="va">_OldVsn</span><span class="fu">,</span> <span class="va">State</span><span class="fu">,</span> <span class="va">_Extra</span><span class="fu">)</span> <span class="op">-&gt;</span></span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span><span class="ch">ok</span><span class="fu">,</span> <span class="va">State</span><span class="fu">}.</span></span></code></pre></div>
+<p>It’s a pretty standard OTP gen_server application with 2 API
+methods. <code>add_one/0</code> adds 1 to the counter and <code>total/0</code> returns the value of the
+counter. The record definition setups up the state record for this server with
+just a <code>count</code> attribute. The 2 API functions use the <code>gen_server:call/2</code> method
+to hit the OTP callback for <code>handle_call/3</code>.</p>
+<p>Next we need to fix the supervisor so it starts the correct module. Change
+<code>sinan_demo_sup.erl</code> so it looks like the code below:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode erlang"><code class="sourceCode erlang"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">start_link()</span> <span class="op">-&gt;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">supervisor:start_link({</span><span class="ch">local</span><span class="fu">,</span> <span class="fu">?</span><span class="va">SERVER</span><span class="fu">},</span> <span class="fu">?</span><span class="va">MODULE</span><span class="fu">,</span> <span class="fu">[]).</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">%%%===================================================================</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">%%% Supervisor callbacks</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">%%%===================================================================</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">%% @private</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="op">-</span><span class="ch">spec</span> <span class="fu">init(list())</span> <span class="op">-&gt;</span> <span class="fu">{</span><span class="ch">ok</span><span class="fu">,</span> <span class="fu">{</span><span class="va">SupFlags</span><span class="fu">::any(),</span> <span class="fu">[</span><span class="va">ChildSpec</span><span class="fu">::any()]}}</span> <span class="fu">|</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>                            <span class="ch">ignore</span> <span class="fu">|</span> <span class="fu">{</span><span class="ch">error</span><span class="fu">,</span> <span class="va">Reason</span><span class="fu">::any()}.</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="fu">init([])</span> <span class="op">-&gt;</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="va">RestartStrategy</span> <span class="op">=</span> <span class="ch">one_for_one</span><span class="fu">,</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="va">MaxRestarts</span> <span class="op">=</span> <span class="dv">1000</span><span class="fu">,</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    <span class="va">MaxSecondsBetweenRestarts</span> <span class="op">=</span> <span class="dv">3600</span><span class="fu">,</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="va">SupFlags</span> <span class="op">=</span> <span class="fu">{</span><span class="va">RestartStrategy</span><span class="fu">,</span> <span class="va">MaxRestarts</span><span class="fu">,</span> <span class="va">MaxSecondsBetweenRestarts</span><span class="fu">},</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    <span class="va">Restart</span> <span class="op">=</span> <span class="ch">permanent</span><span class="fu">,</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="va">Shutdown</span> <span class="op">=</span> <span class="dv">2000</span><span class="fu">,</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    <span class="va">Type</span> <span class="op">=</span> <span class="ch">worker</span><span class="fu">,</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    <span class="va">AChild</span> <span class="op">=</span> <span class="fu">{</span><span class="ch">sinan_demo_server</span><span class="fu">,</span> <span class="fu">{</span><span class="ch">sinan_demo_server</span><span class="fu">,</span> <span class="ch">start_link</span><span class="fu">,</span> <span class="fu">[]},</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>              <span class="va">Restart</span><span class="fu">,</span> <span class="va">Shutdown</span><span class="fu">,</span> <span class="va">Type</span><span class="fu">,</span> <span class="fu">[</span><span class="ch">sinan_demo_server</span><span class="fu">]},</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span><span class="ch">ok</span><span class="fu">,</span> <span class="fu">{</span><span class="va">SupFlags</span><span class="fu">,</span> <span class="fu">[</span><span class="va">AChild</span><span class="fu">]}}.</span></span></code></pre></div>
+<p>The 2 changes we have make is to <code>start_link/0</code> so we can call the server
+directly, and fix the child spec so it starts our new module.</p>
+<p>Now we need to add the sinan_demo_server module to <code>sinan_demo.app.src</code> so we
+know about it when generating the OTP application. Just add it to the list of
+modules like so:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode erlang"><code class="sourceCode erlang"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">%% This is the application resource file (.app file) for the,</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">%% application.</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="ch">application</span><span class="fu">,</span> <span class="ch">sinan_demo</span><span class="fu">,</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a> <span class="fu">[{</span><span class="ch">description</span><span class="fu">,</span> <span class="st">&quot;Sinan demo application.&quot;</span><span class="fu">},</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">{</span><span class="ch">vsn</span><span class="fu">,</span> <span class="st">&quot;0.0.1&quot;</span><span class="fu">},</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">{</span><span class="ch">modules</span><span class="fu">,</span> <span class="fu">[</span><span class="ch">sinan_demo_app</span><span class="fu">,</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>             <span class="ch">sinan_demo_sup</span><span class="fu">,</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>             <span class="ch">sinan_demo_server</span><span class="fu">]},</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">{registered,[</span><span class="ch">sinan_demo_sup</span><span class="fu">]},</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">{</span><span class="ch">applications</span><span class="fu">,</span> <span class="fu">[</span><span class="ch">kernel</span><span class="fu">,</span> <span class="ch">stdlib</span><span class="fu">]},</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">{</span><span class="ch">mod</span><span class="fu">,</span> <span class="fu">{</span><span class="ch">sinan_demo_app</span><span class="fu">,[]}},</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">{</span><span class="ch">start_phases</span><span class="fu">,</span> <span class="fu">[]}]}.</span></span></code></pre></div>
 <p>Compile with <code>sinan build</code> and hopefully everything works.</p>
-<p>From here you’ve got a few options to get your application running, but the easiest is just to use the sinan shell and start your application from there.</p>
+<p>From here you’ve got a few options to get your application running,
+but the easiest is just to use the sinan shell and start your application from
+there.</p>
 <pre class="shell"><code>
 $ sinan shell
 Eshell V5.9.1  (abort with ^G)
@@ -301,7 +332,8 @@ Eshell V5.9.1  (abort with ^G)
 2&gt; application:start(sinan_demo).
 ok
 </code></pre>
-<p>We’ve started a shell and checked what applications are started with <code>application:which_applications()</code>. Now start the demo application with:</p>
+<p>We’ve started a shell and checked what applications are started with
+<code>application:which_applications()</code>. Now start the demo application with:</p>
 <pre class="shell"><code>3&gt; application:start(sinan_demo).
 ok</code></pre>
 <p>Now lets test that we can call the application.</p>
@@ -325,7 +357,14 @@ $ tree -d _build/
         `-- releases
             `-- 0.0.1
 </code></pre>
-<p>The <code>bin</code> directory is still there from last time but now we have an erts, lib and releases directories. erts is there because earlier we asked sinan to include an erlang runtime, so you can copy everything under _build/sinan_demo to another machine without erlang installed and run this application. The limitation being that the CPU and OS needs to match the machine you’ve built on. <code>lib</code> includes all the applications you asked sinan to include, they’ll match what you have in your collective .app.src files. <code>releases</code> contains configuration files specific to a particular release of the application.</p>
+<p>The <code>bin</code> directory is still there from last time but now we have an erts, lib
+and releases directories. erts is there because earlier we asked sinan to
+include an erlang runtime, so you can copy everything under _build/sinan_demo to
+another machine without erlang installed and run this application. The
+limitation being that the CPU and OS needs to match the machine you’ve built
+on. <code>lib</code> includes all the applications you asked sinan to include, they’ll
+match what you have in your collective .app.src files. <code>releases</code> contains
+configuration files specific to a particular release of the application.</p>
 <p>Starting the release generated is as simple as</p>
 <pre class="shell"><code>$ ./_build/sinan_demo/bin/sinan_demo
 Erlang R15B01 (erts-5.9.1) [source] [64-bit] [smp:8:8] [async-threads:0] [hipe] [kernel-poll:false]
@@ -338,7 +377,8 @@ Eshell V5.9.1  (abort with ^G)
   {kernel,&quot;ERTS  CXC 138 10&quot;,&quot;2.15.1&quot;}]
 2&gt;
 </code></pre>
-<p>We’ll leave it there for now, but if you’re curious like me you’ll probably have a bunch of questions of where to take sinan next.</p>
+<p>We’ll leave it there for now, but if you’re curious like me you’ll probably have
+a bunch of questions of where to take sinan next.</p>
 <p>Next time I’m going to cover:</p>
 <ul>
 <li>Generating Version 2</li>

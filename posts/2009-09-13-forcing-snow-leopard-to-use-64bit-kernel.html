@@ -122,15 +122,16 @@
         <div class="post">
   <h1 class="post-title">Forcing Snow Leopard to use 64bit Kernel</h1>
   <span class="post-date">September 13, 2009</span>
-  <p>How to force Snow Leopard to boot the 64 bit kernel, cause we all want to run the latest 64 bit goodness from Apple.</p>
+  <p>How to force Snow Leopard to boot the 64 bit kernel, cause we all want to run the
+latest 64 bit goodness from Apple.</p>
 <p>Open the file</p>
 <pre><code>/Library/Preferences/SystemConfiguration/com.apple.Boot.plist</code></pre>
 <p>with something like TextEdit and add arch=x86_64 to the Kernel Flags string:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a><span class="kw">&lt;key&gt;</span>Kernel<span class="kw">&lt;/key&gt;</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a><span class="kw">&lt;string&gt;</span>mach_kernel<span class="kw">&lt;/string&gt;</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a><span class="kw">&lt;key&gt;</span>Kernel Flags<span class="kw">&lt;/key&gt;</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a><span class="kw">&lt;string&gt;</span>arch=x86_64<span class="kw">&lt;/string&gt;</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">key</span>&gt;Kernel&lt;/<span class="kw">key</span>&gt;</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">string</span>&gt;mach_kernel&lt;/<span class="kw">string</span>&gt;</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">key</span>&gt;Kernel Flags&lt;/<span class="kw">key</span>&gt;</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">string</span>&gt;arch=x86_64&lt;/<span class="kw">string</span>&gt;</span></code></pre></div>
 <p>This is posted just about everywhere, and is really only added here for my convenience.</p>
 </div>
 

@@ -122,37 +122,45 @@
         <div class="post">
   <h1 class="post-title">Rails, ORA-000972 and you</h1>
   <span class="post-date">June 24, 2011</span>
-  <p>Lately I’ve been running up against <em>“ORA-00972: identifier is too long”</em>, when writing Rails migrations for Oracle. This particular error indicates that one of your identifiers is longer than 32 characters which is the maximum length for Oracle.</p>
+  <p>Lately I’ve been running up against <em>“ORA-00972: identifier is too long”</em>, when
+writing Rails migrations for Oracle. This particular error indicates that one of
+your identifiers is longer than 32 characters which is the maximum length for
+Oracle.</p>
 <p>It’ll look something like this in your code:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="kw">class</span> <span class="dt">CreateLongTable</span> &lt; <span class="dt">ActiveRecord</span>::<span class="dt">Migration</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a>  <span class="kw">def</span> <span class="dv">self</span>.up</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a>    create_table <span class="st">:long_table</span> <span class="kw">do</span> |t|</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a>      t.string <span class="st">:title</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a>      t.references <span class="st">:someother_really_long_identifier</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a>    <span class="kw">end</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a>  <span class="kw">end</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true"></a>  ...</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true"></a><span class="kw">end</span></span></code></pre></div>
-<p>This migration will give you a foreign key id called <strong>someother_really_long_identifier_id</strong> which is obviously too long for Oracle. The solution is to use your own foreign key id name. In your migration add a shorter reference.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a><span class="kw">class</span> <span class="dt">CreateLongTable</span> &lt; <span class="dt">ActiveRecord</span>::<span class="dt">Migration</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a>  <span class="kw">def</span> <span class="dv">self</span>.up</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a>    create_table <span class="st">:long_table</span> <span class="kw">do</span> |t|</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a>      t.string <span class="st">:title</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a>      t.references <span class="st">:short_name</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a>    <span class="kw">end</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true"></a>  <span class="kw">end</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true"></a>  ...</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true"></a><span class="kw">end</span></span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="cf">class</span> <span class="dt">CreateLongTable</span> <span class="kw">&lt;</span> <span class="dt">ActiveRecord</span><span class="kw">::</span><span class="dt">Migration</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">def</span> <span class="dv">self</span><span class="at">.up</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    create_table <span class="wa">:long_table</span> <span class="cf">do</span> <span class="kw">|</span>t<span class="kw">|</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>      t<span class="at">.string</span> <span class="wa">:title</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>      t<span class="at">.references</span> <span class="wa">:someother_really_long_identifier</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">end</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">...</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code></pre></div>
+<p>This migration will give you a foreign key id called
+<strong>someother_really_long_identifier_id</strong> which is obviously too long for
+Oracle. The solution is to use your own foreign key id name. In your migration
+add a shorter reference.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="cf">class</span> <span class="dt">CreateLongTable</span> <span class="kw">&lt;</span> <span class="dt">ActiveRecord</span><span class="kw">::</span><span class="dt">Migration</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">def</span> <span class="dv">self</span><span class="at">.up</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    create_table <span class="wa">:long_table</span> <span class="cf">do</span> <span class="kw">|</span>t<span class="kw">|</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>      t<span class="at">.string</span> <span class="wa">:title</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>      t<span class="at">.references</span> <span class="wa">:short_name</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">end</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">...</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code></pre></div>
 <p>Then in your model use the shorter foreign key name.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="kw">class</span> <span class="dt">LongTable</span> &lt; <span class="dt">ActiveRecord</span>::<span class="dt">Base</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a>  belongs_to <span class="st">:someother_really_long_identifier</span>,</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a>             <span class="st">:class_name</span> =&gt; <span class="st">'ClassName'</span>,</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a>             <span class="st">:foreign_key</span> =&gt; <span class="st">'short_name_id'</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a><span class="kw">end</span></span></code></pre></div>
-<p>And everything should be sweet, your model will use <strong>someother_really_long_identifier</strong> and no-one need know that the table is really using <strong>short_name_id</strong>.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="cf">class</span> <span class="dt">LongTable</span> <span class="kw">&lt;</span> <span class="dt">ActiveRecord</span><span class="kw">::</span><span class="dt">Base</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  belongs_to <span class="wa">:someother_really_long_identifier</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>             <span class="wa">:class_name</span> <span class="kw">=&gt;</span> <span class="vs">'ClassName'</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>             <span class="wa">:foreign_key</span> <span class="kw">=&gt;</span> <span class="vs">'short_name_id'</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code></pre></div>
+<p>And everything should be sweet, your model will use
+<strong>someother_really_long_identifier</strong> and no-one need know that the table is
+really using <strong>short_name_id</strong>.</p>
 </div>
 
 

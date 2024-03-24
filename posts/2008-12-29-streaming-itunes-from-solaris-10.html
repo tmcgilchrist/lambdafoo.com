@@ -124,16 +124,23 @@
   <span class="post-date">December 29, 2008</span>
   <p><strong>Problem:</strong> Sharing iTunes library from home server running Solaris.</p>
 <p><strong>Solution:</strong> Firefly Media Server (aka mt-daapd).</p>
-<p>Firefly acts as a shared iTunes volume to any iTunes clients. Since all my clients will be Macs this is the perfect solution. I had previously tried to follow <a href="http://blogs.sun.com/constantin/entry/solaris_home_part_4_streaming">these</a> instructions but had no luck.</p>
+<p>Firefly acts as a shared iTunes volume to any iTunes clients. Since all my
+clients will be Macs this is the perfect solution. I had previously tried to
+follow
+<a href="http://blogs.sun.com/constantin/entry/solaris_home_part_4_streaming">these</a>
+instructions but had no luck.</p>
 <p>Coming back with a fresh Solaris 10 and Sun Studio 11 install I had a bit more luck.</p>
 <p><strong>Step 1:</strong> Dependencies available from Blastwave.</p>
 <ul>
 <li>libid3tag</li>
 <li>sqlite3</li>
 </ul>
-<p><strong>Step 2:</strong> Download Firefly from <a href="http://www.fireflymediaserver.org/">here</a>. I used the latest nightly svn download.</p>
+<p><strong>Step 2:</strong> Download Firefly from <a href="http://www.fireflymediaserver.org/">here</a>. I
+used the latest nightly svn download.</p>
 <p><strong>Step 3:</strong> Running the configure script.</p>
-<p>A couple of pre-requisites before running configure, make sure you have the Sun Studio compilers in your PATH. Otherwise it will try to use the gcc compiler or not find one at all.</p>
+<p>A couple of pre-requisites before running configure, make sure you have the Sun
+Studio compilers in your PATH. Otherwise it will try to use the gcc compiler or
+not find one at all.</p>
 <pre class="shell"><code>export PATH=/opt/SUNWspro/bin:$PATH
 
 ./configure --enable-sqlite3 --with-sqlite3-includes=/opt/csw/include \
@@ -142,14 +149,18 @@
  LDFLAGS=&quot;-L/opt/csw/lib&quot; \
 CPPFLAGS=&quot;-I/opt/csw/include&quot; --prefix=/opt/local
 </code></pre>
-<p>Which looks for the sqlite3 and gdbm libraries from my Blastwave install, and will install the final binary under <strong>/opt/local</strong>. Change this if you want to install elsewhere.</p>
-<p><strong>Step 4:</strong> Compiling Run a quick make to compile everything,</p>
+<p>Which looks for the sqlite3 and gdbm libraries from my Blastwave install, and
+will install the final binary under <strong>/opt/local</strong>. Change this if you want
+to install elsewhere.</p>
+<p><strong>Step 4:</strong> Compiling
+Run a quick make to compile everything,</p>
 <pre class="shell"><code>
 gmake
 gmake install
 </code></pre>
 <h3 id="note-fri-feb-3-082548">NOTE Fri Feb 3 08:25:48</h3>
-<p>I no longer have a Solaris install available, or a SPARC machine for that matter, so I can’t check whether these instructions still work.</p>
+<p>I no longer have a Solaris install available, or a SPARC machine for that
+matter, so I can’t check whether these instructions still work.</p>
 </div>
 
 

@@ -122,13 +122,20 @@
         <div class="post">
   <h1 class="post-title">Creating an rsync copy of Nekoware</h1>
   <span class="post-date">January  6, 2008</span>
-  <p>If you’re running an SGI at home or maybe at work, and you haven’t heard of -Nekoware, then you must be new around here. It’s a collection of opensource -software all compiled and ready to install for your SGI. Check out -<a href="http://www.nekochan.net/downloads.php">Nekoware</a> for a complete list of what -is available .</p>
+  <p>If you’re running an SGI at home or maybe at work, and you haven’t heard of
+-Nekoware, then you must be new around here. It’s a collection of opensource
+-software all compiled and ready to install for your SGI. Check out
+-<a href="http://www.nekochan.net/downloads.php">Nekoware</a> for a complete list of what
+-is available .</p>
 <p>What I want to do here is show how you can have your very own copy of Nekoware locally.</p>
-<p>Download a copy of Nekoware rsync from one of the mirrors, I used this <a href="http://www.mechanics.citg.tudelft.nl/~everdij/nekoware/index.php?path=current/">Mirror</a> and downloaded the file in a browser.</p>
+<p>Download a copy of Nekoware rsync from one of the mirrors, I used this
+<a href="http://www.mechanics.citg.tudelft.nl/~everdij/nekoware/index.php?path=current/">Mirror</a>
+and downloaded the file in a browser.</p>
 <p>Installing rsync really depends on whether you have a monitor hooked up to your SGI or you’re using ssh/remote X , note that telnet is <strong>not</strong> an option. I’m using remote X so that’s what is shown here.</p>
 <p>Login as root and change to the directory where you downloaded rsync to.</p>
 <pre><code>cd /usr/people/me/downloads</code></pre>
-<p>To install software from the command line you need to use the software installation tool <strong>inst(1)</strong>.</p>
+<p>To install software from the command line you need to use the software
+installation tool <strong>inst(1)</strong>.</p>
 <pre class="shell"><code>
 inst
 
@@ -221,7 +228,8 @@ Final projected free space         981640
 
 Inst&gt;
 </code></pre>
-<p>All that remains is the install, so type <strong>go</strong> and watch it go. After it has finished installing, you can simply quit isnt.</p>
+<p>All that remains is the install, so type <strong>go</strong> and watch it go. After it has
+finished installing, you can simply quit isnt.</p>
 <pre><code>
 You may continue with installations or quit now.
 
@@ -239,11 +247,17 @@ Requickstarting ELF files (see rqsall(1)) ..  25%
 <p>Once finished it’s time to rsync some Nekoware. Open up a terminal, it doesn’t have to be as root, create a directory and change into it.</p>
 <pre><code>mkdir nekoware
 cd nekoware</code></pre>
-<p>I only wanted a copy of the current MIPS4 packages, you will most likely want the same, unless you have a really old SGI. So copy the following command and wait for it to finish, which may be a while for a new copy.</p>
+<p>I only wanted a copy of the current MIPS4 packages, you will most likely want
+the same, unless you have a really old SGI. So copy the following command and
+wait for it to finish, which may be a while for a new copy.</p>
 <pre><code>/usr/nekoware/bin/rsync -az --progress \
 mech001.citg.tudelft.nl::nekoware/current  /usr/people/me/nekoware</code></pre>
-<p>Once finished we have an rsync copy of nekoware, that we can install from and can be upgraded when new versions of packages come out. To upgrade simply run the previous command again, and it should only download the updated/changed packages.</p>
-<p>For futher information about rsync and all the brilliant things it can do visit <a href="http://samba.anu.edu.au/rsync/">rsync homepage</a></p>
+<p>Once finished we have an rsync copy of nekoware, that we can install from and
+can be upgraded when new versions of packages come out. To upgrade simply run
+the previous command again, and it should only download the updated/changed
+packages.</p>
+<p>For futher information about rsync and all the brilliant things it can do visit
+<a href="http://samba.anu.edu.au/rsync/">rsync homepage</a></p>
 </div>
 
 

@@ -122,12 +122,24 @@
         <div class="post">
   <h1 class="post-title">Installing NetBSD on a Dell Inspiron 8000</h1>
   <span class="post-date">September 14, 2008</span>
-  <p>I just finished installing NetBSD on my old laptop and I must say it’s quite an impressive system especially when it comes to updating to a new release.</p>
-<p>The victim is my ancient Dell Insprion 8000, featuring a 800Mhz P3 and 384Mb RAM. Not exactly a powerhouse but the 15" 1400x1050 screen makes up for the lack of power.</p>
-<p>To understand the various steps I had to take, it’s important to note that the DVD drive is flakey and it has no native Network adapter. Stupidly I tried to save money and left it out at the time.</p>
+  <p>I just finished installing NetBSD on my old laptop and I must say it’s quite an
+impressive system especially when it comes to updating to a new release.</p>
+<p>The victim is my ancient Dell Insprion 8000, featuring a 800Mhz P3 and 384Mb
+RAM. Not exactly a powerhouse but the 15” 1400x1050 screen makes up for the lack
+of power.</p>
+<p>To understand the various steps I had to take, it’s important to note that the
+DVD drive is flakey and it has no native Network adapter. Stupidly I tried to
+save money and left it out at the time.</p>
 <p>Now to the details.</p>
-<p>I originally wanted <a href="http://www.openbsd.org">OpenBSD</a> on this thing but none of the floppy boot disks supported the PCMCIA network cards I have, and I’m too new to BSDs to know how to fix this. Also none of the recent <a href="http://www.netbsd.org">NetBSD</a> boot CDs would work, they kept getting IO errors from the DVD drive.</p>
-<p>Finally ended up getting an ancient NetBSD 2.0 cd to work and did an install of that. Somehow the 2.0 installer didn’t hit any of the IO errors that stopped the other installs. The PCMCIA network worked and after a bit of messing about with the NetBSD Guide I was up and running on the home network.</p>
+<p>I originally wanted <a href="http://www.openbsd.org">OpenBSD</a> on this thing
+but none of the floppy boot disks supported the PCMCIA network cards I have, and
+I’m too new to BSDs to know how to fix this. Also none of the recent
+<a href="http://www.netbsd.org">NetBSD</a> boot CDs would work, they kept getting IO errors
+from the DVD drive.</p>
+<p>Finally ended up getting an ancient NetBSD 2.0 cd to work and did an install of
+that. Somehow the 2.0 installer didn’t hit any of the IO errors that stopped the
+other installs. The PCMCIA network worked and after a bit of messing about with
+the NetBSD Guide I was up and running on the home network.</p>
 <p>Now for the impressive part upgrading to 4.0.</p>
 <ul>
 <li>Make a backup. Not required in this case.</li>
@@ -158,7 +170,11 @@
 <ul>
 <li>Upgrade finished, time to reboot.</li>
 </ul>
-<p>These instructions are originally from <a href="http://mail-index.netbsd.org/netbsd-help/2008/03/04/msg000089.html">the NetBSD mailing list</a>. Too easy! The etcupdate set takes a while and I must admit I did stuff it up (a few times), but this is much easier that I remember from my last Linux update. Now to recompile the kernel and get the 3Com AirConnect 3CRWE777A card working.</p>
+<p>These instructions are originally from
+<a href="http://mail-index.netbsd.org/netbsd-help/2008/03/04/msg000089.html">the NetBSD mailing list</a>. Too
+easy! The etcupdate set takes a while and I must admit I did stuff it up (a few
+times), but this is much easier that I remember from my last Linux update. Now
+to recompile the kernel and get the 3Com AirConnect 3CRWE777A card working.</p>
 </div>
 
 

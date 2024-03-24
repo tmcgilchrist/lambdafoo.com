@@ -123,40 +123,67 @@
   <h1 class="post-title">Ember.js and Google Analytics</h1>
   <span class="post-date">September 17, 2013</span>
   <h2 id="update">Update</h2>
-<p>As iStefo pointed out in the comments the code I gave has a bug in it. The <code>observes('currentPath')</code> on an application controller doesn’t fire when you transition between paths in the same route. eg ‘/lesson/1/activity/1’ to ‘/lesson/1/activity/2’</p>
+<p>As iStefo pointed out in the comments the code I gave has a bug in it.
+The <code>observes('currentPath')</code> on an application controller doesn’t fire when you
+transition between paths in the same route. eg ‘/lesson/1/activity/1’ to ‘/lesson/1/activity/2’</p>
 <p>A better approach is to add the code to your router.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode coffeescript"><code class="sourceCode coffee"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a>App<span class="kw">.</span>Router<span class="kw">.</span>reopen</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a>  didTransition<span class="kw">:</span> <span class="fu">(infos) -&gt;</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a>    <span class="dt">@_super</span><span class="kw">(</span>infos<span class="kw">);</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a>    <span class="kw">return</span> <span class="kw">unless</span> window<span class="kw">.</span>ga</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a>    Em<span class="kw">.</span>run<span class="kw">.</span>next <span class="fu">-&gt;</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a>      ga<span class="kw">(</span><span class="st">'send'</span><span class="kw">,</span> <span class="st">'pageview'</span><span class="kw">,</span> <span class="kw">{</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true"></a>         <span class="st">'page'</span><span class="kw">:</span> window<span class="kw">.</span>location<span class="kw">.</span>hash<span class="kw">,</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true"></a>         <span class="st">'title'</span><span class="kw">:</span> window<span class="kw">.</span>location<span class="kw">.</span>hash</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true"></a>      <span class="kw">});</span></span></code></pre></div>
-<p>Matthew Beale also pointed out below that there may be a new API coming on the router to achieve the same result. <a href="https://github.com/emberjs/ember.js/pull/3452">PR#3452</a> and <a href="https://github.com/emberjs/ember.js/pull/3453">PR#3453</a></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode coffeescript"><code class="sourceCode coffee"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>App<span class="kw">.</span>Router<span class="kw">.</span>reopen</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  didTransition<span class="kw">:</span> <span class="fu">(infos) -&gt;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">@_super</span><span class="kw">(</span>infos<span class="kw">);</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">return</span> <span class="kw">unless</span> window<span class="kw">.</span>ga</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    Em<span class="kw">.</span>run<span class="kw">.</span>next <span class="fu">-&gt;</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>      ga<span class="kw">(</span><span class="st">'send'</span><span class="kw">,</span> <span class="st">'pageview'</span><span class="kw">,</span> <span class="kw">{</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>         <span class="st">'page'</span><span class="kw">:</span> window<span class="kw">.</span>location<span class="kw">.</span>hash<span class="kw">,</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>         <span class="st">'title'</span><span class="kw">:</span> window<span class="kw">.</span>location<span class="kw">.</span>hash</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>      <span class="kw">});</span></span></code></pre></div>
+<p>Matthew Beale also pointed out below that there may be a new API coming on the
+router to achieve the same result.
+<a href="https://github.com/emberjs/ember.js/pull/3452">PR#3452</a> and
+<a href="https://github.com/emberjs/ember.js/pull/3453">PR#3453</a></p>
 <hr />
 <h2 id="original">Original</h2>
-<p>Single Page Javascript Applications and specifically Ember.js applications don’t always expose the right information to Google Analytics. Usually you’ll see 100% traffic to <code>/</code> and nothing else.</p>
-<p>What I wanted to be able to see what areas of the site people were using in real time. A bit of searching led to various solutions with <a href="http://www.pansapien.com/ember/2013/01/using-google-analytics-with-ember-js/">this post</a> having the most upto date solution. Working in Ember you quickly become wary of older solutions posted and start filtering search results based on time. Hopefully now that 1.0 is out the correct solutions will start bubbling to the top of Google searches.</p>
-<p>To make your Ember.js application more visible to Google Analytics you need to expose the value of your application state. I’m using the hash scheme (eg <code>#/album</code>) so whatever is after the hash in the url shows where a person is in the application.</p>
-<p>First you’ll need to have the Google Analytics Javascript library loaded, I’ve been using the more recent <a href="https://developers.google.com/analytics/devguides/collection/analyticsjs/">analytics.js</a> library which has a different API to the older ga.js library. After you’ve followed Google’s instructions the library is available at <code>ga</code>.</p>
-<p>Next you want to observe whenever the hash path changes within your app. The code below assumes you’re using hashes rather than HTML5 pushState.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode coffeescript"><code class="sourceCode coffee"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a>App<span class="kw">.</span>ApplicationController <span class="kw">=</span> Em<span class="kw">.</span>Controller<span class="kw">.</span>extend</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a>    routeChanged<span class="kw">:</span> <span class="kw">(</span><span class="fu">-&gt;</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a>        <span class="kw">return</span> <span class="kw">unless</span> window<span class="kw">.</span>ga</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a>        Em<span class="kw">.</span>run<span class="kw">.</span>next <span class="fu">-&gt;</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a>            ga<span class="kw">(</span><span class="st">'send'</span><span class="kw">,</span> <span class="st">'pageview'</span><span class="kw">,</span> <span class="kw">{</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true"></a>                <span class="st">'page'</span><span class="kw">:</span> window<span class="kw">.</span>location<span class="kw">.</span>hash<span class="kw">,</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true"></a>                <span class="st">'title'</span><span class="kw">:</span> window<span class="kw">.</span>location<span class="kw">.</span>hash</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true"></a>                <span class="kw">});</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true"></a>    <span class="kw">).</span>observes<span class="kw">(</span><span class="st">'currentPath'</span><span class="kw">)</span></span></code></pre></div>
-<p>The <code>routeChanged</code> function gets called when <code>currentPath</code> changes; it checks whether <code>ga</code> is defined and if it is it sends a pageview event with the current value of location.hash. The <code>Em.run.next</code> is there to make sure all the routing has occured and the hash value is final before using it.</p>
-<p><code>page</code> and <code>title</code> are just strings so you could provide meaningful formatting based on what your application does. The next obvious step is to add <a href="https://developers.google.com/analytics/devguides/collection/analyticsjs/events">event tracking</a> to really see how people interact with the app.</p>
+<p>Single Page Javascript Applications and specifically Ember.js applications don’t
+always expose the right information to Google Analytics. Usually you’ll see
+100% traffic to <code>/</code> and nothing else.</p>
+<p>What I wanted to be able to see what areas of the site people were using in real time.
+A bit of searching led to various solutions with
+<a href="http://www.pansapien.com/ember/2013/01/using-google-analytics-with-ember-js/">this post</a>
+having the most upto date solution. Working in Ember you quickly become wary
+of older solutions posted and start filtering search results based on time.
+Hopefully now that 1.0 is out the correct solutions will start bubbling to the
+top of Google searches.</p>
+<p>To make your Ember.js application more visible to Google Analytics you need to
+expose the value of your application state. I’m using the hash
+scheme (eg <code>#/album</code>) so whatever is after the hash in the url shows where a
+person is in the application.</p>
+<p>First you’ll need to have the Google Analytics Javascript library loaded, I’ve
+been using the more recent
+<a href="https://developers.google.com/analytics/devguides/collection/analyticsjs/">analytics.js</a>
+library which has a different API to the older ga.js library. After you’ve
+followed Google’s instructions the library is available at <code>ga</code>.</p>
+<p>Next you want to observe whenever the hash path changes within your app. The
+code below assumes you’re using hashes rather than HTML5 pushState.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode coffeescript"><code class="sourceCode coffee"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>App<span class="kw">.</span>ApplicationController <span class="kw">=</span> Em<span class="kw">.</span>Controller<span class="kw">.</span>extend</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    routeChanged<span class="kw">:</span> <span class="kw">(</span><span class="fu">-&gt;</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        <span class="kw">return</span> <span class="kw">unless</span> window<span class="kw">.</span>ga</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        Em<span class="kw">.</span>run<span class="kw">.</span>next <span class="fu">-&gt;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>            ga<span class="kw">(</span><span class="st">'send'</span><span class="kw">,</span> <span class="st">'pageview'</span><span class="kw">,</span> <span class="kw">{</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>                <span class="st">'page'</span><span class="kw">:</span> window<span class="kw">.</span>location<span class="kw">.</span>hash<span class="kw">,</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>                <span class="st">'title'</span><span class="kw">:</span> window<span class="kw">.</span>location<span class="kw">.</span>hash</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>                <span class="kw">});</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">).</span>observes<span class="kw">(</span><span class="st">'currentPath'</span><span class="kw">)</span></span></code></pre></div>
+<p>The <code>routeChanged</code> function gets called when <code>currentPath</code> changes; it checks
+whether <code>ga</code> is defined and if it is it sends a pageview event with the current
+value of location.hash. The <code>Em.run.next</code> is there to make sure all the routing
+has occured and the hash value is final before using it.</p>
+<p><code>page</code> and <code>title</code> are just strings so you could provide meaningful formatting
+based on what your application does. The next obvious step is to add
+<a href="https://developers.google.com/analytics/devguides/collection/analyticsjs/events">event tracking</a>
+to really see how people interact with the app.</p>
 </div>
 
 

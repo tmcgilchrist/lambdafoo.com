@@ -124,18 +124,29 @@
   <span class="post-date">October 29, 2021</span>
   <p>OCaml is an awesome language with many fine features. I enjoy using it immensely!</p>
 <p>Unfortunately, it suffers from a perceived weakness in how to get started. Like any new skill, there can be a learning curve. The tools are all there, but combining them for a good developer experience might seem difficult at first.</p>
-<p>Often I’ve found that the barrier for getting into a new langauge is less about the new features of that language and more about learning the tools to become productive in that language. The package managers, build tools, and editor integration of a new language can be confusing, making for an awful experience.</p>
+<p>Often I’ve found that the barrier for getting into a new langauge is less about the
+new features of that language and more about learning the tools to become productive in that
+language. The package managers, build tools, and editor integration of a new language can be confusing, making for an awful experience.</p>
 <p>Perhaps my opinionated guide to getting started with OCaml in 2021 will help reduce any mental blocks against trying out this excellent language.</p>
 <h2 id="install-opam">Install Opam</h2>
-<p>First it’s necessary to install OCaml and Opam. <a href="https://opam.ocaml.org">Opam</a> is the default package manager for OCaml projects. Ignore the other options for now, once you know more about what you want, you can make an informed choice. For now if you speak OPAM, you’ll get the most out of the community.</p>
-<p>On Linux, use your local package manger, e.g., <code>apt-get install opam</code> for Debian and <code>apt install opam</code> for Ubuntu. For MacOS, use homebrew <code>brew install opam</code>. I’ll assume if you run something else, you can handle looking up <a href="https://opam.ocaml.org/doc/Install.html#Using-your-distribution-39-s-package-system">how to install things</a>.</p>
+<p>First it’s necessary to install OCaml and Opam.
+<a href="https://opam.ocaml.org">Opam</a> is the default package manager for OCaml projects.
+Ignore the other options for now, once you know more about what you want, you can make
+an informed choice. For now if you speak OPAM, you’ll get the most out of the community.</p>
+<p>On Linux, use your local package manger, e.g., <code>apt-get install opam</code> for Debian and <code>apt install opam</code>
+for Ubuntu. For MacOS, use homebrew <code>brew install opam</code>. I’ll assume if you run
+something else, you can handle looking up <a href="https://opam.ocaml.org/doc/Install.html#Using-your-distribution-39-s-package-system">how to install things</a>.</p>
 <p>On my Mac I get Opam 2.1.0:</p>
 <pre class="shell"><code>$ opam --version
 2.1.0</code></pre>
 <p>Once you’ve got Opam installed, you should be able to move on to the next step.</p>
 <h2 id="choose-an-ocaml-version">Choose an OCaml Version</h2>
-<p>I strongly recommended that you pick a single OCaml version that your project will compile against. Supporting multiple compiler versions is possible and usually not too diffcult, but it complicates the process right now.</p>
-<p>Running <code>opam switch list-available</code> will show you a long list of every possible OCaml compiler. Choose the latest mainline compiler identifed by <code>Official release X.XX.X</code> where currently the latest is <code>4.13.0</code>. Ignore the others.</p>
+<p>I strongly recommended that you pick a single OCaml version that your project will compile against.
+Supporting multiple compiler versions is possible and usually not too diffcult, but it complicates
+the process right now.</p>
+<p>Running <code>opam switch list-available</code> will show you a long list of every possible OCaml compiler.
+Choose the latest mainline compiler identifed by <code>Official release X.XX.X</code> where currently the latest
+is <code>4.13.0</code>. Ignore the others.</p>
 <pre class="shell"><code>opam switch list-available
 ...
 ocaml-variants                         4.12.0+domains                         OCaml 4.12.0, with support for multicore domains
@@ -180,13 +191,21 @@ Done.</code></pre>
 <p>And verify which switch you are using:</p>
 <pre class="shell"><code>$ opam switch show
 4.13.0</code></pre>
-<p>When you work with several OCaml projects, it’s best to create a switch per project, as it keeps each project isolated and prevents issues with installing conflicting versions of libraries. For example, I use a naming scheme of <code>ocaml-version-project-name</code>, e.g., <code>4.13.0-ocurrent</code>. Then in each project directory, run <code>opam switch link 4.13.0-ocurrent</code> to setup that named switch for that specific directory. Opam will take care of setting that switch in your shell when you change into that directory.</p>
+<p>When you work with several OCaml projects, it’s best to create a switch per project, as it keeps
+each project isolated and prevents issues with installing conflicting versions of libraries.
+For example, I use a naming scheme of <code>ocaml-version-project-name</code>,
+e.g., <code>4.13.0-ocurrent</code>. Then in each project directory, run <code>opam switch link 4.13.0-ocurrent</code>
+to setup that named switch for that specific directory. Opam will take care of setting that switch
+in your shell when you change into that directory.</p>
 <h2 id="creating-your-project-directory">Creating Your Project Directory</h2>
-<p>For this step we need the <a href="https://dune.readthedocs.io">Dune</a> build tool, so go ahead and install it with <code>opam install dune</code>. Dune comes with a simple scaffolding command to create an empty project that is really useful to get started.</p>
+<p>For this step we need the <a href="https://dune.readthedocs.io">Dune</a> build tool, so go ahead and install it with <code>opam install dune</code>.
+Dune comes with a simple scaffolding command to create an empty project that is really useful
+to get started.</p>
 <p>I’m calling my project <code>box</code>, so run:</p>
 <pre class="shell"><code>$ dune init proj box
 Success: initialized project component named box</code></pre>
-<p>In the project generated, we get a library component, a CLI, and a test component, which will all compile out of the box.</p>
+<p>In the project generated, we get a library component, a CLI, and a test component, which will
+all compile out of the box.</p>
 <pre class="shell"><code>$ cd box
 $ tree
 .
@@ -210,14 +229,22 @@ Info: Creating file dune-project with this contents:
 <p>Running the CLI:</p>
 <pre class="shell"><code>$ dune exec bin/main.exe
 Hello, World!</code></pre>
-<p>Each of the <code>bin</code>, <code>lib</code>, and <code>test</code> directories contains the source code in the form of <code>*.ml</code> files, along with a <code>dune</code> file which tells Dune how to build the source and on what libraries it depends. The box <code>bin\dune</code> file declares it’s an <code>executable</code> with a name <code>box</code> and depends on the <code>box</code> library.</p>
+<p>Each of the <code>bin</code>, <code>lib</code>, and <code>test</code> directories contains the source code in the form of <code>*.ml</code> files,
+along with a <code>dune</code> file which tells Dune how to build the source and on what libraries it depends.
+The box <code>bin\dune</code> file declares it’s an <code>executable</code> with a name <code>box</code> and depends on the <code>box</code>
+library.</p>
 <pre class="shell"><code>(executable
  (public_name box)
  (name main)
  (libraries box))</code></pre>
 <h2 id="adding-a-dependency">Adding a Dependency</h2>
-<p>CLI tools require command line parsing, <code>Cmdliner</code> is a common library that implements CLI parsing. We need to add it in two places: first in the <code>dune-project</code> file, to get it installed, and then in <code>bin/dune</code>, to say where we’re using it.</p>
-<p>One small digression, when generating our project, <code>dune</code> created an <code>box.opam</code> file. This describes our project to Opam, telling it what libraries it requires and what the project does. You need this if you ever publish a package for other people to use. Newer versions of Dune can generate the <code>box.opam</code> file from a <code>dune-project</code> file. Having a single source of information is helpful, so lets create that file:</p>
+<p>CLI tools require command line parsing, <code>Cmdliner</code> is a common library that implements CLI parsing.
+We need to add it in two places: first in the <code>dune-project</code> file, to get it installed, and then
+in <code>bin/dune</code>, to say where we’re using it.</p>
+<p>One small digression, when generating our project, <code>dune</code> created an <code>box.opam</code> file. This describes
+our project to Opam, telling it what libraries it requires and what the project does. You need this
+if you ever publish a package for other people to use. Newer versions of Dune can generate the <code>box.opam</code>
+file from a <code>dune-project</code> file. Having a single source of information is helpful, so lets create that file:</p>
 <pre class="shell"><code>(lang dune 2.8)
 (name box)
 
@@ -229,7 +256,9 @@ Hello, World!</code></pre>
   (ocaml (&gt;= 4.13.0))
   (cmdliner (&gt;= 0.9.8)))
  (synopsis &quot;Box cli&quot;))</code></pre>
-<p>Remove the <code>rm box.opam</code> file to test the generation. Now run <code>dune build @all</code> to regenerate the Opam file. This file should be checked in, and any further edits should be at the top-level <code>dune-project</code> file, which should look like this:</p>
+<p>Remove the <code>rm box.opam</code> file to test the generation. Now run <code>dune build @all</code> to regenerate the Opam
+file. This file should be checked in, and any further edits should be at the top-level <code>dune-project</code>
+file, which should look like this:</p>
 <pre class="shell"><code>$ cat box.opam
 # This file is generated by dune, edit dune-project instead
 opam-version: &quot;2.0&quot;
@@ -255,7 +284,13 @@ build: [
   ]
 ]
 </code></pre>
-<p>The final step is to actually install the <code>cmdliner</code> library. Run <code>opam install . --deps-only -ty</code>, which will look at the <code>*.opam</code> files present and install just their dependencies with the correct version bounds. The <code>-y</code> says yes to installing the packages. You can remove it if you like by pressing <code>Y</code> or if you want to review what will be installed. <code>-t</code> will run the package tests, which isn’t always necessary, but it’s sometimes useful for certain packages with native C components.</p>
+<p>The final step is to actually install the <code>cmdliner</code> library. Run <code>opam install . --deps-only -ty</code>,
+which will look at the <code>*.opam</code> files present and install just their dependencies with the correct
+version bounds.
+The <code>-y</code> says yes to installing the packages. You can remove it if you like by pressing <code>Y</code> or if
+you want to review what will be installed.
+<code>-t</code> will run the package tests, which isn’t always necessary, but it’s sometimes useful for certain
+packages with native C components.</p>
 <p>Alternatively you could run <code>opam install cmdliner</code>, as this doesn’t look at version constraints in <code>*.opam</code> files, you might not get what you expect.</p>
 <h2 id="editor-tooling">Editor Tooling</h2>
 <p>Finally, you’ll want to get comfy with your chosen editor. If you have a preference, you should use the native LSP support in that editor, along with installing <code>opam install ocaml-lsp-server</code>. OCaml is standardising on the LSP protocol for editor interaction. If you have no editor preference, then start with <a href="https://code.visualstudio.com">VSCode</a> and install the OCaml LSP package from the Marketplace.</p>
