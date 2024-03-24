@@ -1,4 +1,4 @@
-name: CI
+name: Haskell
 on:
   push:
     branches:
@@ -12,8 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        cabal: ["3.4.0.0"]
-        ghc: ["8.10.7"]
+        cabal: ["3.10"]
+        ghc: ["9.8"]
     steps:
       - uses: actions/checkout@v4
       - uses: haskell/actions/setup@v2
