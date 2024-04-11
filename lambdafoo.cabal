@@ -20,7 +20,7 @@ executable site
                      , binary    >= 0.5
                      , directory >= 1.2
                      , filepath  >= 1.3
-                     , hakyll    >= 4.13
+                     , hakyll    >= 4.16
                      , blaze-html
                      , lens
                      , time
