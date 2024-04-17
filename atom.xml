@@ -20,7 +20,7 @@
     <summary type="html"><![CDATA[<div class="post">
   <h1 class="post-title">Debugging OCaml with Emacs</h1>
   <span class="post-date">March 25, 2024</span>
-  <p>This post started as a summary of my March Hacking Days effort at Tarides.</p>
+  <p>This post started as a summary of my March Hacking Days effort at <a href="https://tarides.com">Tarides</a>.</p>
 <p>I have been working on improving the debugging situation for OCaml and wanted to see how easily I could setup debug support in Emacs using DAP. Debug Adapter Protocol (DAP) is a wire protocol for communicating between an editor or IDE and a debug server like <a href="https://lldb.llvm.org">LLDB</a> or <a href="https://sourceware.org/gdb/">GDB</a>, providing an abstraction over debugging, similar to how <a href="https://microsoft.github.io/language-server-protocol/">Language Server Protocol (LSP)</a> provides language support for editors.</p>
 <p>OCaml comes with support for debugging native programs with GDB and LLDB, and bytecode code programs using <a href="https://v2.ocaml.org/manual/debugger.html">ocamldebug</a> and <a href="https://github.com/hackwaly/ocamlearlybird">earlybird</a>. In this post we will cover setting up and debugging both kinds of programs. I am using an M3 Mac so all examples will show ARM64 assembly and macOS specific paths. The same setup should work on Linux. I use <a href="https://github.com/bbatsov/prelude">prelude</a> to configure my Emacs with my own customistations in <code>.emacs/personal</code>, adjust for your own personal Emacs setup.</p>
 <p>Let’s start with the following program to compute Fibonacci sequence:</p>
