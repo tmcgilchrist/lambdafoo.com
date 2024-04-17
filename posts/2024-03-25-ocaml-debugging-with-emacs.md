@@ -7,7 +7,7 @@ categories: ocaml, emacs
 published: true
 ---
 
-This post started as a summary of my March Hacking Days effort at Tarides.
+This post started as a summary of my March Hacking Days effort at [Tarides](https://tarides.com).
 
 I have been working on improving the debugging situation for OCaml and wanted to see how easily I could setup debug support in Emacs using DAP. Debug Adapter Protocol (DAP) is a wire protocol for communicating between an editor or IDE and a debug server like [LLDB](https://lldb.llvm.org) or [GDB](https://sourceware.org/gdb/), providing an abstraction over debugging, similar to how [Language Server Protocol (LSP)](https://microsoft.github.io/language-server-protocol/) provides language support for editors.
 
