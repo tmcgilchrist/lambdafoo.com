@@ -8,7 +8,8 @@ footer: true
 
 I like giving talks to User groups and Conferences, along with helping to organise our local Functional Programming User Group. At the moment I'm interested in FP Programming in the large and building maintainable / reliable systems in FP.
 
- * 05-12-2023 - [Ocaml for Run and Profit](https://yowcon.com/melbourne-2023/speakers/2904/tim-mcgilchrist) @ YOW! Conference 2023 Melbourne, Brisbane and Sydney [(video)]()
+ * 24-04-2024 - [OCaml behind the scenes: effects](https://github.com/fp-syd/meetings/tree/master/2024#april) @ [FP-SYD](https://www.meetup.com/fp-syd/events/300206218/)
+ * 05-12-2023 - [OCaml for Fun and Profit](https://yowcon.com/melbourne-2023/speakers/2904/tim-mcgilchrist) @ YOW! Conference 2023 Melbourne, Brisbane and Sydney [(video)]()
  * 16-09-2022 - [Homogeneous builds with OBuilder and OCaml](https://github.com/tmcgilchrist/ocaml-2022-submission/tree/master) @ OCaml Workshop 2022 (Colocated with ICFP) [(Video)](https://youtu.be/XopV5Gd6hPo)
  * 25-05-2022 - [Parallel and Concurrent programming in OCaml](https://github.com/tmcgilchrist/ocaml5-tutorial) 5.0 @ [FP-SYD](https://www.meetup.com/fp-syd/events/rdzwmsydchbhc/)
  * 22-06-2020 - 1ML Core and Modules United paper review @ FP-SYD
