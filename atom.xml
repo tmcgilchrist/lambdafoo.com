@@ -10,8 +10,118 @@
         <email>timmcgil@gmail.com</email>
         
     </author>
-    <updated>2024-08-30T00:00:00Z</updated>
+    <updated>2025-02-15T00:00:00Z</updated>
     <entry>
+    <title>Experimenting with OCaml and eBPF</title>
+    <link href="https://lambdafoo.com/posts/2025-02-15-ocaml-ebpf-usdt.html" />
+    <id>https://lambdafoo.com/posts/2025-02-15-ocaml-ebpf-usdt.html</id>
+    <published>true</published>
+    <updated>2025-02-15T00:00:00Z</updated>
+    <summary type="html"><![CDATA[<div class="post">
+  <h1 class="post-title">Experimenting with OCaml and eBPF</h1>
+  <span class="post-date">February 15, 2025</span>
+  <p>Building on top of the excellent book <em>BPF Performance Tools</em> by Brendan Gregg. How can we apply the techniques from Chapter 12 Languages to OCaml?</p>
+<p>First OCaml is roughly equivalent to C, it’s a compiled language with a runtime written in C. It supports frame pointers using the <code>--enable-frame-pointers</code> configuration option on x86_64, with ARM64 support in OCaml 5.4. Eventually the code we’re interested in is C or looks roughly like C but with a different calling convention.</p>
+<p>For tracing into the Linux kernel, you’ll need a distribution that is compiled with frame pointers like Ubuntu 24.04 and we can reuse the kernel’s own symbol table. There are some exceptions for inlined functions and some blacklisted functions that aren’t safe to trace. However for the pieces I’ve looked at like memory allocation and virtual memory, it is fine.</p>
+<p>For the OCaml runtime written in C, it can be configured to include symbols, frame pointers and debuginfo for the portions written in C. The sections of the runtime written in assembly have symbols and frame pointers. For actual OCaml code it will have symbols and frame pointers, with limited debuginfo. Demo time!</p>
+<h1 id="ocaml-function-tracing">OCaml Function Tracing</h1>
+<p>Given this test program taken from a bug report <a href="https://github.com/ocaml/ocaml/issues/13123">#13123</a> against OCaml.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">(* Build with:</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">  ocamlfind ocamlopt -package unix -package threads -thread -linkpkg -o liquidsoap_test.exe liquidsoap_test.ml *)</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> frame_size = <span class="fl">0.04</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> pcm_len = <span class="dt">int_of_float</span> (<span class="dv">44100</span>. *. frame_size)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> channels = <span class="dv">2</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> mk_pcm () = <span class="dt">Array</span>.init channels (<span class="kw">fun</span> _ -&gt; <span class="dt">Array</span>.make pcm_len <span class="dv">0</span>.)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> <span class="kw">rec</span> fn a =</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="kw">if</span> <span class="dt">Array</span>.length a &lt;&gt; <span class="dv">0</span> <span class="kw">then</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Gc</span>.full_major ();</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> pcm = mk_pcm () <span class="kw">in</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">ignore</span>(pcm);</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  Unix.sleepf <span class="fl">0.04</span>;</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  fn [||]</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> () =</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> deadweigth = <span class="dt">Array</span>.make (<span class="dv">40</span> * <span class="dv">1024</span> * <span class="dv">1024</span>) <span class="dv">1</span> <span class="kw">in</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  Unix.sleepf <span class="fl">0.04</span>;</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> th = Thread.create fn deadweigth <span class="kw">in</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  Thread.join th</span></code></pre></div>
+<p>And an opam switch created with frame pointers.</p>
+<pre class="shell"><code>$ opam switch create 5.3.0 5.3.0+options ocaml-option-fp
+
+$ ocamlfind ocamlopt -package unix -package threads -thread \
+  -linkpkg -o liquidsoap_test.exe liquidsoap_test.ml</code></pre>
+<p>Running this code will print the PID each time the <code>liquidsoap_test.exe</code> executable is run.</p>
+<pre class="shell"><code>$ sudo bpftrace -e &#39;uprobe:/home/tsmc/ocaml-performance/liquidsoap_test.exe:caml_start_program { printf(&quot;OCaml run with process ID %d\n&quot;, pid); }&#39;</code></pre>
+<p>Here we are using the information we know about OCaml startup, the <code>caml_start_program</code> is an assembly function that bridges the gap between the C startup code and OCaml, setting up the environment for the OCaml code. The section after <code>uprobe:</code> needs to point to the executable being run, change that if you want to trace something else.</p>
+<p>Next, recall that we are dealing with a mix of regular C functions and OCaml functions. Listing the tracepoints available shows a mix of regular C functions prefixed with <code>caml_*</code> that are either part of the runtime or C primitives. OCaml compiler performs name mangling so anything coming from an OCaml source file will have a prefix <code>caml&lt;MODULE&gt;.</code> e.g. <code>camlStdlib__Domain*</code> for the <code>domain.ml</code> module from the standard library or <code>camlStdlib__Int.compare_296</code> for the compare function on Int. Armed with that knowledge. This command will list available probe points:</p>
+<pre class="shell"><code>$ sudo bpftrace -l &#39;uprobe:/home/tsmc/ocaml-performance/liquidsoap_test.exe:*&#39;</code></pre>
+<p>If we wanted to count the number of function calls in a binary, we could do it like so:</p>
+<pre class="shell"><code>$ cat count.bt
+# Printout matched program
+uprobe:/home/tsmc/ocaml-performance/liquidsoap_test.exe:caml_start_program
+{
+  printf(&quot;OCaml run with process ID %d\n&quot;, pid);
+}
+
+# Trace function calls
+uprobe:/home/tsmc/ocaml-performance/liquidsoap_test.exe:camlLiquidsoap_test*
+{
+    @[probe] = count();
+}
+
+$ sudo bpftrace count.bt
+Attaching 5 probes...
+OCaml run with process ID 128477
+^C
+
+@[uprobe:/home/tsmc/ocaml-performance/liquidsoap_test.exe:camlLiquidsoap_test.entry]: 1
+@[uprobe:/home/tsmc/ocaml-performance/liquidsoap_test.exe:camlLiquidsoap_test.fn_327]: 1
+@[uprobe:/home/tsmc/ocaml-performance/liquidsoap_test.exe:camlLiquidsoap_test.mk_pcm_273]: 1029
+@[uprobe:/home/tsmc/ocaml-performance/liquidsoap_test.exe:camlLiquidsoap_test.fun_601]: 2058</code></pre>
+<p>Another thing we could do is see how much time is spent in the minor GC promotion function.</p>
+<p>OCaml uses a bump-pointer allocator for the minor heap, when that is full it will call a C function to scan the minor heap, destroy the junk, and promote anything that survives into the major heap. I know that the main entry point for this is called <code>caml_empty_minor_heap_promote</code>. So this script will instrument the entry and exit for that function and print out a histogram of the time taken.</p>
+<pre class="shell"><code># cat gcprofile.bt
+
+uprobe:/home/tsmc/ocaml-performance/liquidsoap_test.exe:caml_start_program
+{
+  printf(&quot;Attaching to OCaml process ID %d\n&quot;, pid);
+}
+
+uprobe:/home/tsmc/ocaml-performance/liquidsoap_test.exe:caml_empty_minor_heap_promote
+{
+  @t = nsecs;
+}
+
+uretprobe:/home/tsmc/ocaml-performance/liquidsoap_test.exe:caml_empty_minor_heap_promote / @t /
+{
+  @minor_gc_times = hist(nsecs - @t);
+}</code></pre>
+<p>What about the major GC? The design of that is more complicated but I know <code>major_collection_slice</code> does the majority of the work, so we attach there.</p>
+<pre class="shell"><code># cat gcprofile_major.bt
+
+uprobe:/home/tsmc/ocaml-performance/liquidsoap_test.exe:caml_start_program
+{
+  printf(&quot;Attaching to OCaml process ID %d\n&quot;, pid);
+}
+
+uprobe:/home/tsmc/ocaml-performance/liquidsoap_test.exe:major_collection_slice
+{
+  @t = nsecs;
+}
+
+uretprobe:/home/tsmc/ocaml-performance/liquidsoap_test.exe:major_collection_slice / @t /
+{
+  @major_gc_slice_times = hist(nsecs - @t);
+}</code></pre>
+<h1 id="take-away">Take Away</h1>
+<p>OCaml programs can traced with eBPF and bpftrace. You need to install OCaml with frame pointers enabled and use a Linux distribution like Ubuntu 24.04 that also enables frame pointers, so you can trace into system libraries. The OCaml runtime and certain primitives use a symbol prefix of <code>caml_</code> and OCaml code uses a prefix of <code>caml&lt;MODULE&gt;</code> where <code>&lt;MODULE&gt;</code> is the OCaml module containing the code. This partially covers the functionality in <a href="https://ocaml.org/manual/5.3/profil.html">ocamlprof</a> which lets you profile function counts and branches taken in things like while, if and try. With eBPF we can count the function calls but more work needs to be done to support the branching constructs, essentially we need a USDT implementation for OCaml that understands OCaml’s name mangling and calling conventions. The upside is eBPF can be applied to any OCaml binary without needing a recompile.</p>
+<p>Next steps are adding USDT probes to the OCaml runtime, so there is a static API for the GC, and after that expose USDT probe points from OCaml programs.</p>
+</div>
+]]></summary>
+</entry>
+<entry>
     <title>Building OCaml from assembly</title>
     <link href="https://lambdafoo.com/posts/2024-08-30-building-ocaml-from-assembly.html" />
     <id>https://lambdafoo.com/posts/2024-08-30-building-ocaml-from-assembly.html</id>
@@ -1414,83 +1524,6 @@ be there, and so you get an opportunity to think about what the difference reall
 <li><a href="https://discuss.ocaml.org/t/specific-reason-for-not-embracing-the-use-of-exceptions-for-error-propagation/1666/15">Yaron’s Thoughts</a></li>
 <li><a href="https://www.well-typed.com/blog/2015/07/checked-exceptions/">Checked Exceptions</a></li>
 </ol>
-</div>
-]]></summary>
-</entry>
-<entry>
-    <title>OCaml FFI bindings</title>
-    <link href="https://lambdafoo.com/posts/2015-08-17-ocaml-ffi-bindings.html" />
-    <id>https://lambdafoo.com/posts/2015-08-17-ocaml-ffi-bindings.html</id>
-    <published>2015-08-17T00:00:00Z</published>
-    <updated>2015-08-17T00:00:00Z</updated>
-    <summary type="html"><![CDATA[<div class="post">
-  <h1 class="post-title">OCaml FFI bindings</h1>
-  <span class="post-date">August 17, 2015</span>
-  <p>One thing that always comes up with your favourite language is how do you use
-libraries written in another language. Typically this involves needing to talk
-to a particular C library, either because it’s faster than a native one or just
-that it is already written.</p>
-<p>For OCaml there is the ctypes library for binding to C libraries using pure
-OCaml. Written by the people at the good people at OCaml Labs
-<a href="http://ocaml.io">http://ocaml.io</a></p>
-<p>The core of ctypes is a set of combinators for describing the structure of C
-types – numeric types, arrays, pointers, structs, unions and functions. You can
-use these combinators to describe the types of the functions that you want to
-call, then bind directly to those functions – all without writing or generating
-any C!</p>
-<p>Lets go through a simple example binding to libyaml. Here’s a declaration form
-libyaml to get the version string.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">/**</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"> * Get the library version as a string.</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"> *</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"> * </span><span class="an">@returns</span><span class="co"> The function returns the pointer to a static string of the form</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"> * </span><span class="an">@c</span><span class="co"> </span><span class="cv">&quot;X.Y.Z&quot;</span><span class="co">, where </span><span class="an">@c</span><span class="co"> </span><span class="cv">X</span><span class="co"> is the major version number, </span><span class="an">@c</span><span class="co"> </span><span class="cv">Y</span><span class="co"> is a minor version</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"> * number, and </span><span class="an">@c</span><span class="co"> </span><span class="cv">Z</span><span class="co"> is the patch version number.</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"> */</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>YAML_DECLARE<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*)</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>yaml_get_version_string<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span></code></pre></div>
-<p>To bind to this we need to declare a compatible signature for our OCaml code.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">open</span> Ctypes</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">open</span> Foreign</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> get_version_string =</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  foreign <span class="st">&quot;yaml_get_version_string&quot;</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    (void @-&gt; returning <span class="dt">string</span>)</span></code></pre></div>
-<p>We’re pulling in Ctypes and Foreign. Then the let binding is using foreign with
-the name of the c method we want to call plus a type signature for that method.</p>
-<p>Next we need some calling code to print out the version string.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">open</span> Core.Std</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> () =</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> version_string = get_version_string() <span class="kw">in</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  printf <span class="st">&quot;Version: %s</span><span class="ch">\n</span><span class="st">&quot;</span> version_string</span></code></pre></div>
-<p>Assuming you’ve got opam installed you can get the dependencies <code>opam install core ctypes</code> and compile the whole thing.</p>
-<pre class="shell"><code>
-&gt; corebuild -pkg ctypes.foreign -lflags -cclib,-lyaml version_string.native
-...
-./version_string.native
-Version: 0.1.6
-</code></pre>
-<p>We’ve got bindings to a native C library without writing any C.</p>
-<p>More complicated example involving passing an allocated string back from C, lets
-look at the <code>proc_pidpath</code> call from OSX. This particular library call takes a
-process id (PID) and returns back</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>proc_pidpath<span class="op">(</span><span class="dt">int</span> pid<span class="op">,</span> <span class="dt">void</span> <span class="op">*</span> buffer<span class="op">,</span> <span class="dt">uint32_t</span>  buffersize<span class="op">)</span></span></code></pre></div>
-<p>To bind to this call we again define a compatible signature.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> pidpath =</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    foreign ~check_errno:<span class="kw">true</span> <span class="st">&quot;proc_pidpath&quot;</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>            (<span class="dt">int</span> @-&gt; ptr <span class="dt">char</span> @-&gt; <span class="dt">int</span> @-&gt; returning <span class="dt">int</span>)</span></code></pre></div>
-<p>The arguments simply mirror those for the C library call, along with a new
-argument <code>check_errno</code> which indicates the c library sets errno if it encounters
-a problem.</p>
-<p>http://stackoverflow.com/questions/22651910/returning-a-string-from-a-c-library-to-ocaml-using-ctypes-and-foreign</p>
-<p>Ctypes provides native bindings for most things you’ll need. There’s all sorts
-of pointers and types matching pretty much every native C type you’ll need
-<a href="https://github.com/ocamllabs/ocaml-ctypes/blob/master/src/ctypes/ctypes.mli">here</a>.</p>
 </div>
 ]]></summary>
 </entry>

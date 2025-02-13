@@ -14,6 +14,13 @@
   </url>
 
   <url>
+    <loc>https://lambdafoo.com/posts/2025-02-15-ocaml-ebpf-usdt.html</loc>
+    <lastmod>February 15, 2025</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
     <loc>https://lambdafoo.com/posts/2024-08-30-building-ocaml-from-assembly.html</loc>
     <lastmod>August 30, 2024</lastmod>
     <changefreq>weekly</changefreq>
