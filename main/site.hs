@@ -153,7 +153,7 @@ main = hakyll $ do
       posts <- recentFirst =<< loadAll "posts/*"
 
       -- load individual pages from a list (globs DO NOT work here)
-      singlePages <- loadAll (fromList ["pages/about.md", "pages/talks.md"])
+      singlePages <- loadAll (fromList ["pages/about.md", "pages/talks.md", "pages/server-room.md"])
 
       -- mappend the posts and singlePages together
       let pages = posts <> singlePages
