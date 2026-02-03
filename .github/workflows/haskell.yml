@@ -17,8 +17,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        cabal: ["3.10"]
-        ghc: ["9.8"]
+        cabal: ["3.16"]
+        ghc: ["9.12"]
     steps:
       - uses: actions/checkout@v6
       - uses: haskell-actions/setup@v2
