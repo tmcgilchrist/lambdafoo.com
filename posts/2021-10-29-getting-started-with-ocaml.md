@@ -4,7 +4,6 @@ title: "Getting Started with OCaml in 2021"
 date: 2021-09-28 12:48
 comments: false
 categories: ocaml
-published: false
 ---
 
 OCaml is an awesome language with many fine features. I enjoy using it immensely!

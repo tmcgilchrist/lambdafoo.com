@@ -4,7 +4,6 @@ title: "OCaml with Emacs in 2022"
 date: 2022-09-08 11:33
 comments: false
 categories: ocaml, emacs
-published: true
 ---
 
 I am revisiting my [OCaml setup post from 2021](https://lambdafoo.com/posts/2021-10-29-getting-started-with-ocaml.html) because I needed to setup a new macOS machine. The official OCaml site points newcomers to [Visual Studio Code](https://ocaml.org/docs/up-and-running#editor-support-for-ocaml) which is a fine choice to get started. However I am using [Emacs](https://www.gnu.org/s/emacs/) and have done so for over 20 years, and did not find a good description of how to set things up with Emacs. Here I could digress into why Emacs but I will just strongly encourage any developers to invest heavily in learning their editor with Emacs being a fine choice.

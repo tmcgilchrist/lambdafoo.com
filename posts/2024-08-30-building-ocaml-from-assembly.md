@@ -6,7 +6,6 @@ comments: false
 categories:
   - ocaml
   - compilers
-published: false
 ---
 
 At work I've been focusing on improving the debugging experience with OCaml.

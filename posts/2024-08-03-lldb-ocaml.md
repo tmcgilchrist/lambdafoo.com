@@ -4,7 +4,6 @@ title: "Getting Started with LLDB on OCaml"
 date: 2024-08-03 08:00
 comments: false
 categories: ocaml
-published: true
 ---
 
 This post is a companion to KC's excellent [Getting Started with GDB on OCaml](https://kcsrk.info/ocaml/gdb/2024/01/20/gdb-ocaml/) that shows how to debug OCaml programs with GDB. I wanted to demonstrate the same functionality using LLDB on Linux ARM64. The aim is to show the beginnings of debugging OCaml programs with LLDB and highlight a few LLDB tricks I've found.
