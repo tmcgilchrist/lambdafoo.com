@@ -55,50 +55,28 @@
 <div class="sidebar" id="sidebar">
 
   <div class="sidebar-item">
-    <img src="./images/tim-movember-2009.jpg" />
-    <p>Tim McGilchrist</p>
-    <p>Principal Software Engineer at Tarides</p>
-
-    <p>
-      Twitter: <a href="https://twitter.com/lambda_foo">@lambda_foo</a><br>
-      Github: <a href="https://github.com/tmcgilchrist">tmcgilchrist</a><br>
-      Email: <a href="mailto:timmcgil@gmail.com">timmcgil@gmail.com</a><br>
-      LinkedIn: <a href="https://www.linkedin.com/in/timmcgilchrist">Tim McGilchrist</a>
-    </p>
-
+    <p><a href="./"><strong>Tim McGilchrist</strong></a></p>
   </div>
 
   <nav class="sidebar-nav">
-    <a class="sidebar-nav-item" href="./">
-      Blog
-    </a>
-    <a class="sidebar-nav-item" href="./pages/about.html">
-      About
-    </a>
-    <a class="sidebar-nav-item" href="./pages/talks.html">
-      Talks
-    </a>
-    <a class="sidebar-nav-item" href="./pages/server-room.html">
-      Server Room
-    </a>
-    <p class="sidebar-nav-item">
-      Feed:
-      <a href="./rss.xml">
-        RSS
-      </a>
-      /
-      <a href="./atom.xml">
-        Atom
-      </a>
-    </p>
+    <a class="sidebar-nav-item" href="./">Blog</a>
+    <a class="sidebar-nav-item" href="./pages/about.html">About</a>
+    <a class="sidebar-nav-item" href="./pages/talks.html">Talks</a>
+    <a class="sidebar-nav-item" href="./pages/server-room.html">Server Room</a>
+    <a class="sidebar-nav-item" href="./archive.html">Archive</a>
   </nav>
 
   <div class="sidebar-item">
     <p>
-      &copy; Tim McGilchrist 2007-2024
+      <a href="https://github.com/tmcgilchrist">GitHub</a> ·
+      <a href="https://bsky.app/profile/tsmc.purely-functional.com">Bluesky</a>
     </p>
     <p>
-      Powered by Hakyll
+      <a href="./rss.xml">RSS</a> ·
+      <a href="./atom.xml">Atom</a>
+    </p>
+    <p>
+      &copy; Tim McGilchrist 2007-2025
     </p>
   </div>
 </div>
@@ -126,17 +104,39 @@
       <div class="container content">
         <h2>Welcome</h2>
 
-<p>Welcome to my corner of the internet.</p>
-
 <p>
-    My name is Tim McGilchrist. I currently work as a Principal Software Engineer with <a href="https://tarides.com">Tarides</a>.
+    My name is Tim McGilchrist. I'm a Principal Software Engineer at <a href="https://tarides.com">Tarides</a>,
+    where I work on the OCaml compiler and runtime.
 </p>
 
 <p>
-  I find functional programming interesting and effective for solving problems. Mostly I use OCaml and Haskell
-  but have known Erlang, Elixir, Lisp and Standard ML at various times. My interests are compilers,
-  distributed systems and operating systems. I give talks on these topics at user-groups and conferences.
-  If you are interested in me speaking, let me know via email: timmcgil@gmail.com
+    My current focus is making OCaml programs easier to debug and profile. That means getting backtraces
+    to actually work, adding frame pointers and CFI support across architectures (Power, RISC-V, ARM64, s390x),
+    and making tools like perf, eBPF, and LLDB useful for OCaml. I'm building debugging infrastructure
+    through libraries like <a href="https://github.com/tarides/mach">mach</a>,
+    <a href="https://github.com/tarides/object">object</a>, and
+    <a href="https://github.com/tmcgilchrist/durin">durin</a> (for parsing DWARF debug info).
+    I also work on garbage collection internals and general systems hacking.
+</p>
+
+<p>
+    Before OCaml, I worked extensively with Haskell. I contributed to
+    <a href="https://github.com/hedgehogqa/haskell-hedgehog">Hedgehog</a> (property-based testing),
+    <a href="https://github.com/icicle-lang/">icicle</a> (a streaming query language), and
+    <a href="https://github.com/haskell-distributed/">Cloud Haskell</a> (distributed computing).
+    I've also spent time with Erlang, Lisp, and Standard ML.
+</p>
+
+<p>
+    I maintain several OCaml libraries including
+    <a href="https://github.com/tmcgilchrist/ocaml-grpc">ocaml-grpc</a> and
+    <a href="https://github.com/tmcgilchrist/ocaml-gitlab">ocaml-gitlab</a>.
+    I help organise <a href="https://www.meetup.com/FP-Syd/">FP-Syd</a>, Sydney's functional programming meetup.
+</p>
+
+<p>
+    I give talks at conferences and user groups. If you're interested in having me speak,
+    email me at timmcgil@gmail.com.
 </p>
 
 <h2>Recent posts:</h2>
