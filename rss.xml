@@ -7,8 +7,162 @@
         <description><![CDATA[Personal opinions on technology,functional programming and various systems topics.]]></description>
         <atom:link href="https://lambdafoo.com/rss.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Sat, 07 Feb 2026 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Wed, 25 Mar 2026 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Quick Hardware Performance Counters on macOS ARM64</title>
+    <link>https://lambdafoo.com/posts/2026-03-25-mperf-hardware-counters-macos.html</link>
+    <description><![CDATA[<div class="post">
+  <h1 class="post-title">Quick Hardware Performance Counters on macOS ARM64</h1>
+  <span class="post-date">March 25, 2026</span>
+  <p>If you’ve ever profiled OCaml programs on Linux, you’ve probably reached for <code>perf stat</code>. It’s the go-to tool for grabbing hardware performance counters—cycles, instructions, cache misses—without any instrumentation overhead. On macOS, the equivalent story has been <strong>open Instruments</strong>, which is fine for GUI-driven investigation but terrible for automated benchmarking pipelines.</p>
+<p>I wanted something I could stick in a shell script, get output as JSON, and run in the terminal. So I put together <a href="https://github.com/tmcgilchrist/mperf">mperf</a>, a <code>perf stat</code>-like CLI for Apple Silicon. Here is what it looks like:</p>
+<pre><code>$ sudo ./mperf-stat -e cycles -e instructions -e l1d-tlb-misses -- ./my_benchmark
+
+ Performance counter stats:
+
+         1,234,567,890  cycles
+         2,345,678,901  instructions                # 1.90 IPC
+            12,345,678  l1d-tlb-misses
+
+       0.543210 seconds wall time
+       0.520000 seconds user
+       0.020000 seconds sys</code></pre>
+<h2 id="why-not-just-use-instruments">Why Not Just Use Instruments?</h2>
+<p>Instruments is powerful, but it’s an interactive GUI tool. You can invoke it from the command line using <code>xctrace</code> but the results need the same GUI tool to view them. Sometimes you just need a simple cli tool that prints out the most interesting stats, in my case I want it invoked from a Makefile or a CI runner.</p>
+<p>There’s also no good reason this should require full Xcode and Instruments. The hardware counters are right there in the CPU; the kernel exposes them through private frameworks. The only real requirement is root access, no need for disabling SIP or code signing or other special entitlements.</p>
+<h2 id="using-apples-private-frameworks">Using Apple’s Private Frameworks</h2>
+<p>Apple Silicon exposes hardware performance counters through two private frameworks: <code>kperf.framework</code> and <code>kperfdata.framework</code>, living under <code>/System/Library/PrivateFrameworks/</code>. These are the same frameworks that Instruments uses internally. They’re undocumented, but <a href="https://gist.github.com/ibireme/173517c208c7dc333ba962c1f0d67d12">ibireme’s kpc_demo</a> showed that you can load them at runtime with <code>dlsym</code> and drive them from userspace.</p>
+<p>The CPU-specific event databases live in <code>/usr/share/kpep/</code> as plist files—<code>a14.plist</code> for M1, <code>a15.plist</code> for M2, <code>as4.plist</code> for M4, and so on. mperf provides portable aliases (<code>cycles</code>, <code>instructions</code>, <code>branch-misses</code>, <code>l1d-cache-misses</code>, etc.) that resolve to the right event names for whatever chip you’re running on. You can also pass raw event names if you want something specific.</p>
+<p>Apple Silicon gives you 2 fixed counters (cycles and instructions) plus 8 configurable counters, for a maximum of 10 simultaneous events. Unlike Linux perf, mperf doesn’t do multiplexing — if you ask for more than 10 events, it’s an error rather than a silently degraded estimate. More on that distinction below.</p>
+<h2 id="the-multi-threading-problem">The Multi-Threading Problem</h2>
+<p>A simple approach would be to fork a child, start counting, wait for it to exit, read counters. That works for single-threaded programs, but OCaml 5.x programs with multiple domains spawn multiple pthreads—each domain gets a domain thread plus a backup thread for systhreads. A 4-domain program has at least 8 pthreads, and naive per-thread measurement would miss most of the work.</p>
+<p>This is where Apple’s <strong>Profile Every Thread (PET)</strong> mechanism comes in. Instead of reading counters for a single thread, PET sets up a kernel timer that fires periodically (default: every 1ms) and snapshots PMC values for <em>every</em> thread matching a PID filter. These samples get written to a kernel trace buffer (<code>kdebug</code>) with thread IDs and timestamps.</p>
+<p>The approach is:</p>
+<ol type="1">
+<li>Fork a child process, held at a pipe barrier</li>
+<li>Configure the PMC hardware with requested events</li>
+<li>Set up PET sampling filtered to the child’s PID</li>
+<li>Enable kdebug tracing for <code>PERF_KPC_DATA_THREAD</code> events</li>
+<li>Release the child (close the pipe), let it exec the target command</li>
+<li>Poll kdebug for samples until the child exits</li>
+<li>For each thread, compute the delta between first and last sample</li>
+<li>Sum deltas across all threads</li>
+</ol>
+<pre><code>Thread 1: [sample_0] -------- [sample_1] -------- [sample_N]
+Thread 2:      [sample_0] -------- [sample_1] -------- [sample_N]
+Thread 3:           [sample_0] -------- [sample_1] -------- [sample_N]
+...
+
+Result = Σ (thread_last - thread_first) for all threads</code></pre>
+<p>This is fundamentally a sampling-based approximation rather than continuous counting. But for benchmarks that run longer than a few milliseconds, the results are accurate enough to be useful. The comparison with Linux <code>perf stat</code> is more nuanced than “exact vs approximate” though.</p>
+<h2 id="sampling-period-trade-offs">Sampling Period Trade-offs</h2>
+<p>The <code>-p</code> flag controls the sampling period. The default 1ms works well for most OCaml programs since domains typically live for the program’s duration. For short-lived benchmarks you can go faster at the cost of more overhead by setting smaller values for <code>-p</code>.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Default 1ms - good balance for most programs</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ./mperf-stat <span class="at">-e</span> cycles <span class="at">-e</span> instructions <span class="at">--</span> ./benchmark</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 0.5ms - catches short-lived threads, higher overhead</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ./mperf-stat <span class="at">-p</span> 0.5 <span class="at">-e</span> cycles <span class="at">-e</span> instructions <span class="at">--</span> ./short_benchmark</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 5ms - less overhead for long-running workloads</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ./mperf-stat <span class="at">-p</span> 5 <span class="at">-e</span> cycles <span class="at">-e</span> instructions <span class="at">--</span> ./long_benchmark</span></code></pre></div>
+<h2 id="ocaml-bindings">OCaml Bindings</h2>
+<p>Since the goal is integration with OCaml benchmarking services, mperf includes an OCaml library that wraps the CLI tool and parses its JSON output:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">open</span> Apple_perf_stat</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> () =</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">match</span> run</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    ~events:[<span class="st">&quot;cycles&quot;</span>; <span class="st">&quot;instructions&quot;</span>; <span class="st">&quot;l1d-tlb-misses&quot;</span>; <span class="st">&quot;branch-misses&quot;</span>]</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    [<span class="st">&quot;./my_benchmark&quot;</span>; <span class="st">&quot;--size&quot;</span>; <span class="st">&quot;10000&quot;</span>]</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">with</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  | <span class="dt">Ok</span> <span class="dt">result</span> -&gt;</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Printf</span>.printf <span class="st">&quot;IPC: %.2f</span><span class="ch">\n</span><span class="st">&quot;</span> (get_ipc <span class="dt">result</span>);</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Printf</span>.printf <span class="st">&quot;Wall time: %.3f s</span><span class="ch">\n</span><span class="st">&quot;</span> (wall_time_seconds <span class="dt">result</span>);</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">match</span> get_counter <span class="st">&quot;l1d-tlb-misses&quot;</span> <span class="dt">result</span> <span class="kw">with</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>     | <span class="dt">Some</span> misses -&gt; <span class="dt">Printf</span>.printf <span class="st">&quot;TLB misses: %Ld</span><span class="ch">\n</span><span class="st">&quot;</span> misses</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>     | <span class="dt">None</span> -&gt; ())</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  | <span class="dt">Error</span> e -&gt;</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Printf</span>.eprintf <span class="st">&quot;Error: %s</span><span class="ch">\n</span><span class="st">&quot;</span> (string_of_error e);</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="dt">exit</span> <span class="dv">1</span></span></code></pre></div>
+<p>The library has no external dependencies beyond <code>unix</code> and <code>str</code> from the OCaml standard library. It handles the root privilege check, argument construction, JSON parsing, and error reporting.</p>
+<p>The idea is to use instruction counts as a stable performance metric. Wall-clock time varies with system load and thermal throttling; instruction counts are deterministic. Pairing that with IPC and cache miss rates gives you a pretty complete picture of where regressions come from. The limit of 10 counters on Apple Silicon is enough to get started.</p>
+<h2 id="counting-accuracy">Counting Accuracy</h2>
+<p>How accurate are the results from mperf? And how do they compare to Linux perf?</p>
+<p>It’s tempting to describe this as “perf stat is exact, mperf is approximate” but that’s not the full picture. <code>perf stat</code> uses exact hardware counting <em>only when the requested events fit within the CPU’s physical PMU counters</em>. Once you exceed that limit, the kernel enables time-division multiplexing: it rotates events through the available counters via an <code>hrtimer</code> and scales the final counts:</p>
+<pre><code>final_count = raw_count * (time_enabled / time_running)</code></pre>
+<p>The <a href="https://perfwiki.github.io/main/tutorial/">perf wiki</a> is explicit about this: “It is very important to understand this is an estimate not an actual count. Depending on the workload, there will be blind spots which can introduce errors during scaling.” When multiplexing is active, <code>perf stat</code> shows a percentage column indicating what fraction of time each event was actually measured — anything below 100% means the count was extrapolated.</p>
+<p>How many events before multiplexing kicks in depends on the hardware? It depends on how many PMU counters are exposed on the particular CPU. Here are a few examples from modern CPUs:</p>
+<table>
+<thead>
+<tr>
+<th>CPU</th>
+<th>General-Purpose</th>
+<th>Fixed</th>
+<th>Total</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Intel Skylake (HT on)</td>
+<td>4</td>
+<td>3</td>
+<td>7</td>
+</tr>
+<tr>
+<td>Intel Ice Lake (HT off)</td>
+<td>8</td>
+<td>4</td>
+<td>12</td>
+</tr>
+<tr>
+<td>AMD Zen 3/4</td>
+<td>6</td>
+<td>0</td>
+<td>6</td>
+</tr>
+<tr>
+<td>ARM Cortex-A76 / Neoverse N1</td>
+<td>6</td>
+<td>1</td>
+<td>7</td>
+</tr>
+<tr>
+<td>Apple M1-M4</td>
+<td>8</td>
+<td>2</td>
+<td>10</td>
+</tr>
+</tbody>
+</table>
+<p>On Linux you can check your own CPU with <code>dmesg</code>:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> dmesg <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-E</span> <span class="st">&quot;generic registers|fixed-purpose events&quot;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">...</span> generic registers:      4</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">...</span> fixed-purpose events:   3</span></code></pre></div>
+<p>Note that the NMI watchdog steals one general-purpose counter by default on most distros (<code>cat /proc/sys/kernel/nmi_watchdog</code> — if it returns 1, you’ve lost a counter).</p>
+<p>So in practice the comparison is:</p>
+<ul>
+<li><strong>perf stat with ~6 events on Skylake</strong>: exact counting, genuinely better than mperf’s PET approach.</li>
+<li><strong>perf stat with 12+ events</strong>: time-multiplexed scaled estimates. Still different from PET sampling (perf counts every event while the counter is active, then extrapolates for inactive periods), but the result is still an estimate.</li>
+<li><strong>mperf with up to 10 events</strong>: PET sampling-based approximation, but all counters are always physically active: no time-sharing, no scaling. The inaccuracy comes from sampling granularity (missing activity between snapshots), not from extrapolation.</li>
+</ul>
+<p>For the common case of measuring cycles + instructions + a handful of cache/TLB events (say 4-6 total), perf stat on Linux gives you exact counts and mperf gives you a close approximation. For larger event sets in perf, you hit the multiplexing case and might see unexpected results. Both tools are producing estimates through different mechanisms. mperf’s hard limit of 10 events means you always know whether your counts are real.</p>
+<p>The other caveats: mperf relies on Apple’s private <code>kperf</code> and <code>kperfdata</code> frameworks, which could change with any macOS update (though they’ve been stable across M1 through M4). And very short-lived threads might be missed entirely if they complete within a single sampling period.</p>
+<h2 id="getting-started">Getting Started</h2>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/tmcgilchrist/mperf</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> mperf</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ./mperf-stat <span class="at">--</span> echo hello</span></code></pre></div>
+<p>List all available events for your CPU with <code>./mperf-stat -l</code>.</p>
+<p>The code is based on <a href="https://gist.github.com/ibireme/173517c208c7dc333ba962c1f0d67d12">ibireme’s kpc_demo.c</a>, with event documentation from <a href="https://github.com/jiegec/apple-pmu">jiegec/apple-pmu</a> and the <a href="https://developer.apple.com/documentation/apple-silicon/cpu-optimization-guide">Apple Silicon CPU Optimization Guide</a>.</p>
+<h2 id="whats-next">What’s Next</h2>
+<p>Porting this to x86_64 macOS, the PMC infrastructure should be similar. The more immediate goal is integrating mperf into an automated benchmarking pipeline for the OCaml compiler, tracking instruction counts and IPC across commits the way we’ve been doing with <a href="https://lambdafoo.com/posts/2025-02-24-ocaml-frame-pointers.html">frame pointers</a> and <a href="https://lambdafoo.com/posts/2025-02-15-ocaml-ebpf-usdt.html">eBPF</a> on Linux.</p>
+<p>This fits into the broader effort of making OCaml programs easier to profile. Frame pointer support gives us <code>perf</code> and eBPF integration on Linux; mperf gives us hardware counter access on macOS without reaching for Instruments. Using frame pointers on macOS gives us accurate backtraces in Instruments when used with <code>xctrace</code>.</p>
+</div>
+]]></description>
+    <pubDate>Wed, 25 Mar 2026 00:00:00 UT</pubDate>
+    <guid>https://lambdafoo.com/posts/2026-03-25-mperf-hardware-counters-macos.html</guid>
+    <dc:creator>Tim McGilchrist</dc:creator>
+</item>
+<item>
     <title>More CFI and frame pointers work</title>
     <link>https://lambdafoo.com/posts/2026-02-07-more-cfi-and-frame-pointers.html</link>
     <description><![CDATA[<div class="post">
@@ -1214,265 +1368,6 @@ packages with native C components.</p>
 ]]></description>
     <pubDate>Fri, 29 Oct 2021 00:00:00 UT</pubDate>
     <guid>https://lambdafoo.com/posts/2021-10-29-getting-started-with-ocaml.html</guid>
-    <dc:creator>Tim McGilchrist</dc:creator>
-</item>
-<item>
-    <title>Hakyll Blog setup</title>
-    <link>https://lambdafoo.com/posts/2021-08-27-hakyll-blog.html</link>
-    <description><![CDATA[<div class="post">
-  <h1 class="post-title">Hakyll Blog setup</h1>
-  <span class="post-date">August 27, 2021</span>
-  <p>I wanted to port my blog across from an old Jeykll setup to Haykll.
-The Jekyll was out of date and keeping the required ruby tools installed
-when I swapped machines was a huge pain. I don’t write ruby much anymore.</p>
-<p>Considering my options, I looked at Hugo and Hakyll, discarding Hugo because
-I don’t want to keep up with the JS churn, even though they have lots of
-great resources and themes available. So Hakyll seems like the best option. I
-already regularily write Haskell so the tools will be up to date and I can make
-it do everything I want by digging into the source code.</p>
-<p>My requirements are:</p>
-<ul>
-<li>Markdown based workflow</li>
-<li>support basic pages</li>
-<li>individual post with code highlighting</li>
-<li>RSS/Atom feed</li>
-<li>GitHub action based build and deploy</li>
-<li>support old blog URLs (HTML URL redirects to new url structure)</li>
-<li>serve js talks/slides directly from Hakyll</li>
-<li>generated sitemap.xml</li>
-<li>integrate Google Analytics</li>
-</ul>
-<h2 id="getting-hakyll-setup">Getting Hakyll Setup</h2>
-<p>First things first! I like the following layout when setting up a basic Haskell project:</p>
-<pre><code>$ tree -L 1
-.
-├── CNAME
-├── LICENSE
-├── README.md
-├── css
-├── drafts
-├── images
-├── index.html
-├── lambdafoo.cabal
-├── main
-├── pages
-├── posts
-├── talks
-└── templates</code></pre>
-<p>Initially I used <code>cabal init --cabal-version=2.4 --license=BSD3 -p lambdafoo.com</code> to get a skeleton
-project with a reasonable cabal file. Then I moved things around, making <code>main/site.hs</code> the
-entry point for running Hakyll and adding a TODO list of features into the README.md</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="at"> * ~~basic pages~~</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="at">   * ~~about~~</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="at">   * ~~talks~~</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="at">   * ~~archive~~</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="at"> * ~~individual post with code highlighting~~</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="at"> * ~~rss/atom feed~~</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="at"> * ~~add rss/atom feed to archive page~~</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="at"> * ~~github action build and deploy~~</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="at"> * ~~html url redirects to new url structure~~</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="at"> * ~~serve js talks/slides directly from Hakyll~~</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="at"> * configure dependabot for Haskell</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="at"> * ~~add generated sitemap.xml~~</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="at"> * ~~integrate Google Analytics~~</span></span></code></pre></div>
-<p>These directories are used for Hakyll content:</p>
-<ul>
-<li>pages - includes various regular pages on the site like talks or about me</li>
-<li>css - includes the style sheets for the HTML</li>
-<li>images - is the static images for the site</li>
-<li>drafts - containts the draft posts I’m writing</li>
-<li>talks - contains static JS/HTML based slides from presentations that I want to serve directly
-from the site</li>
-<li>templates - site templates in a markup language for doing page layouts</li>
-<li>CNAME - is Github Pages hosting to tell it the DNS name for the site</li>
-</ul>
-<p>The trickiest part was getting a version of the cabal file that worked with GHC 8.10 and a
-recent version of Hakyll. I ended up needing to pin Hakyll as <code>hakyll ^&gt;= 4.13</code> and left the
-other dependencies floating.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="at">executable site</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">main-is</span><span class="kw">:</span><span class="at">             site.hs</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">hs-source-dirs</span><span class="kw">:</span><span class="at">      main</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">default-language</span><span class="kw">:</span><span class="at">    Haskell2010</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">build-depends</span><span class="kw">:</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="at">                       base      &gt;= 4.6  &amp;&amp; &lt; 5</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="at">                     , binary    &gt;= 0.5</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="at">                     , directory &gt;= 1.2</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="at">                     , filepath  &gt;= 1.3</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="at">                     , hakyll    ^&gt;= 4.13</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="at">                     , blaze-html</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="at">                     , lens</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="at">                     , time</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="at">                     , aeson</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="at">                     , lens-aeson</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="at">                     , containers</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="at">                     , pandoc</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="at">                     , process   &gt;= 1.6</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="at">                     , text      &gt;= 1.2</span></span></code></pre></div>
-<p>At this point, I could have either continued setting up Hakyll or setup CI. I usually
-prefer setting up CI as early as possible in a project, so I stared there.
-Here is what that looks like:</p>
-<h2 id="hakyll-ci">Hakyll CI</h2>
-<p>There are a few options for cloud CI, and my requirements were simple: no cost, easy setup, and integration
-with GitHub pages where I host my site. It was a toss up between CircleCI and Github Actions, as I’ve had
-good experience with CircleCI, but Idecided to try Github Actions.</p>
-<p>First, create a directory <code>mkdir -p .github/workflows/</code> with a <code>ci.yml</code> file</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> CI</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">on</span><span class="kw">:</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">push</span><span class="kw">:</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">branches</span><span class="kw">:</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> master</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">pull_request</span><span class="kw">:</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">types</span><span class="kw">:</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> opened</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> synchronize</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="fu">jobs</span><span class="kw">:</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">build</span><span class="kw">:</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">runs-on</span><span class="kw">:</span><span class="at"> ubuntu-latest</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">strategy</span><span class="kw">:</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">matrix</span><span class="kw">:</span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">cabal</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">&quot;3.4.0.0&quot;</span><span class="kw">]</span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">ghc</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">&quot;8.10.7&quot;</span><span class="kw">]</span></span></code></pre></div>
-<p>The <code>matrix</code> section sets up a build for <code>ghc 8.10.7</code> and cabal <code>3.4</code>, which is enough for a simple blog,
-but is where you’d add extra options, for say a library. Next, we use some community GitHub Actions to
-<code>checkout</code> and setup Haskell.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">steps</span><span class="kw">:</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/checkout@v2</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> haskell/actions/setup@v1</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">id</span><span class="kw">:</span><span class="at"> setup-haskell-cabal</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">ghc-version</span><span class="kw">:</span><span class="at"> ${{ matrix.ghc }}</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">cabal-version</span><span class="kw">:</span><span class="at"> ${{ matrix.cabal }}</span></span></code></pre></div>
-<p>Here we run <code>cabal update</code> to update our Hackage index and then setup some build caching for
-our dependencies. You can copy this directly and it should work:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Cabal Update</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">        run</span><span class="kw">: </span><span class="ch">|</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>          cabal v2-update</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>          cabal v2-freeze $CONFIG</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/cache@v2.1.4</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">          path</span><span class="kw">: </span><span class="ch">|</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>            ${{ steps.setup-haskell-cabal.outputs.cabal-store }}</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>            dist-newstyle</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">key</span><span class="kw">:</span><span class="at"> ${{ runner.os }}-${{ matrix.ghc }}-${{ hashFiles(&#39;cabal.project.freeze&#39;) }}</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="fu">          restore-keys</span><span class="kw">: </span><span class="ch">|</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>            ${{ runner.os }}-${{ matrix.ghc }}-</span></code></pre></div>
-<p>Then we run the cabal build and Hakyll site build.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Build Site</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">        run</span><span class="kw">: </span><span class="ch">|</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>          cabal v2-build $CONFIG</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>          cabal exec site build</span></code></pre></div>
-<p>Adding that into your repo’s main branch of your repo should yield a working CI.
-On top of that, I added a dependabot configuration to check that my GitHub Actions
-config was up to date.</p>
-<p>Add a file <code>dependabot.yml</code> to <code>.github</code>:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">version</span><span class="kw">:</span><span class="at"> </span><span class="dv">2</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">updates</span><span class="kw">:</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">package-ecosystem</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;github-actions&quot;</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">directory</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;/&quot;</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">schedule</span><span class="kw">:</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">interval</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;daily&quot;</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">commit-message</span><span class="kw">:</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">prefix</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;GA&quot;</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">include</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;scope&quot;</span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">labels</span><span class="kw">:</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="st">&quot;CI&quot;</span></span></code></pre></div>
-<p>This will check that your GitHub Actions use the latest version and open a PR to bump versions
-if you aren’t. Something like this for Haskell would be super sweet.</p>
-<h2 id="generating-the-site">Generating the Site</h2>
-<p>Let’s quickly walk through the contents of <code>main/site.hs</code>, but there are more in-depth tutorials on the
-main <a href="https://jaspervdj.be/hakyll/tutorials.html">Hakyll site</a></p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE OverloadedStrings #-}</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Hakyll</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="ot">main ::</span> <span class="dt">IO</span> ()</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> hakyll <span class="op">$</span> <span class="kw">do</span></span></code></pre></div>
-<p>Here we import Hakyll, setup overloaded strings, and create a main function:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>  match <span class="st">&quot;images/*&quot;</span> <span class="op">$</span> <span class="kw">do</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    route idRoute</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    compile copyFileCompiler</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  match <span class="st">&quot;css/*&quot;</span> <span class="op">$</span> <span class="kw">do</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    route idRoute</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    compile compressCssCompiler</span></code></pre></div>
-<p>Serve stylesheets and images from directories <code>css</code> and <code>images</code>, respectively. This is standard code
-that can be copied directly, it basically copies the files into the final static site directory <code>_site</code>.</p>
-<p>Next I wanted to serve some old talk slides written in HTML and JavaScript directly from my site.
-I couldn’t find any posts talking about how to do this, but after thinking about it, I realized that I
-just wanted to serve static assets again like the <code>css</code> and <code>images</code> above. So that’s exactly what was required!
-If course, I lie. I had to fix a few hard coded paths in the HTML but otherwise it worked.</p>
-<p>The layout for <code>talks</code> looks like:</p>
-<pre><code>talks
-├── erl-syd-2012-webmachine
-├── fp-syd-freer-2016
-├── fp-syd-higher-2015
-├── lambda-jam-2014-raft
-├── lambda-jam-2015-ocaml-functors
-├── lambda-jam-2016-performance
-├── roro-2012-riak
-└── scala-syd-2015-modules</code></pre>
-<p>So I needed an extra wildcard in my <code>match</code> statement:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>  match <span class="st">&quot;talks/**/*&quot;</span> <span class="op">$</span> <span class="kw">do</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    route idRoute</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    compile <span class="op">$</span> copyFileCompiler</span></code></pre></div>
-<p>This content then gets served under <code>lambdafoo.com/talks/scala-syd-2015-modules/</code>.
-In retrospect, this is an obvious solution to serving any static content generated outside of Hakyll,
-but it did take me a while to realise it.</p>
-<p>Next we load the individual blog posts:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>  match <span class="st">&quot;posts/*&quot;</span> <span class="op">$</span> <span class="kw">do</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    route <span class="op">$</span> setExtension <span class="st">&quot;html&quot;</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    compile <span class="op">$</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>      pandocCompiler</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>        <span class="op">&gt;&gt;=</span> loadAndApplyTemplate <span class="st">&quot;templates/post.html&quot;</span> postCtx</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>        <span class="co">-- Used by the RSS/Atom feed</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>        <span class="op">&gt;&gt;=</span> saveSnapshot <span class="st">&quot;content&quot;</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>        <span class="op">&gt;&gt;=</span> loadAndApplyTemplate <span class="st">&quot;templates/default.html&quot;</span> postCtx</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>        <span class="op">&gt;&gt;=</span> relativizeUrls</span></code></pre></div>
-<h2 id="authoring-posts">Authoring Posts</h2>
-<p>After getting a few simple things out of the way, the Markdown-based workflow already worked with
-Hakyll, so there’s nothing really to see there. Creating a simple YAML file with the following meta-data
-and content is enough to get a simple post working.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span><span class="kw">:</span><span class="at"> Hakyll Blog setup</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">author</span><span class="kw">:</span><span class="at"> Tim McGilchrist</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="fu">date</span><span class="kw">:</span><span class="at"> 2021-02-01 00:00</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tags</span><span class="kw">:</span><span class="at"> haskell</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="fu">description</span><span class="kw">:</span><span class="at"> How I setup my blog with Hakyll</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="at">Content of post</span></span></code></pre></div>
-<h2 id="deploying">Deploying</h2>
-<p>I have a domain <code>lambdafoo.com</code> that I use to serve my blog. Github pages has up-to-date
-information on how to set this up with your DNS provider.</p>
-<p>Here is where choosing Github Actions really pays off! There is a community action to do it all!
-Assuming you’ve turned on GitHub Pages in the settings for you repo, add this to the end of the <code>ci.yml</code>:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Deploy 🚀</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> JamesIves/github-pages-deploy-action@4.1.5</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">if</span><span class="kw">:</span><span class="at"> github.ref == &#39;refs/heads/master&#39;</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">token</span><span class="kw">:</span><span class="at"> ${{ secrets.GITHUB_TOKEN }}</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">branch</span><span class="kw">:</span><span class="at"> gh-pages</span><span class="co"> # The branch the action should deploy to.</span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">folder</span><span class="kw">:</span><span class="at"> _site</span><span class="co"> # The folder the action should deploy.</span></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">clean</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span><span class="co"> # Automatically remove deleted files from the deploy branch</span></span></code></pre></div>
-<p>This deploys the output of the <code>Build Site</code> step from folder <code>_site</code> to the branch <code>gh-pages</code>
-on all <code>master</code> builds (controlled via <code>if: github.ref == 'refs/heads/master'</code>).</p>
-<p>On the first build, there is a bit of lag to deploy. I had issues with my DNS setup and two
-personal repositories using the same CNAME values. Apart from that, the process was smooth, and I
-quickly had a new version working. Again, if you setup dependabot, it will check that this action is
-up-to-date.</p>
-<h2 id="resources">Resources</h2>
-<ul>
-<li><a href="https://github.com/tmcgilchrist/lambdafoo.com">Blog source</a></li>
-<li><a href="https://markkarpov.com/post/github-actions-for-haskell-ci.html">GitHub Actions for Haskell</a></li>
-<li><a href="https://kodimensional.dev/github-actions#dependabot">Dependabot</a></li>
-</ul>
-</div>
-]]></description>
-    <pubDate>Fri, 27 Aug 2021 00:00:00 UT</pubDate>
-    <guid>https://lambdafoo.com/posts/2021-08-27-hakyll-blog.html</guid>
     <dc:creator>Tim McGilchrist</dc:creator>
 </item>
 
