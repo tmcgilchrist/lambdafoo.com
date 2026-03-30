@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
     <title>Perpetually Curious Blog</title>
+    <subtitle><![CDATA[Personal opinions on technology,functional programming and various systems topics.]]></subtitle>
     <link href="https://lambdafoo.com/atom.xml" rel="self" />
     <link href="https://lambdafoo.com" />
     <id>https://lambdafoo.com/atom.xml</id>
