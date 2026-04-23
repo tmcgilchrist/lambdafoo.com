@@ -11,8 +11,42 @@
         <email>timmcgil@gmail.com</email>
         
     </author>
-    <updated>2026-03-25T00:00:00Z</updated>
+    <updated>2026-04-23T00:00:00Z</updated>
     <entry>
+    <title>A month of Elisp</title>
+    <link href="https://lambdafoo.com/posts/2026-04-23-a-month-of-elisp.html" />
+    <id>https://lambdafoo.com/posts/2026-04-23-a-month-of-elisp.html</id>
+    <published>2026-04-23T00:00:00Z</published>
+    <updated>2026-04-23T00:00:00Z</updated>
+    <summary type="html"><![CDATA[<div class="post">
+  <h1 class="post-title">A month of Elisp</h1>
+  <span class="post-date">April 23, 2026</span>
+  <p>Somehow this month has turned into a month of Elisp. It’s been a while since I posted something Emacs related so here is a roundup of all the things I’ve done.</p>
+<h2 id="inspiration">Inspiration</h2>
+<p>I’m primarily working in OCaml day to day with some C and assembly thrown in for good measure. OCaml has a number of mini-languages it uses for describing things like packages using opam, build rules using dune, LR(1) parser generators using menhir, lexical analysers using ocamllex, integration tests using cram, and so on. Many of these could use a nice tree-sitter mode to power editors like Emacs and NeoVim. Late last year I started looking into the state of tree-sitter grammars for OCaml. There was already a well maintained grammar for the main language but many of the other mini-languages didn’t have a good grammar.</p>
+<p>Tree-sitter is a parser generator and incremental parsing library used in Emacs (since 29) and NeoVim, and powering <a href="https://discuss.ocaml.org/t/ann-code-navigation-and-search-on-github/17999">GitHub code navigation and search</a>. Increasingly it is a vital part of the tooling for OCaml, so why not contribute here?</p>
+<h2 id="sitting-in-trees">Sitting in trees</h2>
+<p>I started out with <a href="https://github.com/tmcgilchrist/tree-sitter-dune">tree-sitter-dune</a>, originally by Etienne Millon, and built out support for dune build system files like dune, dune-project and dune-workspace. Covering modern dune since 3.19 and most of the stanzas (the configuration blocks like <code>(executable ...)</code> and <code>(library ...)</code>), modulo reported issues. The next tree to climb was the menhir grammar.</p>
+<p>Menhir is a parser generator that compiles LR(1) grammar specifications into OCaml. It’s commonly used by the community and even the <a href="https://github.com/ocaml/ocaml/blob/trunk/parsing/parser.mly">OCaml compiler itself</a>. The existing <a href="https://github.com/Kerl13/tree-sitter-menhir">tree-sitter-menhir</a> project hasn’t seen a release for 3 years and didn’t seem active. More importantly it was missing robust support for language injection which we need. Tree-sitter has a concept of injecting another grammar into certain places within the current grammar, commonly used for injecting JavaScript into an HTML grammar. In our case Menhir files contain embedded OCaml code and we want to inject the full OCaml grammar into those places. This gives us full OCaml support without needing to write a second copy of an OCaml grammar inside Menhir, and replaces the ad-hoc regexes used for parsing OCaml code. The bonus is we picked up modern OCaml syntax along the way. The work landed in <a href="https://github.com/Kerl13/tree-sitter-menhir/pull/8">PR #8</a>.</p>
+<p>Skipping <a href="https://github.com/314eter/tree-sitter-ocamllex">ocamllex</a>, which was already using language injection and is actively maintained.</p>
+<p>Next I moved onto <a href="https://github.com/tmcgilchrist/tree-sitter-opam">tree-sitter-opam</a> to parse the opam package manager files. This followed a similar pattern to developing tree-sitter-dune, the interesting parts were using the opam-repository for test cases and finding issues with my implementation. Later on I realised the exact structure of the AST (Abstract Syntax Tree) was <em>much</em> more important than I thought.</p>
+<p>Finally I started an odoc parser. odoc is the OCaml documentation markup language. It’s used for both code comments in OCaml source files and standalone .mld files. The focus was on supporting mld files which look similar to markdown files with some extra syntax for referring to OCaml types and code. This time I searched the odoc project for their <a href="https://github.com/ocaml/odoc/tree/master/src/parser">parser</a> and used their test suite to validate my tree-sitter implementation. There’s more work to do here to make it complete and extend support to code comments, perhaps using language injection again.</p>
+<h2 id="neocaml">Neocaml</h2>
+<p>Next we need a nice OCaml mode that uses tree-sitter. I’ve hacked, in the most messy sense, support into <a href="https://github.com/ocaml/tuareg">tuareg</a> (the long-standing OCaml Emacs mode) but the weight of historical baggage in that code is heavy, so imagine my joy when neocaml was released.</p>
+<p><a href="https://neocaml.org/">Neocaml</a> started as a modern, tree-sitter-powered Emacs package for programming in OCaml. Version 0.6.0 shipped last month with support for dune and opam files, based off the tree-sitter grammars I’d worked on last year. Now I had users and bug reports and motivation to fix things, which has improved all the grammars with more fixes to come. There’s an odoc MLD <a href="https://github.com/bbatsov/neocaml/pull/46">PR #46</a> coming soon once I sort out font-locking (Emacs-speak for syntax highlighting).</p>
+<p>At this point I’ve moved completely over to neocaml for all my OCaml work. bbatsov has written up the release on <a href="https://batsov.com/articles/2026/03/25/neocaml-0-6-opam-dune-and-more/">Neocaml 0.6: Opam, Dune, and More</a>. He also made a nice <a href="https://emacsredux.com/blog/2026/03/26/emacs-prelude-redux/">Emacs Prelude 2.0</a> release that uses neocaml. This is the happiest I’ve been with my Emacs OCaml setup. What is next?</p>
+<h2 id="combobulate">Combobulate</h2>
+<p>Building on the shoulders of all this tree-sitter work is combobulate. Combobulate aims to simplify code navigation in Emacs using tree-sitter to provide intuitive, structured navigation that works across languages. Go read <a href="https://www.masteringemacs.org/article/combobulate-intuitive-structured-navigation-treesitter">Combobulate: Intuitive, Structured Navigation with Tree-Sitter</a> for the full motivation and demo. We recently landed Combobulate support for OCaml in <a href="https://github.com/mickeynp/combobulate/pull/157">PR #157</a> (with bug fixes in <a href="https://github.com/mickeynp/combobulate/pull/159">#159</a> and <a href="https://github.com/mickeynp/combobulate/pull/161">#161</a>). Filled with enthusiasm and the promise of consistent key bindings across all OCaml mini-languages, I threw together <a href="https://github.com/tmcgilchrist/combobulate/pull/9">PR #9</a> to support dune, opam and odoc files. It needs more polish and day to day use but it is already very good.</p>
+<p>On top of that there’s some basic Combobulate C support in <a href="https://github.com/tmcgilchrist/combobulate/pull/11">PR #11</a>, and <a href="https://github.com/tmcgilchrist/combobulate/pull/12">PR #12</a> adds the same for Haskell.</p>
+<h2 id="curry-on">Curry On!</h2>
+<p>Having experienced neocaml I’ve started writing a tree-sitter powered Emacs package for programming in Haskell. The combination of a base tree-sitter mode with a layer of LSP (Language Server Protocol) on top and combobulate on top of that is how language modes should work in Emacs. I’m still furiously hacking on this project and will have more to say when the first version is released.</p>
+<h2 id="colours-and-names-are-hard">Colours and names are hard</h2>
+<p>I also tidied up and shipped <a href="https://github.com/tmcgilchrist/miasma-theme">miasma-theme</a>, a theme for Emacs that had been sitting in a directory since 2024. It’s a dark colour scheme built from muted earth tones (moss, bark, rust, amber, and fog), based on xero’s <a href="https://terminalcolors.com/themes/miasma/default/">miasma terminal theme</a> palette. It fits nicely with my dark theme on macOS. Getting the colours right and covering all the right faces has been a pain; I’ve got everything I use daily but there are going to be things I missed. The <a href="https://github.com/tmcgilchrist/miasma-theme/blob/main/DESIGN.md">DESIGN.md</a> goes into the motivation for the colours. Previously I’d just used other people’s themes, often the <code>doom-themes</code> package or the <code>solarized-theme</code> that was default in Emacs prelude.</p>
+<p>All up there’s been so much Emacs and elisp this month.</p>
+</div>
+]]></summary>
+</entry>
+<entry>
     <title>Quick Hardware Performance Counters on macOS ARM64</title>
     <link href="https://lambdafoo.com/posts/2026-03-25-mperf-hardware-counters-macos.html" />
     <id>https://lambdafoo.com/posts/2026-03-25-mperf-hardware-counters-macos.html</id>
@@ -1185,192 +1219,6 @@ There are 3 main pieces:</p>
 <h2 id="summary">Summary</h2>
 <p>Getting started with OCaml using Emacs can be a struggle. Emacs is a fine editor but the documentation can be difficult to handle. Hopefully following through this setup will yield a working Emacs / LSP setup for OCaml.</p>
 <p>In future I want to try binding more things to keys so I use the mouse less and streamline the installing of the ocaml lsp server. Then after that adding support for more interesting code interactions like extracting modules or hoisting let bindings would be nice to have. Happy hacking!</p>
-</div>
-]]></summary>
-</entry>
-<entry>
-    <title>Getting Started with OCaml in 2021</title>
-    <link href="https://lambdafoo.com/posts/2021-10-29-getting-started-with-ocaml.html" />
-    <id>https://lambdafoo.com/posts/2021-10-29-getting-started-with-ocaml.html</id>
-    <published>2021-10-29T00:00:00Z</published>
-    <updated>2021-10-29T00:00:00Z</updated>
-    <summary type="html"><![CDATA[<div class="post">
-  <h1 class="post-title">Getting Started with OCaml in 2021</h1>
-  <span class="post-date">October 29, 2021</span>
-  <p>OCaml is an awesome language with many fine features. I enjoy using it immensely!</p>
-<p>Unfortunately, it suffers from a perceived weakness in how to get started. Like any new skill, there can be a learning curve. The tools are all there, but combining them for a good developer experience might seem difficult at first.</p>
-<p>Often I’ve found that the barrier for getting into a new langauge is less about the
-new features of that language and more about learning the tools to become productive in that
-language. The package managers, build tools, and editor integration of a new language can be confusing, making for an awful experience.</p>
-<p>Perhaps my opinionated guide to getting started with OCaml in 2021 will help reduce any mental blocks against trying out this excellent language.</p>
-<h2 id="install-opam">Install Opam</h2>
-<p>First it’s necessary to install OCaml and Opam.
-<a href="https://opam.ocaml.org">Opam</a> is the default package manager for OCaml projects.
-Ignore the other options for now, once you know more about what you want, you can make
-an informed choice. For now if you speak OPAM, you’ll get the most out of the community.</p>
-<p>On Linux, use your local package manger, e.g., <code>apt-get install opam</code> for Debian and <code>apt install opam</code>
-for Ubuntu. For MacOS, use homebrew <code>brew install opam</code>. I’ll assume if you run
-something else, you can handle looking up <a href="https://opam.ocaml.org/doc/Install.html#Using-your-distribution-39-s-package-system">how to install things</a>.</p>
-<p>On my Mac I get Opam 2.1.0:</p>
-<pre class="shell"><code>$ opam --version
-2.1.0</code></pre>
-<p>Once you’ve got Opam installed, you should be able to move on to the next step.</p>
-<h2 id="choose-an-ocaml-version">Choose an OCaml Version</h2>
-<p>I strongly recommended that you pick a single OCaml version that your project will compile against.
-Supporting multiple compiler versions is possible and usually not too diffcult, but it complicates
-the process right now.</p>
-<p>Running <code>opam switch list-available</code> will show you a long list of every possible OCaml compiler.
-Choose the latest mainline compiler identifed by <code>Official release X.XX.X</code> where currently the latest
-is <code>4.13.0</code>. Ignore the others.</p>
-<pre class="shell"><code>opam switch list-available
-...
-ocaml-variants                         4.12.0+domains                         OCaml 4.12.0, with support for multicore domains
-ocaml-variants                         4.12.0+domains+effects                 OCaml 4.12.0, with support for multicore domains and effects
-ocaml-variants                         4.12.0+options                         Official release of OCaml 4.12.0
-ocaml-base-compiler                    4.12.1                                 Official release 4.12.1
-ocaml-variants                         4.12.1+options                         Official release of OCaml 4.12.1
-ocaml-variants                         4.12.2+trunk                           Latest 4.12 development
-ocaml-base-compiler                    4.13.0~alpha1                          First alpha release of OCaml 4.13.0
-ocaml-variants                         4.13.0~alpha1+options                  First alpha release of OCaml 4.13.0
-ocaml-base-compiler                    4.13.0~alpha2                          Second alpha release of OCaml 4.13.0
-ocaml-variants                         4.13.0~alpha2+options                  Second alpha release of OCaml 4.13.0
-ocaml-base-compiler                    4.13.0~beta1                           First beta release of OCaml 4.13.0
-ocaml-variants                         4.13.0~beta1+options                   First beta release of OCaml 4.13.0
-ocaml-base-compiler                    4.13.0~rc1                             First release candidate of OCaml 4.13.0
-ocaml-variants                         4.13.0~rc1+options                     First release candidate of OCaml 4.13.0
-ocaml-base-compiler                    4.13.0~rc2                             Second release candidate of OCaml 4.13.0
-ocaml-variants                         4.13.0~rc2+options                     Second release candidate of OCaml 4.13.0
-ocaml-base-compiler                    4.13.0                                 Official release 4.13.0
-ocaml-variants                         4.13.0+options                         Official release of OCaml 4.13.0
-ocaml-variants                         4.13.1+trunk                           Latest 4.13 developmet
-ocaml-variants                         4.14.0+trunk                           Current trunk
-...</code></pre>
-<p>At this point, install the latest OCaml 4.13.0:</p>
-<pre class="shell"><code>$ opam switch create 4.13.0
-
-&lt;&gt;&lt;&gt; Installing new switch packages &lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;  🐫
-Switch invariant: [&quot;ocaml-base-compiler&quot; {= &quot;4.13.0&quot;} | &quot;ocaml-system&quot; {= &quot;4.13.0&quot;}]
-
-&lt;&gt;&lt;&gt; Processing actions &lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;&lt;&gt;  🐫
-∗ installed base-bigarray.base
-∗ installed base-threads.base
-∗ installed base-unix.base
-∗ installed ocaml-options-vanilla.1
-⬇ retrieved ocaml-base-compiler.4.13.0  (https://opam.ocaml.org/cache)
-∗ installed ocaml-base-compiler.4.13.0
-∗ installed ocaml-config.2
-∗ installed ocaml.4.13.0
-Done.</code></pre>
-<p>You can start using this version by typing the following:</p>
-<pre class="shell"><code>$ opam switch set 4.13.0</code></pre>
-<p>And verify which switch you are using:</p>
-<pre class="shell"><code>$ opam switch show
-4.13.0</code></pre>
-<p>When you work with several OCaml projects, it’s best to create a switch per project, as it keeps
-each project isolated and prevents issues with installing conflicting versions of libraries.
-For example, I use a naming scheme of <code>ocaml-version-project-name</code>,
-e.g., <code>4.13.0-ocurrent</code>. Then in each project directory, run <code>opam switch link 4.13.0-ocurrent</code>
-to setup that named switch for that specific directory. Opam will take care of setting that switch
-in your shell when you change into that directory.</p>
-<h2 id="creating-your-project-directory">Creating Your Project Directory</h2>
-<p>For this step we need the <a href="https://dune.readthedocs.io">Dune</a> build tool, so go ahead and install it with <code>opam install dune</code>.
-Dune comes with a simple scaffolding command to create an empty project that is really useful
-to get started.</p>
-<p>I’m calling my project <code>box</code>, so run:</p>
-<pre class="shell"><code>$ dune init proj box
-Success: initialized project component named box</code></pre>
-<p>In the project generated, we get a library component, a CLI, and a test component, which will
-all compile out of the box.</p>
-<pre class="shell"><code>$ cd box
-$ tree
-.
-├── bin
-│   ├── dune
-│   └── main.ml
-├── box.opam
-├── lib
-│   └── dune
-└── test
-    ├── box.ml
-    └── dune
-
-3 directories, 6 files</code></pre>
-<p>Lets try a compile:</p>
-<pre class="shell"><code>$ dune build @all
-Info: Creating file dune-project with this contents:
-| (lang dune 2.8)
-| (name box)
-</code></pre>
-<p>Running the CLI:</p>
-<pre class="shell"><code>$ dune exec bin/main.exe
-Hello, World!</code></pre>
-<p>Each of the <code>bin</code>, <code>lib</code>, and <code>test</code> directories contains the source code in the form of <code>*.ml</code> files,
-along with a <code>dune</code> file which tells Dune how to build the source and on what libraries it depends.
-The box <code>bin\dune</code> file declares it’s an <code>executable</code> with a name <code>box</code> and depends on the <code>box</code>
-library.</p>
-<pre class="shell"><code>(executable
- (public_name box)
- (name main)
- (libraries box))</code></pre>
-<h2 id="adding-a-dependency">Adding a Dependency</h2>
-<p>CLI tools require command line parsing, <code>Cmdliner</code> is a common library that implements CLI parsing.
-We need to add it in two places: first in the <code>dune-project</code> file, to get it installed, and then
-in <code>bin/dune</code>, to say where we’re using it.</p>
-<p>One small digression, when generating our project, <code>dune</code> created an <code>box.opam</code> file. This describes
-our project to Opam, telling it what libraries it requires and what the project does. You need this
-if you ever publish a package for other people to use. Newer versions of Dune can generate the <code>box.opam</code>
-file from a <code>dune-project</code> file. Having a single source of information is helpful, so lets create that file:</p>
-<pre class="shell"><code>(lang dune 2.8)
-(name box)
-
-(generate_opam_files true)
-
-(package
- (name box)
- (depends
-  (ocaml (&gt;= 4.13.0))
-  (cmdliner (&gt;= 0.9.8)))
- (synopsis &quot;Box cli&quot;))</code></pre>
-<p>Remove the <code>rm box.opam</code> file to test the generation. Now run <code>dune build @all</code> to regenerate the Opam
-file. This file should be checked in, and any further edits should be at the top-level <code>dune-project</code>
-file, which should look like this:</p>
-<pre class="shell"><code>$ cat box.opam
-# This file is generated by dune, edit dune-project instead
-opam-version: &quot;2.0&quot;
-synopsis: &quot;Box cli&quot;
-depends: [
-  &quot;dune&quot; {&gt;= &quot;2.8&quot;}
-  &quot;ocaml&quot; {&gt;= &quot;4.13.0&quot;}
-  &quot;cmdliner&quot; {&gt;= &quot;0.9.8&quot;}
-  &quot;odoc&quot; {with-doc}
-]
-build: [
-  [&quot;dune&quot; &quot;subst&quot;] {dev}
-  [
-    &quot;dune&quot;
-    &quot;build&quot;
-    &quot;-p&quot;
-    name
-    &quot;-j&quot;
-    jobs
-    &quot;@install&quot;
-    &quot;@runtest&quot; {with-test}
-    &quot;@doc&quot; {with-doc}
-  ]
-]
-</code></pre>
-<p>The final step is to actually install the <code>cmdliner</code> library. Run <code>opam install . --deps-only -ty</code>,
-which will look at the <code>*.opam</code> files present and install just their dependencies with the correct
-version bounds.
-The <code>-y</code> says yes to installing the packages. You can remove it if you like by pressing <code>Y</code> or if
-you want to review what will be installed.
-<code>-t</code> will run the package tests, which isn’t always necessary, but it’s sometimes useful for certain
-packages with native C components.</p>
-<p>Alternatively you could run <code>opam install cmdliner</code>, as this doesn’t look at version constraints in <code>*.opam</code> files, you might not get what you expect.</p>
-<h2 id="editor-tooling">Editor Tooling</h2>
-<p>Finally, you’ll want to get comfy with your chosen editor. If you have a preference, you should use the native LSP support in that editor, along with installing <code>opam install ocaml-lsp-server</code>. OCaml is standardising on the LSP protocol for editor interaction. If you have no editor preference, then start with <a href="https://code.visualstudio.com">VSCode</a> and install the OCaml LSP package from the Marketplace.</p>
-<p>Personally, I’m using Emacs with the LSP mode <code>eglot</code>, which works really nicely, along with some customisations to bind certain LSP actions to keys. I highly recommend getting into Emacs as an editor because the customisation via a fully-featured language, like Lisp, is fantastic if you live in your editor like I do.</p>
-<p>This post is an update to an earlier post by <a href="https://adambard.com/blog/getting-started-with-ocaml/">Adam</a> in 2017, and I hope this short tutorial helps get you started with OCaml!</p>
 </div>
 ]]></summary>
 </entry>
