@@ -6,6 +6,12 @@ import Hakyll
 --------------------------------------------------------------------------------
 main :: IO ()
 main = hakyll $ do
+  -- Collect tags from post metadata. Each tag gets its own page at
+  -- /tags/<tag>/ which renders as the clean URL /tags/<tag>.
+  tags <- buildTags "posts/*" (fromCapture "tags/*/index.html")
+
+  let postCtxWithTags = tagsField "tags" tags <> postCtx
+
   match "images/*" $ do
     route idRoute
     compile copyFileCompiler
@@ -25,10 +31,25 @@ main = hakyll $ do
     route $ setExtension "html"
     compile $
       pandocCompiler
-        >>= loadAndApplyTemplate "templates/post.html" postCtx
+        >>= loadAndApplyTemplate "templates/post.html" postCtxWithTags
         -- Used by the RSS/Atom feed
         >>= saveSnapshot "content"
-        >>= loadAndApplyTemplate "templates/default.html" postCtx
+        >>= loadAndApplyTemplate "templates/default.html" postCtxWithTags
+        >>= relativizeUrls
+
+  -- One listing page per tag at /tags/<tag>/index.html.
+  tagsRules tags $ \tag pattern -> do
+    let title = "Posts tagged \"" ++ tag ++ "\""
+    route idRoute
+    compile $ do
+      posts <- recentFirst =<< loadAll pattern
+      let ctx =
+            constField "title" title
+              <> listField "posts" postCtx (return posts)
+              <> allContext
+      makeItem ""
+        >>= loadAndApplyTemplate "templates/tag.html" ctx
+        >>= loadAndApplyTemplate "templates/default.html" ctx
         >>= relativizeUrls
 
   match "pages/*" $ do
