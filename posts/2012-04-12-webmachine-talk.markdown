@@ -2,7 +2,7 @@
 title: WebMachine Talk
 author: Tim McGilchrist
 date: 2012-04-12 12:44
-tags: webmachine erlang talk
+tags: webmachine, erlang, talk
 description: WebMachine Talk
 ---
 

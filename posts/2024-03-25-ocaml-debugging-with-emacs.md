@@ -3,7 +3,7 @@ layout: post
 title: "Debugging OCaml with Emacs"
 date: 2024-03-25 08:00
 comments: false
-categories: ocaml, emacs
+tags: ocaml, emacs
 ---
 
 This post started as a summary of my March Hacking Days effort at [Tarides](https://tarides.com).

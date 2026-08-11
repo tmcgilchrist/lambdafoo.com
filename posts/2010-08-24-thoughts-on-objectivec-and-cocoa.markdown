@@ -2,7 +2,7 @@
 title: Thoughts on ObjectiveC and Cocoa
 author: Tim McGilchrist
 date: 2010-08-24
-tags: objectivec OSX
+tags: objectivec, osx
 description: Thoughts on ObjectiveC and Cocoa
 ---
 

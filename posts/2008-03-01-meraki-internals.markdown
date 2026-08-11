@@ -1,7 +1,7 @@
 ---
 title: Meraki Internals
 author: Tim McGilchrist
-tags: Coding Meraki
+tags: coding, meraki
 ---
 
 Pristine Meraki Mini.

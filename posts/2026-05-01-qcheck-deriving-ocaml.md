@@ -1,7 +1,7 @@
 ---
 title: "Deriving QCheck Generators for External Types in OCaml"
 date: 2026-05-01
-tags: [ocaml, testing, qcheck, quickcheck, ppx]
+tags: ocaml, testing, qcheck, quickcheck, ppx
 ---
 
 Recently I've been working on [durin](https://github.com/tmcgilchrist/durin), a DWARF library for OCaml. I won't go into the details here but I wanted to share a property testing technique I've been using in durin.

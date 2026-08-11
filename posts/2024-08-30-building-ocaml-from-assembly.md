@@ -3,9 +3,7 @@ layout: post
 title: "Building OCaml from assembly"
 date: 2022-08-24 12:00
 comments: false
-categories:
-  - ocaml
-  - compilers
+tags: ocaml, compilers
 ---
 
 At work I've been focusing on improving the debugging experience with OCaml.

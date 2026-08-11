@@ -2,7 +2,7 @@
 title: OCaml CI with CircleCI
 author: Tim McGilchrist
 date: 2021-02-02 00:00
-tags: ocaml ci
+tags: ocaml, ci
 description: How to setup OCaml CI using CircleCI
 ---
 

@@ -2,7 +2,7 @@
 title: Hacking the Meraki
 author: Tim McGilchrist
 date: 2008-02-28
-tags: meraki hardware
+tags: meraki, hardware
 description: Hacking the Meraki
 ---
 
