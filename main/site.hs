@@ -204,6 +204,9 @@ allContext =
     <> field "baseurl" (\_ -> return "")
     <> constField "root" root
     <> dateField "date" "%B %e, %Y"
+    -- Machine readable form of the same date, for sitemap lastmod and
+    -- anywhere else that wants ISO 8601 rather than prose.
+    <> dateField "isodate" "%Y-%m-%d"
     <> defaultContext
 
 root :: String
