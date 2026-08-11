@@ -12,7 +12,7 @@
 
   <title>
       
-        Experimenting with OCaml and eBPF &middot; Perpetually Curious Blog
+        Experimenting with OCaml and eBPF &middot; Perpetually Curious
       
   </title>
 
@@ -88,14 +88,13 @@
       <div class="masthead">
         <div class="container">
           <h3 class="masthead-title">
-            <a href="../" title="Home">Perpetually Curious Blog</a>
+            <a href="../" title="Home">Perpetually Curious</a>
             
             <span class="masthead-links">
-              <a href="../">Blog</a> |
               <a href="../pages/about.html">About</a> |
-              <a href="../archive.html">Archive</a> |
               <a href="../pages/talks.html">Talks</a> |
-              <a href="../pages/server-room.html">Server Room</a>
+              <a href="../pages/server-room.html">Server Room</a> |
+              <a href="../archive.html">Archive</a>
             </span>
           </h3>
         </div>
@@ -203,6 +202,9 @@ uretprobe:/home/tsmc/ocaml-performance/liquidsoap_test.exe:major_collection_slic
 <h1 id="take-away">Take Away</h1>
 <p>OCaml programs can traced with eBPF and bpftrace. You need to install OCaml with frame pointers enabled and use a Linux distribution like Ubuntu 24.04 that also enables frame pointers, so you can trace into system libraries. The OCaml runtime and certain primitives use a symbol prefix of <code>caml_</code> and OCaml code uses a prefix of <code>caml&lt;MODULE&gt;</code> where <code>&lt;MODULE&gt;</code> is the OCaml module containing the code. This partially covers the functionality in <a href="https://ocaml.org/manual/5.3/profil.html">ocamlprof</a> which lets you profile function counts and branches taken in things like while, if and try. With eBPF we can count the function calls but more work needs to be done to support the branching constructs, essentially we need a USDT implementation for OCaml that understands OCaml’s name mangling and calling conventions. The upside is eBPF can be applied to any OCaml binary without needing a recompile.</p>
 <p>Next steps are adding USDT probes to the OCaml runtime, so there is a static API for the GC, and after that expose USDT probe points from OCaml programs.</p>
+  
+  <p class="post-tags">Tags: <a title="All pages tagged 'ocaml'." href="../tags/ocaml/index.html" rel="tag">ocaml</a>, <a title="All pages tagged 'ebpf'." href="../tags/ebpf/index.html" rel="tag">ebpf</a></p>
+  
 </div>
 
 

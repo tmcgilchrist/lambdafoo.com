@@ -12,7 +12,7 @@
 
   <title>
       
-        Why do frame pointers matter for OCaml? &middot; Perpetually Curious Blog
+        Why do frame pointers matter for OCaml? &middot; Perpetually Curious
       
   </title>
 
@@ -88,14 +88,13 @@
       <div class="masthead">
         <div class="container">
           <h3 class="masthead-title">
-            <a href="../" title="Home">Perpetually Curious Blog</a>
+            <a href="../" title="Home">Perpetually Curious</a>
             
             <span class="masthead-links">
-              <a href="../">Blog</a> |
               <a href="../pages/about.html">About</a> |
-              <a href="../archive.html">Archive</a> |
               <a href="../pages/talks.html">Talks</a> |
-              <a href="../pages/server-room.html">Server Room</a>
+              <a href="../pages/server-room.html">Server Room</a> |
+              <a href="../archive.html">Archive</a>
             </span>
           </h3>
         </div>
@@ -163,6 +162,9 @@
 <p>The original target of all Tier-1 platforms was an ambitious one. Unfortunately, we didn’t manage to finish everything. The work for adding RISC-V frame pointer support was started but needs further work. The work in progress is available at <a href="https://github.com/tmcgilchrist/ocaml/pull/22">tmcgilchrist/ocaml#22</a>. The work on <a href="https://github.com/tmcgilchrist/ocaml/pull/24">s390x</a> and Power didn’t get much further than diagramming stack frames and reading ABI documents. In particular the Power backend is also missing CFI support which makes debugging very difficult and really needs to be added first before tackling frame pointer support. Essentially you don’t even have a working debugger while debugging any problems with your frame pointer changes.</p>
 <p>Next steps are finding time or help with finishing off the remaining platforms, starting with RISC-V. If you’d like to help please get in touch. Then doing some comprehensive benchmarking for the ARM64 platform, my intuition is there is negligible overhead when adding frame pointers since it uses a load/store pair instruction, but firm results would be better.</p>
 <p>If you’ve made it this far, thanks for reading.</p>
+  
+  <p class="post-tags">Tags: <a title="All pages tagged 'ocaml'." href="../tags/ocaml/index.html" rel="tag">ocaml</a></p>
+  
 </div>
 
 

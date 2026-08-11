@@ -12,7 +12,7 @@
 
   <title>
       
-        Deriving QCheck Generators for External Types in OCaml &middot; Perpetually Curious Blog
+        Deriving QCheck Generators for External Types in OCaml &middot; Perpetually Curious
       
   </title>
 
@@ -88,14 +88,13 @@
       <div class="masthead">
         <div class="container">
           <h3 class="masthead-title">
-            <a href="../" title="Home">Perpetually Curious Blog</a>
+            <a href="../" title="Home">Perpetually Curious</a>
             
             <span class="masthead-links">
-              <a href="../">Blog</a> |
               <a href="../pages/about.html">About</a> |
-              <a href="../archive.html">Archive</a> |
               <a href="../pages/talks.html">Talks</a> |
-              <a href="../pages/server-room.html">Server Room</a>
+              <a href="../pages/server-room.html">Server Room</a> |
+              <a href="../archive.html">Archive</a>
             </span>
           </h3>
         </div>
@@ -335,6 +334,9 @@
 <p>This is a useful technique to add to your OCaml property-testing toolkit. It is self-maintaining, so when you add a variant to a type in the library, <code>ppx_import</code> picks up the new definition on the next build and <code>ppx_deriving_qcheck</code> generates a generator that includes it.</p>
 <p>The library side stays clean. No PPX dependencies, no QCheck dependency, no generated code in its build artifacts. The <code>.opam</code> file and build are unchanged, and consumers who never run tests never see these test packages. The imported type is also the same OCaml type as the library’s, so there are no type-safety issues to worry about. It keeps open the option for defining a test library that just includes useful generators.</p>
 <p>As a bonus, the same approach lets you define generators for types outside of your control, which is handy when you want to test round-trips against data from another library. I’ve found this pattern very useful and I hope you do too.</p>
+  
+  <p class="post-tags">Tags: <a title="All pages tagged 'ocaml'." href="../tags/ocaml/index.html" rel="tag">ocaml</a>, <a title="All pages tagged 'testing'." href="../tags/testing/index.html" rel="tag">testing</a>, <a title="All pages tagged 'qcheck'." href="../tags/qcheck/index.html" rel="tag">qcheck</a>, <a title="All pages tagged 'quickcheck'." href="../tags/quickcheck/index.html" rel="tag">quickcheck</a>, <a title="All pages tagged 'ppx'." href="../tags/ppx/index.html" rel="tag">ppx</a></p>
+  
 </div>
 
 

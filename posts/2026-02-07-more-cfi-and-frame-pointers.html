@@ -12,7 +12,7 @@
 
   <title>
       
-        More CFI and frame pointers work &middot; Perpetually Curious Blog
+        More CFI and frame pointers work &middot; Perpetually Curious
       
   </title>
 
@@ -88,14 +88,13 @@
       <div class="masthead">
         <div class="container">
           <h3 class="masthead-title">
-            <a href="../" title="Home">Perpetually Curious Blog</a>
+            <a href="../" title="Home">Perpetually Curious</a>
             
             <span class="masthead-links">
-              <a href="../">Blog</a> |
               <a href="../pages/about.html">About</a> |
-              <a href="../archive.html">Archive</a> |
               <a href="../pages/talks.html">Talks</a> |
-              <a href="../pages/server-room.html">Server Room</a>
+              <a href="../pages/server-room.html">Server Room</a> |
+              <a href="../archive.html">Archive</a>
             </span>
           </h3>
         </div>
@@ -266,6 +265,9 @@
 <p>With all that OCaml now has working debugger support on Power, completing the set of Tier-1 architectures where such tools will work. This exceeds the support that existed in OCaml prior to 5.0 and completes the one thorny issue I knew about to achieve feature parity. Closing the CFI s390x bug I reported in 2024 resolved the last known issue with debuggers on that platform.</p>
 <p>On top of that we have frame pointer support for more architectures than ever, if you’re debugging or profiling OCaml on Power, RISC-V, ARM64, or AMD64, you now get clean backtraces. As I wrote in the OCaml manual <a href="https://ocaml.org/manual/5.4/profil.html#s:ocamlprof-time-profiling">section on profiling</a> this is key to getting accurate profiling using Linux perf and macOS Instruments. FreeBSD users can profile with dtrace and pmcstat, and there is documentation on how to get started.</p>
 <p>All these changes should eventually reach an OCaml release, if I’m lucky the smaller bug fixes will squeeze into 5.6 and the rest targeting 5.7. That leaves s390x frame pointers (still wrestling with the 160-byte minimum frame problem) and Windows (the elephant in the room). We shall see.</p>
+  
+  <p class="post-tags">Tags: <a title="All pages tagged 'ocaml'." href="../tags/ocaml/index.html" rel="tag">ocaml</a></p>
+  
 </div>
 
 

@@ -244,6 +244,9 @@
 <p>This is a useful technique to add to your OCaml property-testing toolkit. It is self-maintaining, so when you add a variant to a type in the library, <code>ppx_import</code> picks up the new definition on the next build and <code>ppx_deriving_qcheck</code> generates a generator that includes it.</p>
 <p>The library side stays clean. No PPX dependencies, no QCheck dependency, no generated code in its build artifacts. The <code>.opam</code> file and build are unchanged, and consumers who never run tests never see these test packages. The imported type is also the same OCaml type as the library’s, so there are no type-safety issues to worry about. It keeps open the option for defining a test library that just includes useful generators.</p>
 <p>As a bonus, the same approach lets you define generators for types outside of your control, which is handy when you want to test round-trips against data from another library. I’ve found this pattern very useful and I hope you do too.</p>
+  
+  <p class="post-tags">Tags: <a title="All pages tagged &#39;ocaml&#39;." href="/tags/ocaml/index.html" rel="tag">ocaml</a>, <a title="All pages tagged &#39;testing&#39;." href="/tags/testing/index.html" rel="tag">testing</a>, <a title="All pages tagged &#39;qcheck&#39;." href="/tags/qcheck/index.html" rel="tag">qcheck</a>, <a title="All pages tagged &#39;quickcheck&#39;." href="/tags/quickcheck/index.html" rel="tag">quickcheck</a>, <a title="All pages tagged &#39;ppx&#39;." href="/tags/ppx/index.html" rel="tag">ppx</a></p>
+  
 </div>
 ]]></description>
     <pubDate>Fri, 01 May 2026 00:00:00 UT</pubDate>
@@ -278,6 +281,9 @@
 <h2 id="colours-and-names-are-hard">Colours and names are hard</h2>
 <p>I also tidied up and shipped <a href="https://github.com/tmcgilchrist/miasma-theme">miasma-theme</a>, a theme for Emacs that had been sitting in a directory since 2024. It’s a dark colour scheme built from muted earth tones (moss, bark, rust, amber, and fog), based on xero’s <a href="https://terminalcolors.com/themes/miasma/default/">miasma terminal theme</a> palette. It fits nicely with my dark theme on macOS. Getting the colours right and covering all the right faces has been a pain; I’ve got everything I use daily but there are going to be things I missed. The <a href="https://github.com/tmcgilchrist/miasma-theme/blob/main/DESIGN.md">DESIGN.md</a> goes into the motivation for the colours. Previously I’d just used other people’s themes, often the <code>doom-themes</code> package or the <code>solarized-theme</code> that was default in Emacs prelude.</p>
 <p>All up there’s been so much Emacs and elisp this month.</p>
+  
+  <p class="post-tags">Tags: <a title="All pages tagged &#39;ocaml&#39;." href="/tags/ocaml/index.html" rel="tag">ocaml</a>, <a title="All pages tagged &#39;emacs&#39;." href="/tags/emacs/index.html" rel="tag">emacs</a>, <a title="All pages tagged &#39;tree-sitter&#39;." href="/tags/tree-sitter/index.html" rel="tag">tree-sitter</a></p>
+  
 </div>
 ]]></description>
     <pubDate>Thu, 23 Apr 2026 00:00:00 UT</pubDate>
@@ -432,6 +438,9 @@ Result = Σ (thread_last - thread_first) for all threads</code></pre>
 <h2 id="whats-next">What’s Next</h2>
 <p>Porting this to x86_64 macOS, the PMC infrastructure should be similar. The more immediate goal is integrating mperf into an automated benchmarking pipeline for the OCaml compiler, tracking instruction counts and IPC across commits the way we’ve been doing with <a href="https://lambdafoo.com/posts/2025-02-24-ocaml-frame-pointers.html">frame pointers</a> and <a href="https://lambdafoo.com/posts/2025-02-15-ocaml-ebpf-usdt.html">eBPF</a> on Linux.</p>
 <p>This fits into the broader effort of making OCaml programs easier to profile. Frame pointer support gives us <code>perf</code> and eBPF integration on Linux; mperf gives us hardware counter access on macOS without reaching for Instruments. Using frame pointers on macOS gives us accurate backtraces in Instruments when used with <code>xctrace</code>.</p>
+  
+  <p class="post-tags">Tags: <a title="All pages tagged &#39;ocaml&#39;." href="/tags/ocaml/index.html" rel="tag">ocaml</a>, <a title="All pages tagged &#39;profiling&#39;." href="/tags/profiling/index.html" rel="tag">profiling</a>, <a title="All pages tagged &#39;macos&#39;." href="/tags/macos/index.html" rel="tag">macos</a></p>
+  
 </div>
 ]]></description>
     <pubDate>Wed, 25 Mar 2026 00:00:00 UT</pubDate>
@@ -605,6 +614,9 @@ Result = Σ (thread_last - thread_first) for all threads</code></pre>
 <p>With all that OCaml now has working debugger support on Power, completing the set of Tier-1 architectures where such tools will work. This exceeds the support that existed in OCaml prior to 5.0 and completes the one thorny issue I knew about to achieve feature parity. Closing the CFI s390x bug I reported in 2024 resolved the last known issue with debuggers on that platform.</p>
 <p>On top of that we have frame pointer support for more architectures than ever, if you’re debugging or profiling OCaml on Power, RISC-V, ARM64, or AMD64, you now get clean backtraces. As I wrote in the OCaml manual <a href="https://ocaml.org/manual/5.4/profil.html#s:ocamlprof-time-profiling">section on profiling</a> this is key to getting accurate profiling using Linux perf and macOS Instruments. FreeBSD users can profile with dtrace and pmcstat, and there is documentation on how to get started.</p>
 <p>All these changes should eventually reach an OCaml release, if I’m lucky the smaller bug fixes will squeeze into 5.6 and the rest targeting 5.7. That leaves s390x frame pointers (still wrestling with the 160-byte minimum frame problem) and Windows (the elephant in the room). We shall see.</p>
+  
+  <p class="post-tags">Tags: <a title="All pages tagged &#39;ocaml&#39;." href="/tags/ocaml/index.html" rel="tag">ocaml</a></p>
+  
 </div>
 ]]></description>
     <pubDate>Sat, 07 Feb 2026 00:00:00 UT</pubDate>
@@ -675,6 +687,9 @@ Result = Σ (thread_last - thread_first) for all threads</code></pre>
 <p>The original target of all Tier-1 platforms was an ambitious one. Unfortunately, we didn’t manage to finish everything. The work for adding RISC-V frame pointer support was started but needs further work. The work in progress is available at <a href="https://github.com/tmcgilchrist/ocaml/pull/22">tmcgilchrist/ocaml#22</a>. The work on <a href="https://github.com/tmcgilchrist/ocaml/pull/24">s390x</a> and Power didn’t get much further than diagramming stack frames and reading ABI documents. In particular the Power backend is also missing CFI support which makes debugging very difficult and really needs to be added first before tackling frame pointer support. Essentially you don’t even have a working debugger while debugging any problems with your frame pointer changes.</p>
 <p>Next steps are finding time or help with finishing off the remaining platforms, starting with RISC-V. If you’d like to help please get in touch. Then doing some comprehensive benchmarking for the ARM64 platform, my intuition is there is negligible overhead when adding frame pointers since it uses a load/store pair instruction, but firm results would be better.</p>
 <p>If you’ve made it this far, thanks for reading.</p>
+  
+  <p class="post-tags">Tags: <a title="All pages tagged &#39;ocaml&#39;." href="/tags/ocaml/index.html" rel="tag">ocaml</a></p>
+  
 </div>
 ]]></description>
     <pubDate>Mon, 24 Feb 2025 00:00:00 UT</pubDate>
@@ -785,6 +800,9 @@ uretprobe:/home/tsmc/ocaml-performance/liquidsoap_test.exe:major_collection_slic
 <h1 id="take-away">Take Away</h1>
 <p>OCaml programs can traced with eBPF and bpftrace. You need to install OCaml with frame pointers enabled and use a Linux distribution like Ubuntu 24.04 that also enables frame pointers, so you can trace into system libraries. The OCaml runtime and certain primitives use a symbol prefix of <code>caml_</code> and OCaml code uses a prefix of <code>caml&lt;MODULE&gt;</code> where <code>&lt;MODULE&gt;</code> is the OCaml module containing the code. This partially covers the functionality in <a href="https://ocaml.org/manual/5.3/profil.html">ocamlprof</a> which lets you profile function counts and branches taken in things like while, if and try. With eBPF we can count the function calls but more work needs to be done to support the branching constructs, essentially we need a USDT implementation for OCaml that understands OCaml’s name mangling and calling conventions. The upside is eBPF can be applied to any OCaml binary without needing a recompile.</p>
 <p>Next steps are adding USDT probes to the OCaml runtime, so there is a static API for the GC, and after that expose USDT probe points from OCaml programs.</p>
+  
+  <p class="post-tags">Tags: <a title="All pages tagged &#39;ocaml&#39;." href="/tags/ocaml/index.html" rel="tag">ocaml</a>, <a title="All pages tagged &#39;ebpf&#39;." href="/tags/ebpf/index.html" rel="tag">ebpf</a></p>
+  
 </div>
 ]]></description>
     <pubDate>Sat, 15 Feb 2025 00:00:00 UT</pubDate>
@@ -988,6 +1006,9 @@ to loop over a table of functions to call rather than generating large slabs of 
 <p>Now you we don’t need the OCaml compiler to write OCaml.</p>
 <p>But seriously the purpose for discovering this was to investigate adding DWARF debugging
 information to OCaml on macOS. That’s a different topic for next time.</p>
+  
+  <p class="post-tags">Tags: <a title="All pages tagged &#39;ocaml&#39;." href="/tags/ocaml/index.html" rel="tag">ocaml</a>, <a title="All pages tagged &#39;compilers&#39;." href="/tags/compilers/index.html" rel="tag">compilers</a></p>
+  
 </div>
 ]]></description>
     <pubDate>Fri, 30 Aug 2024 00:00:00 UT</pubDate>
@@ -1201,6 +1222,9 @@ Process 12078 stopped
 <p>Finally setting breakpoints on macOS with LLDB is slightly broken so you need to lookup the symbol name and then set the breakpoint based on the address of the symbol. We can combine <code>image lookup</code> with setting breakpoints on addresses to debug on macOS.</p>
 <h2 id="more-for-later">More for later</h2>
 <p>There is a lot more to say about debugging OCaml programs using LLDB and there is ongoing work to improve debugger support in OCaml. Get in touch if you would like to be involved.</p>
+  
+  <p class="post-tags">Tags: <a title="All pages tagged &#39;ocaml&#39;." href="/tags/ocaml/index.html" rel="tag">ocaml</a></p>
+  
 </div>
 ]]></description>
     <pubDate>Sat, 03 Aug 2024 00:00:00 UT</pubDate>
@@ -1359,6 +1383,9 @@ $ opam install dune</code></pre>
 <p>The same setup will work under VSCode with the <code>CodeLLDB</code> and <code>OCaml Platform</code> extensions installed. Happy Emacs debugging.</p>
 <h2 id="future-work">Future Work</h2>
 <p>I’m working on improving the OCaml debugging experience on macOS and Linux. Currently the macOS LLDB experience is behind that on Linux LLDB, so that is the first goal. Then I want to improve the DWARF encodings for OCaml and generally improve the native debugger experience.</p>
+  
+  <p class="post-tags">Tags: <a title="All pages tagged &#39;ocaml&#39;." href="/tags/ocaml/index.html" rel="tag">ocaml</a>, <a title="All pages tagged &#39;emacs&#39;." href="/tags/emacs/index.html" rel="tag">emacs</a></p>
+  
 </div>
 ]]></description>
     <pubDate>Mon, 25 Mar 2024 00:00:00 UT</pubDate>
@@ -1380,6 +1407,9 @@ Outside of OCaml I spent time in the Haskell Implementors Workshop, hearing abou
 <li>Delimited Continuations for both OCaml and Haskell.</li>
 <li>Lockfree data structures, <a href="https://github.com/ocaml-multicore/reagents">Reagents</a> and <a href="https://hackage.haskell.org/package/stm">STM</a>.</li>
 </ul>
+  
+  <p class="post-tags">Tags: <a title="All pages tagged &#39;ocaml&#39;." href="/tags/ocaml/index.html" rel="tag">ocaml</a>, <a title="All pages tagged &#39;haskell&#39;." href="/tags/haskell/index.html" rel="tag">haskell</a></p>
+  
 </div>
 ]]></description>
     <pubDate>Tue, 11 Oct 2022 00:00:00 UT</pubDate>

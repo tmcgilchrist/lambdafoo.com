@@ -12,7 +12,7 @@
 
   <title>
       
-        Quick Hardware Performance Counters on macOS ARM64 &middot; Perpetually Curious Blog
+        Quick Hardware Performance Counters on macOS ARM64 &middot; Perpetually Curious
       
   </title>
 
@@ -88,14 +88,13 @@
       <div class="masthead">
         <div class="container">
           <h3 class="masthead-title">
-            <a href="../" title="Home">Perpetually Curious Blog</a>
+            <a href="../" title="Home">Perpetually Curious</a>
             
             <span class="masthead-links">
-              <a href="../">Blog</a> |
               <a href="../pages/about.html">About</a> |
-              <a href="../archive.html">Archive</a> |
               <a href="../pages/talks.html">Talks</a> |
-              <a href="../pages/server-room.html">Server Room</a>
+              <a href="../pages/server-room.html">Server Room</a> |
+              <a href="../archive.html">Archive</a>
             </span>
           </h3>
         </div>
@@ -247,6 +246,9 @@ Result = Σ (thread_last - thread_first) for all threads</code></pre>
 <h2 id="whats-next">What’s Next</h2>
 <p>Porting this to x86_64 macOS, the PMC infrastructure should be similar. The more immediate goal is integrating mperf into an automated benchmarking pipeline for the OCaml compiler, tracking instruction counts and IPC across commits the way we’ve been doing with <a href="https://lambdafoo.com/posts/2025-02-24-ocaml-frame-pointers.html">frame pointers</a> and <a href="https://lambdafoo.com/posts/2025-02-15-ocaml-ebpf-usdt.html">eBPF</a> on Linux.</p>
 <p>This fits into the broader effort of making OCaml programs easier to profile. Frame pointer support gives us <code>perf</code> and eBPF integration on Linux; mperf gives us hardware counter access on macOS without reaching for Instruments. Using frame pointers on macOS gives us accurate backtraces in Instruments when used with <code>xctrace</code>.</p>
+  
+  <p class="post-tags">Tags: <a title="All pages tagged 'ocaml'." href="../tags/ocaml/index.html" rel="tag">ocaml</a>, <a title="All pages tagged 'profiling'." href="../tags/profiling/index.html" rel="tag">profiling</a>, <a title="All pages tagged 'macos'." href="../tags/macos/index.html" rel="tag">macos</a></p>
+  
 </div>
 
 
