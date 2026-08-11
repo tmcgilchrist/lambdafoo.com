@@ -200,7 +200,7 @@ postCtx =
 
 allContext :: Context String
 allContext =
-  field "siteTitle" (\_ -> return "Perpetually Curious Blog")
+  field "siteTitle" (\_ -> return "Perpetually Curious")
     <> field "baseurl" (\_ -> return "")
     <> constField "root" root
     <> dateField "date" "%B %e, %Y"
