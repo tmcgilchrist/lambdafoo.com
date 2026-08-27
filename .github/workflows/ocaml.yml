@@ -1,4 +1,4 @@
-name: Haskell
+name: OCaml
 on:
   push:
     branches:
@@ -11,37 +11,27 @@ on:
     # Prime the caches every Monday
     - cron: 0 1 * * MON
 
-
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        cabal: ["3.16"]
-        ghc: ["9.12"]
+        ocaml-compiler: ["5.3"]
     steps:
       - uses: actions/checkout@v7
-      - uses: haskell-actions/setup@v2
-        id: setup-haskell-cabal
+      - uses: ocaml/setup-ocaml@v3
         with:
-          ghc-version: ${{ matrix.ghc }}
-          cabal-version: ${{ matrix.cabal }}
-      - name: Cabal Update
-        run: |
-          cabal v2-update
-          cabal v2-freeze $CONFIG
-      - uses: actions/cache@v6
-        with:
-          path: |
-            ${{ steps.setup-haskell-cabal.outputs.cabal-store }}
-            dist-newstyle
-          key: ${{ runner.os }}-${{ matrix.ghc }}-${{ hashFiles('cabal.project.freeze') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ matrix.ghc }}-
+          ocaml-compiler: ${{ matrix.ocaml-compiler }}
+          dune-cache: true
+      - name: Install Dependencies
+        run: opam install . --deps-only --yes
+      - name: Build Generator
+        run: opam exec -- dune build
       - name: Build Site
-        run: |
-          cabal v2-build $CONFIG
-          cabal exec site build
+        # Run from the repository root: the generator reads posts/, pages/,
+        # templates/, css/, images/, talks/ and main/grammars/ relative to the
+        # working directory, and writes _site/.
+        run: ./_build/default/main/site.exe
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         if: github.ref == 'refs/heads/master'

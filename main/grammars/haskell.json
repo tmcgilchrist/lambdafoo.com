@@ -1,0 +1,29 @@
+{
+  "name": "haskell",
+  "scopeName": "source.haskell",
+  "patterns": [
+    { "name": "comment.block.haskell", "begin": "\\{-", "end": "-\\}" },
+    { "name": "comment.line.double-dash.haskell", "match": "--.*" },
+    {
+      "name": "string.quoted.double.haskell",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        { "name": "constant.character.escape.haskell", "match": "\\\\." }
+      ]
+    },
+    { "name": "string.quoted.single.haskell", "match": "'([^'\\\\]|\\\\.)'" },
+    {
+      "match": "^\\s*([a-z_][A-Za-z0-9_']*)\\s*::",
+      "captures": { "1": { "name": "entity.name.function.haskell" } }
+    },
+    {
+      "name": "keyword.other.haskell",
+      "match": "\\b(module|import|hiding|qualified|as|data|type|newtype|class|instance|deriving|where|let|in|do|case|of|if|then|else|forall|infix|infixl|infixr|foreign|mdo|proc|rec)\\b"
+    },
+    { "name": "constant.numeric.haskell", "match": "\\b0[xX][0-9a-fA-F_]+\\b" },
+    { "name": "constant.numeric.haskell", "match": "\\b[0-9][0-9_]*\\.[0-9_]+([eE][+-]?[0-9]+)?\\b" },
+    { "name": "constant.numeric.haskell", "match": "\\b[0-9][0-9_]*\\b" },
+    { "name": "entity.name.type.haskell", "match": "\\b[A-Z][A-Za-z0-9_']*(\\.[A-Z][A-Za-z0-9_']*)*\\b" }
+  ]
+}

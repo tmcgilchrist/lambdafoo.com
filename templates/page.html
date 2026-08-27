@@ -1,4 +1,4 @@
 <div class="page">
-  <h1 class="page-title">$title$</h1>
-  $body$
+  <h1 class="page-title">{{ title }}</h1>
+  {%- autoescape false -%}{{ yocaml_body }}{%- endautoescape -%}
 </div>

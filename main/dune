@@ -1,0 +1,13 @@
+(executable
+ (name site)
+ (modules site redirects)
+ (libraries
+  yocaml
+  yocaml_unix
+  yocaml_yaml
+  yocaml_jingoo
+  yocaml_markdown
+  yocaml_syndication
+  hilite
+  textmate-language
+  yojson))

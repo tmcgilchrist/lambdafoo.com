@@ -1,5 +1,11 @@
-dist/
-dist-newstyle/
+# Generator output and build trees
+_site
+_build/
+*.install
+
+# Anchored to the repository root: main/grammars/vendor/ is checked in
+/vendor
+
 .bundle
 .DS_Store
 .sass-cache
@@ -11,8 +17,5 @@ sass.old
 source.old
 source/_stash
 source/stylesheets/screen.css
-vendor
 node_modules
 TAGS
-_cache
-_site

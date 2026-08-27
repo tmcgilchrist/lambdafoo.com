@@ -8,16 +8,16 @@
   xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"
 >
   <url>
-    <loc>$root$</loc>
+    <loc>{{ root }}</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
-$for(pages)$
+{%- for post in posts %}
   <url>
-    <loc>$root$$url$</loc>
-    <lastmod>$if(updated)$$updated$$else$$if(isodate)$$isodate$$endif$$endif$</lastmod>
+    <loc>{{ root }}{{ post.url }}</loc>
+    <lastmod>{{ post.isodate }}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
-$endfor$
+{%- endfor %}
 </urlset>

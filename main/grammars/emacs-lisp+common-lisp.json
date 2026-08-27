@@ -1,0 +1,28 @@
+{
+  "name": "lisp",
+  "scopeName": "source.lisp",
+  "patterns": [
+    { "name": "comment.line.semicolon.lisp", "match": ";.*" },
+    {
+      "name": "string.quoted.double.lisp",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        { "name": "constant.character.escape.lisp", "match": "\\\\." }
+      ]
+    },
+    {
+      "match": "(\\()\\s*(defun|defmacro|defvar|defcustom|defconst|defconstant|defgroup|defface|defclass|defmethod|defgeneric|defparameter|defstruct|defpackage|deftype|define-key|define-minor-mode|define-derived-mode|lambda|let\\*?|labels|flet|if|when|unless|cond|case|ecase|typecase|progn|prog1|prog2|setq|setf|setq-default|push|pop|require|provide|use-package|add-hook|remove-hook|with-eval-after-load|eval-after-load|dolist|dotimes|loop|do|return|return-from|quote|function|lambda|and|or|not|declare|interactive)\\b",
+      "captures": { "2": { "name": "keyword.control.lisp" } }
+    },
+    { "name": "constant.other.keyword.lisp", "match": ":[A-Za-z][A-Za-z0-9_+*/=<>!?-]*" },
+    { "name": "constant.other.symbol.lisp", "match": "#?'[A-Za-z][A-Za-z0-9_+*/=<>!?-]*" },
+    { "name": "constant.language.lisp", "match": "\\b(nil|t)\\b" },
+    { "name": "constant.numeric.lisp", "match": "\\b-?[0-9]+\\.[0-9]+\\b" },
+    { "name": "constant.numeric.lisp", "match": "\\b-?[0-9]+\\b" },
+    {
+      "match": "(\\()\\s*([A-Za-z][A-Za-z0-9_+*/=<>!?-]*)",
+      "captures": { "2": { "name": "entity.name.function.lisp" } }
+    }
+  ]
+}
