@@ -29,7 +29,7 @@ let _ = main ()
 ```
 
 And this `dune` configuration in the same directory:
-``` ocaml
+``` dune
 (executable
  (name fib)
  (modules fib)
@@ -37,7 +37,7 @@ And this `dune` configuration in the same directory:
 ```
 
 And this `dune-project` configuration in the same directory:
-``` ocaml
+``` dune
 (lang dune 3.11)
 (map_workspace_root false)
 ```
