@@ -19,9 +19,8 @@ let author_name = "Tim McGilchrist"
 let author_email = "timmcgil@gmail.com"
 let feed_title = "Perpetually Curious Blog"
 
-(* site.hs builds this with a Haskell string gap, which drops the space. *)
 let feed_description =
-  "Personal opinions on technology,functional programming and various systems \
+  "Personal opinions on technology, functional programming and various systems \
    topics."
 
 module Source = struct

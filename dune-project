@@ -2,8 +2,6 @@
 
 (name lambdafoo)
 
-; CI runs `opam install . --deps-only`, so lambdafoo.opam is generated from the
-; depends below and committed. Regenerate it with `dune build`.
 (generate_opam_files true)
 
 (source (github tmcgilchrist/lambdafoo.com))

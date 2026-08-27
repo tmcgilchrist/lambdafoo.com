@@ -1,6 +1,7 @@
-# Generator output and build trees
+# Generator output, build trees, and the local opam switch
 _site
 _build/
+_opam/
 *.install
 
 # Anchored to the repository root: main/grammars/vendor/ is checked in
