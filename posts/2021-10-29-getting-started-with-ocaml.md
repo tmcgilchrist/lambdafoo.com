@@ -169,7 +169,7 @@ along with a `dune` file which tells Dune how to build the source and on what li
 The box `bin\dune` file declares it's an `executable` with a name `box` and depends on the `box`
 library.
 
-``` shell
+``` dune
 (executable
  (public_name box)
  (name main)
@@ -188,7 +188,7 @@ our project to Opam, telling it what libraries it requires and what the project 
 if you ever publish a package for other people to use. Newer versions of Dune can generate the `box.opam `
 file from a `dune-project` file. Having a single source of information is helpful, so lets create that file:
 
-``` shell
+``` dune
 (lang dune 2.8)
 (name box)
 

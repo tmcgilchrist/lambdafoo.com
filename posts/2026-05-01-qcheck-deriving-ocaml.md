@@ -147,7 +147,7 @@ This is how I've been setting up this pattern in durin.
 
 In your `dune-project`, add the PPX packages scoped to tests:
 
-```
+``` dune
 (package
  (name durin)
  (depends
@@ -165,7 +165,7 @@ The `:with-test` scope means these packages are never required by library consum
 
 In your `test/dune`:
 
-```
+``` dune
 (test
  (name test_roundtrip)
  (libraries durin alcotest qcheck-core qcheck-alcotest)
