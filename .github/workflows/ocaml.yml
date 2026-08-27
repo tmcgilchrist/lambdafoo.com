@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ocaml-compiler: ["5.3"]
+        ocaml-compiler: ["5.4.1"]
     steps:
       - uses: actions/checkout@v7
       - uses: ocaml/setup-ocaml@v3
