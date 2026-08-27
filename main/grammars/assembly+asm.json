@@ -1,0 +1,30 @@
+{
+  "name": "assembly",
+  "scopeName": "source.assembly",
+  "patterns": [
+    { "name": "comment.line.semicolon.assembly", "match": ";.*" },
+    { "name": "comment.line.double-slash.assembly", "match": "//.*" },
+    { "name": "comment.line.hash.assembly", "match": "^\\s*#\\s.*" },
+    { "name": "string.quoted.double.assembly", "begin": "\"", "end": "\"" },
+    {
+      "name": "keyword.other.directive.assembly",
+      "match": "^\\s*\\.[A-Za-z_][A-Za-z0-9_.]*"
+    },
+    {
+      "name": "entity.name.function.label.assembly",
+      "match": "^\\s*[A-Za-z_.$][A-Za-z0-9_.$@]*:"
+    },
+    {
+      "name": "keyword.control.mnemonic.assembly",
+      "match": "^\\s*(mov[nkz]?|mvn|ldr[bhs]?|ldp|ldur|str[bh]?|stp|stur|adr[p]?|add[s]?|sub[s]?|mul|madd|msub|sdiv|udiv|neg|cmp|cmn|tst|and[s]?|orr|eor|bic|lsl|lsr|asr|ror|sxt[bhw]|uxt[bh]|b|bl|blr|br|ret|cbz|cbnz|tbz|tbnz|b\\.[a-z]{2,3}|beq|bne|blt|bgt|ble|bge|bcc|bcs|bhi|bls|csel|cset|nop|svc|brk|dmb|dsb|isb|push|pop|call|jmp|je|jne|leave|lea|test|xor|int|syscall)\\b"
+    },
+    { "name": "constant.numeric.assembly", "match": "#-?(0[xX][0-9a-fA-F]+|[0-9]+)" },
+    { "name": "constant.numeric.assembly", "match": "\\b0[xX][0-9a-fA-F]+\\b" },
+    { "name": "constant.numeric.assembly", "match": "\\$-?[0-9]+\\b" },
+    {
+      "name": "support.type.register.assembly",
+      "match": "\\b(x[0-9]{1,2}|w[0-9]{1,2}|v[0-9]{1,2}|q[0-9]{1,2}|d[0-9]{1,2}|s[0-9]{1,2}|xzr|wzr|sp|lr|pc|fp|r[0-9]{1,2}|[re][abcd]x|[re][sd]i|[re][sb]p)\\b"
+    },
+    { "name": "constant.numeric.assembly", "match": "\\b-?[0-9]+\\b" }
+  ]
+}

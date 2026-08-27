@@ -1,0 +1,32 @@
+{
+  "name": "erlang",
+  "scopeName": "source.erlang",
+  "patterns": [
+    { "name": "comment.line.percentage.erlang", "match": "%.*" },
+    {
+      "name": "string.quoted.double.erlang",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        { "name": "constant.character.escape.erlang", "match": "\\\\." }
+      ]
+    },
+    {
+      "name": "keyword.other.directive.erlang",
+      "match": "^\\s*-\\s*(module|export|export_type|import|behaviour|behavior|record|define|include|include_lib|spec|type|opaque|callback|ifdef|ifndef|else|endif|undef|compile|vsn|author)\\b"
+    },
+    {
+      "name": "keyword.control.erlang",
+      "match": "\\b(after|and|andalso|band|begin|bnot|bor|bsl|bsr|bxor|case|catch|cond|div|end|fun|if|let|not|of|or|orelse|receive|rem|try|when|xor)\\b"
+    },
+    { "name": "constant.numeric.erlang", "match": "\\b[0-9]+#[0-9a-zA-Z]+\\b" },
+    { "name": "constant.numeric.erlang", "match": "\\b[0-9]+\\.[0-9]+([eE][+-]?[0-9]+)?\\b" },
+    { "name": "constant.numeric.erlang", "match": "\\b[0-9]+\\b" },
+    { "name": "constant.other.symbol.erlang", "match": "'[^']*'" },
+    { "name": "variable.other.erlang", "match": "\\b[A-Z_][a-zA-Z0-9_@]*\\b" },
+    {
+      "match": "\\b([a-z][a-zA-Z0-9_@]*)\\s*\\(",
+      "captures": { "1": { "name": "entity.name.function.erlang" } }
+    }
+  ]
+}

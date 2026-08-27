@@ -1,8 +1,8 @@
 <div class="post">
-  <h1 class="post-title">$title$</h1>
-  <span class="post-date">$date$</span>
-  $body$
-  $if(tags)$
-  <p class="post-tags">Tags: $tags$</p>
-  $endif$
+  <h1 class="post-title">{{ title }}</h1>
+  <span class="post-date">{{ pretty_date }}</span>
+  {%- autoescape false -%}{{ yocaml_body }}{%- endautoescape -%}
+  {%- if has_tags %}
+  <p class="post-tags">Tags: {% for tag in tags %}<a title="All pages tagged '{{ tag }}'." href="/tags/{{ tag }}/index.html" rel="tag">{{ tag }}</a>{% if not loop.last %}, {% endif %}{% endfor %}</p>
+  {%- endif %}
 </div>
