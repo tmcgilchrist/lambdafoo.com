@@ -10,4 +10,5 @@
   yocaml_syndication
   hilite
   textmate-language
-  yojson))
+  yojson
+  unix))

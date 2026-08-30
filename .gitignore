@@ -1,5 +1,6 @@
 # Generator output, build trees, and the local opam switch
 _site
+_site_dev
 _build/
 _opam/
 *.install
