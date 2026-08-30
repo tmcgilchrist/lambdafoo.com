@@ -1,0 +1,13 @@
+<div class="post">
+  <p style="padding:.5em .75em;margin-bottom:1.5em;border-left:4px solid #c00;background:#fff4f4;color:#600;font-size:.9em">
+    Unpublished draft, from <code>drafts/</code>. Not part of the deployed site.
+  </p>
+  <h1 class="post-title">{{ title }}</h1>
+  {%- if has_date %}
+  <span class="post-date">{{ pretty_date }}</span>
+  {%- endif %}
+  {%- autoescape false -%}{{ yocaml_body }}{%- endautoescape -%}
+  {%- if has_tags %}
+  <p class="post-tags">Tags: {% for tag in tags %}{{ tag }}{% if not loop.last %}, {% endif %}{% endfor %}</p>
+  {%- endif %}
+</div>

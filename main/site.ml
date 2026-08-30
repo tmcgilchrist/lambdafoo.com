@@ -23,8 +23,17 @@ let feed_description =
   "Personal opinions on technology, functional programming and various systems \
    topics."
 
+(* Dev mode, for working on drafts/. Read from argv here rather than threaded
+   through, because [Target] below is a module of constants and every path in
+   the site hangs off it.
+
+   Drafts render into a separate tree, so nothing in drafts/ can reach _site/
+   even if you forget which mode you last built in. CI passes no flag. *)
+let include_drafts = Array.exists (fun a -> a = "--drafts") Sys.argv
+
 module Source = struct
   let posts = Path.rel [ "posts" ]
+  let drafts = Path.rel [ "drafts" ]
   let pages = Path.rel [ "pages" ]
   let css = Path.rel [ "css" ]
   let images = Path.rel [ "images" ]
@@ -44,9 +53,11 @@ end
 module Target = struct
   (* NB: not named [root]. Inside [Path.(...)] that would be shadowed by
      [Path.root], the absolute "/". *)
-  let base = Path.rel [ "_site" ]
+  let base = Path.rel [ (if include_drafts then "_site_dev" else "_site") ]
   let cache = Path.(base / ".cache")
   let posts = Path.(base / "posts")
+  let drafts = Path.(base / "drafts")
+  let drafts_index = Path.(base / "drafts.html")
   let pages = Path.(base / "pages")
   let atom = Path.(base / "atom.xml")
   let rss = Path.(base / "rss.xml")
@@ -64,8 +75,14 @@ end
 
 (* Hakyll's route for posts/pages is `setExtension "html"`, so the public URL
    is /posts/<basename>.html. *)
-let url_of_post file = Path.to_string (Target.as_html (Path.abs [ "posts" ]) file)
-let url_of_page file = Path.to_string (Target.as_html (Path.abs [ "pages" ]) file)
+let url_of_post file =
+  Path.to_string (Target.as_html (Path.abs [ "posts" ]) file)
+
+let url_of_page file =
+  Path.to_string (Target.as_html (Path.abs [ "pages" ]) file)
+
+let url_of_draft file =
+  Path.to_string (Target.as_html (Path.abs [ "drafts" ]) file)
 
 (* ------------------------------------------------------------------ *)
 (* Dates.                                                              *)
@@ -100,11 +117,14 @@ let month_number = function
 
 (* Hakyll renders dates with "%B %e, %Y"; %e is space padded. *)
 let pretty_date (d : Archetype.Datetime.t) =
-  Printf.sprintf "%s %2d, %d" (month_name d.month) (d.day :> int)
+  Printf.sprintf "%s %2d, %d" (month_name d.month)
+    (d.day :> int)
     (d.year :> int)
 
 let iso_date (d : Archetype.Datetime.t) =
-  Printf.sprintf "%04d-%02d-%02d" (d.year :> int) (month_number d.month)
+  Printf.sprintf "%04d-%02d-%02d"
+    (d.year :> int)
+    (month_number d.month)
     (d.day :> int)
 
 (* Hakyll's getItemUTC tries the `date:` field against a fixed set of formats
@@ -123,8 +143,25 @@ let hakyll_accepts_date raw =
       | _ -> false)
   | [ _; time ] -> (
       (* Only a complete HH:MM:SS is accepted. *)
-      match String.split_on_char ':' time with [ _; _; _ ] -> true | _ -> false)
+      match String.split_on_char ':' time with
+      | [ _; _; _ ] -> true
+      | _ -> false)
   | _ -> false
+
+(* A draft need not have a `title:` yet, so fall back to its filename:
+   "2024-11-04-dwarf-part-1.md" becomes "Dwarf part 1". *)
+let title_from_filename file =
+  let base =
+    file |> Path.remove_extension |> Path.basename |> Option.value ~default:""
+  in
+  let words =
+    match String.split_on_char '-' base with
+    | y :: m :: d :: rest when is_digits y && is_digits m && is_digits d -> rest
+    | words -> words
+  in
+  match String.concat " " words with
+  | "" -> base
+  | s -> String.mapi (fun i c -> if i = 0 then Char.uppercase_ascii c else c) s
 
 let date_from_filename file =
   let base =
@@ -132,9 +169,7 @@ let date_from_filename file =
   in
   match String.split_on_char '-' base with
   | y :: m :: d :: _ -> (
-      match
-        (int_of_string_opt y, int_of_string_opt m, int_of_string_opt d)
-      with
+      match (int_of_string_opt y, int_of_string_opt m, int_of_string_opt d) with
       | Some year, Some month, Some day ->
           Archetype.Datetime.make ~year ~month ~day () |> Result.to_option
       | _ -> None)
@@ -146,19 +181,21 @@ let date_from_filename file =
 let common_fields =
   Data.
     [
-      ("site_title", string site_title)
-    ; ("root", string root_url)
-    ; ("baseurl", string "")
+      ("site_title", string site_title);
+      (* Lets the layout show dev-only chrome. False in a deployed build. *)
+      ("dev", bool include_drafts);
+      ("root", string root_url);
+      ("baseurl", string "");
     ]
 
 module Post = struct
   type t = {
-      title : string
-    ; date : Archetype.Datetime.t
-    ; tags : string list
-    ; description : string option
-    ; author : string option
-    ; url : string
+    title : string;
+    date : Archetype.Datetime.t;
+    tags : string list;
+    description : string option;
+    author : string option;
+    url : string;
   }
 
   let entity_name = "Post"
@@ -166,14 +203,18 @@ module Post = struct
   (* Hakyll writes `tags: ocaml, open-source`; accept that as well as a real
      YAML list, so no post front matter has to change. *)
   let split_tags s =
-    String.split_on_char ',' s
-    |> List.map String.trim
+    String.split_on_char ',' s |> List.map String.trim
     |> List.filter (fun s -> s <> "")
 
   (* [/] is "try the left validator, fall back to the right one". *)
   let tags_validator =
     let open Data.Validation in
     list_of string / (string $ split_tags)
+
+  (* Stands in for a draft that has no date anywhere. Templates key off
+     [has_date] rather than printing 1970. *)
+  let undated =
+    Archetype.Datetime.make ~year:1970 ~month:1 ~day:1 () |> Result.get_ok
 
   let validate ~url ~fallback_date data =
     let open Data.Validation in
@@ -187,7 +228,8 @@ module Post = struct
         let from_metadata =
           Option.bind date (fun raw ->
               if hakyll_accepts_date raw then
-                Archetype.Datetime.validate (Data.string raw) |> Result.to_option
+                Archetype.Datetime.validate (Data.string raw)
+                |> Result.to_option
               else None)
         in
         let date =
@@ -196,10 +238,45 @@ module Post = struct
           | None, Some d -> d
           | None, None ->
               (* Unreachable here: every post filename carries a date. *)
-              Archetype.Datetime.make ~year:1970 ~month:1 ~day:1 ()
-              |> Result.get_ok
+              undated
         in
         { title; date; tags; description; author; url })
+      data
+
+  (* Drafts are work in progress, so nothing may be required. Four of them
+     currently have no front matter at all. Dates still go through
+     [hakyll_accepts_date], so a draft previews with the date it will actually
+     publish under once it moves into posts/. *)
+  let validate_draft ~url ~fallback_title ~fallback_date data =
+    let open Data.Validation in
+    record
+      (fun fields ->
+        let+ title = optional fields "title" string
+        and+ date = optional fields "date" string
+        and+ tags = optional_or fields ~default:[] "tags" tags_validator
+        and+ description = optional fields "description" string
+        and+ author = optional fields "author" string in
+        let from_metadata =
+          Option.bind date (fun raw ->
+              if hakyll_accepts_date raw then
+                Archetype.Datetime.validate (Data.string raw)
+                |> Result.to_option
+              else None)
+        in
+        let date =
+          match (from_metadata, fallback_date) with
+          | Some d, _ -> d
+          | None, Some d -> d
+          | None, None -> undated
+        in
+        {
+          title = Option.value title ~default:fallback_title;
+          date;
+          tags;
+          description;
+          author;
+          url;
+        })
       data
 
   (* [validate] needs the file path for the URL and the date fallback, which a
@@ -213,23 +290,51 @@ module Post = struct
 
       let validate data =
         validate ~url:(url_of_post file)
-          ~fallback_date:(date_from_filename file)
-          data
+          ~fallback_date:(date_from_filename file) data
+    end)
+
+  let readable_draft_for file : (module Required.DATA_READABLE with type t = t)
+      =
+    (module struct
+      type nonrec t = t
+
+      let entity_name = "Draft"
+      let url = url_of_draft file
+      let fallback_title = title_from_filename file
+      let fallback_date = date_from_filename file
+
+      (* No front matter at all is a normal state for a draft, so unlike a post
+         this is a value rather than an error. *)
+      let neutral =
+        Ok
+          {
+            title = fallback_title;
+            date = Option.value fallback_date ~default:undated;
+            tags = [];
+            description = None;
+            author = None;
+            url;
+          }
+
+      let validate data =
+        validate_draft ~url ~fallback_title ~fallback_date data
     end)
 
   let normalize p =
     Data.
       [
-        ("title", string p.title)
-      ; ("url", string p.url)
-      ; ("date", Archetype.Datetime.normalize p.date)
-      ; ("pretty_date", string (pretty_date p.date))
-      ; ("isodate", string (iso_date p.date))
-      ; ("tags", list_of string p.tags)
-      ; ("has_tags", bool (p.tags <> []))
-      ; ("description", option string p.description)
-      ; ("has_description", bool (Option.is_some p.description))
-      ; ("author", option string p.author)
+        ("title", string p.title);
+        ("url", string p.url);
+        ("date", Archetype.Datetime.normalize p.date);
+        ("pretty_date", string (pretty_date p.date));
+        (* False only for a draft with no date anywhere. *)
+        ("has_date", bool (Archetype.Datetime.compare p.date undated <> 0));
+        ("isodate", string (iso_date p.date));
+        ("tags", list_of string p.tags);
+        ("has_tags", bool (p.tags <> []));
+        ("description", option string p.description);
+        ("has_description", bool (Option.is_some p.description));
+        ("author", option string p.author);
       ]
     @ common_fields
 
@@ -261,10 +366,9 @@ module Page = struct
   let normalize p =
     Data.
       [
-        ("title", string p.title)
-      ; ("url", string p.url)
-      ; ( "isodate"
-        , option string (Option.map iso_date p.date) )
+        ("title", string p.title);
+        ("url", string p.url);
+        ("isodate", option string (Option.map iso_date p.date));
       ]
     @ common_fields
 end
@@ -276,9 +380,10 @@ module Listing = struct
   let normalize l =
     Data.
       [
-        ("title", string l.title)
-      ; ("posts", list (List.map (fun p -> Data.record (Post.normalize p)) l.posts))
-      ; ("has_posts", bool (l.posts <> []))
+        ("title", string l.title);
+        ( "posts",
+          list (List.map (fun p -> Data.record (Post.normalize p)) l.posts) );
+        ("has_posts", bool (l.posts <> []));
       ]
     @ common_fields
 end
@@ -291,13 +396,13 @@ module Sitemap = struct
   let normalize s =
     Data.
       [
-        ( "posts"
-        , list
+        ( "posts",
+          list
             (List.map
                (fun e ->
                  Data.record
                    [ ("url", string e.url); ("isodate", string e.isodate) ])
-               s.posts) )
+               s.posts) );
       ]
     @ common_fields
 end
@@ -318,11 +423,26 @@ let fetch_posts =
           let+ metadata, _content =
             Eff.read_file_with_metadata
               (module Yocaml_yaml)
-              (Post.readable_for file)
-              ~on:`Source file
+              (Post.readable_for file) ~on:`Source file
           in
           metadata)
         Source.posts
+  >>| List.sort Post.compare_recent_first
+
+let fetch_drafts =
+  let open Task in
+  Pipeline.track_files [ Source.binary; Source.drafts ]
+  >>> Pipeline.fetch ~only:`Files ~where:is_post
+        (fun file ->
+          let open Eff in
+          let+ metadata, _content =
+            Eff.read_file_with_metadata
+              (module Yocaml_yaml)
+              (Post.readable_draft_for file)
+              ~on:`Source file
+          in
+          metadata)
+        Source.drafts
   >>| List.sort Post.compare_recent_first
 
 let take n l = List.filteri (fun i _ -> i < n) l
@@ -362,8 +482,8 @@ let load_grammar_file tm path =
    how `c++` gets a name at all: the filename convention above cannot spell it,
    because `+` is the alias separator. *)
 let load_vendored_grammar_file tm path =
-  Yojson.Basic.from_file path |> TmLanguage.of_yojson_exn
-  |> TmLanguage.add_grammar tm
+  Yojson.Basic.from_file path
+  |> TmLanguage.of_yojson_exn |> TmLanguage.add_grammar tm
 
 let load_grammar_dir tm load dir =
   let dir = Path.to_string dir in
@@ -372,11 +492,11 @@ let load_grammar_dir tm load dir =
     |> List.filter (fun f -> Filename.check_suffix f ".json")
     |> List.sort String.compare
     |> List.iter (fun f ->
-           let path = Filename.concat dir f in
-           try load tm path
-           with exn ->
-             Printf.eprintf "warning: ignoring grammar %s (%s)\n" path
-               (Printexc.to_string exn))
+        let path = Filename.concat dir f in
+        try load tm path
+        with exn ->
+          Printf.eprintf "warning: ignoring grammar %s (%s)\n" path
+            (Printexc.to_string exn))
 
 (* YOCaml's default set omits shell, this blog's most used language. *)
 let grammars =
@@ -385,14 +505,14 @@ let grammars =
     (fun g -> g |> TmLanguage.of_yojson_exn |> TmLanguage.add_grammar t)
     Hilite.Grammars.
       [
-        ocaml
-      ; ocaml_interface
-      ; dune
-      ; opam
-      ; diff
-      ; add_name "shell" shell
-      ; add_name "sh" shell
-      ; add_name "bash" shell
+        ocaml;
+        ocaml_interface;
+        dune;
+        opam;
+        diff;
+        add_name "shell" shell;
+        add_name "sh" shell;
+        add_name "bash" shell;
       ];
   load_grammar_dir t load_vendored_grammar_file Source.vendored_grammars;
   load_grammar_dir t load_grammar_file Source.grammars;
@@ -421,9 +541,7 @@ let visible p = not (is_hidden p)
 
 let rec copy_tree ~into source cache =
   let open Eff in
-  let* entries =
-    read_directory ~on:`Source ~only:`Both ~where:visible source
-  in
+  let* entries = read_directory ~on:`Source ~only:`Both ~where:visible source in
   Stdlib.List.fold_left
     (fun acc entry ->
       let* cache = acc in
@@ -449,8 +567,7 @@ let process_post file =
     Target.(as_html posts file)
     (Pipeline.track_files
        [ Source.binary; Source.grammars; Source.vendored_grammars ]
-    >>> Yocaml_yaml.Pipeline.read_file_with_metadata
-          (Post.readable_for file)
+    >>> Yocaml_yaml.Pipeline.read_file_with_metadata (Post.readable_for file)
           file
     >>> content_to_html ()
     >>> Yocaml_jingoo.Pipeline.as_template
@@ -463,13 +580,47 @@ let process_post file =
 let process_posts =
   Action.batch ~only:`Files ~where:is_post Source.posts process_post
 
+(* Same pipeline as a post, but through the lenient archetype and the draft
+   template, and only ever into the dev tree. *)
+let process_draft file =
+  let open Task in
+  Action.Static.write_file_with_metadata
+    Target.(as_html drafts file)
+    (Pipeline.track_files
+       [ Source.binary; Source.grammars; Source.vendored_grammars ]
+    >>> Yocaml_yaml.Pipeline.read_file_with_metadata
+          (Post.readable_draft_for file)
+          file
+    >>> content_to_html ()
+    >>> Yocaml_jingoo.Pipeline.as_template
+          (module Post)
+          (Source.template "draft.html")
+    >>> Yocaml_jingoo.Pipeline.as_template
+          (module Post)
+          (Source.template "layout.html"))
+
+let process_drafts =
+  Action.batch ~only:`Files ~where:is_post Source.drafts process_draft
+
+let process_drafts_index =
+  let open Task in
+  Action.Static.write_file Target.drafts_index
+    (fetch_drafts
+    >>| (fun drafts -> ({ Listing.title = "Drafts"; posts = drafts }, ""))
+    >>> Yocaml_jingoo.Pipeline.as_template
+          (module Listing)
+          (Source.template "drafts.html")
+    >>> Yocaml_jingoo.Pipeline.as_template
+          (module Listing)
+          (Source.template "layout.html")
+    >>| snd)
+
 let process_page file =
   let open Task in
   Action.Static.write_file_with_metadata
     Target.(as_html pages file)
     (Pipeline.track_file Source.binary
-    >>> Yocaml_yaml.Pipeline.read_file_with_metadata
-          (Page.readable_for file)
+    >>> Yocaml_yaml.Pipeline.read_file_with_metadata (Page.readable_for file)
           file
     >>> content_to_html ()
     >>> Yocaml_jingoo.Pipeline.as_template
@@ -488,8 +639,8 @@ let write_listing ~target ~template ~title ~limit =
   Action.Static.write_file target
     (fetch_posts
     >>| (fun posts ->
-          let posts = match limit with None -> posts | Some n -> take n posts in
-          ({ Listing.title; posts }, ""))
+    let posts = match limit with None -> posts | Some n -> take n posts in
+    ({ Listing.title; posts }, ""))
     >>> Yocaml_jingoo.Pipeline.as_template (module Listing) template
     >>> Yocaml_jingoo.Pipeline.as_template
           (module Listing)
@@ -506,19 +657,18 @@ let process_archive =
 let strip_hakyll_partial content =
   String.split_on_char '\n' content
   |> List.filter (fun line ->
-         String.trim line <> {|$partial("templates/post-list.html")$|})
+      String.trim line <> {|$partial("templates/post-list.html")$|})
   |> String.concat "\n"
 
 let process_index =
   let open Task in
   Action.Static.write_file Target.index
-    ((let+ posts = fetch_posts
-      and+ body = Pipeline.read_file Source.index in
+    ((let+ posts = fetch_posts and+ body = Pipeline.read_file Source.index in
       let _, body =
         Metadata.extract_from_content ~strategy:Metadata.jekyll body
       in
-      ( { Listing.title = "Home"; posts = take 10 posts }
-      , strip_hakyll_partial body ))
+      ( { Listing.title = "Home"; posts = take 10 posts },
+        strip_hakyll_partial body ))
     >>> Yocaml_jingoo.Pipeline.as_template
           (module Listing)
           (Source.template "index.html")
@@ -533,9 +683,8 @@ let process_tag tag =
     Path.(Target.tags / tag / "index.html")
     (fetch_posts
     >>| (fun posts ->
-          let posts = List.filter (fun p -> List.mem tag p.Post.tags) posts in
-          ( { Listing.title = Printf.sprintf "Posts tagged \"%s\"" tag; posts }
-          , "" ))
+    let posts = List.filter (fun p -> List.mem tag p.Post.tags) posts in
+    ({ Listing.title = Printf.sprintf "Posts tagged \"%s\"" tag; posts }, ""))
     >>> Yocaml_jingoo.Pipeline.as_template
           (module Listing)
           (Source.template "tag.html")
@@ -548,38 +697,38 @@ let process_sitemap =
   let open Task in
   Action.Static.write_file Target.sitemap
     ((let+ posts = fetch_posts
-     and+ pages =
-       Pipeline.fetch ~only:`Files ~where:is_md
-         (fun file ->
-           let open Eff in
-           let+ metadata, _ =
-             Eff.read_file_with_metadata
-               (module Yocaml_yaml)
-               (Page.readable_for file)
-               ~on:`Source file
-           in
-           metadata)
-         Source.pages
-     in
-     let post_entries =
-       List.map
-         (fun p -> { Sitemap.url = p.Post.url; isodate = iso_date p.Post.date })
-         posts
-     and page_entries =
-       List.map
-         (fun (p : Page.t) ->
-           {
-             Sitemap.url = p.url
-           ; isodate = Option.fold ~none:"" ~some:iso_date p.date
-           })
-         pages
-     in
-     let page_entries =
-       List.sort
-         (fun a b -> String.compare a.Sitemap.url b.Sitemap.url)
-         page_entries
-     in
-     ({ Sitemap.posts = post_entries @ page_entries }, ""))
+      and+ pages =
+        Pipeline.fetch ~only:`Files ~where:is_md
+          (fun file ->
+            let open Eff in
+            let+ metadata, _ =
+              Eff.read_file_with_metadata
+                (module Yocaml_yaml)
+                (Page.readable_for file) ~on:`Source file
+            in
+            metadata)
+          Source.pages
+      in
+      let post_entries =
+        List.map
+          (fun p ->
+            { Sitemap.url = p.Post.url; isodate = iso_date p.Post.date })
+          posts
+      and page_entries =
+        List.map
+          (fun (p : Page.t) ->
+            {
+              Sitemap.url = p.url;
+              isodate = Option.fold ~none:"" ~some:iso_date p.date;
+            })
+          pages
+      in
+      let page_entries =
+        List.sort
+          (fun a b -> String.compare a.Sitemap.url b.Sitemap.url)
+          page_entries
+      in
+      ({ Sitemap.posts = post_entries @ page_entries }, ""))
     >>> Yocaml_jingoo.Pipeline.as_template
           (module Sitemap)
           (Source.template "sitemap.xml")
@@ -603,7 +752,8 @@ let process_redirects =
         |> List.fold_left (fun acc frag -> Path.(acc / frag)) Target.base
       in
       Action.Static.write_file target
-        Task.(Pipeline.track_file Source.binary >>| fun () -> redirect_page into))
+        Task.(
+          Pipeline.track_file Source.binary >>| fun () -> redirect_page into))
 
 (* ------------------------------------------------------------------ *)
 (* Feeds.                                                              *)
@@ -618,19 +768,14 @@ let fetch_feed_entries =
     Yocaml_jingoo.read_template (Source.template "post.html")
   and+ entries =
     Pipeline.track_files
-      [ Source.binary
-      ; Source.posts
-      ; Source.grammars
-      ; Source.vendored_grammars
-      ]
+      [ Source.binary; Source.posts; Source.grammars; Source.vendored_grammars ]
     >>> Pipeline.fetch ~only:`Files ~where:is_post
           (fun file ->
             let open Eff in
             let+ metadata, content =
               read_file_with_metadata
                 (module Yocaml_yaml)
-                (Post.readable_for file)
-                ~on:`Source file
+                (Post.readable_for file) ~on:`Source file
             in
             (metadata, markdown_to_html content))
           Source.posts
@@ -639,7 +784,7 @@ let fetch_feed_entries =
   |> List.sort (fun (a, _) (b, _) -> Post.compare_recent_first a b)
   |> take 10
   |> List.map (fun (m, html) ->
-         (m, apply_post_template (module Post) ~metadata:m html))
+      (m, apply_post_template (module Post) ~metadata:m html))
 
 let atom_entry ((p : Post.t), body) =
   let open Yocaml_syndication in
@@ -687,13 +832,13 @@ let all_tags () =
   in
   let rec collect acc = function
     | [] ->
-        return (acc |> Stdlib.List.concat |> Stdlib.List.sort_uniq String.compare)
+        return
+          (acc |> Stdlib.List.concat |> Stdlib.List.sort_uniq String.compare)
     | file :: rest ->
         let* metadata, _ =
           read_file_with_metadata
             (module Yocaml_yaml)
-            (Post.readable_for file)
-            ~on:`Source file
+            (Post.readable_for file) ~on:`Source file
         in
         collect (metadata.Post.tags :: acc) rest
   in
@@ -703,17 +848,154 @@ let process_all () =
   let open Eff in
   let* tags = all_tags () in
   Action.restore_cache Target.cache
-  >>= process_assets
-  >>= process_posts
-  >>= process_pages
+  >>= process_assets >>= process_posts >>= process_pages
   >>= Action.batch_list tags process_tag
-  >>= process_index
-  >>= process_archive
-  >>= process_sitemap
-  >>= process_atom
-  >>= process_rss
-  >>= process_redirects
+  >>= process_index >>= process_archive >>= process_sitemap >>= process_atom
+  >>= process_rss >>= process_redirects
+  >>= (if include_drafts then process_drafts >=> process_drafts_index
+       else Eff.return)
   >>= Action.store_cache Target.cache
+
+(* ------------------------------------------------------------------ *)
+(* Draft tooling.                                                      *)
+
+let read_lines path =
+  let ic = open_in path in
+  let rec loop acc =
+    match input_line ic with
+    | exception End_of_file ->
+        close_in ic;
+        List.rev acc
+    | line -> loop (line :: acc)
+  in
+  loop []
+
+(* Front matter is the block between the first two `---` lines. Returns None
+   when the file has none at all, which several drafts do. *)
+let front_matter lines =
+  match lines with
+  | first :: rest when String.trim first = "---" ->
+      let rec take acc = function
+        | [] -> None (* unterminated *)
+        | line :: _ when String.trim line = "---" -> Some (List.rev acc)
+        | line :: tl -> take (line :: acc) tl
+      in
+      take [] rest
+  | _ -> None
+
+(* A key with an empty value is what [new_draft] scaffolds, so treat it as
+   absent rather than as filled in. *)
+let field name lines =
+  let prefix = name ^ ":" in
+  let n = String.length prefix in
+  List.find_map
+    (fun line ->
+      if String.length line >= n && String.sub line 0 n = prefix then
+        match String.trim (String.sub line n (String.length line - n)) with
+        | "" -> None
+        | v -> Some v
+      else None)
+    lines
+
+let markdown_files dir =
+  let path = Path.to_string dir in
+  if not (Sys.file_exists path && Sys.is_directory path) then []
+  else
+    Sys.readdir path |> Array.to_list |> List.sort String.compare
+    |> List.filter (fun f ->
+           Filename.check_suffix f ".md" || Filename.check_suffix f ".markdown")
+
+(* Check every draft against what posts/ actually requires: a `title:`, and a
+   date in the *filename*, because the filename is what a post publishes under.
+   Everything else is advisory. In particular the `YYYY-MM-DD HH:MM` date form
+   is not an error, since 65 of the 76 published posts use it too, so it is
+   counted once at the end rather than reported per file. *)
+let check_drafts () =
+  let files = markdown_files Source.drafts in
+  let blocked = ref 0 and untagged = ref 0 and inert_date = ref 0 in
+  let report file =
+    let path = Filename.concat (Path.to_string Source.drafts) file in
+    let lines = read_lines path in
+    let blockers = ref [] in
+    let block s = blockers := s :: !blockers in
+    let notes = ref [] in
+    (match front_matter lines with
+    | None -> block "no front matter"
+    | Some fm ->
+        if field "title" fm = None then block "no title:";
+        (match field "date" fm with
+        | Some d when not (hakyll_accepts_date d) -> incr inert_date
+        | _ -> ());
+        if field "tags" fm = None then (
+          incr untagged;
+          notes := "no tags" :: !notes));
+    if date_from_filename (Path.rel [ file ]) = None then
+      block "filename needs a YYYY-MM-DD prefix";
+    let note =
+      match !notes with [] -> "" | ns -> "(" ^ String.concat ", " ns ^ ")"
+    in
+    match List.rev !blockers with
+    | [] -> Printf.printf "  ready    %-52s %s\n" file note
+    | bs ->
+        incr blocked;
+        Printf.printf "  blocked  %-52s %s\n" file (String.concat "; " bs)
+  in
+  Printf.printf "%d drafts in %s\n\n" (List.length files)
+    (Path.to_string Source.drafts);
+  List.iter report files;
+  Printf.printf "\n%d ready to publish, %d blocked\n"
+    (List.length files - !blocked)
+    !blocked;
+  if !untagged > 0 then
+    Printf.printf "%d have no tags, so they would join no tag page\n" !untagged;
+  if !inert_date > 0 then
+    Printf.printf
+      "%d carry a `date:` in `YYYY-MM-DD HH:MM` form, which is ignored. The \
+       filename\n\
+      \  date is what publishes. That matches posts/, so it is not a problem.\n"
+      !inert_date
+
+let slug_of_title title =
+  let buf = Buffer.create (String.length title) in
+  String.iter
+    (fun c ->
+      if (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') then
+        Buffer.add_char buf c
+      else if c >= 'A' && c <= 'Z' then
+        Buffer.add_char buf (Char.lowercase_ascii c)
+      else if Buffer.length buf > 0 && Buffer.nth buf (Buffer.length buf - 1) <> '-'
+      then Buffer.add_char buf '-')
+    title;
+  let s = Buffer.contents buf in
+  let n = String.length s in
+  if n > 0 && s.[n - 1] = '-' then String.sub s 0 (n - 1) else s
+
+(* Scaffold drafts/YYYY-MM-DD-slug.md with front matter that passes
+   [check_drafts]. The date prefix is what the post will publish under, so it
+   is worth getting into the filename from the start. *)
+let new_draft title =
+  let slug = slug_of_title title in
+  if slug = "" then (
+    prerr_endline "new-draft: give a title, e.g. site.exe new-draft \"On DWARF\"";
+    exit 1);
+  let tm = Unix.localtime (Unix.time ()) in
+  let date =
+    Printf.sprintf "%04d-%02d-%02d" (tm.Unix.tm_year + 1900)
+      (tm.Unix.tm_mon + 1) tm.Unix.tm_mday
+  in
+  let file = Printf.sprintf "%s-%s.md" date slug in
+  let path = Filename.concat (Path.to_string Source.drafts) file in
+  if Sys.file_exists path then (
+    Printf.eprintf "new-draft: %s already exists\n" path;
+    exit 1);
+  if not (Sys.file_exists (Path.to_string Source.drafts)) then
+    Sys.mkdir (Path.to_string Source.drafts) 0o755;
+  let oc = open_out path in
+  Printf.fprintf oc
+    "---\ntitle: \"%s\"\ndate: %s 09:00\ntags: \ndescription: \n---\n\n" title
+    date;
+  close_out oc;
+  Printf.printf "%s\n" path
 
 (* Report which fenced-code languages still have no grammar. *)
 let report_grammars () =
@@ -721,24 +1003,24 @@ let report_grammars () =
   let dir = Path.to_string Source.posts in
   Sys.readdir dir |> Array.to_list |> List.sort String.compare
   |> List.iter (fun f ->
-         let ic = open_in (Filename.concat dir f) in
-         let rec loop fenced =
-           match input_line ic with
-           | exception End_of_file -> close_in ic
-           | line ->
-               let fence =
-                 String.length line >= 3 && String.sub line 0 3 = "```"
+      let ic = open_in (Filename.concat dir f) in
+      let rec loop fenced =
+        match input_line ic with
+        | exception End_of_file -> close_in ic
+        | line ->
+            let fence =
+              String.length line >= 3 && String.sub line 0 3 = "```"
+            in
+            (if fence && not fenced then
+               let lang =
+                 String.sub line 3 (String.length line - 3) |> String.trim
                in
-               (if fence && not fenced then
-                  let lang =
-                    String.sub line 3 (String.length line - 3) |> String.trim
-                  in
-                  if lang <> "" then
-                    Hashtbl.replace seen lang
-                      (1 + Option.value ~default:0 (Hashtbl.find_opt seen lang)));
-               loop (if fence then not fenced else fenced)
-         in
-         loop false);
+               if lang <> "" then
+                 Hashtbl.replace seen lang
+                   (1 + Option.value ~default:0 (Hashtbl.find_opt seen lang)));
+            loop (if fence then not fenced else fenced)
+      in
+      loop false);
   let rows =
     Hashtbl.fold (fun lang n acc -> (lang, n) :: acc) seen []
     |> List.sort (fun (_, a) (_, b) -> compare b a)
@@ -755,9 +1037,25 @@ let report_grammars () =
     (total missing);
   List.iter (fun (l, n) -> Printf.printf "  %-14s %3d\n" l n) missing
 
+let usage () =
+  prerr_endline
+    "usage: site.exe [--drafts]            build into _site (_site_dev with \
+     --drafts)\n\
+    \       site.exe serve [--drafts] [port]\n\
+    \       site.exe check-drafts          report drafts that are not ready\n\
+    \       site.exe new-draft <title>     scaffold a new draft\n\
+    \       site.exe grammars              syntax highlighting coverage";
+  exit 1
+
 let () =
-  match Array.to_list Sys.argv with
+  (* [--drafts] is a mode, not a positional argument, so strip it before
+     matching. It has already been read into [include_drafts]. *)
+  match List.filter (fun a -> a <> "--drafts") (Array.to_list Sys.argv) with
   | _ :: "grammars" :: _ -> report_grammars ()
+  | _ :: "check-drafts" :: _ -> check_drafts ()
+  | _ :: "new-draft" :: title when title <> [] ->
+      new_draft (String.concat " " title)
+  | _ :: "new-draft" :: _ -> usage ()
   | _ :: "serve" :: rest ->
       let port =
         Option.bind (List.nth_opt rest 0) int_of_string_opt

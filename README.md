@@ -8,14 +8,14 @@ Tim McGilchrist's blog, generated with [YOCaml 3](https://github.com/xhtmlboi/yo
 YOCaml needs OCaml >= 5.1.1.
 
 ``` shell
-opam switch create . 5.3.0        # or reuse an existing 5.x switch
+opam switch create . 5.4.1        # or reuse an existing 5.x switch
 opam install . --deps-only -y
 dune build
 ```
 
 ## Running
 
-All three commands are run **from the repository root**, because the generator
+Every command is run **from the repository root**, because the generator
 reads `posts/`, `pages/`, `templates/`, `css/`, `images/`, `talks/` and
 `main/grammars/` relative to the working directory.
 
@@ -29,12 +29,48 @@ reads `posts/`, `pages/`, `templates/`, `css/`, `images/`, `talks/` and
 Rebuilds are content-hashed, so an edit to one post rewrites one file. Delete
 `_site/` for a full rebuild.
 
+## Drafts
+
+Drafts live in `drafts/` and are never part of the deployed site. `--drafts`
+turns on dev mode, which renders them at `/drafts/<name>.html` with an index at
+`/drafts.html`, and adds a Drafts link to the sidebar.
+
+``` shell
+./_build/default/main/site.exe serve --drafts 8080
+./_build/default/main/site.exe --drafts             # build only
+```
+
+Dev mode writes to `_site_dev/`, not `_site/`, so a draft cannot reach the
+deployed output even if you forget which mode you last built in. Everything
+else about the two trees is identical: `_site_dev` is `_site` plus the draft
+pages. CI passes no flag, and `drafts/` is untracked anyway, so it never
+reaches the runner.
+
+Drafts are read with a lenient version of the post archetype: no `title:` and
+no front matter at all are both fine, since several drafts are in that state.
+A draft with no title falls back to its filename, and one with no date renders
+without a date line rather than as 1970.
+
+``` shell
+./_build/default/main/site.exe check-drafts
+./_build/default/main/site.exe new-draft "On DWARF and OCaml"
+```
+
+`check-drafts` reports which drafts could move to `posts/` as they stand. Two
+things block that: missing front matter or `title:`, and a filename with no
+`YYYY-MM-DD` prefix, because the filename date is what a post publishes under
+(see the note on dates below). Missing tags are reported but do not block.
+
+`new-draft` scaffolds `drafts/YYYY-MM-DD-slug.md` with front matter that
+passes the check, dated today.
+
 ## Layout
 
 | Path                 | Purpose                                                |
 |----------------------|--------------------------------------------------------|
 | `main/site.ml`       | The generator: archetypes, tasks and actions           |
 | `main/redirects.ml`  | 60 legacy `/blog/YYYY/MM/DD/slug/` redirects           |
+| `drafts/`            | Unpublished drafts, dev mode only                      |
 | `main/grammars/`     | Extra TextMate grammars for syntax highlighting        |
 | `templates/`         | Jingoo templates                                       |
 | `posts/`, `pages/`   | Content                                                |
