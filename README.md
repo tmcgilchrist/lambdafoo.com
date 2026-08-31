@@ -20,14 +20,35 @@ reads `posts/`, `pages/`, `templates/`, `css/`, `images/`, `talks/` and
 `main/grammars/` relative to the working directory.
 
 ``` shell
-./_build/default/main/site.exe            # build into _site/
-./_build/default/main/site.exe serve      # build and serve on :8000
-./_build/default/main/site.exe serve 8080 # ...or on another port
-./_build/default/main/site.exe grammars   # syntax highlighting coverage
+./_build/default/main/site.exe --help       # the full command list
+./_build/default/main/site.exe build        # build into _site/
+./_build/default/main/site.exe serve        # build and serve on :8000
+./_build/default/main/site.exe serve 8080   # ...or on another port
+./_build/default/main/site.exe grammars     # syntax highlighting coverage
 ```
+
+The CLI is [cmdliner](https://erratique.ch/software/cmdliner)-based, so every
+subcommand takes `--help` and gets its own man page. Running it with no
+arguments prints the command list rather than doing anything.
 
 Rebuilds are content-hashed, so an edit to one post rewrites one file. Delete
 `_site/` for a full rebuild.
+
+### Shell completion
+
+Subcommands, options and draft filenames all complete. cmdliner ships the
+generic completion scripts, so the shell only needs to be told that `site`
+uses them. For zsh, with the switch active:
+
+``` shell
+FPATH="$(opam var share)/zsh/site-functions:${FPATH}"
+autoload -Uz compinit && compinit -u
+autoload _cmdliner_generic && compdef _cmdliner_generic site.exe
+```
+
+`cmdliner generic-completion` prints the scripts for other shells, and
+`cmdliner install tool-support` installs a definition for a tool that is on
+`PATH`. Neither applies here while the binary is run from `_build/`.
 
 ## Drafts
 
@@ -37,7 +58,7 @@ turns on dev mode, which renders them at `/drafts/<name>.html` with an index at
 
 ``` shell
 ./_build/default/main/site.exe serve --drafts 8080
-./_build/default/main/site.exe --drafts             # build only
+./_build/default/main/site.exe build --drafts       # build only
 ```
 
 Dev mode writes to `_site_dev/`, not `_site/`, so a draft cannot reach the
@@ -53,6 +74,7 @@ without a date line rather than as 1970.
 
 ``` shell
 ./_build/default/main/site.exe check-drafts
+./_build/default/main/site.exe check-drafts oxcaml-yaks.md   # just one
 ./_build/default/main/site.exe new-draft "On DWARF and OCaml"
 ```
 

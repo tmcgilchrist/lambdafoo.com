@@ -31,7 +31,7 @@ jobs:
         # Run from the repository root: the generator reads posts/, pages/,
         # templates/, css/, images/, talks/ and main/grammars/ relative to the
         # working directory, and writes _site/.
-        run: ./_build/default/main/site.exe
+        run: ./_build/default/main/site.exe build
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         if: github.ref == 'refs/heads/master'
