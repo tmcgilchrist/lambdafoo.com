@@ -11,4 +11,5 @@
   hilite
   textmate-language
   yojson
-  unix))
+  unix
+  cmdliner))

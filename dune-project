@@ -26,4 +26,5 @@
   (yocaml_syndication (>= 3.0.0))
   (hilite (>= 0.5.0))
   textmate-language
+  (cmdliner (>= 2.0.0))
   yojson))
