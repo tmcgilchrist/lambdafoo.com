@@ -72,8 +72,9 @@ dune exec main/site.exe -- build --drafts       # build only
 Dev mode writes to `_site_dev/`, not `_site/`, so a draft cannot reach the
 deployed output even if you forget which mode you last built in. Everything
 else about the two trees is identical: `_site_dev` is `_site` plus the draft
-pages. CI passes no flag, and `drafts/` is untracked anyway, so it never
-reaches the runner.
+pages. CI passes no flag, so drafts are never rendered there. Note that eight
+of the drafts are tracked in git and do reach the runner as source, they are
+simply not built.
 
 Drafts are read with a lenient version of the post archetype: no `title:` and
 no front matter at all are both fine, since several drafts are in that state.
