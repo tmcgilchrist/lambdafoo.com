@@ -1,7 +1,7 @@
 ---
 title: Update on Me
 author: Tim McGilchrist
-date: 2008-12-14 00:00
+date: 2008-12-14
 tags: misc
 description: Update on Me
 ---

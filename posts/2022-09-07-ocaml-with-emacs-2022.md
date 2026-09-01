@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "OCaml with Emacs in 2022"
-date: 2022-09-08 11:33
+date: 2022-09-07
 comments: false
 tags: ocaml, emacs
 ---

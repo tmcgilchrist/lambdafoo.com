@@ -1,7 +1,7 @@
 ---
 title: Ember.js and Google Analytics
 author: Tim McGilchrist
-date: 2013-09-17 11:07
+date: 2013-09-17
 tags: emberjs
 description: Ember.js and Google Analytics
 ---

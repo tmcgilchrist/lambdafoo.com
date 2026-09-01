@@ -1,7 +1,7 @@
 ---
 title: .emacs publishing
 author: Tim McGilchrist
-date: 2010-06-25 00:00
+date: 2010-06-25
 tags: emacs
 description: .emacs publishing
 ---

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "More CFI and frame pointers work"
-date: 2026-02-07 08:00
+date: 2026-02-07
 comments: false
 tags: ocaml
 ---

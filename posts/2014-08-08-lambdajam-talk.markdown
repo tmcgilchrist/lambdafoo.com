@@ -1,7 +1,7 @@
 ---
 title: Lambdajam Talks
 author: Tim McGilchrist
-date: 2014-08-08 14:15
+date: 2014-08-08
 tags: talks
 description: Lambdajam 2014 talks
 ---

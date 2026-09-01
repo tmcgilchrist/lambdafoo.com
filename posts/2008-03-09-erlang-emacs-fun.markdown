@@ -1,7 +1,7 @@
 ---
 title: Erlang + Emacs = Fun
 author: Tim McGilchrist
-date: 2008-03-09 00:00
+date: 2008-03-09
 tags: erlang
 description: Erlang + Emacs = Fun
 ---

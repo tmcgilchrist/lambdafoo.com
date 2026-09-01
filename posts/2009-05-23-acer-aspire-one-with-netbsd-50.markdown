@@ -1,7 +1,7 @@
 ---
 title: Acer Aspire One with NetBSD 5.0
 author: Tim McGilchrist
-date: 2009-05-23 00:00
+date: 2009-05-23
 tags: netbsd
 description: Acer Aspire One with NetBSD 5.0
 ---

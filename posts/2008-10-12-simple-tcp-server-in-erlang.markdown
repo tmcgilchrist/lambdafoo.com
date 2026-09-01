@@ -1,7 +1,7 @@
 ---
 title: Simple TCP Server in Erlang
 author: Tim McGilchrist
-date: 2008-10-12 00:00
+date: 2008-10-12
 tags: erlang
 description: Simple TCP Server in Erlang
 ---

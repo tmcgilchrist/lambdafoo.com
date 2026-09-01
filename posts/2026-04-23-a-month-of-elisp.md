@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "A month of Elisp"
-date: 2026-04-23 14:00
+date: 2026-04-23
 tags: ocaml, emacs, tree-sitter
 ---
 

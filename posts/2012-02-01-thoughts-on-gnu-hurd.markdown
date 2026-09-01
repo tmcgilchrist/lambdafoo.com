@@ -1,7 +1,7 @@
 ---
 title: Thoughts on GNU Hurd
 author: Tim McGilchrist
-date: 2012-02-01 10:34
+date: 2012-02-01
 tags: hurd, opinion
 description: Thoughts on GNU Hurd
 ---

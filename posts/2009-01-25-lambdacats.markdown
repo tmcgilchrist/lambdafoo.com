@@ -1,7 +1,7 @@
 ---
 title: Lambdacats
 author: Tim McGilchrist
-date: 2009-01-25 00:00
+date: 2009-01-25
 tags: haskell
 description: Lambdacats
 ---

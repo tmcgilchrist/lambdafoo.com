@@ -1,7 +1,7 @@
 ---
 title: NetBSD wireless setup
 author: Tim McGilchrist
-date: 2008-09-20 00:00
+date: 2008-09-20
 tags: netbsd
 description: NetBSD wireless setup
 ---

@@ -1,7 +1,7 @@
 ---
 title: "YARB: Yet Another Ring Benchmark, Part I"
 author: Tim McGilchrist
-date: 2009-03-21 00:00
+date: 2009-03-21
 tags: erlang
 description: "YARB: Yet Another Ring Benchmark, Part I"
 ---

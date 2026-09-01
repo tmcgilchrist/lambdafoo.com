@@ -1,7 +1,7 @@
 ---
 title: iPad and eBooks galore
 author: Tim McGilchrist
-date: 2011-01-06
+date: 2011-10-06
 tags: opinion
 description: iPad and eBooks galore
 ---

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Building OCaml from assembly"
-date: 2022-08-24 12:00
+date: 2024-08-30
 comments: false
 tags: ocaml, compilers
 ---

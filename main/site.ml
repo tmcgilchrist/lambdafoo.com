@@ -20,13 +20,14 @@ let feed_description =
   "Personal opinions on technology, functional programming and various systems \
    topics."
 
-(* Dev mode, for working on drafts/. Read from argv here rather than threaded
-   through, because [Target] below is a module of constants and every path in
-   the site hangs off it.
+(* Dev mode, for working on drafts/. Set once from the parsed command line
+   before any action runs. It is a ref rather than a parameter because every
+   path in [Target] and the [dev] template flag depend on it, and threading it
+   through would mean a functor over most of this file for one boolean.
 
    Drafts render into a separate tree, so nothing in drafts/ can reach _site/
    even if you forget which mode you last built in. CI passes no flag. *)
-let include_drafts = Array.exists (fun a -> a = "--drafts") Sys.argv (* TODO Prefer not to use Sys.argv can we integrate this with Cmdliner? *)
+let include_drafts = ref false
 
 module Source = struct
   let posts = Path.rel [ "posts" ]
@@ -44,25 +45,32 @@ module Source = struct
   (* Third-party grammars *)
   let vendored_grammars = Path.(grammars / "vendor")
   let template file = Path.(templates / file)
-  let binary = Path.rel [ Sys.argv.(0) ] (* TODO Same here this should be Cmdliner based *)
+  (* Tracked so that changing the generator rebuilds every page. It has to be
+     [Sys.executable_name], which is absolute, rather than [Sys.argv.(0)]: under
+     `dune exec` argv(0) does not resolve from the working directory, YOCaml
+     treats the missing dependency as nothing to track, and the site goes
+     silently stale. *)
+  let binary = Path.from_string Sys.executable_name
 end
 
+(* Functions, not constants: the output directory is not known until the
+   command line has been parsed. *)
 module Target = struct
-  let base = Path.rel [ (if include_drafts then "_site_dev" else "_site") ]
-  let cache = Path.(base / ".cache")
-  let posts = Path.(base / "posts")
-  let drafts = Path.(base / "drafts")
-  let drafts_index = Path.(base / "drafts.html")
-  let pages = Path.(base / "pages")
-  let atom = Path.(base / "atom.xml")
-  let rss = Path.(base / "rss.xml")
-  let archive = Path.(base / "archive.html")
-  let sitemap = Path.(base / "sitemap.xml")
-  let index = Path.(base / "index.html")
-  let tags = Path.(base / "tags")
-  let css = Path.(base / "css")
-  let images = Path.(base / "images")
-  let talks = Path.(base / "talks")
+  let base () = Path.rel [ (if !include_drafts then "_site_dev" else "_site") ]
+  let cache () = Path.(base () / ".cache")
+  let posts () = Path.(base () / "posts")
+  let drafts () = Path.(base () / "drafts")
+  let drafts_index () = Path.(base () / "drafts.html")
+  let pages () = Path.(base () / "pages")
+  let atom () = Path.(base () / "atom.xml")
+  let rss () = Path.(base () / "rss.xml")
+  let archive () = Path.(base () / "archive.html")
+  let sitemap () = Path.(base () / "sitemap.xml")
+  let index () = Path.(base () / "index.html")
+  let tags () = Path.(base () / "tags")
+  let css () = Path.(base () / "css")
+  let images () = Path.(base () / "images")
+  let talks () = Path.(base () / "talks")
 
   let as_html into file =
     file |> Path.move ~into |> Path.change_extension "html"
@@ -119,28 +127,13 @@ let iso_date (d : Archetype.Datetime.t) =
     (month_number d.month)
     (d.day :> int)
 
-(* TODO Review these Hakll edge-cases, we can migrate the markdown, the only
-   fixed thing is keeping the old urls available. *)
-(* Hakyll's getItemUTC tries the `date:` field against a fixed set of formats
-   and falls back to the date in the filename when none match. Those formats
-   need either a bare date or a full HH:MM:SS time, so the `YYYY-MM-DD HH:MM`
-   used by 65 of the 76 posts here is rejected and the filename wins. Replicate
-   that: otherwise the posts whose front matter contradicts their filename sort
-   differently from the live site. *)
+(* Every post in posts/ carries a `date:` matching the date in its filename, so
+   the front matter is simply read. Hakyll used to reject the `YYYY-MM-DD HH:MM`
+   form these files once used and silently publish under the filename date
+   instead; the posts were migrated to a bare date rather than keep modelling
+   that. The filename fallback below survives for drafts, which are not held to
+   the same standard. *)
 let is_digits s = s <> "" && String.for_all (fun c -> c >= '0' && c <= '9') s
-
-let hakyll_accepts_date raw =
-  match String.split_on_char ' ' (String.trim raw) with
-  | [ d ] -> (
-      match String.split_on_char '-' d with
-      | [ y; m; dd ] -> is_digits y && is_digits m && is_digits dd
-      | _ -> false)
-  | [ _; time ] -> (
-      (* Only a complete HH:MM:SS is accepted. *)
-      match String.split_on_char ':' time with
-      | [ _; _; _ ] -> true
-      | _ -> false)
-  | _ -> false
 
 (* A draft need not have a `title:` yet, so fall back to its filename:
    "2024-11-04-dwarf-part-1.md" becomes "Dwarf part 1". *)
@@ -176,7 +169,7 @@ let common_fields =
     [
       ("site_title", string site_title);
       (* Lets the layout show dev-only chrome. False in a deployed build. *)
-      ("dev", bool include_drafts);
+      ("dev", bool !include_drafts);
       ("root", string root_url);
       ("baseurl", string "");
     ]
@@ -210,58 +203,37 @@ module Post = struct
   let undated =
     Archetype.Datetime.make ~year:1970 ~month:1 ~day:1 () |> Result.get_ok
 
+  (* Front matter first, then the filename, then the sentinel. *)
+  let first_date candidates =
+    Option.value ~default:undated (List.find_opt Option.is_some candidates
+                                   |> Option.join)
+
   let validate ~url ~fallback_date data =
     let open Data.Validation in
     record
       (fun fields ->
         let+ title = required fields "title" string
-        and+ date = optional fields "date" string
+        and+ date = optional fields "date" Archetype.Datetime.validate
         and+ tags = optional_or fields ~default:[] "tags" tags_validator
         and+ description = optional fields "description" string
         and+ author = optional fields "author" string in
-        let from_metadata =
-          Option.bind date (fun raw ->
-              if hakyll_accepts_date raw then
-                Archetype.Datetime.validate (Data.string raw)
-                |> Result.to_option
-              else None)
-        in
-        let date =
-          match (from_metadata, fallback_date) with
-          | Some d, _ -> d
-          | None, Some d -> d
-          | None, None ->
-              undated
-        in
+        let date = first_date [ date; fallback_date ] in
         { title; date; tags; description; author; url })
       data
 
   (* Drafts are work in progress, so nothing may be required. Four of them
-     currently have no front matter at all. Dates still go through
-     [hakyll_accepts_date], so a draft previews with the date it will actually
-     publish under once it moves into posts/. *)
+     currently have no front matter at all, and many have no date in their
+     filename. *)
   let validate_draft ~url ~fallback_title ~fallback_date data =
     let open Data.Validation in
     record
       (fun fields ->
         let+ title = optional fields "title" string
-        and+ date = optional fields "date" string
+        and+ date = optional fields "date" Archetype.Datetime.validate
         and+ tags = optional_or fields ~default:[] "tags" tags_validator
         and+ description = optional fields "description" string
         and+ author = optional fields "author" string in
-        let from_metadata =
-          Option.bind date (fun raw ->
-              if hakyll_accepts_date raw then
-                Archetype.Datetime.validate (Data.string raw)
-                |> Result.to_option
-              else None)
-        in
-        let date =
-          match (from_metadata, fallback_date) with
-          | Some d, _ -> d
-          | None, Some d -> d
-          | None, None -> undated
-        in
+        let date = first_date [ date; fallback_date ] in
         {
           title = Option.value title ~default:fallback_title;
           date;
@@ -333,7 +305,8 @@ module Post = struct
   let compare_recent_first a b = ~-(Archetype.Datetime.compare a.date b.date)
 end
 
-(* TODO brief module comment here *)
+(* A page in pages/: About, Talks, Server Room. Unlike a post it carries no
+   tags and its date is optional, since only the sitemap uses one. *)
 module Page = struct
   type t = { title : string; url : string; date : Archetype.Datetime.t option }
 
@@ -467,13 +440,8 @@ let load_grammar_file tm path =
       named |> TmLanguage.of_yojson_exn |> TmLanguage.add_grammar tm)
     names
 
-(* TODO Verbose comment, vendoring is described elsewhere just cover what this
-   function does if it isn't obvious from the code. *)
-(* A vendored grammar is loaded byte for byte, so it stays diffable against
-   upstream. It keeps its own `name`, which the registry lowercases, and its own
-   `scopeName`, which is what sibling grammars include each other by. That is
-   how `c++` gets a name at all: the filename convention above cannot spell it,
-   because `+` is the alias separator. *)
+(* Loaded as-is, keeping the grammar's own `name` and `scopeName`. See
+   grammars/vendor/README.md. *)
 let load_vendored_grammar_file tm path =
   Yojson.Basic.from_file path
   |> TmLanguage.of_yojson_exn |> TmLanguage.add_grammar tm
@@ -546,16 +514,16 @@ let rec copy_tree ~into source cache =
 let copy_flat ~into source =
   Action.batch ~only:`Files ~where:visible source (Action.copy_file ~into)
 
-let process_assets =
+let process_assets () =
   let open Eff in
-  copy_flat ~into:Target.css Source.css
-  >=> copy_flat ~into:Target.images Source.images
-  >=> copy_tree ~into:Target.talks Source.talks
+  copy_flat ~into:(Target.css ()) Source.css
+  >=> copy_flat ~into:(Target.images ()) Source.images
+  >=> copy_tree ~into:(Target.talks ()) Source.talks
 
 let process_post file =
   let open Task in
   Action.Static.write_file_with_metadata
-    Target.(as_html posts file)
+    Target.(as_html (posts ()) file)
     (Pipeline.track_files
        [ Source.binary; Source.grammars; Source.vendored_grammars ]
     >>> Yocaml_yaml.Pipeline.read_file_with_metadata (Post.readable_for file)
@@ -576,7 +544,7 @@ let process_posts =
 let process_draft file =
   let open Task in
   Action.Static.write_file_with_metadata
-    Target.(as_html drafts file)
+    Target.(as_html (drafts ()) file)
     (Pipeline.track_files
        [ Source.binary; Source.grammars; Source.vendored_grammars ]
     >>> Yocaml_yaml.Pipeline.read_file_with_metadata
@@ -593,9 +561,9 @@ let process_draft file =
 let process_drafts =
   Action.batch ~only:`Files ~where:is_post Source.drafts process_draft
 
-let process_drafts_index =
+let process_drafts_index () =
   let open Task in
-  Action.Static.write_file Target.drafts_index
+  Action.Static.write_file (Target.drafts_index ())
     (fetch_drafts
     >>| (fun drafts -> ({ Listing.title = "Drafts"; posts = drafts }, ""))
     >>> Yocaml_jingoo.Pipeline.as_template
@@ -609,7 +577,7 @@ let process_drafts_index =
 let process_page file =
   let open Task in
   Action.Static.write_file_with_metadata
-    Target.(as_html pages file)
+    Target.(as_html (pages ()) file)
     (Pipeline.track_file Source.binary
     >>> Yocaml_yaml.Pipeline.read_file_with_metadata (Page.readable_for file)
           file
@@ -638,29 +606,19 @@ let write_listing ~target ~template ~title ~limit =
           (Source.template "layout.html")
     >>| snd)
 
-let process_archive =
-  write_listing ~target:Target.archive
+let process_archive () =
+  write_listing ~target:(Target.archive ())
     ~template:(Source.template "archive.html")
     ~title:"Archives" ~limit:None
 
-(* Hakyll's index reads index.html and applies it as a template. Here the post
-   list lives in the Jingoo template, so drop Hakyll's partial call. *)
-let strip_hakyll_partial content =
-  String.split_on_char '\n' content
-  |> List.filter (fun line ->
-    String.trim line <> {|$partial("templates/post-list.html")$|})
-   (* TODO Revisit this? *)
-  |> String.concat "\n"
-
-let process_index =
+let process_index () =
   let open Task in
-  Action.Static.write_file Target.index
+  Action.Static.write_file (Target.index ())
     ((let+ posts = fetch_posts and+ body = Pipeline.read_file Source.index in
       let _, body =
         Metadata.extract_from_content ~strategy:Metadata.jekyll body
       in
-      ( { Listing.title = "Home"; posts = take 10 posts },
-        strip_hakyll_partial body ))
+      ({ Listing.title = "Home"; posts = take 10 posts }, body))
     >>> Yocaml_jingoo.Pipeline.as_template
           (module Listing)
           (Source.template "index.html")
@@ -672,7 +630,7 @@ let process_index =
 let process_tag tag =
   let open Task in
   Action.Static.write_file
-    Path.(Target.tags / tag / "index.html")
+    Path.(Target.tags () / tag / "index.html")
     (fetch_posts
     >>| (fun posts ->
     let posts = List.filter (fun p -> List.mem tag p.Post.tags) posts in
@@ -685,9 +643,9 @@ let process_tag tag =
           (Source.template "layout.html")
     >>| snd)
 
-let process_sitemap =
+let process_sitemap () =
   let open Task in
-  Action.Static.write_file Target.sitemap
+  Action.Static.write_file (Target.sitemap ())
     ((let+ posts = fetch_posts
       and+ pages =
         Pipeline.fetch ~only:`Files ~where:is_md
@@ -742,7 +700,7 @@ let process_redirects =
       (* [from] carries slashes, so split it into real path fragments. *)
       let target =
         String.split_on_char '/' from
-        |> List.fold_left (fun acc frag -> Path.(acc / frag)) Target.base
+        |> List.fold_left (fun acc frag -> Path.(acc / frag)) (Target.base ())
       in
       Action.Static.write_file target
         Task.(
@@ -791,9 +749,9 @@ let rss_item ((p : Post.t), body) =
   Rss2.item ~title:p.title ~link:(root_url ^ p.url) ~description:body
     ~pub_date:(Datetime.make p.date) ()
 
-let process_atom =
+let process_atom () =
   let open Task in
-  Action.Static.write_file Target.atom
+  Action.Static.write_file (Target.atom ())
     (fetch_feed_entries
     >>> Yocaml_syndication.Atom.from
           ~title:(Yocaml_syndication.Atom.text feed_title)
@@ -804,9 +762,9 @@ let process_atom =
           ~links:[ Yocaml_syndication.Atom.self (root_url ^ "/atom.xml") ]
           atom_entry)
 
-let process_rss =
+let process_rss () =
   let open Task in
-  Action.Static.write_file Target.rss
+  Action.Static.write_file (Target.rss ())
     (fetch_feed_entries
     >>> Yocaml_syndication.Rss2.from ~title:feed_title ~site_url:root_url
           ~feed_url:(root_url ^ "/rss.xml") ~description:feed_description
@@ -838,14 +796,14 @@ let all_tags () =
 let process_all () =
   let open Eff in
   let* tags = all_tags () in
-  Action.restore_cache Target.cache
-  >>= process_assets >>= process_posts >>= process_pages
+  Action.restore_cache (Target.cache ())
+  >>= process_assets () >>= process_posts >>= process_pages
   >>= Action.batch_list tags process_tag
-  >>= process_index >>= process_archive >>= process_sitemap >>= process_atom
-  >>= process_rss >>= process_redirects
-  >>= (if include_drafts then process_drafts >=> process_drafts_index
+  >>= process_index () >>= process_archive () >>= process_sitemap ()
+  >>= process_atom () >>= process_rss () >>= process_redirects
+  >>= (if !include_drafts then process_drafts >=> process_drafts_index ()
        else Eff.return)
-  >>= Action.store_cache Target.cache
+  >>= Action.store_cache (Target.cache ())
 
 (* Draft tooling *)
 
@@ -893,7 +851,7 @@ let markdown_files dir =
   else
     Sys.readdir path |> Array.to_list |> List.sort String.compare
     |> List.filter (fun f ->
-           Filename.check_suffix f ".md" || Filename.check_suffix f ".markdown")
+        Filename.check_suffix f ".md" || Filename.check_suffix f ".markdown")
 
 (* Check every draft against what posts/ actually requires: a `title:`, and a
    date in the *filename*, because the filename is what a post publishes under.
@@ -915,7 +873,7 @@ let check_drafts only =
     | names -> List.filter (fun f -> List.mem f names) all
   in
   let plural n singular = if n = 1 then singular else singular ^ "s" in
-  let blocked = ref 0 and untagged = ref 0 and inert_date = ref 0 in
+  let blocked = ref 0 and untagged = ref 0 and odd_date = ref 0 in
   let report file =
     let path = Filename.concat (Path.to_string Source.drafts) file in
     let lines = read_lines path in
@@ -926,8 +884,19 @@ let check_drafts only =
     | None -> block "no front matter"
     | Some fm ->
         if field "title" fm = None then block "no title:";
-        (match field "date" fm with
-        | Some d when not (hakyll_accepts_date d) -> incr inert_date
+        (* posts/ keeps `date:` and the filename in step, so that the date a
+           page shows matches the date in its URL. A draft is free not to, but
+           it will carry the disagreement with it when it is promoted. *)
+        (match (field "date" fm, date_from_filename (Path.rel [ file ])) with
+        | Some d, _
+          when Result.is_error (Archetype.Datetime.validate (Data.string d)) ->
+            incr odd_date;
+            notes := "date: does not parse" :: !notes
+        | Some d, Some from_name
+          when String.length d < 10
+               || String.sub d 0 10 <> iso_date from_name ->
+            incr odd_date;
+            notes := "date: disagrees with the filename" :: !notes
         | _ -> ());
         if field "tags" fm = None then (
           incr untagged;
@@ -952,13 +921,13 @@ let check_drafts only =
     Printf.printf "%d %s no tags, so %s join no tag page\n" !untagged
       (if !untagged = 1 then "has" else "have")
       (if !untagged = 1 then "it would" else "they would");
-  if !inert_date > 0 then
+  if !odd_date > 0 then
     Printf.printf
-      "%d %s a `date:` in `YYYY-MM-DD HH:MM` form, which is ignored. The \
-       filename\n\
-      \  date is what publishes. That matches posts/, so it is not a problem.\n"
-      !inert_date
-      (if !inert_date = 1 then "carries" else "carry");
+      "%d %s a `date:` that will not match the date in its URL once \
+       published.\n  posts/ uses a bare YYYY-MM-DD equal to the filename \
+       prefix.\n"
+      !odd_date
+      (if !odd_date = 1 then "carries" else "carry");
   unknown = []
 
 let slug_of_title title =
@@ -969,7 +938,8 @@ let slug_of_title title =
         Buffer.add_char buf c
       else if c >= 'A' && c <= 'Z' then
         Buffer.add_char buf (Char.lowercase_ascii c)
-      else if Buffer.length buf > 0 && Buffer.nth buf (Buffer.length buf - 1) <> '-'
+      else if
+        Buffer.length buf > 0 && Buffer.nth buf (Buffer.length buf - 1) <> '-'
       then Buffer.add_char buf '-')
     title;
   let s = Buffer.contents buf in
@@ -982,7 +952,8 @@ let slug_of_title title =
 let new_draft title =
   let slug = slug_of_title title in
   if slug = "" then (
-    prerr_endline "new-draft: give a title, e.g. site.exe new-draft \"On DWARF\"";
+    prerr_endline
+      "new-draft: give a title, e.g. site.exe new-draft \"On DWARF\"";
     exit 1);
   let tm = Unix.localtime (Unix.time ()) in
   let date =
@@ -1045,18 +1016,15 @@ let report_grammars () =
 
 open Cmdliner
 
-(* [include_drafts] is read straight from argv at startup, before cmdliner
-   runs, because [Target] is a module of constants and the output directory has
-   to be settled before any of them are forced. Declaring the flag here is what
-   puts it in the help and in completion. Cmdliner rejects abbreviations rather
-   than accepting unambiguous prefixes, so the two readings cannot disagree
-   about which tree is being written. *)
+(* Parsing the flag also applies it, so that nothing downstream has to
+   remember to. Every command that builds anything takes this term. *)
 let drafts_flag =
   let doc =
     "Include drafts/ in the build. Output moves to _site_dev/ so that a draft \
      can never reach the deployed _site/."
   in
-  Arg.(value & flag & info [ "drafts" ] ~doc)
+  let apply drafts = include_drafts := drafts in
+  Term.(const apply $ Arg.(value & flag & info [ "drafts" ] ~doc))
 
 let build_cmd =
   let doc = "Build the site" in
@@ -1069,10 +1037,8 @@ let build_cmd =
          one file. Delete the output directory for a full rebuild.";
     ]
   in
-  let run _drafts = Yocaml_unix.run ~level:`Info process_all in
-  Cmd.v
-    (Cmd.info "build" ~doc ~man)
-    Term.(const run $ drafts_flag)
+  let run () = Yocaml_unix.run ~level:`Info process_all in
+  Cmd.v (Cmd.info "build" ~doc ~man) Term.(const run $ drafts_flag)
 
 let serve_cmd =
   let doc = "Build the site and serve it over HTTP" in
@@ -1088,12 +1054,10 @@ let serve_cmd =
     let doc = "Port to listen on." in
     Arg.(value & pos 0 int 8000 & info [] ~docv:"PORT" ~doc)
   in
-  let run _drafts port =
-    Yocaml_unix.serve ~level:`Info ~target:Target.base ~port process_all
+  let run () port =
+    Yocaml_unix.serve ~level:`Info ~target:(Target.base ()) ~port process_all
   in
-  Cmd.v
-    (Cmd.info "serve" ~doc ~man)
-    Term.(const run $ drafts_flag $ port)
+  Cmd.v (Cmd.info "serve" ~doc ~man) Term.(const run $ drafts_flag $ port)
 
 (* Subcommand and option names complete for free. This is the one argument
    with values worth completing, and there are 33 of them. *)
@@ -1102,8 +1066,7 @@ let draft_conv =
     let complete _ctx ~token =
       Ok
         (markdown_files Source.drafts
-        |> List.filter (fun f ->
-               String.starts_with ~prefix:token f)
+        |> List.filter (fun f -> String.starts_with ~prefix:token f)
         |> List.map (fun f -> Arg.Completion.string f))
     in
     Arg.Completion.make complete
@@ -1124,7 +1087,9 @@ let check_drafts_cmd =
     ]
   in
   let only =
-    let doc = "Check only these drafts, by filename, rather than all of them." in
+    let doc =
+      "Check only these drafts, by filename, rather than all of them."
+    in
     Arg.(value & pos_all draft_conv [] & info [] ~docv:"DRAFT" ~doc)
   in
   let run only = if not (check_drafts only) then exit Cmd.Exit.cli_error in
@@ -1144,8 +1109,7 @@ let new_draft_cmd =
   in
   let title =
     let doc = "Title of the draft. The slug and filename come from it." in
-    Arg.(
-      non_empty & pos_all string [] & info [] ~docv:"TITLE" ~doc)
+    Arg.(non_empty & pos_all string [] & info [] ~docv:"TITLE" ~doc)
   in
   let run words = new_draft (String.concat " " words) in
   Cmd.v (Cmd.info "new-draft" ~doc ~man) Term.(const run $ title)
@@ -1161,9 +1125,7 @@ let grammars_cmd =
          block counts. See main/grammars/README.md to add one.";
     ]
   in
-  Cmd.v
-    (Cmd.info "grammars" ~doc ~man)
-    Term.(const report_grammars $ const ())
+  Cmd.v (Cmd.info "grammars" ~doc ~man) Term.(const report_grammars $ const ())
 
 let main_cmd =
   let doc = "The lambdafoo.com static site generator" in
@@ -1181,7 +1143,9 @@ let main_cmd =
     ]
   in
   let default = Term.(ret (const (`Help (`Plain, None)))) in
-  Cmd.group (Cmd.info "site" ~doc ~man) ~default
+  Cmd.group
+    (Cmd.info "site" ~doc ~man)
+    ~default
     [ build_cmd; serve_cmd; check_drafts_cmd; new_draft_cmd; grammars_cmd ]
 
-let () = exit (Cmd.eval main_cmd) (* TODO Can we use Cmd.eval_exit here? *)
+let () = exit (Cmd.eval main_cmd)

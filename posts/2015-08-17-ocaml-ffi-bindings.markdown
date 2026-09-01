@@ -1,7 +1,7 @@
 ---
 title: OCaml FFI bindings
 author: Tim McGilchrist
-date: 2015-08-17 08:14
+date: 2015-08-17
 tags: ocaml
 description: OCaml FFI bindings
 ---

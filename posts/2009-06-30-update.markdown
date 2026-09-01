@@ -1,7 +1,7 @@
 ---
 title: Update
 author: Tim McGilchrist
-date: 2009-06-30 00:00
+date: 2009-06-30
 tags: misc
 description: Update 2009
 ---

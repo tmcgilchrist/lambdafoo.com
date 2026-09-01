@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Getting Started with OCaml in 2021"
-date: 2021-09-28 12:48
+date: 2021-10-29
 comments: false
 tags: ocaml
 ---
