@@ -58,7 +58,7 @@ let table =
   ; "blog/2013/09/17/emberjs-and-google-analytics/index.html", "/posts/2013-09-17-emberjs-and-google-analytics.html"
   ; "blog/2014/08/08/lambdajam-talk/index.html", "/posts/2014-08-08-lambdajam-talk.html"
   ; "blog/2015/01/16/ocaml-lenses/index.html", "/posts/2015-01-16-ocaml-lenses.html"
-  ; "blog/2015/05/15/unreliable-guide-to-ocaml-modules/index.html", "/posts/2015-05-15-unreliable-guide-to-ocaml-modules.html"
+  ; "blog/2015/05/15/unreliable-guide-to-ocaml-modules/index.html", "/posts/2015-05-17-unreliable-guide-to-ocaml-modules.html"
   ; "blog/2015/05/20/first-month-of-haskell/index.html", "/posts/2015-05-20-first-month-of-haskell.html"
   ; "blog/2015/08/17/ocaml-ffi-bindings/index.html", "/posts/2015-08-17-ocaml-ffi-bindings.html"
   ; "blog/2018/06/22/transformers-either/index.html", "/posts/2018-06-22-transformers-either.html"
