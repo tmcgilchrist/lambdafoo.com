@@ -3,7 +3,9 @@
    being reproduced deliberately.
 
    Run from the repository root, since every path here is relative to the
-   working directory. `site.exe --help` lists the subcommands. *)
+   working directory:
+     dune exec main/site.exe -- --help     (the command list)
+     dune exec main/site.exe -- build      (build into _site) *)
 
 open Yocaml
 
@@ -953,7 +955,8 @@ let new_draft title =
   let slug = slug_of_title title in
   if slug = "" then (
     prerr_endline
-      "new-draft: give a title, e.g. site.exe new-draft \"On DWARF\"";
+      "new-draft: give a title, e.g. dune exec main/site.exe -- new-draft \
+       \"On DWARF\"";
     exit 1);
   let tm = Unix.localtime (Unix.time ()) in
   let date =

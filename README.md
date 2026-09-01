@@ -20,12 +20,17 @@ reads `posts/`, `pages/`, `templates/`, `css/`, `images/`, `talks/` and
 `main/grammars/` relative to the working directory.
 
 ``` shell
-./_build/default/main/site.exe --help       # the full command list
-./_build/default/main/site.exe build        # build into _site/
-./_build/default/main/site.exe serve        # build and serve on :8000
-./_build/default/main/site.exe serve 8080   # ...or on another port
-./_build/default/main/site.exe grammars     # syntax highlighting coverage
+dune exec main/site.exe -- --help       # the full command list
+dune exec main/site.exe -- build        # build into _site/
+dune exec main/site.exe -- serve        # build and serve on :8000
+dune exec main/site.exe -- serve 8080   # ...or on another port
+dune exec main/site.exe -- grammars     # syntax highlighting coverage
 ```
+
+The `--` is needed, otherwise dune reads the flags as its own. `dune exec`
+rebuilds the generator first, so when you are iterating on content rather than
+on the generator, `./_build/default/main/site.exe build` skips that step and is
+a little quicker. The two are equivalent.
 
 The CLI is [cmdliner](https://erratique.ch/software/cmdliner)-based, so every
 subcommand takes `--help` and gets its own man page. Running it with no
@@ -36,9 +41,12 @@ Rebuilds are content-hashed, so an edit to one post rewrites one file. Delete
 
 ### Shell completion
 
-Subcommands, options and draft filenames all complete. cmdliner ships the
-generic completion scripts, so the shell only needs to be told that `site`
-uses them. For zsh, with the switch active:
+Subcommands, options and draft filenames all complete. This works when you
+invoke the binary directly, not through `dune exec`, since in that form the
+shell is completing `dune`'s own arguments.
+
+cmdliner ships the generic completion scripts, so the shell only needs to be
+told that `site.exe` uses them. For zsh, with the switch active:
 
 ``` shell
 FPATH="$(opam var share)/zsh/site-functions:${FPATH}"
@@ -57,8 +65,8 @@ turns on dev mode, which renders them at `/drafts/<name>.html` with an index at
 `/drafts.html`, and adds a Drafts link to the sidebar.
 
 ``` shell
-./_build/default/main/site.exe serve --drafts 8080
-./_build/default/main/site.exe build --drafts       # build only
+dune exec main/site.exe -- serve --drafts 8080
+dune exec main/site.exe -- build --drafts       # build only
 ```
 
 Dev mode writes to `_site_dev/`, not `_site/`, so a draft cannot reach the
@@ -73,9 +81,9 @@ A draft with no title falls back to its filename, and one with no date renders
 without a date line rather than as 1970.
 
 ``` shell
-./_build/default/main/site.exe check-drafts
-./_build/default/main/site.exe check-drafts oxcaml-yaks.md   # just one
-./_build/default/main/site.exe new-draft "On DWARF and OCaml"
+dune exec main/site.exe -- check-drafts
+dune exec main/site.exe -- check-drafts oxcaml-yaks.md   # just one
+dune exec main/site.exe -- new-draft "On DWARF and OCaml"
 ```
 
 `check-drafts` reports which drafts could move to `posts/` as they stand. Two

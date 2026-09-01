@@ -57,4 +57,5 @@ that hilite drops the last dot-component, so name scopes
 
 ## What is still unhighlighted
 
-Run `site.exe grammars` from the repository root for the current list.
+Run `dune exec main/site.exe -- grammars` from the repository root for the
+current list.
