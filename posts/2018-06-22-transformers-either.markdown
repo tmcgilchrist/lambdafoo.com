@@ -1,7 +1,7 @@
 ---
 title: On EitherT
 author: Tim McGilchrist
-date: 2018-06-22 00:00
+date: 2018-06-22
 tags: haskell
 description: Thoughts on Haskell error handling and using EitherT.
 ---

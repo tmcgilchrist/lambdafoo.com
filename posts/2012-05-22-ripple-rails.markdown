@@ -1,7 +1,7 @@
 ---
 title: Ripple on Rails
 author: Tim McGilchrist
-date: 2012-05-22 16:59
+date: 2012-05-22
 tags: riak, ruby, nosql
 description: Ripple on Rails
 ---

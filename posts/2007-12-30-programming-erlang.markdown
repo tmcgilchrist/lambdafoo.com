@@ -1,7 +1,7 @@
 ---
 title: Programming Erlang
 author: Tim McGilchrist
-date: 2007-12-30 00:00
+date: 2007-12-30
 tags: erlang
 description: Programming Erlang
 ---

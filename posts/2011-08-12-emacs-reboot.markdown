@@ -1,7 +1,7 @@
 ---
 title: Emacs reboot
 author: Tim McGilchrist
-date: 2011-08-12 00:00
+date: 2011-08-12
 tags: emacs, rails, ruby
 description: Emacs reboot
 ---

@@ -1,7 +1,7 @@
 ---
 title: Leaving OpenBSD for ...
 author: Tim McGilchrist
-date: 2010-09-30 00:00
+date: 2010-09-30
 description: Leaving OpenBSD for ...
 tags: linux, openbsd, unix
 ---

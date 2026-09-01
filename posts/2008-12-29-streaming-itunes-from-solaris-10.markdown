@@ -1,7 +1,7 @@
 ---
 title: Streaming iTunes from Solaris 10
 author: Tim McGilchrist
-date: 2008-12-29 00:00
+date: 2008-12-29
 tags: solaris, itunes
 description: Streaming iTunes from Solaris 10
 ---

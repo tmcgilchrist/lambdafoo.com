@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Getting Started with LLDB on OCaml"
-date: 2024-08-03 08:00
+date: 2024-08-03
 comments: false
 tags: ocaml
 ---

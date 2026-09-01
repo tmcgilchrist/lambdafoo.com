@@ -1,7 +1,7 @@
 ---
 title: Setting up Oracle 10g XE with Rails 3
 author: Tim McGilchrist
-date: 2011-07-25 00:00
+date: 2011-07-25
 tags: rails, ruby
 description: Setting up Oracle 10g XE with Rails 3
 ---

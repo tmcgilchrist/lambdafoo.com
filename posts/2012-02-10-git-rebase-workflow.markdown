@@ -1,7 +1,7 @@
 ---
 title: Git rebase workflow
 author: Tim McGilchrist
-date: 2012-02-10 14:00
+date: 2012-02-10
 tags: git
 description: Git rebase workflow
 ---

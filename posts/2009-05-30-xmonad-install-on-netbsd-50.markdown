@@ -1,7 +1,7 @@
 ---
 title: XMonad Install on NetBSD 5.0
 author: Tim McGilchrist
-date: 2009-05-30 00:00
+date: 2009-05-30
 tags: haskell, netbsd, xmonad
 description: XMonad Install on NetBSD 5.0
 ---

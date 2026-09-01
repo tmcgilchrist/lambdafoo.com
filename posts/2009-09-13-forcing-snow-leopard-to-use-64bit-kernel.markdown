@@ -1,7 +1,7 @@
 ---
 title: Forcing Snow Leopard to use 64bit Kernel
 author: Tim McGilchrist
-date: 2009-09-13 00:00
+date: 2009-09-13
 tags: osx
 description: Forcing Snow Leopard to use 64bit Kernel
 ---

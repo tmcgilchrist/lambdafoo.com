@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Quick Hardware Performance Counters on macOS ARM64"
-date: 2026-03-25 08:00
+date: 2026-03-25
 comments: false
 tags: ocaml, profiling, macos
 ---

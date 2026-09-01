@@ -1,7 +1,7 @@
 ---
 title: Compiler Update
 author: Tim McGilchrist
-date: 2009-03-05 00:00
+date: 2009-03-05
 tags: haskell
 description: Compiler Update
 ---

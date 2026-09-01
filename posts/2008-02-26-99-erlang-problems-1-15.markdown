@@ -1,7 +1,7 @@
 ---
 title: "99 Erlang Problems: 1 - 15"
 author: Tim McGilchrist
-date: 2008-02-26 00:00
+date: 2008-02-26
 tags: erlang
 description: "99 Erlang Problems: 1 - 15"
 ---

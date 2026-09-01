@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Why do frame pointers matter for OCaml?"
-date: 2025-02-24 08:00
+date: 2025-02-24
 comments: false
 tags: ocaml
 ---

@@ -1,7 +1,7 @@
 ---
 title: Agressive Emacs Spring Clean
 author: Tim McGilchrist
-date: 2011-10-05 00:00
+date: 2011-10-05
 description: Agressive Emacs Spring Clean
 tags: emacs, rails, ruby
 ---

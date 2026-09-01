@@ -1,7 +1,7 @@
 ---
 title: Unreliable guide to OCaml modules
 author: Tim McGilchrist
-date: 2015-05-15 19:13
+date: 2015-05-17
 tags: ocaml
 description: Unreliable guide to OCaml modules
 ---

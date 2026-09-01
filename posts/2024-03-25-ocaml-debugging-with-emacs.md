@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Debugging OCaml with Emacs"
-date: 2024-03-25 08:00
+date: 2024-03-25
 comments: false
 tags: ocaml, emacs
 ---
