@@ -1,7 +1,8 @@
-The grammars in this directory (c.tmLanguage.json, cpp.tmLanguage.json) are
-distributed under the following licence. See README.md for provenance.
+Third-party grammars, copied here unmodified. Two licences apply.
 
-MIT License
+
+MIT, for c.tmLanguage.json and cpp.tmLanguage.json
+--------------------------------------------------
 
 Copyright (c) 2019 Jeff Hykin
 
@@ -22,3 +23,21 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+
+MIT, for JSON.tmLanguage.json (Microsoft) and coffeescript.tmLanguage.json
+(GitHub/Atom)
+--------------------------------------------------------------------------
+
+Both are distributed under the MIT licence reproduced above, with copyright
+held by Microsoft Corporation and GitHub Inc. respectively. See README.md for
+the upstream repositories.
+
+
+TextMate Bundle License, for ruby.tmLanguage.json and yaml.tmLanguage.json
+--------------------------------------------------------------------------
+
+    Permission to copy, use, modify, sell and distribute this
+    software is granted. This software is provided "as is" without
+    express or implied warranty, and with no claim as to its
+    suitability for any purpose.
