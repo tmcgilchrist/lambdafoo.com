@@ -1,4 +1,5 @@
-(* Generated from main/site.hs createRedirects: old path -> new path. *)
+(* Legacy URLs from the Octopress era, old path -> new path. Originally
+   generated from site.hs createRedirects, and maintained by hand since. *)
 let table =
   [
     "blog/2007/12/08/postfix-smf/index.html", "/posts/2007-12-08-postfix-smf.html"
@@ -28,7 +29,7 @@ let table =
   ; "blog/2009/01/25/lambdacats/index.html", "/posts/2009-01-25-lambdacats.html"
   ; "blog/2009/03/05/compiler-update/index.html", "/posts/2009-03-05-compiler-update.html"
   ; "blog/2009/03/21/yarb-yet-another-ring-benchmark-part-i/index.html", "/posts/2009-03-21-yarb-yet-another-ring-benchmark-part-i.html"
-  ; "blog/2009/05/23/acer-aspire-one-with-netbsd-50/index.html", "/post/2009-05-23-acer-aspire-one-with-netbsd-50.html"
+  ; "blog/2009/05/23/acer-aspire-one-with-netbsd-50/index.html", "/posts/2009-05-23-acer-aspire-one-with-netbsd-50.html"
   ; "blog/2009/05/30/xmonad-install-on-netbsd-50/index.html", "/posts/2009-05-30-xmonad-install-on-netbsd-50.html"
   ; "blog/2009/06/30/update/index.html", "/posts/2009-06-30-update.html"
   ; "blog/2009/09/13/forcing-snow-leopard-to-use-64bit-kernel/index.html", "/posts/2009-09-13-forcing-snow-leopard-to-use-64bit-kernel.html"
