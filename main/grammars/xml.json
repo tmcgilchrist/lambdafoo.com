@@ -1,0 +1,69 @@
+{
+  "name": "xml",
+  "scopeName": "text.xml",
+  "patterns": [
+    { "name": "comment.block.xml", "begin": "<!--", "end": "-->" },
+    {
+      "name": "string.unquoted.cdata.xml",
+      "begin": "<!\\[CDATA\\[",
+      "end": "\\]\\]>"
+    },
+    {
+      "name": "keyword.other.declaration.xml",
+      "begin": "<\\?",
+      "end": "\\?>",
+      "patterns": [{ "include": "#attributes" }]
+    },
+    {
+      "name": "keyword.other.doctype.xml",
+      "begin": "<!DOCTYPE",
+      "end": ">"
+    },
+    {
+      "begin": "(</?)([A-Za-z_][-A-Za-z0-9_.:]*)",
+      "end": "/?>",
+      "captures": {
+        "1": { "name": "punctuation.definition.tag.xml" },
+        "2": { "name": "entity.name.tag.xml" }
+      },
+      "patterns": [{ "include": "#attributes" }]
+    },
+    {
+      "name": "constant.character.entity.xml",
+      "match": "&(#[0-9]+|#x[0-9a-fA-F]+|[A-Za-z][A-Za-z0-9]*);"
+    }
+  ],
+  "repository": {
+    "attributes": {
+      "patterns": [
+        {
+          "match": "([A-Za-z_][-A-Za-z0-9_.:]*)\\s*(=)",
+          "captures": {
+            "1": { "name": "entity.other.attribute-name.xml" },
+            "2": { "name": "punctuation.separator.key-value.xml" }
+          }
+        },
+        {
+          "name": "string.quoted.double.xml",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [{ "include": "#entities" }]
+        },
+        {
+          "name": "string.quoted.single.xml",
+          "begin": "'",
+          "end": "'",
+          "patterns": [{ "include": "#entities" }]
+        }
+      ]
+    },
+    "entities": {
+      "patterns": [
+        {
+          "name": "constant.character.entity.xml",
+          "match": "&(#[0-9]+|#x[0-9a-fA-F]+|[A-Za-z][A-Za-z0-9]*);"
+        }
+      ]
+    }
+  }
+}

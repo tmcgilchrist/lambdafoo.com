@@ -448,11 +448,45 @@ let load_vendored_grammar_file tm path =
   Yojson.Basic.from_file path
   |> TmLanguage.of_yojson_exn |> TmLanguage.add_grammar tm
 
+(* Most vendored grammars carry a `name` that already matches the fence label.
+   Where upstream calls it something else, "JSON (Javascript Next)" say, this
+   manifest maps the label to the file to register under it. Keeping the map
+   beside the grammars rather than editing them is what lets the vendored files
+   stay byte-identical to upstream. *)
+let vendored_aliases_file = "aliases.json"
+
+let load_vendored_aliases tm dir =
+  let dir = Path.to_string dir in
+  let path = Filename.concat dir vendored_aliases_file in
+  if Sys.file_exists path then
+    match Yojson.Basic.from_file path with
+    | `Assoc entries ->
+        List.iter
+          (fun (name, file) ->
+            match file with
+            | `String file when not (String.starts_with ~prefix:"_" name) -> (
+                let file = Filename.concat dir file in
+                try
+                  match Yojson.Basic.from_file file with
+                  | `Assoc fields ->
+                      `Assoc
+                        (("name", `String name)
+                        :: List.remove_assoc "name" fields)
+                      |> TmLanguage.of_yojson_exn |> TmLanguage.add_grammar tm
+                  | _ -> ()
+                with exn ->
+                  Printf.eprintf "warning: alias %s -> %s (%s)\n" name file
+                    (Printexc.to_string exn))
+            | _ -> ())
+          entries
+    | _ -> ()
+
 let load_grammar_dir tm load dir =
   let dir = Path.to_string dir in
   if Sys.file_exists dir && Sys.is_directory dir then
     Sys.readdir dir |> Array.to_list
-    |> List.filter (fun f -> Filename.check_suffix f ".json")
+    |> List.filter (fun f ->
+           Filename.check_suffix f ".json" && f <> vendored_aliases_file)
     |> List.sort String.compare
     |> List.iter (fun f ->
         let path = Filename.concat dir f in
@@ -477,6 +511,7 @@ let grammars =
         add_name "bash" shell;
       ];
   load_grammar_dir t load_vendored_grammar_file Source.vendored_grammars;
+  load_vendored_aliases t Source.vendored_grammars;
   load_grammar_dir t load_grammar_file Source.grammars;
   t
 
@@ -1005,11 +1040,16 @@ let report_grammars () =
     Hashtbl.fold (fun lang n acc -> (lang, n) :: acc) seen []
     |> List.sort (fun (_, a) (_, b) -> compare b a)
   in
-  let have, missing =
-    List.partition
-      (fun (lang, _) -> Option.is_some (TmLanguage.find_by_name grammars lang))
-      rows
+  (* Registering a grammar is not the same as it working. Run a snippet
+     through hilite so a grammar that loads but tokenises nothing, or that
+     raises, is reported as missing rather than as covered. *)
+  let works lang =
+    match Hilite.src_code_to_html ~tm:grammars ~lang "x y\n" with
+    | Ok html -> String.length html > 0 && String.index_opt html '\'' <> None
+    | Error _ -> false
+    | exception _ -> false
   in
+  let have, missing = List.partition (fun (lang, _) -> works lang) rows in
   let total = List.fold_left (fun acc (_, n) -> acc + n) 0 in
   Printf.printf "highlighted (%d blocks):\n" (total have);
   List.iter (fun (l, n) -> Printf.printf "  %-14s %3d\n" l n) have;

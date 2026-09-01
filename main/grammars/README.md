@@ -28,8 +28,8 @@ changes are needed.
 | `emacs-lisp+common-lisp.json` | `emacs-lisp`, `common-lisp` | one dialect-agnostic Lisp grammar, `:keywords` and `'symbols` |
 | `assembly+asm.json` | `assembly`, `asm` | ARM64 and x86 mnemonics, registers, GAS directives, labels |
 | `dune.json` | `dune` | generic s-expression rules, overriding hilite's bundled grammar |
-| `vendor/c.tmLanguage.json` | `c` | upstream better-c-syntax, MIT |
-| `vendor/cpp.tmLanguage.json` | `c++` | upstream better-cpp-syntax, MIT |
+| `xml.json` | `xml` | tags, attributes, entities, CDATA, declarations |
+| `vendor/*` | `c`, `c++`, `json`, `ruby`, `yaml`, `yml`, `coffeescript` | upstream grammars, see `vendor/README.md` |
 
 Built into hilite already, so not needed here: `ocaml`, `dune`, `opam`,
 `diff`, `shell`, `sh`, `bash`.
@@ -37,10 +37,13 @@ Built into hilite already, so not needed here: `ocaml`, `dune`, `opam`,
 ## Why the rest are hand-written
 
 The obvious source of real grammars is a VS Code install, under
-`Contents/Resources/app/extensions/*/syntaxes/`. That is where the two C ones
+`Contents/Resources/app/extensions/*/syntaxes/`. That is where the vendored ones
 came from. It bundles about 80 grammars, and none of them is Erlang, Haskell,
-Emacs Lisp, Common Lisp, assembly, dune or even OCaml. Those are all
-marketplace extensions rather than built-ins, so there is nothing to copy.
+Emacs Lisp, Common Lisp, assembly, dune or even OCaml. Those are all marketplace
+extensions rather than built-ins, so there is nothing to copy.
+
+XML is the one case where a bundled grammar exists but cannot be used: it has an
+upstream defect that `textmate-language` rejects. See `vendor/README.md`.
 
 The hand-written ones are deliberately small: comments, strings, keywords,
 numbers, and the identifiers worth picking out. That covers what blog snippets
@@ -58,4 +61,6 @@ that hilite drops the last dot-component, so name scopes
 ## What is still unhighlighted
 
 Run `dune exec main/site.exe -- grammars` from the repository root for the
-current list.
+current list. It highlights a snippet with each grammar rather than just
+checking one is registered, so a grammar that loads but tokenises nothing is
+reported as missing.

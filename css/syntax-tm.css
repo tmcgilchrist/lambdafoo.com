@@ -19,6 +19,7 @@ pre code span[class*="variable"] { color: inherit; }
 pre code span[class*="storage"]       { color: #902000; }
 pre code span[class*="entity-name-type"],
 pre code span[class*="entity-name-class"],
+pre code span[class*="entity-other-inherited-class"],
 pre code span[class*="support-type"],
 pre code span[class*="support-class"] { color: #902000; }
 
