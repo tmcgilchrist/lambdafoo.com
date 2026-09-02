@@ -55,7 +55,11 @@ end
    command line has been parsed. *)
 module Target = struct
   let base () = Path.rel [ (if !include_drafts then "_site_dev" else "_site") ]
-  let cache () = Path.(base () / ".cache")
+  (* Deliberately outside [base ()]: everything under the output directory is
+     published, and the build cache is not part of the site. Dev and release
+     builds keep separate caches. *)
+  let cache () =
+    Path.rel [ "_cache"; (if !include_drafts then "site_dev" else "site") ]
   let posts () = Path.(base () / "posts")
   let drafts () = Path.(base () / "drafts")
   let drafts_index () = Path.(base () / "drafts.html")
