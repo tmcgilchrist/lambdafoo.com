@@ -75,25 +75,38 @@ else about the two trees is identical: `_site_dev` is `_site` plus the draft
 pages. `drafts/` is gitignored, so nothing in it is committed and CI never
 sees it at all.
 
-Drafts are read with a lenient version of the post archetype: no `title:` and
-no front matter at all are both fine, since several drafts are in that state.
-A draft with no title falls back to its filename, and one with no date renders
-without a date line rather than as 1970.
+### The shape of a draft, and of a post
 
-``` shell
-dune exec main/site.exe -- check-drafts
-dune exec main/site.exe -- check-drafts oxcaml-yaks.md   # just one
-dune exec main/site.exe -- new-draft "On DWARF and OCaml"
+A draft is named `drafts/<slug>.md`, with no date in the filename, and carries
+all three front matter fields. Only the title needs a value:
+
+``` yaml
+---
+title: "On DWARF and OCaml"
+date:
+tags:
+description:
+---
 ```
 
-`check-drafts` reports which drafts could move to `posts/` as they stand. Two
-things block that: missing front matter or `title:`, and a filename with no
-`YYYY-MM-DD` prefix, because the filename is what the published URL is built
-from. Missing tags, and a `date:` that disagrees with the filename prefix, are
-reported but do not block.
+Leaving `date:` and `tags:` empty is expected while a piece is still being
+written. A draft with no date renders without a date line rather than as 1970.
 
-`new-draft` scaffolds `drafts/YYYY-MM-DD-slug.md` with front matter that
-passes the check, dated today.
+Publishing means moving the file to `posts/`, adding a `YYYY-MM-DD` prefix to
+the filename, and filling the fields in. In `posts/` the metadata must be
+valid: every post carries a `title:`, a bare `YYYY-MM-DD` `date:` equal to its
+filename prefix, and a `tags:` list.
+
+``` shell
+dune exec main/site.exe -- new-draft "On DWARF and OCaml"
+dune exec main/site.exe -- check-drafts
+dune exec main/site.exe -- check-drafts oxcaml-yaks.md   # just one
+```
+
+`new-draft` scaffolds a draft in that shape. `check-drafts` reports any that
+have drifted from it: missing front matter, a missing `title:`, a missing
+`date:` or `tags:` key, or a filename that has picked up a date prefix. Empty
+`date:` and `tags:` values are reported but do not count as problems.
 
 ## Layout
 
