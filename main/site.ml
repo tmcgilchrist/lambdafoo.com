@@ -757,8 +757,11 @@ let atom_entry ((p : Post.t), body) =
 
 let rss_item ((p : Post.t), body) =
   let open Yocaml_syndication in
+  (* The guid is what a reader keys on to decide an item is not new. Inferring
+     it from the link matches the URL the previous generator emitted, so
+     existing subscribers see no duplicates. *)
   Rss2.item ~title:p.title ~link:(root_url ^ p.url) ~description:body
-    ~pub_date:(Datetime.make p.date) ()
+    ~guid:Rss2.guid_from_link ~pub_date:(Datetime.make p.date) ()
 
 let process_atom () =
   let open Task in
