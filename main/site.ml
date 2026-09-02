@@ -34,6 +34,7 @@ module Source = struct
   let images = Path.rel [ "images" ]
   let talks = Path.rel [ "talks" ]
   let index = Path.rel [ "index.html" ]
+
   (* The GitHub Pages custom domain, copied verbatim to the site root. The
      deploy runs with clean:true, so an absent CNAME unsets the domain. *)
   let cname = Path.rel [ "CNAME" ]
@@ -45,6 +46,7 @@ module Source = struct
   (* Third-party grammars *)
   let vendored_grammars = Path.(grammars / "vendor")
   let template file = Path.(templates / file)
+
   (* Tracked so a change to the generator rebuilds every page. Must be
      [Sys.executable_name], not [Sys.argv.(0)], which does not resolve under
      `dune exec`. *)
@@ -55,11 +57,13 @@ end
    command line has been parsed. *)
 module Target = struct
   let base () = Path.rel [ (if !include_drafts then "_site_dev" else "_site") ]
+
   (* Deliberately outside [base ()]: everything under the output directory is
      published, and the build cache is not part of the site. Dev and release
      builds keep separate caches. *)
   let cache () =
     Path.rel [ "_cache"; (if !include_drafts then "site_dev" else "site") ]
+
   let posts () = Path.(base () / "posts")
   let drafts () = Path.(base () / "drafts")
   let drafts_index () = Path.(base () / "drafts.html")
@@ -184,7 +188,6 @@ module Post = struct
   }
 
   let entity_name = "Post"
-
   let tags_validator = Data.Validation.(list_of string)
 
   (* For a draft with no date anywhere. Templates key off [has_date]. *)
@@ -193,8 +196,8 @@ module Post = struct
 
   (* Front matter first, then the filename, then the sentinel. *)
   let first_date candidates =
-    Option.value ~default:undated (List.find_opt Option.is_some candidates
-                                   |> Option.join)
+    Option.value ~default:undated
+      (List.find_opt Option.is_some candidates |> Option.join)
 
   let validate ~url ~fallback_date data =
     let open Data.Validation in
@@ -465,7 +468,7 @@ let load_grammar_dir tm load dir =
   if Sys.file_exists dir && Sys.is_directory dir then
     Sys.readdir dir |> Array.to_list
     |> List.filter (fun f ->
-           Filename.check_suffix f ".json" && f <> vendored_aliases_file)
+        Filename.check_suffix f ".json" && f <> vendored_aliases_file)
     |> List.sort String.compare
     |> List.iter (fun f ->
         let path = Filename.concat dir f in
@@ -913,8 +916,8 @@ let check_drafts only =
         if not (has_field "date" fm) then block "no date: field";
         if not (has_field "tags" fm) then block "no tags: field";
         (match field "date" fm with
-        | Some d when Result.is_error (Archetype.Datetime.validate (Data.string d))
-          ->
+        | Some d
+          when Result.is_error (Archetype.Datetime.validate (Data.string d)) ->
             incr odd_date;
             notes := "date: does not parse" :: !notes
         | Some _ -> ()
@@ -940,8 +943,8 @@ let check_drafts only =
   Printf.printf "\n%d well formed, %d need work\n" (n - !blocked) !blocked;
   if !untagged > 0 then
     Printf.printf
-      "%d %s no tags yet, which is fine for a draft but means no tag page \
-       once published\n"
+      "%d %s no tags yet, which is fine for a draft but means no tag page once \
+       published\n"
       !untagged
       (if !untagged = 1 then "has" else "have");
   if !odd_date > 0 then
@@ -955,14 +958,19 @@ let check_drafts only =
    is only removed once the post has been written. *)
 let today () =
   let tm = Unix.localtime (Unix.time ()) in
-  Printf.sprintf "%04d-%02d-%02d"
-    (tm.Unix.tm_year + 1900)
-    (tm.Unix.tm_mon + 1) tm.Unix.tm_mday
+  Printf.sprintf "%04d-%02d-%02d" (tm.Unix.tm_year + 1900) (tm.Unix.tm_mon + 1)
+    tm.Unix.tm_mday
 
 let publish_draft ~date file =
   let dir = Path.to_string Source.drafts in
   let src = Filename.concat dir file in
-  let fail fmt = Printf.ksprintf (fun m -> Printf.eprintf "publish: %s\n" m; false) fmt in
+  let fail fmt =
+    Printf.ksprintf
+      (fun m ->
+        Printf.eprintf "publish: %s\n" m;
+        false)
+      fmt
+  in
   if not (Sys.file_exists src) then fail "no such draft: %s" file
   else
     let lines = read_lines src in
@@ -972,9 +980,7 @@ let publish_draft ~date file =
         (* A post needs all three. A draft may leave date and tags empty, so
            this is where that has to be made good. *)
         let missing =
-          List.filter
-            (fun k -> field k fm = None)
-            [ "title"; "tags" ]
+          List.filter (fun k -> field k fm = None) [ "title"; "tags" ]
         in
         let chosen =
           match date with
@@ -1052,8 +1058,8 @@ let new_draft title =
   let slug = slug_of_title title in
   if slug = "" then (
     prerr_endline
-      "new-draft: give a title, e.g. dune exec main/site.exe -- new-draft \
-       \"On DWARF\"";
+      "new-draft: give a title, e.g. dune exec main/site.exe -- new-draft \"On \
+       DWARF\"";
     exit 1);
   let path = Filename.concat (Path.to_string Source.drafts) (slug ^ ".md") in
   if Sys.file_exists path then (
@@ -1272,7 +1278,13 @@ let main_cmd =
   Cmd.group
     (Cmd.info "site" ~doc ~man)
     ~default
-    [ build_cmd; serve_cmd; check_drafts_cmd; new_draft_cmd; publish_cmd;
-      grammars_cmd ]
+    [
+      build_cmd;
+      serve_cmd;
+      check_drafts_cmd;
+      new_draft_cmd;
+      publish_cmd;
+      grammars_cmd;
+    ]
 
 let () = exit (Cmd.eval main_cmd)
