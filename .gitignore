@@ -1,3 +1,6 @@
+# Drafts are never committed, see the Drafts section of README.md
+drafts/
+
 # Generator output, build trees, and the local opam switch
 _site
 _site_dev
