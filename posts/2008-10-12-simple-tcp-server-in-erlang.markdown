@@ -2,7 +2,7 @@
 title: Simple TCP Server in Erlang
 author: Tim McGilchrist
 date: 2008-10-12
-tags: erlang
+tags: [erlang]
 description: Simple TCP Server in Erlang
 ---
 Just a quick example of a tcp server that returns the current time.

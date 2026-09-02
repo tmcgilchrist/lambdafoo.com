@@ -2,7 +2,7 @@
 title: Forcing Snow Leopard to use 64bit Kernel
 author: Tim McGilchrist
 date: 2009-09-13
-tags: osx
+tags: [osx]
 description: Forcing Snow Leopard to use 64bit Kernel
 ---
 How to force Snow Leopard to boot the 64 bit kernel, cause we all want to run the

@@ -2,7 +2,7 @@
 title: IntelliJ IDEA Ubuntu Launcher
 author: Tim McGilchrist
 date: 2010-12-17
-tags: java
+tags: [java]
 description: IntelliJ IDEA Ubuntu Launcher
 ---
 

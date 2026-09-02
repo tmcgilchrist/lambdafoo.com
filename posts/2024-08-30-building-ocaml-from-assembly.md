@@ -3,7 +3,7 @@ layout: post
 title: "Building OCaml from assembly"
 date: 2024-08-30
 comments: false
-tags: ocaml, compilers
+tags: [ocaml, compilers]
 ---
 
 At work I've been focusing on improving the debugging experience with OCaml.

@@ -2,7 +2,7 @@
 layout: post
 title: "A month of Elisp"
 date: 2026-04-23
-tags: ocaml, emacs, tree-sitter
+tags: [ocaml, emacs, tree-sitter]
 ---
 
 Somehow this month has turned into a month of Elisp. It's been a while since I posted something Emacs related so here is a roundup of all the things I've done.

@@ -3,7 +3,7 @@ layout: post
 title: "Quick Hardware Performance Counters on macOS ARM64"
 date: 2026-03-25
 comments: false
-tags: ocaml, profiling, macos
+tags: [ocaml, profiling, macos]
 ---
 
 If you've ever profiled OCaml programs on Linux, you've probably reached for `perf stat`. It's the go-to tool for grabbing hardware performance counters—cycles, instructions, cache misses—without any instrumentation overhead. On macOS, the equivalent story has been **open Instruments**, which is fine for GUI-driven investigation but terrible for automated benchmarking pipelines.

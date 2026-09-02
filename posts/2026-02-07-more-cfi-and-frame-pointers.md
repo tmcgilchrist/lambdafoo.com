@@ -3,7 +3,7 @@ layout: post
 title: "More CFI and frame pointers work"
 date: 2026-02-07
 comments: false
-tags: ocaml
+tags: [ocaml]
 ---
 
 This month I set myself a goal to wrap up different pieces of work on OCaml that have been taking up space in my notes and my mind from last year. I wanted a clean slate to focus on the new year. I also enjoy reading other developers notes like [Opening up old release branches](https://www.dra27.uk/blog/platform/2026/01/16/dusting-off-the-branches.html) and [Faster Faster GDB Startup](https://tromey.com/blog/?p=1111). So here is my minor contribution and we are jumping straight in!

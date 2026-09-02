@@ -178,16 +178,7 @@ module Post = struct
 
   let entity_name = "Post"
 
-  (* TODO We can fix this by editing the markdown posts and drop this conversion *)
-  (* Accept `tags: ocaml, open-source` as well as a real YAML list. *)
-  let split_tags s =
-    String.split_on_char ',' s |> List.map String.trim
-    |> List.filter (fun s -> s <> "")
-
-  (* [/] is "try the left validator, fall back to the right one". *)
-  let tags_validator =
-    let open Data.Validation in
-    list_of string / (string $ split_tags)
+  let tags_validator = Data.Validation.(list_of string)
 
   (* For a draft with no date anywhere. Templates key off [has_date]. *)
   let undated =
