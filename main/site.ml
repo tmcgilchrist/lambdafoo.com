@@ -34,6 +34,9 @@ module Source = struct
   let images = Path.rel [ "images" ]
   let talks = Path.rel [ "talks" ]
   let index = Path.rel [ "index.html" ]
+  (* The GitHub Pages custom domain, copied verbatim to the site root. The
+     deploy runs with clean:true, so an absent CNAME unsets the domain. *)
+  let cname = Path.rel [ "CNAME" ]
   let templates = Path.rel [ "templates" ]
 
   (* Extra TextMate grammars, loaded by filename. See grammars/README.md. *)
@@ -529,6 +532,7 @@ let process_assets () =
   copy_flat ~into:(Target.css ()) Source.css
   >=> copy_flat ~into:(Target.images ()) Source.images
   >=> copy_tree ~into:(Target.talks ()) Source.talks
+  >=> Action.copy_file ~into:(Target.base ()) Source.cname
 
 let process_post file =
   let open Task in
