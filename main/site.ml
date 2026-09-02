@@ -938,6 +938,87 @@ let check_drafts only =
       (if !odd_date = 1 then "has" else "have");
   unknown = []
 
+(* Moves a draft into posts/: adds the YYYY-MM-DD prefix to the filename and
+   normalises `date:` to match. Refuses anything that would not be a valid post,
+   so the fields a draft may leave empty have to be filled in first. The draft
+   is only removed once the post has been written. *)
+let today () =
+  let tm = Unix.localtime (Unix.time ()) in
+  Printf.sprintf "%04d-%02d-%02d"
+    (tm.Unix.tm_year + 1900)
+    (tm.Unix.tm_mon + 1) tm.Unix.tm_mday
+
+let publish_draft ~date file =
+  let dir = Path.to_string Source.drafts in
+  let src = Filename.concat dir file in
+  let fail fmt = Printf.ksprintf (fun m -> Printf.eprintf "publish: %s\n" m; false) fmt in
+  if not (Sys.file_exists src) then fail "no such draft: %s" file
+  else
+    let lines = read_lines src in
+    match front_matter lines with
+    | None -> fail "%s has no front matter" file
+    | Some fm -> (
+        (* A post needs all three. A draft may leave date and tags empty, so
+           this is where that has to be made good. *)
+        let missing =
+          List.filter
+            (fun k -> field k fm = None)
+            [ "title"; "tags" ]
+        in
+        let chosen =
+          match date with
+          | Some d -> Some d
+          | None -> (
+              match field "date" fm with
+              | Some d when String.length d >= 10 -> Some (String.sub d 0 10)
+              | _ -> Some (today ()))
+        in
+        let bad_date =
+          match chosen with
+          | Some d ->
+              Result.is_error (Archetype.Datetime.validate (Data.string d))
+          | None -> true
+        in
+        match (missing, chosen, bad_date) with
+        | _ :: _, _, _ ->
+            fail "%s needs a value for: %s" file (String.concat ", " missing)
+        | _, Some d, true -> fail "%s is not a YYYY-MM-DD date" d
+        | _, None, _ -> fail "no date"
+        | [], Some date, false ->
+            let stem = Filename.remove_extension file in
+            let ext = Filename.extension file in
+            let dst =
+              Filename.concat
+                (Path.to_string Source.posts)
+                (Printf.sprintf "%s-%s%s" date stem ext)
+            in
+            if Sys.file_exists dst then fail "%s already exists" dst
+            else begin
+              let fm =
+                List.map
+                  (fun l ->
+                    if String.length l >= 5 && String.sub l 0 5 = "date:" then
+                      "date: " ^ date
+                    else l)
+                  fm
+              in
+              let body =
+                let rec drop n = function
+                  | l :: tl when n > 0 || String.trim l <> "---" ->
+                      drop (n - 1) tl
+                  | rest -> rest
+                in
+                drop 1 lines
+              in
+              let oc = open_out dst in
+              output_string oc (String.concat "\n" (("---" :: fm) @ body));
+              close_out oc;
+              (* Only now is it safe to drop the draft. *)
+              if Sys.file_exists dst then Sys.remove src;
+              Printf.printf "%s\n  -> %s\n" src dst;
+              true
+            end)
+
 let slug_of_title title =
   let buf = Buffer.create (String.length title) in
   String.iter
@@ -1101,6 +1182,34 @@ let check_drafts_cmd =
   let run only = if not (check_drafts only) then exit Cmd.Exit.cli_error in
   Cmd.v (Cmd.info "check-drafts" ~doc ~man) Term.(const run $ only)
 
+let publish_cmd =
+  let doc = "Move a draft into posts/" in
+  let man =
+    [
+      `S Manpage.s_description;
+      `P
+        "Renames the draft to posts/YYYY-MM-DD-<slug>, sets its `date:` to \
+         match, and removes it from drafts/. The date comes from --date, or \
+         from the draft's own `date:`, or from today, in that order.";
+      `P
+        "Refuses a draft that would not be a valid post, so `title:` and \
+         `tags:` must have values first. Nothing is removed unless the post \
+         was written.";
+    ]
+  in
+  let date =
+    let doc = "Publication date, YYYY-MM-DD. Defaults to the draft's own." in
+    Arg.(value & opt (some string) None & info [ "date" ] ~docv:"DATE" ~doc)
+  in
+  let draft =
+    let doc = "Draft to publish, by filename." in
+    Arg.(required & pos 0 (some draft_conv) None & info [] ~docv:"DRAFT" ~doc)
+  in
+  let run date draft =
+    if not (publish_draft ~date draft) then exit Cmd.Exit.some_error
+  in
+  Cmd.v (Cmd.info "publish" ~doc ~man) Term.(const run $ date $ draft)
+
 let new_draft_cmd =
   let doc = "Scaffold a new draft" in
   let man =
@@ -1152,6 +1261,7 @@ let main_cmd =
   Cmd.group
     (Cmd.info "site" ~doc ~man)
     ~default
-    [ build_cmd; serve_cmd; check_drafts_cmd; new_draft_cmd; grammars_cmd ]
+    [ build_cmd; serve_cmd; check_drafts_cmd; new_draft_cmd; publish_cmd;
+      grammars_cmd ]
 
 let () = exit (Cmd.eval main_cmd)

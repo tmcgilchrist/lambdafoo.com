@@ -101,12 +101,20 @@ filename prefix, and a `tags:` list.
 dune exec main/site.exe -- new-draft "On DWARF and OCaml"
 dune exec main/site.exe -- check-drafts
 dune exec main/site.exe -- check-drafts oxcaml-yaks.md   # just one
+dune exec main/site.exe -- publish on-dwarf-and-ocaml.md
+dune exec main/site.exe -- publish --date 2026-09-10 oxcaml-yaks.md
 ```
 
 `new-draft` scaffolds a draft in that shape. `check-drafts` reports any that
 have drifted from it: missing front matter, a missing `title:`, a missing
 `date:` or `tags:` key, or a filename that has picked up a date prefix. Empty
 `date:` and `tags:` values are reported but do not count as problems.
+
+`publish` does the move. It renames the draft to `posts/YYYY-MM-DD-<slug>` and
+rewrites `date:` to match, taking the date from `--date`, or from the draft's
+own `date:`, or from today, in that order. It refuses anything that would not
+be a valid post, so `title:` and `tags:` must have values by then, and it only
+removes the draft once the post has been written.
 
 ## Layout
 
