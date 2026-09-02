@@ -843,7 +843,15 @@ let front_matter lines =
       take [] rest
   | _ -> None
 
-(* An empty value counts as absent: that is what [new_draft] scaffolds. *)
+(* [has_field] is key present, [field] is key present with a value. A draft may
+   leave `date:` and `tags:` empty, so the two are not the same question. *)
+let has_field name lines =
+  let prefix = name ^ ":" in
+  let n = String.length prefix in
+  List.exists
+    (fun line -> String.length line >= n && String.sub line 0 n = prefix)
+    lines
+
 let field name lines =
   let prefix = name ^ ":" in
   let n = String.length prefix in
@@ -864,10 +872,10 @@ let markdown_files dir =
     |> List.filter (fun f ->
         Filename.check_suffix f ".md" || Filename.check_suffix f ".markdown")
 
-(* Reports which drafts could move to posts/. Blocked by missing front matter,
-   a missing `title:`, or a filename with no YYYY-MM-DD prefix. Returns false if
-   a named draft does not exist. *)
-(* TODO Consider just fixing the drafts to follow this format. *)
+(* Reports which drafts are shaped correctly. A draft carries `title:`, `date:`
+   and `tags:`, of which only the title needs a value, and its filename has no
+   date prefix: the prefix is added when it moves to posts/. Returns false if a
+   named draft does not exist. *)
 let check_drafts only =
   let all = markdown_files Source.drafts in
   let unknown = List.filter (fun n -> not (List.mem n all)) only in
@@ -891,24 +899,20 @@ let check_drafts only =
     | None -> block "no front matter"
     | Some fm ->
         if field "title" fm = None then block "no title:";
-        (* posts/ keeps `date:` and the filename in step. Flag drafts that
-           do not. *)
-        (match (field "date" fm, date_from_filename (Path.rel [ file ])) with
-        | Some d, _
-          when Result.is_error (Archetype.Datetime.validate (Data.string d)) ->
+        if not (has_field "date" fm) then block "no date: field";
+        if not (has_field "tags" fm) then block "no tags: field";
+        (match field "date" fm with
+        | Some d when Result.is_error (Archetype.Datetime.validate (Data.string d))
+          ->
             incr odd_date;
             notes := "date: does not parse" :: !notes
-        | Some d, Some from_name
-          when String.length d < 10
-               || String.sub d 0 10 <> iso_date from_name ->
-            incr odd_date;
-            notes := "date: disagrees with the filename" :: !notes
-        | _ -> ());
+        | Some _ -> ()
+        | None -> notes := "date not set" :: !notes);
         if field "tags" fm = None then (
           incr untagged;
-          notes := "no tags" :: !notes));
-    if date_from_filename (Path.rel [ file ]) = None then
-      block "filename needs a YYYY-MM-DD prefix";
+          notes := "tags not set" :: !notes));
+    if date_from_filename (Path.rel [ file ]) <> None then
+      block "filename has a date prefix, drop it until it moves to posts/";
     let note =
       match !notes with [] -> "" | ns -> "(" ^ String.concat ", " ns ^ ")"
     in
@@ -922,18 +926,16 @@ let check_drafts only =
   Printf.printf "%d %s in %s\n\n" n (plural n "draft")
     (Path.to_string Source.drafts);
   List.iter report files;
-  Printf.printf "\n%d ready to publish, %d blocked\n" (n - !blocked) !blocked;
+  Printf.printf "\n%d well formed, %d need work\n" (n - !blocked) !blocked;
   if !untagged > 0 then
-    Printf.printf "%d %s no tags, so %s join no tag page\n" !untagged
-      (if !untagged = 1 then "has" else "have")
-      (if !untagged = 1 then "it would" else "they would");
-  if !odd_date > 0 then
     Printf.printf
-      "%d %s a `date:` that will not match the date in its URL once \
-       published.\n  posts/ uses a bare YYYY-MM-DD equal to the filename \
-       prefix.\n"
-      !odd_date
-      (if !odd_date = 1 then "carries" else "carry");
+      "%d %s no tags yet, which is fine for a draft but means no tag page \
+       once published\n"
+      !untagged
+      (if !untagged = 1 then "has" else "have");
+  if !odd_date > 0 then
+    Printf.printf "%d %s a `date:` that does not parse\n" !odd_date
+      (if !odd_date = 1 then "has" else "have");
   unknown = []
 
 let slug_of_title title =
@@ -952,8 +954,8 @@ let slug_of_title title =
   let n = String.length s in
   if n > 0 && s.[n - 1] = '-' then String.sub s 0 (n - 1) else s
 
-(* Scaffolds drafts/YYYY-MM-DD-slug.md with front matter that passes
-   [check_drafts]. *)
+(* Scaffolds drafts/slug.md. The date is left empty and the filename carries no
+   prefix: both are settled when the draft moves to posts/. *)
 let new_draft title =
   let slug = slug_of_title title in
   if slug = "" then (
@@ -961,22 +963,15 @@ let new_draft title =
       "new-draft: give a title, e.g. dune exec main/site.exe -- new-draft \
        \"On DWARF\"";
     exit 1);
-  let tm = Unix.localtime (Unix.time ()) in
-  let date =
-    Printf.sprintf "%04d-%02d-%02d" (tm.Unix.tm_year + 1900)
-      (tm.Unix.tm_mon + 1) tm.Unix.tm_mday
-  in
-  let file = Printf.sprintf "%s-%s.md" date slug in
-  let path = Filename.concat (Path.to_string Source.drafts) file in
+  let path = Filename.concat (Path.to_string Source.drafts) (slug ^ ".md") in
   if Sys.file_exists path then (
     Printf.eprintf "new-draft: %s already exists\n" path;
     exit 1);
   if not (Sys.file_exists (Path.to_string Source.drafts)) then
     Sys.mkdir (Path.to_string Source.drafts) 0o755;
   let oc = open_out path in
-  Printf.fprintf oc
-    "---\ntitle: \"%s\"\ndate: %s 09:00\ntags: \ndescription: \n---\n\n" title
-    date;
+  Printf.fprintf oc "---\ntitle: \"%s\"\ndate:\ntags:\ndescription:\n---\n\n"
+    title;
   close_out oc;
   Printf.printf "%s\n" path
 
