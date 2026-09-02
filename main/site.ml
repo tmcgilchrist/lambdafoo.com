@@ -693,27 +693,30 @@ let process_sitemap () =
           (Source.template "sitemap.xml")
     >>| snd)
 
-(* TODO Make this a template? *)
-let redirect_page target =
-  Printf.sprintf
-    "<!DOCTYPE html><html><head><meta charset=\"utf-8\"/><meta \
-     name=\"generator\" content=\"yocaml\"/><meta name=\"viewport\" \
-     content=\"width=device-width, initial-scale=1.0\"><meta \
-     http-equiv=\"refresh\" content=\"0; url=%s\"><link rel=\"canonical\" \
-     href=\"%s\"><title>Permanent Redirect</title></head><body><p>The page has \
-     moved to: <a href=\"%s\">this page</a></p></body></html>"
-    target target target
+(* A legacy URL, rendered through templates/redirect.html. No layout: a
+   redirect page is never read. *)
+module Redirect = struct
+  type t = { target : string }
+
+  let normalize r = Data.[ ("target", string r.target) ] @ common_fields
+end
 
 let process_redirects =
   Action.batch_list Redirects.table (fun (from, into) ->
       (* [from] carries slashes, so split it into real path fragments. *)
-      let target =
+      let path =
         String.split_on_char '/' from
         |> List.fold_left (fun acc frag -> Path.(acc / frag)) (Target.base ())
       in
-      Action.Static.write_file target
+      Action.Static.write_file path
         Task.(
-          Pipeline.track_file Source.binary >>| fun () -> redirect_page into))
+          Pipeline.track_files
+            [ Source.binary; Source.template "redirect.html" ]
+          >>| (fun () -> ({ Redirect.target = into }, ""))
+          >>> Yocaml_jingoo.Pipeline.as_template
+                (module Redirect)
+                (Source.template "redirect.html")
+          >>| snd))
 
 (* Feeds *)
 
