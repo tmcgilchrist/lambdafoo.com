@@ -25,7 +25,7 @@ let feed_description =
    they can never reach _site. *)
 let include_drafts = ref false
 
-(* TODO Module level comment similar to Target *)
+(* Everything the generator reads, relative to the repository root. *)
 module Source = struct
   let posts = Path.rel [ "posts" ]
   let drafts = Path.rel [ "drafts" ]
@@ -165,7 +165,7 @@ let common_fields =
       ("baseurl", string "");
     ]
 
-(* TODO Module level comment similar to Targets *)
+(* A post in posts/. Drafts reuse this type through a lenient validator. *)
 module Post = struct
   type t = {
     title : string;
