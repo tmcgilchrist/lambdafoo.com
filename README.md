@@ -98,14 +98,14 @@ passes the check, dated today.
 
 ## Layout
 
-| Path                 | Purpose                                                |
-|----------------------|--------------------------------------------------------|
-| `main/site.ml`       | The generator: archetypes, tasks and actions           |
-| `main/redirects.ml`  | 60 legacy `/blog/YYYY/MM/DD/slug/` redirects           |
-| `drafts/`            | Unpublished drafts, dev mode only                      |
-| `main/grammars/`     | Extra TextMate grammars for syntax highlighting        |
-| `templates/`         | Jingoo templates                                       |
-| `posts/`, `pages/`   | Content                                                |
+| Path                        | Purpose                                         |
+|-----------------------------|-------------------------------------------------|
+| `main/site.ml`              | The generator: archetypes, tasks and actions    |
+| `main/redirects.ml`         | 60 legacy `/blog/YYYY/MM/DD/slug/` redirects    |
+| `drafts/`                   | Unpublished drafts, dev mode only               |
+| `main/grammars/`            | Extra TextMate grammars for syntax highlighting |
+| `templates/`                | Jingoo templates                                |
+| `posts/`, `pages/`          | Content                                         |
 | `css/`, `images/`, `talks/` | Assets, copied through unchanged                |
 
 ## Deployment
