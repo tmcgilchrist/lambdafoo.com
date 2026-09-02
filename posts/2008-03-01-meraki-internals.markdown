@@ -2,7 +2,7 @@
 title: Meraki Internals
 date: 2008-03-01
 author: Tim McGilchrist
-tags: coding, meraki
+tags: [coding, meraki]
 ---
 
 Pristine Meraki Mini.

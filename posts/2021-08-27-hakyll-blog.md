@@ -2,7 +2,7 @@
 title: Hakyll Blog setup
 author: Tim McGilchrist
 date: 2021-08-27
-tags: haskell
+tags: [haskell]
 description: How I setup my blog with Hakyll
 ---
 

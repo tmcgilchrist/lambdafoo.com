@@ -3,7 +3,7 @@ title: The Rubinius Virtual Machine
 author: Tim McGilchrist
 date: 2011-07-05
 description: The Rubinius Virtual Machine
-tags: ruby
+tags: [ruby]
 ---
 
 Cool talk about the Rubinius Virtual Machine.

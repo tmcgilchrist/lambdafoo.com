@@ -2,7 +2,7 @@
 title: "Postfix & SMF: Update"
 author: Tim McGilchrist
 date: 2008-04-10
-tags: postfix, solaris
+tags: [postfix, solaris]
 description: "Postfix & SMF: Update"
 ---
 

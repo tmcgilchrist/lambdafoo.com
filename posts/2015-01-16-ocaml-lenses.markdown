@@ -2,7 +2,7 @@
 title: Lenses in OCaml
 author: Tim McGilchrist
 date: 2015-01-16
-tags: ocaml
+tags: [ocaml]
 description: Lenses in OCaml
 ---
 

@@ -2,7 +2,7 @@
 title: Haskell Things
 author: Tim McGilchrist
 date: 2008-09-06
-tags: haskell
+tags: [haskell]
 description: Haskell Things
 ---
 

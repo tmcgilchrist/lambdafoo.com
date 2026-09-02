@@ -2,7 +2,7 @@
 title: Software Engineering Radio Interviews
 author: Tim McGilchrist
 date: 2008-05-18
-tags: erlang, lisp
+tags: [erlang, lisp]
 description: Software Engineering Radio Interviews
 ---
 

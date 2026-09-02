@@ -2,7 +2,7 @@
 title: On EitherT
 author: Tim McGilchrist
 date: 2018-06-22
-tags: haskell
+tags: [haskell]
 description: Thoughts on Haskell error handling and using EitherT.
 ---
 In choosing Haskell as a language you sign up for a certain class of features and behaviours.

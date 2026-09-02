@@ -2,7 +2,7 @@
 title: Site Update
 author: Tim McGilchrist
 date: 2012-01-22
-tags: misc
+tags: [misc]
 description: Site Update
 ---
 

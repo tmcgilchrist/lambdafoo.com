@@ -2,7 +2,7 @@
 title: Erlang TechTalk
 author: Tim McGilchrist
 date: 2008-04-07
-tags: erlang
+tags: [erlang]
 description: Erlang TechTalk
 ---
 

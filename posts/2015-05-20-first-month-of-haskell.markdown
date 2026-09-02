@@ -2,7 +2,7 @@
 title: "First month of Haskell"
 author: Tim McGilchrist
 date: 2015-05-20
-tags: haskell, ocaml
+tags: [haskell, ocaml]
 description: First month of Haskell
 ---
 

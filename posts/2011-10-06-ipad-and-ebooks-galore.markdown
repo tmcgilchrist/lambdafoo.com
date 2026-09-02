@@ -2,7 +2,7 @@
 title: iPad and eBooks galore
 author: Tim McGilchrist
 date: 2011-10-06
-tags: opinion
+tags: [opinion]
 description: iPad and eBooks galore
 ---
 Having recently caved and bought an iPad. It's exceptionally good, much better

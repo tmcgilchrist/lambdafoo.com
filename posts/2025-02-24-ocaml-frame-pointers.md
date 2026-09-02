@@ -3,7 +3,7 @@ layout: post
 title: "Why do frame pointers matter for OCaml?"
 date: 2025-02-24
 comments: false
-tags: ocaml
+tags: [ocaml]
 ---
 
 At the end of last year at Tarides, my colleagues and I worked on improving frame pointer support in OCaml. While pitching the work internally, someone asked: **Why do frame pointers matter for OCaml?** Here's the answer I gave.

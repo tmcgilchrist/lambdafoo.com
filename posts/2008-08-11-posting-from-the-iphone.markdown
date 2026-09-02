@@ -2,7 +2,7 @@
 title: Posting from the iPhone
 author: Tim McGilchrist
 date: 2008-08-11
-tags: misc
+tags: [misc]
 description: Posting from the iPhone
 ---
 

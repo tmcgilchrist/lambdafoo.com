@@ -3,7 +3,7 @@ layout: post
 title: "Experimenting with OCaml and eBPF"
 date: 2025-02-15
 comments: false
-tags: ocaml, ebpf
+tags: [ocaml, ebpf]
 ---
 
 Building on top of the excellent book _BPF Performance Tools_ by Brendan Gregg. How can we apply the techniques from Chapter 12 Languages to OCaml?

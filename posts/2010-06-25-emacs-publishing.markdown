@@ -2,7 +2,7 @@
 title: .emacs publishing
 author: Tim McGilchrist
 date: 2010-06-25
-tags: emacs
+tags: [emacs]
 description: .emacs publishing
 ---
 
