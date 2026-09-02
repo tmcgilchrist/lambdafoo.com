@@ -1,16 +1,14 @@
-(* The lambdafoo.com generator, built on YOCaml 3. Ported from the Hakyll
-   site.hs it replaces, so the comments below explain where Hakyll behaviour is
-   being reproduced deliberately.
+(* The lambdafoo.com generator.
 
-   Run from the repository root, since every path here is relative to the
-   working directory:
+   Run from the repository root: every path here is relative to the working
+   directory.
      dune exec main/site.exe -- --help     (the command list)
      dune exec main/site.exe -- build      (build into _site) *)
 
 open Yocaml
 
 (* ------------------------------------------------------------------ *)
-(* Site configuration, mirroring the constants in site.hs.             *)
+(* Site configuration constants.                                      *)
 
 let root_url = "https://lambdafoo.com"
 let site_title = "Perpetually Curious"
@@ -22,15 +20,12 @@ let feed_description =
   "Personal opinions on technology, functional programming and various systems \
    topics."
 
-(* Dev mode, for working on drafts/. Set once from the parsed command line
-   before any action runs. It is a ref rather than a parameter because every
-   path in [Target] and the [dev] template flag depend on it, and threading it
-   through would mean a functor over most of this file for one boolean.
-
-   Drafts render into a separate tree, so nothing in drafts/ can reach _site/
-   even if you forget which mode you last built in. CI passes no flag. *)
+(* Dev mode. Set from the command line before any action runs, since [Target]
+   and the [dev] template flag both read it. Drafts render into _site_dev, so
+   they can never reach _site. *)
 let include_drafts = ref false
 
+(* TODO Module level comment similar to Target *)
 module Source = struct
   let posts = Path.rel [ "posts" ]
   let drafts = Path.rel [ "drafts" ]
@@ -47,11 +42,9 @@ module Source = struct
   (* Third-party grammars *)
   let vendored_grammars = Path.(grammars / "vendor")
   let template file = Path.(templates / file)
-  (* Tracked so that changing the generator rebuilds every page. It has to be
-     [Sys.executable_name], which is absolute, rather than [Sys.argv.(0)]: under
-     `dune exec` argv(0) does not resolve from the working directory, YOCaml
-     treats the missing dependency as nothing to track, and the site goes
-     silently stale. *)
+  (* Tracked so a change to the generator rebuilds every page. Must be
+     [Sys.executable_name], not [Sys.argv.(0)], which does not resolve under
+     `dune exec`. *)
   let binary = Path.from_string Sys.executable_name
 end
 
@@ -78,8 +71,7 @@ module Target = struct
     file |> Path.move ~into |> Path.change_extension "html"
 end
 
-(* Hakyll's route for posts/pages is `setExtension "html"`, so the public URL
-   is /posts/<basename>.html. *)
+(* Public URL of a post or page: /posts/<basename>.html. *)
 let url_of_post file =
   Path.to_string (Target.as_html (Path.abs [ "posts" ]) file)
 
@@ -129,16 +121,12 @@ let iso_date (d : Archetype.Datetime.t) =
     (month_number d.month)
     (d.day :> int)
 
-(* Every post in posts/ carries a `date:` matching the date in its filename, so
-   the front matter is simply read. Hakyll used to reject the `YYYY-MM-DD HH:MM`
-   form these files once used and silently publish under the filename date
-   instead; the posts were migrated to a bare date rather than keep modelling
-   that. The filename fallback below survives for drafts, which are not held to
-   the same standard. *)
+(* Every post carries a `date:` equal to its filename prefix, so the field is
+   read directly. The filename fallback below is for drafts. *)
 let is_digits s = s <> "" && String.for_all (fun c -> c >= '0' && c <= '9') s
 
-(* A draft need not have a `title:` yet, so fall back to its filename:
-   "2024-11-04-dwarf-part-1.md" becomes "Dwarf part 1". *)
+(* Title fallback for a draft: "2024-11-04-dwarf-part-1.md" becomes
+   "Dwarf part 1". *)
 let title_from_filename file =
   let base =
     file |> Path.remove_extension |> Path.basename |> Option.value ~default:""
@@ -164,7 +152,8 @@ let date_from_filename file =
       | _ -> None)
   | _ -> None
 
-(* Metadata *)
+(* ------------------------------------------------------------------ *)
+(* Metadata                                                           *)
 
 let common_fields =
   Data.
@@ -176,6 +165,7 @@ let common_fields =
       ("baseurl", string "");
     ]
 
+(* TODO Module level comment similar to Targets *)
 module Post = struct
   type t = {
     title : string;
@@ -189,8 +179,7 @@ module Post = struct
   let entity_name = "Post"
 
   (* TODO We can fix this by editing the markdown posts and drop this conversion *)
-  (* Hakyll writes `tags: ocaml, open-source`; accept that as well as a real
-     YAML list, so no post front matter has to change. *)
+  (* Accept `tags: ocaml, open-source` as well as a real YAML list. *)
   let split_tags s =
     String.split_on_char ',' s |> List.map String.trim
     |> List.filter (fun s -> s <> "")
@@ -200,8 +189,7 @@ module Post = struct
     let open Data.Validation in
     list_of string / (string $ split_tags)
 
-  (* Stands in for a draft that has no date anywhere. Templates key off
-     [has_date] rather than printing 1970. *)
+  (* For a draft with no date anywhere. Templates key off [has_date]. *)
   let undated =
     Archetype.Datetime.make ~year:1970 ~month:1 ~day:1 () |> Result.get_ok
 
@@ -223,9 +211,7 @@ module Post = struct
         { title; date; tags; description; author; url })
       data
 
-  (* Drafts are work in progress, so nothing may be required. Four of them
-     currently have no front matter at all, and many have no date in their
-     filename. *)
+  (* Drafts are work in progress, so nothing is required. *)
   let validate_draft ~url ~fallback_title ~fallback_date data =
     let open Data.Validation in
     record
@@ -246,8 +232,8 @@ module Post = struct
         })
       data
 
-  (* [validate] needs the file path for the URL and the date fallback, which a
-     plain DATA_READABLE cannot see, so build one per file. *)
+  (* One per file, since [validate] needs the path for the URL and the date
+     fallback. *)
   let readable_for file : (module Required.DATA_READABLE with type t = t) =
     (module struct
       type nonrec t = t
@@ -270,8 +256,7 @@ module Post = struct
       let fallback_title = title_from_filename file
       let fallback_date = date_from_filename file
 
-      (* No front matter at all is a normal state for a draft, so unlike a post
-         this is a value rather than an error. *)
+      (* A draft with no front matter at all is fine. *)
       let neutral =
         Ok
           {
@@ -307,8 +292,7 @@ module Post = struct
   let compare_recent_first a b = ~-(Archetype.Datetime.compare a.date b.date)
 end
 
-(* A page in pages/: About, Talks, Server Room. Unlike a post it carries no
-   tags and its date is optional, since only the sitemap uses one. *)
+(* A page in pages/. No tags, and the date is optional. *)
 module Page = struct
   type t = { title : string; url : string; date : Archetype.Datetime.t option }
 
@@ -375,7 +359,8 @@ module Sitemap = struct
     @ common_fields
 end
 
-(* Reading posts *)
+(* ------------------------------------------------------------------ *)
+(* Reading posts                                                      *)
 
 let is_markdown = Path.has_extension "markdown"
 let is_md = Path.has_extension "md"
@@ -414,16 +399,15 @@ let fetch_drafts =
 
 let take n l = List.filteri (fun i _ -> i < n) l
 
-(* Markdown, with syntax highlighting *)
+(* ------------------------------------------------------------------ *)
+(* Markdown, with syntax highlighting                                 *)
 
 let add_name name = function
   | `Assoc assoc -> `Assoc (("name", `String name) :: assoc)
   | j -> j
 
-(* A hand-written grammar is registered under its filename, so `erlang.json`
-   answers to ```erlang. `+` in the stem gives aliases: `yaml+yml.json` answers
-   to both. This mirrors what Hilite.add_name does for its own bundled
-   grammars. *)
+(* Registered under the filename, so `erlang.json` answers to ```erlang. `+`
+   in the stem gives aliases: `yaml+yml.json` answers to both. *)
 let load_grammar_file tm path =
   let json = Yojson.Basic.from_file path in
   let names =
@@ -448,11 +432,8 @@ let load_vendored_grammar_file tm path =
   Yojson.Basic.from_file path
   |> TmLanguage.of_yojson_exn |> TmLanguage.add_grammar tm
 
-(* Most vendored grammars carry a `name` that already matches the fence label.
-   Where upstream calls it something else, "JSON (Javascript Next)" say, this
-   manifest maps the label to the file to register under it. Keeping the map
-   beside the grammars rather than editing them is what lets the vendored files
-   stay byte-identical to upstream. *)
+(* Registers a grammar under a fence label that differs from its own `name`.
+   See grammars/vendor/README.md. *)
 let vendored_aliases_file = "aliases.json"
 
 let load_vendored_aliases tm dir =
@@ -524,10 +505,11 @@ let markdown_to_html content =
 let content_to_html () =
   Task.lift (fun (meta, content) -> (meta, markdown_to_html content))
 
-(* Actions *)
+(* ------------------------------------------------------------------ *)
+(* Actions                                                            *)
 
-(* Hakyll skips dotfiles, and `images/*` / `css/*` are single-level globs
-   whereas `talks/**/*` is recursive. Match that exactly. *)
+(* `images/*` and `css/*` are single-level, `talks/**/*` is recursive, and
+   dotfiles are skipped. *)
 let is_hidden path =
   match Path.basename path with
   | Some b -> String.length b > 0 && b.[0] = '.'
@@ -576,8 +558,7 @@ let process_post file =
 let process_posts =
   Action.batch ~only:`Files ~where:is_post Source.posts process_post
 
-(* Same pipeline as a post, but through the lenient archetype and the draft
-   template, and only ever into the dev tree. *)
+(* As a post, but through the lenient archetype and the draft template. *)
 let process_draft file =
   let open Task in
   Action.Static.write_file_with_metadata
@@ -747,8 +728,7 @@ let process_redirects =
 
 let feed_author = Yocaml_syndication.Person.make ~email:author_email author_name
 
-(* Hakyll snapshots each post after templates/post.html is applied and uses
-   that as the feed description, so the feed carries the whole article. *)
+(* The feed carries each whole article, rendered through post.html. *)
 let fetch_feed_entries =
   let open Task in
   let+ apply_post_template =
@@ -807,10 +787,11 @@ let process_rss () =
           ~feed_url:(root_url ^ "/rss.xml") ~description:feed_description
           rss_item)
 
-(* Driver *)
+(* ------------------------------------------------------------------ *)
+(* Driver                                                             *)
 
-(* Tag pages are one file per distinct tag, so the tag set has to be known
-   before the actions are built. Hakyll's buildTags does the same scan. *)
+(* One page per distinct tag, so the tag set must be known before the actions
+   are built. *)
 let all_tags () =
   let open Eff in
   let* files =
@@ -842,7 +823,8 @@ let process_all () =
        else Eff.return)
   >>= Action.store_cache (Target.cache ())
 
-(* Draft tooling *)
+(* ------------------------------------------------------------------ *)
+(* Draft tooling                                                      *)
 
 let read_lines path =
   let ic = open_in path in
@@ -855,8 +837,7 @@ let read_lines path =
   in
   loop []
 
-(* Front matter is the block between the first two `---` lines. Returns None
-   when the file has none at all, which several drafts do. *)
+(* The block between the first two `---` lines, or None if there is none. *)
 let front_matter lines =
   match lines with
   | first :: rest when String.trim first = "---" ->
@@ -868,8 +849,7 @@ let front_matter lines =
       take [] rest
   | _ -> None
 
-(* A key with an empty value is what [new_draft] scaffolds, so treat it as
-   absent rather than as filled in. *)
+(* An empty value counts as absent: that is what [new_draft] scaffolds. *)
 let field name lines =
   let prefix = name ^ ":" in
   let n = String.length prefix in
@@ -890,14 +870,10 @@ let markdown_files dir =
     |> List.filter (fun f ->
         Filename.check_suffix f ".md" || Filename.check_suffix f ".markdown")
 
-(* Check every draft against what posts/ actually requires: a `title:`, and a
-   date in the *filename*, because the filename is what a post publishes under.
-   Everything else is advisory. In particular the `YYYY-MM-DD HH:MM` date form
-   is not an error, since 65 of the 76 published posts use it too, so it is
-   counted once at the end rather than reported per file. *)
+(* Reports which drafts could move to posts/. Blocked by missing front matter,
+   a missing `title:`, or a filename with no YYYY-MM-DD prefix. Returns false if
+   a named draft does not exist. *)
 (* TODO Consider just fixing the drafts to follow this format. *)
-(* Returns false when a named draft does not exist, so the caller can exit
-   non-zero rather than quietly reporting on nothing. *)
 let check_drafts only =
   let all = markdown_files Source.drafts in
   let unknown = List.filter (fun n -> not (List.mem n all)) only in
@@ -921,9 +897,8 @@ let check_drafts only =
     | None -> block "no front matter"
     | Some fm ->
         if field "title" fm = None then block "no title:";
-        (* posts/ keeps `date:` and the filename in step, so that the date a
-           page shows matches the date in its URL. A draft is free not to, but
-           it will carry the disagreement with it when it is promoted. *)
+        (* posts/ keeps `date:` and the filename in step. Flag drafts that
+           do not. *)
         (match (field "date" fm, date_from_filename (Path.rel [ file ])) with
         | Some d, _
           when Result.is_error (Archetype.Datetime.validate (Data.string d)) ->
@@ -983,9 +958,8 @@ let slug_of_title title =
   let n = String.length s in
   if n > 0 && s.[n - 1] = '-' then String.sub s 0 (n - 1) else s
 
-(* Scaffold drafts/YYYY-MM-DD-slug.md with front matter that passes
-   [check_drafts]. The date prefix is what the post will publish under, so it
-   is worth getting into the filename from the start. *)
+(* Scaffolds drafts/YYYY-MM-DD-slug.md with front matter that passes
+   [check_drafts]. *)
 let new_draft title =
   let slug = slug_of_title title in
   if slug = "" then (
@@ -1040,9 +1014,8 @@ let report_grammars () =
     Hashtbl.fold (fun lang n acc -> (lang, n) :: acc) seen []
     |> List.sort (fun (_, a) (_, b) -> compare b a)
   in
-  (* Registering a grammar is not the same as it working. Run a snippet
-     through hilite so a grammar that loads but tokenises nothing, or that
-     raises, is reported as missing rather than as covered. *)
+  (* Highlights a snippet rather than just looking the grammar up, so one
+     that loads but tokenises nothing counts as missing. *)
   let works lang =
     match Hilite.src_code_to_html ~tm:grammars ~lang "x y\n" with
     | Ok html -> String.length html > 0 && String.index_opt html '\'' <> None
@@ -1057,10 +1030,11 @@ let report_grammars () =
     (total missing);
   List.iter (fun (l, n) -> Printf.printf "  %-14s %3d\n" l n) missing
 
+(* ------------------------------------------------------------------ *)
+(* Command Line Interface                                             *)
 open Cmdliner
 
-(* Parsing the flag also applies it, so that nothing downstream has to
-   remember to. Every command that builds anything takes this term. *)
+(* Parsing the flag applies it. Every command that builds takes this term. *)
 let drafts_flag =
   let doc =
     "Include drafts/ in the build. Output moves to _site_dev/ so that a draft \
@@ -1102,8 +1076,8 @@ let serve_cmd =
   in
   Cmd.v (Cmd.info "serve" ~doc ~man) Term.(const run $ drafts_flag $ port)
 
-(* Subcommand and option names complete for free. This is the one argument
-   with values worth completing, and there are 33 of them. *)
+(* Completes draft filenames. Subcommand and option names complete for
+   free. *)
 let draft_conv =
   let completion =
     let complete _ctx ~token =
@@ -1125,7 +1099,7 @@ let check_drafts_cmd =
         "Checks every file in drafts/ against what posts/ requires. A draft is \
          blocked by missing front matter, a missing title:, or a filename with \
          no YYYY-MM-DD prefix, since the filename date is what a post \
-         publishes under. Missing tags are reported but do not block.";
+         publishes under. Missing tags are reported but do not bplock.";
       `P "With no argument, checks every draft.";
     ]
   in
