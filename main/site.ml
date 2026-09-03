@@ -1103,9 +1103,10 @@ let check_drafts_cmd =
       `S Manpage.s_description;
       `P
         "Checks every file in drafts/ against what posts/ requires. A draft is \
-         blocked by missing front matter, a missing title:, or a filename with \
-         no YYYY-MM-DD prefix, since the filename date is what a post \
-         publishes under. Missing tags are reported but do not bplock.";
+         blocked by missing front matter, front matter that is not valid YAML, \
+         a missing title:, or a filename that already carries a YYYY-MM-DD \
+         prefix, since publish is what adds that. Missing tags and an unset \
+         date are reported but do not block.";
       `P "With no argument, checks every draft.";
     ]
   in
@@ -1152,8 +1153,10 @@ let new_draft_cmd =
     [
       `S Manpage.s_description;
       `P
-        "Creates drafts/YYYY-MM-DD-slug.md, dated today, with front matter \
-         that passes check-drafts.";
+        "Creates drafts/slug.md, with the slug taken from the title and front \
+         matter that passes check-drafts. The date: is left empty and the \
+         filename carries no date prefix: publish settles both when the draft \
+         moves into posts/.";
       `S Manpage.s_examples;
       `Pre "site new-draft \"On DWARF and OCaml\"";
     ]
