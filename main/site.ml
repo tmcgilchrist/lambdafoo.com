@@ -367,36 +367,32 @@ let is_markdown = Path.has_extension "markdown"
 let is_md = Path.has_extension "md"
 let is_post file = is_markdown file || is_md file
 
-let fetch_posts =
+(* The metadata of every file in [dir], read through [readable_for]. The
+   content is discarded: these feed listing pages, not the pages themselves. *)
+let fetch_metadata ~where ~readable_for dir =
+  Pipeline.fetch ~only:`Files ~where
+    (fun file ->
+      let open Eff in
+      let+ metadata, _content =
+        Eff.read_file_with_metadata
+          (module Yocaml_yaml)
+          (readable_for file) ~on:`Source file
+      in
+      metadata)
+    dir
+
+(* Posts and drafts differ only in the directory and how lenient the
+   validator is. *)
+let fetch_entries ~readable_for dir =
   let open Task in
-  Pipeline.track_files [ Source.binary; Source.posts ]
-  >>> Pipeline.fetch ~only:`Files ~where:is_post
-        (fun file ->
-          let open Eff in
-          let+ metadata, _content =
-            Eff.read_file_with_metadata
-              (module Yocaml_yaml)
-              (Post.readable_for file) ~on:`Source file
-          in
-          metadata)
-        Source.posts
+  Pipeline.track_files [ Source.binary; dir ]
+  >>> fetch_metadata ~where:is_post ~readable_for dir
   >>| List.sort Post.compare_recent_first
 
+let fetch_posts = fetch_entries ~readable_for:Post.readable_for Source.posts
+
 let fetch_drafts =
-  let open Task in
-  Pipeline.track_files [ Source.binary; Source.drafts ]
-  >>> Pipeline.fetch ~only:`Files ~where:is_post
-        (fun file ->
-          let open Eff in
-          let+ metadata, _content =
-            Eff.read_file_with_metadata
-              (module Yocaml_yaml)
-              (Post.readable_draft_for file)
-              ~on:`Source file
-          in
-          metadata)
-        Source.drafts
-  >>| List.sort Post.compare_recent_first
+  fetch_entries ~readable_for:Post.readable_draft_for Source.drafts
 
 let take n l = List.filteri (fun i _ -> i < n) l
 
@@ -541,52 +537,32 @@ let process_assets () =
   >=> copy_tree ~into:(Target.talks ()) Source.talks
   >=> Action.copy_file ~into:(Target.base ()) Source.cname
 
-let process_post file =
+(* A draft renders as a post does, but through the lenient validator and the
+   draft template. [into] stays a function: the output directory is not known
+   until --drafts has been parsed, so applying it here rather than at the call
+   site is what keeps a --drafts build out of _site/. *)
+let process_entry ~into ~readable_for ~template file =
   let open Task in
   Action.Static.write_file_with_metadata
-    Target.(as_html (posts ()) file)
+    (Target.as_html (into ()) file)
     (Pipeline.track_files
        [ Source.binary; Source.grammars; Source.vendored_grammars ]
-    >>> Yocaml_yaml.Pipeline.read_file_with_metadata (Post.readable_for file)
-          file
+    >>> Yocaml_yaml.Pipeline.read_file_with_metadata (readable_for file) file
     >>> content_to_html ()
     >>> Pipeline.chain_templates
           (module Yocaml_jingoo)
           (module Post)
-          [ Source.template "post.html"; Source.template "layout.html" ])
+          [ Source.template template; Source.template "layout.html" ])
 
 let process_posts =
-  Action.batch ~only:`Files ~where:is_post Source.posts process_post
-
-(* As a post, but through the lenient archetype and the draft template. *)
-let process_draft file =
-  let open Task in
-  Action.Static.write_file_with_metadata
-    Target.(as_html (drafts ()) file)
-    (Pipeline.track_files
-       [ Source.binary; Source.grammars; Source.vendored_grammars ]
-    >>> Yocaml_yaml.Pipeline.read_file_with_metadata
-          (Post.readable_draft_for file)
-          file
-    >>> content_to_html ()
-    >>> Pipeline.chain_templates
-          (module Yocaml_jingoo)
-          (module Post)
-          [ Source.template "draft.html"; Source.template "layout.html" ])
+  Action.batch ~only:`Files ~where:is_post Source.posts
+    (process_entry ~into:Target.posts ~readable_for:Post.readable_for
+       ~template:"post.html")
 
 let process_drafts =
-  Action.batch ~only:`Files ~where:is_post Source.drafts process_draft
-
-let process_drafts_index () =
-  let open Task in
-  Action.Static.write_file (Target.drafts_index ())
-    (fetch_drafts
-    >>| (fun drafts -> ({ Listing.title = "Drafts"; posts = drafts }, ""))
-    >>> Pipeline.chain_templates
-          (module Yocaml_jingoo)
-          (module Listing)
-          [ Source.template "drafts.html"; Source.template "layout.html" ]
-    >>| snd)
+  Action.batch ~only:`Files ~where:is_post Source.drafts
+    (process_entry ~into:Target.drafts ~readable_for:Post.readable_draft_for
+       ~template:"draft.html")
 
 let process_page file =
   let open Task in
@@ -604,14 +580,15 @@ let process_page file =
 let process_pages =
   Action.batch ~only:`Files ~where:is_md Source.pages process_page
 
-(* A listing page rendered from a template plus the layout. *)
-let write_listing ~target ~template ~title ~limit =
+(* The archive, the tag pages and the drafts index are all the same page: a
+   list of entries rendered through a template and the layout. [keep] picks
+   which of them appear. *)
+let write_listing ?(entries = fetch_posts) ?(keep = fun posts -> posts) ~target
+    ~template ~title () =
   let open Task in
   Action.Static.write_file target
-    (fetch_posts
-    >>| (fun posts ->
-    let posts = match limit with None -> posts | Some n -> take n posts in
-    ({ Listing.title; posts }, ""))
+    (entries
+    >>| (fun posts -> ({ Listing.title; posts = keep posts }, ""))
     >>> Pipeline.chain_templates
           (module Yocaml_jingoo)
           (module Listing)
@@ -621,7 +598,12 @@ let write_listing ~target ~template ~title ~limit =
 let process_archive () =
   write_listing ~target:(Target.archive ())
     ~template:(Source.template "archive.html")
-    ~title:"Archives" ~limit:None
+    ~title:"Archives" ()
+
+let process_drafts_index () =
+  write_listing ~entries:fetch_drafts ~target:(Target.drafts_index ())
+    ~template:(Source.template "drafts.html")
+    ~title:"Drafts" ()
 
 let process_index () =
   let open Task in
@@ -638,34 +620,19 @@ let process_index () =
     >>| snd)
 
 let process_tag tag =
-  let open Task in
-  Action.Static.write_file
-    Path.(Target.tags () / tag / "index.html")
-    (fetch_posts
-    >>| (fun posts ->
-    let posts = List.filter (fun p -> List.mem tag p.Post.tags) posts in
-    ({ Listing.title = Printf.sprintf "Posts tagged \"%s\"" tag; posts }, ""))
-    >>> Pipeline.chain_templates
-          (module Yocaml_jingoo)
-          (module Listing)
-          [ Source.template "tag.html"; Source.template "layout.html" ]
-    >>| snd)
+  write_listing
+    ~keep:(List.filter (fun p -> List.mem tag p.Post.tags))
+    ~target:Path.(Target.tags () / tag / "index.html")
+    ~template:(Source.template "tag.html")
+    ~title:(Printf.sprintf "Posts tagged \"%s\"" tag)
+    ()
 
 let process_sitemap () =
   let open Task in
   Action.Static.write_file (Target.sitemap ())
     ((let+ posts = fetch_posts
       and+ pages =
-        Pipeline.fetch ~only:`Files ~where:is_md
-          (fun file ->
-            let open Eff in
-            let+ metadata, _ =
-              Eff.read_file_with_metadata
-                (module Yocaml_yaml)
-                (Page.readable_for file) ~on:`Source file
-            in
-            metadata)
-          Source.pages
+        fetch_metadata ~where:is_md ~readable_for:Page.readable_for Source.pages
       in
       let post_entries =
         List.map
@@ -810,7 +777,7 @@ let all_tags () =
 let process_all () =
   let open Eff in
   let* tags = all_tags () in
-  Action.restore_cache (Target.cache ())
+  Action.restore_cache (Target.cache ()) (* TODO Can this use >>> ? *)
   >>= process_assets () >>= process_posts >>= process_pages
   >>= Action.batch_list tags process_tag
   >>= process_index () >>= process_archive () >>= process_sitemap ()
