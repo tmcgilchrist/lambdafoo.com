@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
   <head>
@@ -10,40 +11,28 @@
   <!-- Enable responsiveness on mobile devices-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-  <title>
-      
-        XMonad Install on NetBSD 5.0 &middot; Perpetually Curious
-      
-  </title>
+  <title>XMonad Install on NetBSD 5.0 &middot; Perpetually Curious</title>
 
   <!-- CSS -->
-  <link rel="stylesheet" href="../css/poole.css">
-  <link rel="stylesheet" href="../css/syntax.css">
-  <link rel="stylesheet" href="../css/lanyon.css">
-  <link rel="stylesheet" href="../css/book.css">
+  <link rel="stylesheet" href="/css/poole.css">
+  <link rel="stylesheet" href="/css/syntax.css">
+  <link rel="stylesheet" href="/css/syntax-tm.css">
+  <link rel="stylesheet" href="/css/lanyon.css">
+  <link rel="stylesheet" href="/css/book.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
 
   <!-- Icons -->
-  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-precomposed.png">
-  <link rel="shortcut icon" href="../images/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/images/favicon.ico">
 
   <!-- RSS -->
-  <link rel="alternate" type="application/rss+xml" title="RSS" href="../atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
 
-  <!-- Google Analytics -->
-  <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-28532776-1', 'auto');
-    ga('send', 'pageview');
-  </script>
-<!-- End Google Analytics -->
+  <!-- Analytics -->
+  <script data-goatcounter="https://lambdafoo.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
   <a rel="me" hidden="true" href="https://hachyderm.io/@tsmc">Mastodon</a>
 </head>
-
 
   <body class="sidebar-overlay">
 
@@ -55,15 +44,15 @@
 <div class="sidebar" id="sidebar">
 
   <div class="sidebar-item">
-    <p><a href="../"><strong>Tim McGilchrist</strong></a></p>
+    <p><a href="/"><strong>Tim McGilchrist</strong></a></p>
   </div>
 
   <nav class="sidebar-nav">
-    <a class="sidebar-nav-item" href="../">Blog</a>
-    <a class="sidebar-nav-item" href="../pages/about.html">About</a>
-    <a class="sidebar-nav-item" href="../pages/talks.html">Talks</a>
-    <a class="sidebar-nav-item" href="../pages/server-room.html">Server Room</a>
-    <a class="sidebar-nav-item" href="../archive.html">Archive</a>
+    <a class="sidebar-nav-item" href="/">Blog</a>
+    <a class="sidebar-nav-item" href="/pages/about.html">About</a>
+    <a class="sidebar-nav-item" href="/pages/talks.html">Talks</a>
+    <a class="sidebar-nav-item" href="/pages/server-room.html">Server Room</a>
+    <a class="sidebar-nav-item" href="/archive.html">Archive</a>
   </nav>
 
   <div class="sidebar-item">
@@ -72,8 +61,8 @@
       <a href="https://bsky.app/profile/tsmc.purely-functional.com">Bluesky</a>
     </p>
     <p>
-      <a href="../rss.xml">RSS</a> ·
-      <a href="../atom.xml">Atom</a>
+      <a href="/rss.xml">RSS</a> ·
+      <a href="/atom.xml">Atom</a>
     </p>
     <p>
       &copy; Tim McGilchrist 2007-2026
@@ -81,102 +70,106 @@
   </div>
 </div>
 
-
     <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
          content to avoid any CSS collisions with our real content. -->
     <div class="wrap">
       <div class="masthead">
         <div class="container">
           <h3 class="masthead-title">
-            <a href="../" title="Home">Perpetually Curious</a>
-            
+            <a href="/" title="Home">Perpetually Curious</a>
             <span class="masthead-links">
-              <a href="../pages/about.html">About</a> |
-              <a href="../pages/talks.html">Talks</a> |
-              <a href="../pages/server-room.html">Server Room</a> |
-              <a href="../archive.html">Archive</a>
+              <a href="/pages/about.html">About</a> |
+              <a href="/pages/talks.html">Talks</a> |
+              <a href="/pages/server-room.html">Server Room</a> |
+              <a href="/archive.html">Archive</a>
             </span>
           </h3>
         </div>
       </div>
 
-      <div class="container content">
-        <div class="post">
+      <div class="container content"><div class="post">
   <h1 class="post-title">XMonad Install on NetBSD 5.0</h1>
-  <span class="post-date">May 30, 2009</span>
-  <p>I had some issues with getting XMonad and it’s dependencies working on NetBSD
-5.0 with pkgsrc, so I thought I’d put this up to help out others and myself when
+  <span class="post-date">May 30, 2009</span><p>I had some issues with getting XMonad and it's dependencies working on NetBSD
+5.0 with pkgsrc, so I thought I'd put this up to help out others and myself when
 I forget how it was done.</p>
-<p>Start by installing ghc-6.8.3 from pkgsrc. The two options here are:
-* pkg_add -v ghc
-* cd /usr/pkgsrc/lang/ghc; make; make install</p>
+<p>Start by installing ghc-6.8.3 from pkgsrc. The two options here are:</p>
+<ul>
+<li>pkg_add -v ghc</li>
+<li>cd /usr/pkgsrc/lang/ghc; make; make install</li>
+</ul>
 <p>Both require root access. The first option will download a prebuilt binary of
 ghc and install it all for you. I chose the second option which involves
 downloading the
 <a href="http://www.netbsd.org/docs/pkgsrc/getting.html#getting-first">pkgsrc source</a> and <a href="http://www.netbsd.org/docs/pkgsrc/using.html#how-to-build-and-install">compiling
 from source</a>.</p>
-<p>Next up you need to install Xmonad’s dependencies:
-* <a href="http://hackage.haskell.org/cgi-bin/hackage-scripts/package/mtl">mtl</a>
-* <a href="http://hackage.haskell.org/cgi-bin/hackage-scripts/package/unix">unix</a>
-* <a href="http://hackage.haskell.org/cgi-bin/hackage-scripts/package/X11">X11</a></p>
+<p>Next up you need to install Xmonad's dependencies:</p>
+<ul>
+<li><a href="http://hackage.haskell.org/cgi-bin/hackage-scripts/package/mtl">mtl</a></li>
+<li><a href="http://hackage.haskell.org/cgi-bin/hackage-scripts/package/unix">unix</a></li>
+<li><a href="http://hackage.haskell.org/cgi-bin/hackage-scripts/package/X11">X11</a></li>
+</ul>
 <p>Running <strong>ghc-pkg list</strong> will show you what is already installed.</p>
 <p>Mine looked something like this:</p>
-<pre class="shell"><code>
-micro# ghc-pkg list
-/usr/pkg/lib/ghc-6.8.3/package.conf:
-    Cabal-1.2.4.0, HUnit-1.2.0.0, QuickCheck-1.1.0.0, X11-1.4.5,
-    array-0.1.0.0, base-3.0.2.0, bytestring-0.9.0.1.1, cgi-3001.1.6.0,
-    containers-0.1.0.2, directory-1.0.0.1, fgl-5.4.2.0,
-    filepath-1.1.0.0, (ghc-6.8.3), haskell-src-1.0.1.2,
-    haskell98-1.0.1.0, hpc-0.5.0.1, html-1.0.1.1, mtl-1.1.0.1,
-    network-2.2.0.0, old-locale-1.0.0.0, old-time-1.0.0.0,
-    packedstring-0.1.0.0, parallel-1.0.0.1, parsec-2.1.0.1,
-    pretty-1.0.0.0, process-1.0.0.1, random-1.0.0.0, readline-1.0.1.0,
-    regex-base-0.72.0.1, regex-compat-0.71.0.1, regex-posix-0.72.0.2,
-    rts-1.0, stm-2.1.1.1, template-haskell-2.2.0.0, time-1.1.2.1,
-    unix-2.3.0.1, xhtml-3000.2.0.0</code></pre>
+<pre><code><span class='shell-source'>
+</span><span class='shell-source'>micro# ghc-pkg list
+</span><span class='shell-source'>/usr/pkg/lib/ghc-6.8.3/package.conf:
+</span><span class='shell-source'>    Cabal-1.2.4.0, HUnit-1.2.0.0, QuickCheck-1.1.0.0, X11-1.4.5,
+</span><span class='shell-source'>    array-0.1.0.0, base-3.0.2.0, bytestring-0.9.0.1.1, cgi-3001.1.6.0,
+</span><span class='shell-source'>    containers-0.1.0.2, directory-1.0.0.1, fgl-5.4.2.0,
+</span><span class='shell-source'>    filepath-1.1.0.0, </span><span class='shell-punctuation-definition-subshell'>(</span><span class='shell-meta-scope-subshell'>ghc-6.8.3</span><span class='shell-punctuation-definition-subshell'>)</span><span class='shell-source'>, haskell-src-1.0.1.2,
+</span><span class='shell-source'>    haskell98-1.0.1.0, hpc-0.5.0.1, html-1.0.1.1, mtl-1.1.0.1,
+</span><span class='shell-source'>    network-2.2.0.0, old-locale-1.0.0.0, old-time-1.0.0.0,
+</span><span class='shell-source'>    packedstring-0.1.0.0, parallel-1.0.0.1, parsec-2.1.0.1,
+</span><span class='shell-source'>    pretty-1.0.0.0, process-1.0.0.1, random-1.0.0.0, readline-1.0.1.0,
+</span><span class='shell-source'>    regex-base-0.72.0.1, regex-compat-0.71.0.1, regex-posix-0.72.0.2,
+</span><span class='shell-source'>    rts-1.0, stm-2.1.1.1, template-haskell-2.2.0.0, time-1.1.2.1,
+</span><span class='shell-source'>    unix-2.3.0.1, xhtml-3000.2.0.0
+</span></code></pre>
 <p>So I only needed X11 which I grabbed from
 <a href="http://hackage.haskell.org/cgi-bin/hackage-scripts/package/X11">here</a>. Untar
 the X11 download, hop into that directory and run each of these commands in order.</p>
 <pre><code>runhaskell Setup configure
 runhaskell Setup build
-runhaskell Setup install</code></pre>
-<p>If it fails, <strong>good</strong> it’s just like my install. I got the following stack trace:</p>
-<pre class="shell"><code>
-Building X11-1.4.5...
-[22 of 24] Compiling Graphics.X11.Xlib.Extras ( dist/build/Graphics/X11/Xlib/Extras.hs, dist/build/Graphics/X11/Xlib/Extras.o )
-Warning: orphan instances:
-  instance GHC.Read.Read [Graphics.X11.Xlib.Types.Rectangle]
-    = Graphics.X11.Xlib.Extras.$f1
-
-In file included from /usr/pkg/lib/ghc-6.8.3/include/Stg.h:183,
-                 from /usr/pkg/lib/ghc-6.8.3/include/Rts.h:19,
-
-                 from dist/build/Graphics/X11/Xlib/Extras_stub.c:2:0:
-
-
-/usr/pkg/lib/ghc-6.8.3/include/Regs.h:28:17:
-     error: gmp.h: No such file or directory
-In file included from /usr/pkg/lib/ghc-6.8.3/include/Stg.h:183,
-                 from /usr/pkg/lib/ghc-6.8.3/include/Rts.h:19,
-
-                 from dist/build/Graphics/X11/Xlib/Extras_stub.c:2:0:
-
-
-/usr/pkg/lib/ghc-6.8.3/include/Regs.h:121:0:
-     error: expected specifier-qualifier-list before 'MP_INT'
-
-In file included from dist/build/Graphics/X11/Xlib/Extras_stub.c:2:0:
-
-
-/usr/pkg/lib/ghc-6.8.3/include/Rts.h:203:0:
-     error: expected ')' before '*' token
-
-/usr/pkg/lib/ghc-6.8.3/include/Rts.h:204:0:
-     error: expected ')' before '*' token
+runhaskell Setup install
 </code></pre>
-<p>Seems that it’s actually complaining that it can’t see gmp.h. So the quick ’n nasty fix for this is.</p>
-<pre><code>ln -s /usr/pkg/include/gmp.h /usr/pkg/lib/ghc-6.8.3/include/gmp.h</code></pre>
+<p>If it fails, <strong>good</strong> it's just like my install. I got the following stack trace:</p>
+<pre><code><span class='shell-source'>
+</span><span class='shell-source'>Building X11-1.4.5...
+</span><span class='shell-source'>[22 of 24] Compiling Graphics.X11.Xlib.Extras </span><span class='shell-punctuation-definition-subshell'>(</span><span class='shell-meta-scope-subshell'> dist/build/Graphics/X11/Xlib/Extras.hs, dist/build/Graphics/X11/Xlib/Extras.o </span><span class='shell-punctuation-definition-subshell'>)</span><span class='shell-source'>
+</span><span class='shell-source'>Warning: orphan instances:
+</span><span class='shell-source'>  instance GHC.Read.Read [Graphics.X11.Xlib.Types.Rectangle]
+</span><span class='shell-source'>    = Graphics.X11.Xlib.Extras.</span><span class='shell-punctuation-definition-variable'>$</span><span class='shell-variable-other-normal'>f1</span><span class='shell-source'>
+</span><span class='shell-source'>
+</span><span class='shell-source'>In file included from /usr/pkg/lib/ghc-6.8.3/include/Stg.h:183,
+</span><span class='shell-source'>                 from /usr/pkg/lib/ghc-6.8.3/include/Rts.h:19,
+</span><span class='shell-source'>
+</span><span class='shell-source'>                 from dist/build/Graphics/X11/Xlib/Extras_stub.c:2:0:
+</span><span class='shell-source'>
+</span><span class='shell-source'>
+</span><span class='shell-source'>/usr/pkg/lib/ghc-6.8.3/include/Regs.h:28:17:
+</span><span class='shell-source'>     error: gmp.h: No such file or directory
+</span><span class='shell-source'>In file included from /usr/pkg/lib/ghc-6.8.3/include/Stg.h:183,
+</span><span class='shell-source'>                 from /usr/pkg/lib/ghc-6.8.3/include/Rts.h:19,
+</span><span class='shell-source'>
+</span><span class='shell-source'>                 from dist/build/Graphics/X11/Xlib/Extras_stub.c:2:0:
+</span><span class='shell-source'>
+</span><span class='shell-source'>
+</span><span class='shell-source'>/usr/pkg/lib/ghc-6.8.3/include/Regs.h:121:0:
+</span><span class='shell-source'>     error: expected specifier-qualifier-list before </span><span class='shell-punctuation-definition-string-begin'>'</span><span class='shell-string-quoted-single'>MP_INT</span><span class='shell-punctuation-definition-string-end'>'</span><span class='shell-source'>
+</span><span class='shell-source'>
+</span><span class='shell-source'>In file included from dist/build/Graphics/X11/Xlib/Extras_stub.c:2:0:
+</span><span class='shell-source'>
+</span><span class='shell-source'>
+</span><span class='shell-source'>/usr/pkg/lib/ghc-6.8.3/include/Rts.h:203:0:
+</span><span class='shell-source'>     error: expected </span><span class='shell-punctuation-definition-string-begin'>'</span><span class='shell-string-quoted-single'>)</span><span class='shell-punctuation-definition-string-end'>'</span><span class='shell-source'> before </span><span class='shell-punctuation-definition-string-begin'>'</span><span class='shell-string-quoted-single'>*</span><span class='shell-punctuation-definition-string-end'>'</span><span class='shell-source'> token
+</span><span class='shell-source'>
+</span><span class='shell-source'>/usr/pkg/lib/ghc-6.8.3/include/Rts.h:204:0:
+</span><span class='shell-source'>     error: expected </span><span class='shell-punctuation-definition-string-begin'>'</span><span class='shell-string-quoted-single'>)</span><span class='shell-punctuation-definition-string-end'>'</span><span class='shell-source'> before </span><span class='shell-punctuation-definition-string-begin'>'</span><span class='shell-string-quoted-single'>*</span><span class='shell-punctuation-definition-string-end'>'</span><span class='shell-source'> token
+</span><span class='shell-source'>
+</span></code></pre>
+<p>Seems that it's actually complaining that it can't see gmp.h.  So the quick 'n nasty fix for this is.</p>
+<pre><code>ln -s /usr/pkg/include/gmp.h /usr/pkg/lib/ghc-6.8.3/include/gmp.h
+</code></pre>
 <p>Idea originally from <a href="http://ghcsparc.blogspot.com/2009/01/in-in-morning.html">here</a>.</p>
 <p>Now retry, <strong>runhaskell Setup build</strong> and <strong>runhaskell Setup install</strong>, which
 should work now.</p>
@@ -185,25 +178,23 @@ grabbed both xmonad and xmonad-contrib. Untar them and follow the same
 runhaskell commands from before:</p>
 <pre><code>runhaskell Setup configure
 runhaskell Setup build
-runhaskell Setup install</code></pre>
+runhaskell Setup install
+</code></pre>
 <p>It should now all compile &amp; install correctly, and <strong>you</strong> can get on with using
 Xmonad.</p>
 <p>Finally here are some helpful Xmonad starter links:</p>
 <ul>
 <li><a href="http://xmonad.org/tour.html">http://xmonad.org/tour.html</a></li>
-<li><a href="http://haskell.org/haskellwiki/Xmonad/Config_archive/John_Goerzen's_Configuration">http://haskell.org/haskellwiki/Xmonad/Config_archive/John_Goerzen’s_Configuration</a></li>
+<li><a href="http://haskell.org/haskellwiki/Xmonad/Config_archive/John_Goerzen&apos;s_Configuration">http://haskell.org/haskellwiki/Xmonad/Config_archive/John_Goerzen's_Configuration</a></li>
 <li><a href="http://www.xmonad.org/xmonad-docs/xmonad-contrib/XMonad-Doc-Configuring.html">http://www.xmonad.org/xmonad-docs/xmonad-contrib/XMonad-Doc-Configuring.html</a></li>
 </ul>
-  
-  <p class="post-tags">Tags: <a title="All pages tagged 'haskell'." href="../tags/haskell/index.html" rel="tag">haskell</a>, <a title="All pages tagged 'netbsd'." href="../tags/netbsd/index.html" rel="tag">netbsd</a>, <a title="All pages tagged 'xmonad'." href="../tags/xmonad/index.html" rel="tag">xmonad</a></p>
-  
+
+  <p class="post-tags">Tags: <a title="All pages tagged 'haskell'." href="/tags/haskell/index.html" rel="tag">haskell</a>, <a title="All pages tagged 'netbsd'." href="/tags/netbsd/index.html" rel="tag">netbsd</a>, <a title="All pages tagged 'xmonad'." href="/tags/xmonad/index.html" rel="tag">xmonad</a></p>
 </div>
-
-
-        <div class="container content">
+<div class="container content">
           <small>Copyright © Tim McGilchrist 2007-2026</small>
           <br>
-          <small>Powered by <a href="https://github.com/tmcgilchrist/lambdafoo.com">Hakyll</a></small>
+          <small>Powered by <a href="https://github.com/xhtmlboi/yocaml">YOCaml</a></small>
         </div>
       </div>
     </div>

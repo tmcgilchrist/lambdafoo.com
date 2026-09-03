@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
   <head>
@@ -10,40 +11,28 @@
   <!-- Enable responsiveness on mobile devices-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-  <title>
-      
-        Acer Aspire One with NetBSD 5.0 &middot; Perpetually Curious
-      
-  </title>
+  <title>Acer Aspire One with NetBSD 5.0 &middot; Perpetually Curious</title>
 
   <!-- CSS -->
-  <link rel="stylesheet" href="../css/poole.css">
-  <link rel="stylesheet" href="../css/syntax.css">
-  <link rel="stylesheet" href="../css/lanyon.css">
-  <link rel="stylesheet" href="../css/book.css">
+  <link rel="stylesheet" href="/css/poole.css">
+  <link rel="stylesheet" href="/css/syntax.css">
+  <link rel="stylesheet" href="/css/syntax-tm.css">
+  <link rel="stylesheet" href="/css/lanyon.css">
+  <link rel="stylesheet" href="/css/book.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
 
   <!-- Icons -->
-  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-precomposed.png">
-  <link rel="shortcut icon" href="../images/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/images/favicon.ico">
 
   <!-- RSS -->
-  <link rel="alternate" type="application/rss+xml" title="RSS" href="../atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
 
-  <!-- Google Analytics -->
-  <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-28532776-1', 'auto');
-    ga('send', 'pageview');
-  </script>
-<!-- End Google Analytics -->
+  <!-- Analytics -->
+  <script data-goatcounter="https://lambdafoo.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
   <a rel="me" hidden="true" href="https://hachyderm.io/@tsmc">Mastodon</a>
 </head>
-
 
   <body class="sidebar-overlay">
 
@@ -55,15 +44,15 @@
 <div class="sidebar" id="sidebar">
 
   <div class="sidebar-item">
-    <p><a href="../"><strong>Tim McGilchrist</strong></a></p>
+    <p><a href="/"><strong>Tim McGilchrist</strong></a></p>
   </div>
 
   <nav class="sidebar-nav">
-    <a class="sidebar-nav-item" href="../">Blog</a>
-    <a class="sidebar-nav-item" href="../pages/about.html">About</a>
-    <a class="sidebar-nav-item" href="../pages/talks.html">Talks</a>
-    <a class="sidebar-nav-item" href="../pages/server-room.html">Server Room</a>
-    <a class="sidebar-nav-item" href="../archive.html">Archive</a>
+    <a class="sidebar-nav-item" href="/">Blog</a>
+    <a class="sidebar-nav-item" href="/pages/about.html">About</a>
+    <a class="sidebar-nav-item" href="/pages/talks.html">Talks</a>
+    <a class="sidebar-nav-item" href="/pages/server-room.html">Server Room</a>
+    <a class="sidebar-nav-item" href="/archive.html">Archive</a>
   </nav>
 
   <div class="sidebar-item">
@@ -72,8 +61,8 @@
       <a href="https://bsky.app/profile/tsmc.purely-functional.com">Bluesky</a>
     </p>
     <p>
-      <a href="../rss.xml">RSS</a> ·
-      <a href="../atom.xml">Atom</a>
+      <a href="/rss.xml">RSS</a> ·
+      <a href="/atom.xml">Atom</a>
     </p>
     <p>
       &copy; Tim McGilchrist 2007-2026
@@ -81,217 +70,211 @@
   </div>
 </div>
 
-
     <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
          content to avoid any CSS collisions with our real content. -->
     <div class="wrap">
       <div class="masthead">
         <div class="container">
           <h3 class="masthead-title">
-            <a href="../" title="Home">Perpetually Curious</a>
-            
+            <a href="/" title="Home">Perpetually Curious</a>
             <span class="masthead-links">
-              <a href="../pages/about.html">About</a> |
-              <a href="../pages/talks.html">Talks</a> |
-              <a href="../pages/server-room.html">Server Room</a> |
-              <a href="../archive.html">Archive</a>
+              <a href="/pages/about.html">About</a> |
+              <a href="/pages/talks.html">Talks</a> |
+              <a href="/pages/server-room.html">Server Room</a> |
+              <a href="/archive.html">Archive</a>
             </span>
           </h3>
         </div>
       </div>
 
-      <div class="container content">
-        <div class="post">
+      <div class="container content"><div class="post">
   <h1 class="post-title">Acer Aspire One with NetBSD 5.0</h1>
-  <span class="post-date">May 23, 2009</span>
-  <p>Finished installing NetBSD 5.0 on my AspireOne, here’s the output from dmesg.</p>
-<pre class="shell"><code>
-    Copyright (c) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-    2006, 2007, 2008
-    The NetBSD Foundation, Inc.  All rights reserved.
-    Copyright (c) 1982, 1986, 1989, 1991, 1993
-    The Regents of the University of California.  All rights reserved.
+  <span class="post-date">May 23, 2009</span><p>Finished installing NetBSD 5.0 on my AspireOne, here's the output from dmesg.</p>
+<pre><code><span class='shell-source'>
+</span><span class='shell-source'>    Copyright </span><span class='shell-punctuation-definition-subshell'>(</span><span class='shell-meta-scope-subshell'>c</span><span class='shell-punctuation-definition-subshell'>)</span><span class='shell-source'> 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
+</span><span class='shell-source'>    2006, 2007, 2008
+</span><span class='shell-source'>    The NetBSD Foundation, Inc.  All rights reserved.
+</span><span class='shell-source'>    Copyright </span><span class='shell-punctuation-definition-subshell'>(</span><span class='shell-meta-scope-subshell'>c</span><span class='shell-punctuation-definition-subshell'>)</span><span class='shell-source'> 1982, 1986, 1989, 1991, 1993
+</span><span class='shell-source'>    The Regents of the University of California.  All rights reserved.
+</span><span class='shell-source'>
+</span><span class='shell-source'>    NetBSD 5.0 </span><span class='shell-punctuation-definition-subshell'>(</span><span class='shell-meta-scope-subshell'>GENERIC</span><span class='shell-punctuation-definition-subshell'>)</span><span class='shell-source'> </span><span class='shell-punctuation-definition-comment'>#</span><span class='shell-comment-line-number-sign'>0: Sat May 16 18:00:22 EST 2009</span><span class='shell-comment-line-number-sign'>
+</span><span class='shell-source'>    tim@micro.:/usr/src/sys/arch/i386/compile/GENERIC
+</span><span class='shell-source'>    total memory = 1523 MB
+</span><span class='shell-source'>    avail memory = 1486 MB
+</span><span class='shell-source'>    timecounter: Timecounters tick every 10.000 msec
+</span><span class='shell-source'>    RTC BIOS diagnostic error 80&amp;lt;clock_battery&amp;gt;
+</span><span class='shell-source'>    timecounter: Timecounter &quot;i8254&quot; frequency 1193182 Hz quality 100
+</span><span class='shell-source'>    Acer AOA110 (1)
+</span><span class='shell-source'>    mainbus0 (root)
+</span><span class='shell-source'>    cpu0 at mainbus0 apid 0: Intel 686-class, 1596MHz, id 0x106c2
+</span><span class='shell-source'>    cpu0: Enhanced SpeedStep (1228 mV) 1600 MHz
+</span><span class='shell-source'>    cpu0: Enhanced SpeedStep frequencies available (MHz): 1600 1467 1333 1200 1067 933 800
+</span><span class='shell-source'>    cpu1 at mainbus0 apid 1: Intel 686-class, 1596MHz, id 0x106c2
+</span><span class='shell-source'>    ioapic0 at mainbus0 apid 4: pa 0xfec00000, version 20, 24 pins
+</span><span class='shell-source'>    acpi0 at mainbus0: Intel ACPICA 20080321
+</span><span class='shell-source'>    acpi0: X/RSDT: OemId &amp;lt;INTEL ,Napa    ,00000001&amp;gt;, AslId &amp;lt;    ,01000013&amp;gt;
+</span><span class='shell-source'>    acpi0: SCI interrupting at int 9
+</span><span class='shell-source'>    acpi0: fixed-feature power button present
+</span><span class='shell-source'>    timecounter: Timecounter &quot;ACPI-Fast&quot; frequency 3579545 Hz quality 1000
+</span><span class='shell-source'>    ACPI-Fast 24-bit timer
+</span><span class='shell-source'>    acpibut0 at acpi0 (PWRB, PNP0C0C): ACPI Power Button
+</span><span class='shell-source'>    acpilid0 at acpi0 (LID0, PNP0C0D): ACPI Lid Switch
+</span><span class='shell-source'>    acpibut1 at acpi0 (SLPB, PNP0C0E): ACPI Sleep Button
+</span><span class='shell-source'>    acpibat0 at acpi0 (BAT1, PNP0C0A-0): ACPI Battery (Control Method)
+</span><span class='shell-source'>    acpiacad0 at acpi0 (ACAD, ACPI0003): ACPI AC Adapter
+</span><span class='shell-source'>    hpet0 at acpi0 (HPET, PNP0103)
+</span><span class='shell-source'>    hpet0: mem 0xfed00000-0xfed003ff irq 0,8
+</span><span class='shell-source'>    timecounter: Timecounter &quot;hpet0&quot; frequency 14318179 Hz quality 2000
+</span><span class='shell-source'>    npx1 at acpi0 (FPU, PNP0C04)
+</span><span class='shell-source'>    npx1: io 0xf0 irq 13
+</span><span class='shell-source'>    npx1: reported by CPUID; using exception 16
+</span><span class='shell-source'>    attimer1 at acpi0 (TIMR, PNP0100): AT Timer
+</span><span class='shell-source'>    attimer1: io 0x40-0x43,0x50-0x53
+</span><span class='shell-source'>    FWHD (INT0800) at acpi0 not configured
+</span><span class='shell-source'>    pckbc1 at acpi0 (KBC, PNP0303): kbd port
+</span><span class='shell-source'>    pckbc1: io 0x60,0x64 irq 1
+</span><span class='shell-source'>    pckbc2 at acpi0 (MOUE, PNP0F13): aux port
+</span><span class='shell-source'>    pckbc2: irq 12
+</span><span class='shell-source'>    acpiec0 at acpi0 (EC0, PNP0C09): ACPI Embedded Controller
+</span><span class='shell-source'>    acpiec0: io 0x62,0x66
+</span><span class='shell-source'>    WMID (PNP0C14) at acpi0 not configured
+</span><span class='shell-source'>    apm0 at acpi0: Power Management spec V1.2
+</span><span class='shell-source'>    pckbd0 at pckbc1 (kbd slot)
+</span><span class='shell-source'>    pckbc1: using irq 1 for kbd slot
+</span><span class='shell-source'>    wskbd0 at pckbd0: console keyboard
+</span><span class='shell-source'>    pms0 at pckbc1 (aux slot)
+</span><span class='shell-source'>    pms0: Synaptics touchpad version 7.2
+</span><span class='shell-source'>    pms0: Palm detect
+</span><span class='shell-source'>    pckbc1: using irq 12 for aux slot
+</span><span class='shell-source'>    wsmouse0 at pms0 mux 0
+</span><span class='shell-source'>    pci0 at mainbus0 bus 0: configuration mode 1
+</span><span class='shell-source'>    pci0: i/o space, memory space enabled, rd/line, rd/mult, wr/inv ok
+</span><span class='shell-source'>    pchb0 at pci0 dev 0 function 0
+</span><span class='shell-source'>    pchb0: vendor 0x8086 product 0x27ac (rev. 0x03)
+</span><span class='shell-source'>    agp0 at pchb0: detected 7932k stolen memory
+</span><span class='shell-source'>    agp0: aperture at 0x60000000, size 0x10000000
+</span><span class='shell-source'>    vga1 at pci0 dev 2 function 0: vendor 0x8086 product 0x27ae (rev. 0x03)
+</span><span class='shell-source'>    wsdisplay0 at vga1 kbdmux 1: console (80x25, vt100 emulation), using wskbd0
+</span><span class='shell-source'>    wsmux1: connecting to wsdisplay0
+</span><span class='shell-source'>    drm at vga1 not configured
+</span><span class='shell-source'>    vendor 0x8086 product 0x27a6 (miscellaneous display, revision 0x03) at pci0 dev 2 function 1 not configured
+</span><span class='shell-source'>    azalia0 at pci0 dev 27 function 0: Generic High Definition Audio Controller
+</span><span class='shell-source'>    azalia0: interrupting at ioapic0 pin 16
+</span><span class='shell-source'>    azalia0: host: 0x8086/0x27d8 (rev. 2), HDA rev. 1.0
+</span><span class='shell-source'>    ppb0 at pci0 dev 28 function 0: vendor 0x8086 product 0x27d0 (rev. 0x02)
+</span><span class='shell-source'>    pci1 at ppb0 bus 1
+</span><span class='shell-source'>    pci1: i/o space, memory space enabled
+</span><span class='shell-source'>    ppb1 at pci0 dev 28 function 1: vendor 0x8086 product 0x27d2 (rev. 0x02)
+</span><span class='shell-source'>    pci2 at ppb1 bus 2
+</span><span class='shell-source'>    pci2: i/o space, memory space enabled
+</span><span class='shell-source'>    re0 at pci2 dev 0 function 0: RealTek 8100E/8101E/8102E/8102EL PCIe 10/100BaseTX (rev. 0x02)
+</span><span class='shell-source'>    re0: interrupting at ioapic0 pin 17
+</span><span class='shell-source'>    re0: Ethernet address 00:1e:68:8a:70:30
+</span><span class='shell-source'>    re0: using 256 tx descriptors
+</span><span class='shell-source'>    rlphy0 at re0 phy 7: RTL8201L 10/100 media interface, rev. 1
+</span><span class='shell-source'>    rlphy0: 10baseT, 10baseT-FDX, 100baseTX, 100baseTX-FDX, auto
+</span><span class='shell-source'>    ppb2 at pci0 dev 28 function 2: vendor 0x8086 product 0x27d4 (rev. 0x02)
+</span><span class='shell-source'>    pci3 at ppb2 bus 3
+</span><span class='shell-source'>    pci3: i/o space, memory space enabled
+</span><span class='shell-source'>    ath0 at pci3 dev 0 function 0
+</span><span class='shell-source'>    ath0: interrupting at ioapic0 pin 18
+</span><span class='shell-source'>    ath0: 11b rates: 1Mbps 2Mbps 5.5Mbps 11Mbps
+</span><span class='shell-source'>    ath0: 11g rates: 1Mbps 2Mbps 5.5Mbps 11Mbps 6Mbps 9Mbps 12Mbps 18Mbps 24Mbps 36Mbps 48Mbps 54Mbps
+</span><span class='shell-source'>    ath0: mac 14.2 phy 7.0 radio 10.2
+</span><span class='shell-source'>    ppb3 at pci0 dev 28 function 3: vendor 0x8086 product 0x27d6 (rev. 0x02)
+</span><span class='shell-source'>    pci4 at ppb3 bus 4
+</span><span class='shell-source'>    pci4: i/o space, memory space enabled
+</span><span class='shell-source'>    vendor 0x197b product 0x2382 (miscellaneous system) at pci4 dev 0 function 0 not configured
+</span><span class='shell-source'>    vendor 0x197b product 0x2381 (SD Host Controller system, interface 0x01) at pci4 dev 0 function 2 not configured
+</span><span class='shell-source'>    vendor 0x197b product 0x2383 (miscellaneous system) at pci4 dev 0 function 3 not configured
+</span><span class='shell-source'>    vendor 0x197b product 0x2384 (miscellaneous system) at pci4 dev 0 function 4 not configured
+</span><span class='shell-source'>    uhci0 at pci0 dev 29 function 0: vendor 0x8086 product 0x27c8 (rev. 0x02)
+</span><span class='shell-source'>    uhci0: interrupting at ioapic0 pin 16
+</span><span class='shell-source'>    usb0 at uhci0: USB revision 1.0
+</span><span class='shell-source'>    uhci1 at pci0 dev 29 function 1: vendor 0x8086 product 0x27c9 (rev. 0x02)
+</span><span class='shell-source'>    uhci1: interrupting at ioapic0 pin 17
+</span><span class='shell-source'>    usb1 at uhci1: USB revision 1.0
+</span><span class='shell-source'>    uhci2 at pci0 dev 29 function 2: vendor 0x8086 product 0x27ca (rev. 0x02)
+</span><span class='shell-source'>    uhci2: interrupting at ioapic0 pin 18
+</span><span class='shell-source'>    usb2 at uhci2: USB revision 1.0
+</span><span class='shell-source'>    uhci3 at pci0 dev 29 function 3: vendor 0x8086 product 0x27cb (rev. 0x02)
+</span><span class='shell-source'>    uhci3: interrupting at ioapic0 pin 19
+</span><span class='shell-source'>    usb3 at uhci3: USB revision 1.0
+</span><span class='shell-source'>    ehci0 at pci0 dev 29 function 7: vendor 0x8086 product 0x27cc (rev. 0x02)
+</span><span class='shell-source'>    ehci0: interrupting at ioapic0 pin 16
+</span><span class='shell-source'>    ehci0: EHCI version 1.0
+</span><span class='shell-source'>    ehci0: companion controllers, 2 ports each: uhci0 uhci1 uhci2 uhci3
+</span><span class='shell-source'>    usb4 at ehci0: USB revision 2.0
+</span><span class='shell-source'>    ppb4 at pci0 dev 30 function 0: vendor 0x8086 product 0x2448 (rev. 0xe2)
+</span><span class='shell-source'>    pci5 at ppb4 bus 5
+</span><span class='shell-source'>    pci5: i/o space, memory space enabled
+</span><span class='shell-source'>    ichlpcib0 at pci0 dev 31 function 0
+</span><span class='shell-source'>    ichlpcib0: vendor 0x8086 product 0x27b9 (rev. 0x02)
+</span><span class='shell-source'>    timecounter: Timecounter &quot;ichlpcib0&quot; frequency 3579545 Hz quality 1000
+</span><span class='shell-source'>    ichlpcib0: 24-bit timer
+</span><span class='shell-source'>    ichlpcib0: TCO (watchdog) timer configured.
+</span><span class='shell-source'>    piixide0 at pci0 dev 31 function 2
+</span><span class='shell-source'>    piixide0: Intel 82801GBM/GHM Serial ATA Controller (ICH7) (rev. 0x02)
+</span><span class='shell-source'>    piixide0: bus-master DMA support present
+</span><span class='shell-source'>    piixide0: primary channel wired to compatibility mode
+</span><span class='shell-source'>    piixide0: primary channel interrupting at ioapic0 pin 14
+</span><span class='shell-source'>    atabus0 at piixide0 channel 0
+</span><span class='shell-source'>    piixide0: secondary channel wired to compatibility mode
+</span><span class='shell-source'>    piixide0: secondary channel interrupting at ioapic0 pin 15
+</span><span class='shell-source'>    atabus1 at piixide0 channel 1
+</span><span class='shell-source'>    ichsmb0 at pci0 dev 31 function 3: vendor 0x8086 product 0x27da (rev. 0x02)
+</span><span class='shell-source'>    ichsmb0: interrupting at ioapic0 pin 17
+</span><span class='shell-source'>    iic0 at ichsmb0: I2C bus
+</span><span class='shell-source'>    isa0 at ichlpcib0
+</span><span class='shell-source'>    pcppi0 at isa0 port 0x61
+</span><span class='shell-source'>    midi0 at pcppi0: PC speaker (CPU-intensive output)
+</span><span class='shell-source'>    sysbeep0 at pcppi0
+</span><span class='shell-source'>    attimer1: attached to pcppi0
+</span><span class='shell-source'>    timecounter: Timecounter &quot;clockinterrupt&quot; frequency 100 Hz quality 0
+</span><span class='shell-source'>    azalia0: codec[0]: Realtek ALC268 (rev. 1.1), HDA rev. 1.0
+</span><span class='shell-source'>    audio0 at azalia0: full duplex, independent
+</span><span class='shell-source'>    acpiacad0: AC adapter online.
+</span><span class='shell-source'>    wd0 at atabus1 drive 0: &amp;lt;SSDPAMM0008G1EA&amp;gt;
+</span><span class='shell-source'>    wd0: drive supports 1-sector PIO transfers, LBA addressing
+</span><span class='shell-source'>    wd0: 7695 MB, 15636 cyl, 16 head, 63 sec, 512 bytes/sect x 15761088 sectors
+</span><span class='shell-source'>    uhub0 at usb0: vendor 0x8086 UHCI root hub, class 9/0, rev 1.00/1.00, addr 1
+</span><span class='shell-source'>    uhub0: 2 ports with 2 removable, self powered
+</span><span class='shell-source'>    uhub1 at usb1: vendor 0x8086 UHCI root hub, class 9/0, rev 1.00/1.00, addr 1
+</span><span class='shell-source'>    uhub1: 2 ports with 2 removable, self powered
+</span><span class='shell-source'>    uhub2 at usb2: vendor 0x8086 UHCI root hub, class 9/0, rev 1.00/1.00, addr 1
+</span><span class='shell-source'>    uhub2: 2 ports with 2 removable, self powered
+</span><span class='shell-source'>    uhub3 at usb3: vendor 0x8086 UHCI root hub, class 9/0, rev 1.00/1.00, addr 1
+</span><span class='shell-source'>    uhub3: 2 ports with 2 removable, self powered
+</span><span class='shell-source'>    uhub4 at usb4: vendor 0x8086 EHCI root hub, class 9/0, rev 2.00/1.00, addr 1
+</span><span class='shell-source'>    uhub4: 8 ports with 8 removable, self powered
+</span><span class='shell-source'>    wd0: 32-bit data port
+</span><span class='shell-source'>    wd0: drive supports PIO mode 4, DMA mode 2, Ultra-DMA mode 4 (Ultra/66)
+</span><span class='shell-source'>    wd0(piixide0:1:0): using PIO mode 4, Ultra-DMA mode 4 (Ultra/66) (using DMA)
+</span><span class='shell-source'>    acpibat0: battery info: SIMPLO, LION, UM08A72 0095
+</span><span class='shell-source'>    acpibat0: battery info: SIMPLO, LION, UM08A72 0095
+</span><span class='shell-source'>    uvideo0 at uhub4 port 5 configuration 1 interface 0: Sonix Technology Co., Ltd. USB 2.0 Camera, rev 2.00/1.00, addr 2
+</span><span class='shell-source'>    video0 at uvideo0: Sonix Technology Co., Ltd. USB 2.0 Camera, rev 2.00/1.00, addr 2
+</span><span class='shell-source'>    Kernelized RAIDframe activated
+</span><span class='shell-source'>    pad0: outputs: 44100Hz, 16-bit, stereo
+</span><span class='shell-source'>    audio1 at pad0: half duplex
+</span><span class='shell-source'>    boot device: wd0
+</span><span class='shell-source'>    root on wd0a dumps on wd0b
+</span><span class='shell-source'>    root file system type: ffs
+</span><span class='shell-source'>    wsdisplay0: screen 1 added (80x25, vt100 emulation)
+</span><span class='shell-source'>    wsdisplay0: screen 2 added (80x25, vt100 emulation)
+</span><span class='shell-source'>    wsdisplay0: screen 3 added (80x25, vt100 emulation)
+</span><span class='shell-source'>    wsdisplay0: screen 4 added (80x25, vt100 emulation)
+</span><span class='shell-source'>
+</span></code></pre>
+<p>I'm writing up some notes on how the install went and special things I needed to
+do to get hardware working which I'll be posting sometime over the weekend.</p>
 
-    NetBSD 5.0 (GENERIC) #0: Sat May 16 18:00:22 EST 2009
-    tim@micro.:/usr/src/sys/arch/i386/compile/GENERIC
-    total memory = 1523 MB
-    avail memory = 1486 MB
-    timecounter: Timecounters tick every 10.000 msec
-    RTC BIOS diagnostic error 80&amp;lt;clock_battery&amp;gt;
-    timecounter: Timecounter &quot;i8254&quot; frequency 1193182 Hz quality 100
-    Acer AOA110 (1)
-    mainbus0 (root)
-    cpu0 at mainbus0 apid 0: Intel 686-class, 1596MHz, id 0x106c2
-    cpu0: Enhanced SpeedStep (1228 mV) 1600 MHz
-    cpu0: Enhanced SpeedStep frequencies available (MHz): 1600 1467 1333 1200 1067 933 800
-    cpu1 at mainbus0 apid 1: Intel 686-class, 1596MHz, id 0x106c2
-    ioapic0 at mainbus0 apid 4: pa 0xfec00000, version 20, 24 pins
-    acpi0 at mainbus0: Intel ACPICA 20080321
-    acpi0: X/RSDT: OemId &amp;lt;INTEL ,Napa    ,00000001&amp;gt;, AslId &amp;lt;    ,01000013&amp;gt;
-    acpi0: SCI interrupting at int 9
-    acpi0: fixed-feature power button present
-    timecounter: Timecounter &quot;ACPI-Fast&quot; frequency 3579545 Hz quality 1000
-    ACPI-Fast 24-bit timer
-    acpibut0 at acpi0 (PWRB, PNP0C0C): ACPI Power Button
-    acpilid0 at acpi0 (LID0, PNP0C0D): ACPI Lid Switch
-    acpibut1 at acpi0 (SLPB, PNP0C0E): ACPI Sleep Button
-    acpibat0 at acpi0 (BAT1, PNP0C0A-0): ACPI Battery (Control Method)
-    acpiacad0 at acpi0 (ACAD, ACPI0003): ACPI AC Adapter
-    hpet0 at acpi0 (HPET, PNP0103)
-    hpet0: mem 0xfed00000-0xfed003ff irq 0,8
-    timecounter: Timecounter &quot;hpet0&quot; frequency 14318179 Hz quality 2000
-    npx1 at acpi0 (FPU, PNP0C04)
-    npx1: io 0xf0 irq 13
-    npx1: reported by CPUID; using exception 16
-    attimer1 at acpi0 (TIMR, PNP0100): AT Timer
-    attimer1: io 0x40-0x43,0x50-0x53
-    FWHD (INT0800) at acpi0 not configured
-    pckbc1 at acpi0 (KBC, PNP0303): kbd port
-    pckbc1: io 0x60,0x64 irq 1
-    pckbc2 at acpi0 (MOUE, PNP0F13): aux port
-    pckbc2: irq 12
-    acpiec0 at acpi0 (EC0, PNP0C09): ACPI Embedded Controller
-    acpiec0: io 0x62,0x66
-    WMID (PNP0C14) at acpi0 not configured
-    apm0 at acpi0: Power Management spec V1.2
-    pckbd0 at pckbc1 (kbd slot)
-    pckbc1: using irq 1 for kbd slot
-    wskbd0 at pckbd0: console keyboard
-    pms0 at pckbc1 (aux slot)
-    pms0: Synaptics touchpad version 7.2
-    pms0: Palm detect
-    pckbc1: using irq 12 for aux slot
-    wsmouse0 at pms0 mux 0
-    pci0 at mainbus0 bus 0: configuration mode 1
-    pci0: i/o space, memory space enabled, rd/line, rd/mult, wr/inv ok
-    pchb0 at pci0 dev 0 function 0
-    pchb0: vendor 0x8086 product 0x27ac (rev. 0x03)
-    agp0 at pchb0: detected 7932k stolen memory
-    agp0: aperture at 0x60000000, size 0x10000000
-    vga1 at pci0 dev 2 function 0: vendor 0x8086 product 0x27ae (rev. 0x03)
-    wsdisplay0 at vga1 kbdmux 1: console (80x25, vt100 emulation), using wskbd0
-    wsmux1: connecting to wsdisplay0
-    drm at vga1 not configured
-    vendor 0x8086 product 0x27a6 (miscellaneous display, revision 0x03) at pci0 dev 2 function 1 not configured
-    azalia0 at pci0 dev 27 function 0: Generic High Definition Audio Controller
-    azalia0: interrupting at ioapic0 pin 16
-    azalia0: host: 0x8086/0x27d8 (rev. 2), HDA rev. 1.0
-    ppb0 at pci0 dev 28 function 0: vendor 0x8086 product 0x27d0 (rev. 0x02)
-    pci1 at ppb0 bus 1
-    pci1: i/o space, memory space enabled
-    ppb1 at pci0 dev 28 function 1: vendor 0x8086 product 0x27d2 (rev. 0x02)
-    pci2 at ppb1 bus 2
-    pci2: i/o space, memory space enabled
-    re0 at pci2 dev 0 function 0: RealTek 8100E/8101E/8102E/8102EL PCIe 10/100BaseTX (rev. 0x02)
-    re0: interrupting at ioapic0 pin 17
-    re0: Ethernet address 00:1e:68:8a:70:30
-    re0: using 256 tx descriptors
-    rlphy0 at re0 phy 7: RTL8201L 10/100 media interface, rev. 1
-    rlphy0: 10baseT, 10baseT-FDX, 100baseTX, 100baseTX-FDX, auto
-    ppb2 at pci0 dev 28 function 2: vendor 0x8086 product 0x27d4 (rev. 0x02)
-    pci3 at ppb2 bus 3
-    pci3: i/o space, memory space enabled
-    ath0 at pci3 dev 0 function 0
-    ath0: interrupting at ioapic0 pin 18
-    ath0: 11b rates: 1Mbps 2Mbps 5.5Mbps 11Mbps
-    ath0: 11g rates: 1Mbps 2Mbps 5.5Mbps 11Mbps 6Mbps 9Mbps 12Mbps 18Mbps 24Mbps 36Mbps 48Mbps 54Mbps
-    ath0: mac 14.2 phy 7.0 radio 10.2
-    ppb3 at pci0 dev 28 function 3: vendor 0x8086 product 0x27d6 (rev. 0x02)
-    pci4 at ppb3 bus 4
-    pci4: i/o space, memory space enabled
-    vendor 0x197b product 0x2382 (miscellaneous system) at pci4 dev 0 function 0 not configured
-    vendor 0x197b product 0x2381 (SD Host Controller system, interface 0x01) at pci4 dev 0 function 2 not configured
-    vendor 0x197b product 0x2383 (miscellaneous system) at pci4 dev 0 function 3 not configured
-    vendor 0x197b product 0x2384 (miscellaneous system) at pci4 dev 0 function 4 not configured
-    uhci0 at pci0 dev 29 function 0: vendor 0x8086 product 0x27c8 (rev. 0x02)
-    uhci0: interrupting at ioapic0 pin 16
-    usb0 at uhci0: USB revision 1.0
-    uhci1 at pci0 dev 29 function 1: vendor 0x8086 product 0x27c9 (rev. 0x02)
-    uhci1: interrupting at ioapic0 pin 17
-    usb1 at uhci1: USB revision 1.0
-    uhci2 at pci0 dev 29 function 2: vendor 0x8086 product 0x27ca (rev. 0x02)
-    uhci2: interrupting at ioapic0 pin 18
-    usb2 at uhci2: USB revision 1.0
-    uhci3 at pci0 dev 29 function 3: vendor 0x8086 product 0x27cb (rev. 0x02)
-    uhci3: interrupting at ioapic0 pin 19
-    usb3 at uhci3: USB revision 1.0
-    ehci0 at pci0 dev 29 function 7: vendor 0x8086 product 0x27cc (rev. 0x02)
-    ehci0: interrupting at ioapic0 pin 16
-    ehci0: EHCI version 1.0
-    ehci0: companion controllers, 2 ports each: uhci0 uhci1 uhci2 uhci3
-    usb4 at ehci0: USB revision 2.0
-    ppb4 at pci0 dev 30 function 0: vendor 0x8086 product 0x2448 (rev. 0xe2)
-    pci5 at ppb4 bus 5
-    pci5: i/o space, memory space enabled
-    ichlpcib0 at pci0 dev 31 function 0
-    ichlpcib0: vendor 0x8086 product 0x27b9 (rev. 0x02)
-    timecounter: Timecounter &quot;ichlpcib0&quot; frequency 3579545 Hz quality 1000
-    ichlpcib0: 24-bit timer
-    ichlpcib0: TCO (watchdog) timer configured.
-    piixide0 at pci0 dev 31 function 2
-    piixide0: Intel 82801GBM/GHM Serial ATA Controller (ICH7) (rev. 0x02)
-    piixide0: bus-master DMA support present
-    piixide0: primary channel wired to compatibility mode
-    piixide0: primary channel interrupting at ioapic0 pin 14
-    atabus0 at piixide0 channel 0
-    piixide0: secondary channel wired to compatibility mode
-    piixide0: secondary channel interrupting at ioapic0 pin 15
-    atabus1 at piixide0 channel 1
-    ichsmb0 at pci0 dev 31 function 3: vendor 0x8086 product 0x27da (rev. 0x02)
-    ichsmb0: interrupting at ioapic0 pin 17
-    iic0 at ichsmb0: I2C bus
-    isa0 at ichlpcib0
-    pcppi0 at isa0 port 0x61
-    midi0 at pcppi0: PC speaker (CPU-intensive output)
-    sysbeep0 at pcppi0
-    attimer1: attached to pcppi0
-    timecounter: Timecounter &quot;clockinterrupt&quot; frequency 100 Hz quality 0
-    azalia0: codec[0]: Realtek ALC268 (rev. 1.1), HDA rev. 1.0
-    audio0 at azalia0: full duplex, independent
-    acpiacad0: AC adapter online.
-    wd0 at atabus1 drive 0: &amp;lt;SSDPAMM0008G1EA&amp;gt;
-    wd0: drive supports 1-sector PIO transfers, LBA addressing
-    wd0: 7695 MB, 15636 cyl, 16 head, 63 sec, 512 bytes/sect x 15761088 sectors
-    uhub0 at usb0: vendor 0x8086 UHCI root hub, class 9/0, rev 1.00/1.00, addr 1
-    uhub0: 2 ports with 2 removable, self powered
-    uhub1 at usb1: vendor 0x8086 UHCI root hub, class 9/0, rev 1.00/1.00, addr 1
-    uhub1: 2 ports with 2 removable, self powered
-    uhub2 at usb2: vendor 0x8086 UHCI root hub, class 9/0, rev 1.00/1.00, addr 1
-    uhub2: 2 ports with 2 removable, self powered
-    uhub3 at usb3: vendor 0x8086 UHCI root hub, class 9/0, rev 1.00/1.00, addr 1
-    uhub3: 2 ports with 2 removable, self powered
-    uhub4 at usb4: vendor 0x8086 EHCI root hub, class 9/0, rev 2.00/1.00, addr 1
-    uhub4: 8 ports with 8 removable, self powered
-    wd0: 32-bit data port
-    wd0: drive supports PIO mode 4, DMA mode 2, Ultra-DMA mode 4 (Ultra/66)
-    wd0(piixide0:1:0): using PIO mode 4, Ultra-DMA mode 4 (Ultra/66) (using DMA)
-    acpibat0: battery info: SIMPLO, LION, UM08A72 0095
-    acpibat0: battery info: SIMPLO, LION, UM08A72 0095
-    uvideo0 at uhub4 port 5 configuration 1 interface 0: Sonix Technology Co., Ltd. USB 2.0 Camera, rev 2.00/1.00, addr 2
-    video0 at uvideo0: Sonix Technology Co., Ltd. USB 2.0 Camera, rev 2.00/1.00, addr 2
-    Kernelized RAIDframe activated
-    pad0: outputs: 44100Hz, 16-bit, stereo
-    audio1 at pad0: half duplex
-    boot device: wd0
-    root on wd0a dumps on wd0b
-    root file system type: ffs
-    wsdisplay0: screen 1 added (80x25, vt100 emulation)
-    wsdisplay0: screen 2 added (80x25, vt100 emulation)
-    wsdisplay0: screen 3 added (80x25, vt100 emulation)
-    wsdisplay0: screen 4 added (80x25, vt100 emulation)
-</code></pre>
-<p>I’m writing up some notes on how the install went and special things I needed to
-do to get hardware working which I’ll be posting sometime over the weekend.</p>
-  
-  <p class="post-tags">Tags: <a title="All pages tagged 'netbsd'." href="../tags/netbsd/index.html" rel="tag">netbsd</a></p>
-  
+  <p class="post-tags">Tags: <a title="All pages tagged 'netbsd'." href="/tags/netbsd/index.html" rel="tag">netbsd</a></p>
 </div>
-
-
-        <div class="container content">
+<div class="container content">
           <small>Copyright © Tim McGilchrist 2007-2026</small>
           <br>
-          <small>Powered by <a href="https://github.com/tmcgilchrist/lambdafoo.com">Hakyll</a></small>
+          <small>Powered by <a href="https://github.com/xhtmlboi/yocaml">YOCaml</a></small>
         </div>
       </div>
     </div>

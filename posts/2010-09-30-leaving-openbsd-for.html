@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
   <head>
@@ -10,40 +11,28 @@
   <!-- Enable responsiveness on mobile devices-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-  <title>
-      
-        Leaving OpenBSD for ... &middot; Perpetually Curious
-      
-  </title>
+  <title>Leaving OpenBSD for ... &middot; Perpetually Curious</title>
 
   <!-- CSS -->
-  <link rel="stylesheet" href="../css/poole.css">
-  <link rel="stylesheet" href="../css/syntax.css">
-  <link rel="stylesheet" href="../css/lanyon.css">
-  <link rel="stylesheet" href="../css/book.css">
+  <link rel="stylesheet" href="/css/poole.css">
+  <link rel="stylesheet" href="/css/syntax.css">
+  <link rel="stylesheet" href="/css/syntax-tm.css">
+  <link rel="stylesheet" href="/css/lanyon.css">
+  <link rel="stylesheet" href="/css/book.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
 
   <!-- Icons -->
-  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-precomposed.png">
-  <link rel="shortcut icon" href="../images/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/images/favicon.ico">
 
   <!-- RSS -->
-  <link rel="alternate" type="application/rss+xml" title="RSS" href="../atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
 
-  <!-- Google Analytics -->
-  <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-28532776-1', 'auto');
-    ga('send', 'pageview');
-  </script>
-<!-- End Google Analytics -->
+  <!-- Analytics -->
+  <script data-goatcounter="https://lambdafoo.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
   <a rel="me" hidden="true" href="https://hachyderm.io/@tsmc">Mastodon</a>
 </head>
-
 
   <body class="sidebar-overlay">
 
@@ -55,15 +44,15 @@
 <div class="sidebar" id="sidebar">
 
   <div class="sidebar-item">
-    <p><a href="../"><strong>Tim McGilchrist</strong></a></p>
+    <p><a href="/"><strong>Tim McGilchrist</strong></a></p>
   </div>
 
   <nav class="sidebar-nav">
-    <a class="sidebar-nav-item" href="../">Blog</a>
-    <a class="sidebar-nav-item" href="../pages/about.html">About</a>
-    <a class="sidebar-nav-item" href="../pages/talks.html">Talks</a>
-    <a class="sidebar-nav-item" href="../pages/server-room.html">Server Room</a>
-    <a class="sidebar-nav-item" href="../archive.html">Archive</a>
+    <a class="sidebar-nav-item" href="/">Blog</a>
+    <a class="sidebar-nav-item" href="/pages/about.html">About</a>
+    <a class="sidebar-nav-item" href="/pages/talks.html">Talks</a>
+    <a class="sidebar-nav-item" href="/pages/server-room.html">Server Room</a>
+    <a class="sidebar-nav-item" href="/archive.html">Archive</a>
   </nav>
 
   <div class="sidebar-item">
@@ -72,8 +61,8 @@
       <a href="https://bsky.app/profile/tsmc.purely-functional.com">Bluesky</a>
     </p>
     <p>
-      <a href="../rss.xml">RSS</a> ·
-      <a href="../atom.xml">Atom</a>
+      <a href="/rss.xml">RSS</a> ·
+      <a href="/atom.xml">Atom</a>
     </p>
     <p>
       &copy; Tim McGilchrist 2007-2026
@@ -81,74 +70,75 @@
   </div>
 </div>
 
-
     <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
          content to avoid any CSS collisions with our real content. -->
     <div class="wrap">
       <div class="masthead">
         <div class="container">
           <h3 class="masthead-title">
-            <a href="../" title="Home">Perpetually Curious</a>
-            
+            <a href="/" title="Home">Perpetually Curious</a>
             <span class="masthead-links">
-              <a href="../pages/about.html">About</a> |
-              <a href="../pages/talks.html">Talks</a> |
-              <a href="../pages/server-room.html">Server Room</a> |
-              <a href="../archive.html">Archive</a>
+              <a href="/pages/about.html">About</a> |
+              <a href="/pages/talks.html">Talks</a> |
+              <a href="/pages/server-room.html">Server Room</a> |
+              <a href="/archive.html">Archive</a>
             </span>
           </h3>
         </div>
       </div>
 
-      <div class="container content">
-        <div class="post">
+      <div class="container content"><div class="post">
   <h1 class="post-title">Leaving OpenBSD for ...</h1>
-  <span class="post-date">September 30, 2010</span>
-  <p>I’m migrating my home server away from OpenBSD.</p>
+  <span class="post-date">September 30, 2010</span><p>I'm migrating my home server away from OpenBSD.</p>
 <p>The things I was able to setup in OpenBSD have worked very well. Things like
 DHCP, DNS and SQUID have worked excellently. I found some fantastic guides on
 http://www.kernel-panic.it/openbsd.html that allowed me to
 get everything up and working in no time at all. I wont bother posting any
-details from my setup it’s better to just visit that site and decide which
+details from my setup it's better to just visit that site and decide which
 pieces you want.</p>
 <p>Why move away? These are surely very personal reasons to make the switch and are
 not a general condemnation of OpenBSD which is still a fantastic piece of
 software.</p>
-<ol type="1">
-<li><p>I wasn’t able to get DHCP &amp; DNS to dynamically update DNS when a new host
+<ol>
+<li>
+<p>I wasn't able to get DHCP &amp; DNS to dynamically update DNS when a new host
 was added to the network. Instead I had a whole heap of static mappings for
-computers. Not an ideal situation!</p></li>
-<li><p>The upgrade path for OpenBSD confuses me. When a new version comes out how do
-I upgrade without nuking all my local configuration? I really don’t want to
+computers. Not an ideal situation!</p>
+</li>
+<li>
+<p>The upgrade path for OpenBSD confuses me. When a new version comes out how do
+I upgrade without nuking all my local configuration? I really don't want to
 go back through the setup every 6 months when the BSD guys bring out a new
-version.</p></li>
-<li><p>I wasn’t able to get PHP + MySQL + Wordpress to play nicely together. Not
-being a PHP person I didn’t really grok how to setup the whole thing so I
-was forced to follow guides written by others. OpenBSD doesn’t really seem
+version.</p>
+</li>
+<li>
+<p>I wasn't able to get PHP + MySQL + Wordpress to play nicely together. Not
+being a PHP person I didn't really grok how to setup the whole thing so I
+was forced to follow guides written by others. OpenBSD doesn't really seem
 to be a Wordpress/PHP platform of choice for many so I struggled to find
-accurate docs on what to do.</p></li>
-<li><p>I wanted to add new services to the server like Ruby/Rails, Java/EE,
+accurate docs on what to do.</p>
+</li>
+<li>
+<p>I wanted to add new services to the server like Ruby/Rails, Java/EE,
 Python/Django and Erlang/OTP. Doing all this and keeping it current on OpenBSD
-is more work that I was willing to expend.</p></li>
+is more work that I was willing to expend.</p>
+</li>
 </ol>
-<p>So the solution I’m turning to is Linux and specifically Ubuntu in all it’s glory.</p>
+<p>So the solution I'm turning to is Linux and specifically Ubuntu in all it's glory.</p>
 <p>What a spiffy system Ubuntu is? I remember struggling to install Debian way back
 when but Ubuntu is a pleasure and perhaps a little too easy. Kids these days
-don’t need to struggle for hours setting up XFree86 or a dodgy network card.</p>
-<p>So over the next few weeks I’m migrating the essential services, DHCP, DNS and
-SQUID to Ubuntu. After that I’ll get a bit funky and start adding this blog on
+don't need to struggle for hours setting up XFree86 or a dodgy network card.</p>
+<p>So over the next few weeks I'm migrating the essential services, DHCP, DNS and
+SQUID to Ubuntu. After that I'll get a bit funky and start adding this blog on
 there and other bits and pieces.</p>
 <p>Hooray for Ubuntu!!</p>
-  
-  <p class="post-tags">Tags: <a title="All pages tagged 'linux'." href="../tags/linux/index.html" rel="tag">linux</a>, <a title="All pages tagged 'openbsd'." href="../tags/openbsd/index.html" rel="tag">openbsd</a>, <a title="All pages tagged 'unix'." href="../tags/unix/index.html" rel="tag">unix</a></p>
-  
+
+  <p class="post-tags">Tags: <a title="All pages tagged 'linux'." href="/tags/linux/index.html" rel="tag">linux</a>, <a title="All pages tagged 'openbsd'." href="/tags/openbsd/index.html" rel="tag">openbsd</a>, <a title="All pages tagged 'unix'." href="/tags/unix/index.html" rel="tag">unix</a></p>
 </div>
-
-
-        <div class="container content">
+<div class="container content">
           <small>Copyright © Tim McGilchrist 2007-2026</small>
           <br>
-          <small>Powered by <a href="https://github.com/tmcgilchrist/lambdafoo.com">Hakyll</a></small>
+          <small>Powered by <a href="https://github.com/xhtmlboi/yocaml">YOCaml</a></small>
         </div>
       </div>
     </div>

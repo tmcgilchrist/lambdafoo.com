@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
   <head>
@@ -10,40 +11,28 @@
   <!-- Enable responsiveness on mobile devices-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-  <title>
-      
-        On EitherT &middot; Perpetually Curious
-      
-  </title>
+  <title>On EitherT &middot; Perpetually Curious</title>
 
   <!-- CSS -->
-  <link rel="stylesheet" href="../css/poole.css">
-  <link rel="stylesheet" href="../css/syntax.css">
-  <link rel="stylesheet" href="../css/lanyon.css">
-  <link rel="stylesheet" href="../css/book.css">
+  <link rel="stylesheet" href="/css/poole.css">
+  <link rel="stylesheet" href="/css/syntax.css">
+  <link rel="stylesheet" href="/css/syntax-tm.css">
+  <link rel="stylesheet" href="/css/lanyon.css">
+  <link rel="stylesheet" href="/css/book.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
 
   <!-- Icons -->
-  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-precomposed.png">
-  <link rel="shortcut icon" href="../images/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/images/favicon.ico">
 
   <!-- RSS -->
-  <link rel="alternate" type="application/rss+xml" title="RSS" href="../atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
 
-  <!-- Google Analytics -->
-  <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-28532776-1', 'auto');
-    ga('send', 'pageview');
-  </script>
-<!-- End Google Analytics -->
+  <!-- Analytics -->
+  <script data-goatcounter="https://lambdafoo.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
   <a rel="me" hidden="true" href="https://hachyderm.io/@tsmc">Mastodon</a>
 </head>
-
 
   <body class="sidebar-overlay">
 
@@ -55,15 +44,15 @@
 <div class="sidebar" id="sidebar">
 
   <div class="sidebar-item">
-    <p><a href="../"><strong>Tim McGilchrist</strong></a></p>
+    <p><a href="/"><strong>Tim McGilchrist</strong></a></p>
   </div>
 
   <nav class="sidebar-nav">
-    <a class="sidebar-nav-item" href="../">Blog</a>
-    <a class="sidebar-nav-item" href="../pages/about.html">About</a>
-    <a class="sidebar-nav-item" href="../pages/talks.html">Talks</a>
-    <a class="sidebar-nav-item" href="../pages/server-room.html">Server Room</a>
-    <a class="sidebar-nav-item" href="../archive.html">Archive</a>
+    <a class="sidebar-nav-item" href="/">Blog</a>
+    <a class="sidebar-nav-item" href="/pages/about.html">About</a>
+    <a class="sidebar-nav-item" href="/pages/talks.html">Talks</a>
+    <a class="sidebar-nav-item" href="/pages/server-room.html">Server Room</a>
+    <a class="sidebar-nav-item" href="/archive.html">Archive</a>
   </nav>
 
   <div class="sidebar-item">
@@ -72,8 +61,8 @@
       <a href="https://bsky.app/profile/tsmc.purely-functional.com">Bluesky</a>
     </p>
     <p>
-      <a href="../rss.xml">RSS</a> ·
-      <a href="../atom.xml">Atom</a>
+      <a href="/rss.xml">RSS</a> ·
+      <a href="/atom.xml">Atom</a>
     </p>
     <p>
       &copy; Tim McGilchrist 2007-2026
@@ -81,31 +70,27 @@
   </div>
 </div>
 
-
     <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
          content to avoid any CSS collisions with our real content. -->
     <div class="wrap">
       <div class="masthead">
         <div class="container">
           <h3 class="masthead-title">
-            <a href="../" title="Home">Perpetually Curious</a>
-            
+            <a href="/" title="Home">Perpetually Curious</a>
             <span class="masthead-links">
-              <a href="../pages/about.html">About</a> |
-              <a href="../pages/talks.html">Talks</a> |
-              <a href="../pages/server-room.html">Server Room</a> |
-              <a href="../archive.html">Archive</a>
+              <a href="/pages/about.html">About</a> |
+              <a href="/pages/talks.html">Talks</a> |
+              <a href="/pages/server-room.html">Server Room</a> |
+              <a href="/archive.html">Archive</a>
             </span>
           </h3>
         </div>
       </div>
 
-      <div class="container content">
-        <div class="post">
+      <div class="container content"><div class="post">
   <h1 class="post-title">On EitherT</h1>
-  <span class="post-date">June 22, 2018</span>
-  <p>In choosing Haskell as a language you sign up for a certain class of features and behaviours.
-e.g. lazy evaluation, static typing</p>
+  <span class="post-date">June 22, 2018</span><p>In choosing Haskell as a language you sign up for a certain class of features and behaviours.
+e.g. lazy evaluation, static typing</p>
 <p>This gives you a general point in the design space for general purpose languages but like
 all languages you are still left with a number of choices in building software. These choices
 are broad, diverse and hotly debated, sometimes they get labelled with <strong>Best Practices</strong> or the
@@ -119,19 +104,21 @@ Haskell when dealing with <em>errors</em>. Both are valid design points in a wid
 space. The exception path is widely associated with Snoyman, who has written much software and
 written extensively about this in <a href="https://www.fpcomplete.com/blog/2016/11/exceptions-best-practices-haskell">Exceptions Best Practices in Haskell</a>
 and in the <a href="http://hackage.haskell.org/package/safe-exceptions">Safe Exceptions</a> package.</p>
-<p>I’d like to highlight the negatives, as I see them, of that approach and suggest a different set
+<p>I'd like to highlight the negatives, as I see them, of that approach and suggest a different set
 of trade offs around modelling <em>errors</em> as data types using EitherT/ExceptT.</p>
 <p>EitherT is a Monad Transformer built on the familar Either data type.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Either</span> a b</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="ot">=</span> <span class="dt">Left</span> a</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="dt">Right</span> b</span></code></pre></div>
+<pre><code><span class='haskell-keyword-other'>data</span><span class='haskell-source'> </span><span class='haskell-entity-name-type'>Either</span><span class='haskell-source'> a b
+</span><span class='haskell-source'>  = </span><span class='haskell-entity-name-type'>Left</span><span class='haskell-source'> a
+</span><span class='haskell-source'>  | </span><span class='haskell-entity-name-type'>Right</span><span class='haskell-source'> b
+</span></code></pre>
 <p>where typically <code>Left</code> represents some failure case in this context and <code>Right</code> represents success.
 Another formulation from OCaml community is:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> ('a,'b) <span class="dt">result</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  = <span class="dt">Ok</span> <span class="kw">of</span> 'a</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  | <span class="dt">Error</span> <span class="kw">of</span> 'b</span></code></pre></div>
+<pre><code><span class='ocaml-keyword-other'>type</span><span class='ocaml-source'> </span><span class='ocaml-source'>(</span><span class='ocaml-storage-type'>'a</span><span class='ocaml-keyword-other-ocaml punctuation-comma punctuation-separator'>,</span><span class='ocaml-storage-type'>'b</span><span class='ocaml-source'>)</span><span class='ocaml-source'> </span><span class='ocaml-source'>result</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>  </span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>Ok</span><span class='ocaml-source'> </span><span class='ocaml-keyword-other'>of</span><span class='ocaml-source'> </span><span class='ocaml-storage-type'>'a</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>  </span><span class='ocaml-keyword-other'>|</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>Error</span><span class='ocaml-source'> </span><span class='ocaml-keyword-other'>of</span><span class='ocaml-source'> </span><span class='ocaml-storage-type'>'b</span><span class='ocaml-source'>
+</span></code></pre>
 <p>which is more explicit about what the two constructors represent.</p>
-<h2 id="async-exceptions">Async Exceptions</h2>
+<h2 id="async-exceptions"><a class="anchor" aria-hidden="true" href="#async-exceptions"></a>Async Exceptions</h2>
 <p>Back in the beginning, actually in 2000/01, asynchronous exceptions were added to Haskell. [2]
 Quoting Simon Marlow:</p>
 <blockquote>
@@ -142,41 +129,43 @@ asynchronous exceptions are the only way, because polling would be a side-effect
 This means that any code in <code>IO</code> can throw a runtime exception, further any thread can receive an
 async exception.</p>
 <p>So, how should we best deal with this reality and structure our code?</p>
-<h2 id="exceptions">Exceptions</h2>
+<h2 id="exceptions"><a class="anchor" aria-hidden="true" href="#exceptions"></a>Exceptions</h2>
 <p>We have exceptions; lets use them.</p>
 <p>To start doing that you need to define your own custom exception type.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">VapourError</span> <span class="ot">=</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">InsufficientFunds</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="dt">ItemUnavailable</span> <span class="dt">Text</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="dt">MachineMalfunction</span> <span class="dt">Text</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">deriving</span> <span class="dt">Typeable</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">-- Write a reasonable Show instance for each error</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Show</span> <span class="dt">VapourError</span> <span class="kw">where</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">show</span> a <span class="ot">=</span> <span class="kw">case</span> a <span class="kw">of</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">InsufficientFunds</span> <span class="ot">-&gt;</span> <span class="st">&quot;Insufficient funds.&quot;</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">ItemUnavailable</span> i <span class="ot">-&gt;</span> <span class="st">&quot;Item &quot;</span> <span class="op">++</span> i <span class="op">++</span> <span class="st">&quot; unavailable.&quot;</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">MachineMalfunction</span> e <span class="ot">-&gt;</span> <span class="st">&quot;Hardware malfunction &quot;</span> <span class="op">++</span> e <span class="op">++</span> <span class="st">&quot;.&quot;</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Exception</span> <span class="dt">VapourError</span></span></code></pre></div>
+<pre><code><span class='haskell-keyword-other'>data</span><span class='haskell-source'> </span><span class='haskell-entity-name-type'>VapourError</span><span class='haskell-source'> =
+</span><span class='haskell-source'>    </span><span class='haskell-entity-name-type'>InsufficientFunds</span><span class='haskell-source'>
+</span><span class='haskell-source'>  | </span><span class='haskell-entity-name-type'>ItemUnavailable</span><span class='haskell-source'> </span><span class='haskell-entity-name-type'>Text</span><span class='haskell-source'>
+</span><span class='haskell-source'>  | </span><span class='haskell-entity-name-type'>MachineMalfunction</span><span class='haskell-source'> </span><span class='haskell-entity-name-type'>Text</span><span class='haskell-source'>
+</span><span class='haskell-source'>  </span><span class='haskell-keyword-other'>deriving</span><span class='haskell-source'> </span><span class='haskell-entity-name-type'>Typeable</span><span class='haskell-source'>
+</span><span class='haskell-source'>
+</span><span class='haskell-comment-line-double-dash'>-- Write a reasonable Show instance for each error</span><span class='haskell-source'>
+</span><span class='haskell-keyword-other'>instance</span><span class='haskell-source'> </span><span class='haskell-entity-name-type'>Show</span><span class='haskell-source'> </span><span class='haskell-entity-name-type'>VapourError</span><span class='haskell-source'> </span><span class='haskell-keyword-other'>where</span><span class='haskell-source'>
+</span><span class='haskell-source'>  show a = </span><span class='haskell-keyword-other'>case</span><span class='haskell-source'> a </span><span class='haskell-keyword-other'>of</span><span class='haskell-source'>
+</span><span class='haskell-source'>    </span><span class='haskell-entity-name-type'>InsufficientFunds</span><span class='haskell-source'> -&gt; </span><span class='haskell-string-quoted-double'>&quot;</span><span class='haskell-string-quoted-double'>Insufficient funds.</span><span class='haskell-string-quoted-double'>&quot;</span><span class='haskell-source'>
+</span><span class='haskell-source'>    </span><span class='haskell-entity-name-type'>ItemUnavailable</span><span class='haskell-source'> i -&gt; </span><span class='haskell-string-quoted-double'>&quot;</span><span class='haskell-string-quoted-double'>Item </span><span class='haskell-string-quoted-double'>&quot;</span><span class='haskell-source'> ++ i ++ </span><span class='haskell-string-quoted-double'>&quot;</span><span class='haskell-string-quoted-double'> unavailable.</span><span class='haskell-string-quoted-double'>&quot;</span><span class='haskell-source'>
+</span><span class='haskell-source'>    </span><span class='haskell-entity-name-type'>MachineMalfunction</span><span class='haskell-source'> e -&gt; </span><span class='haskell-string-quoted-double'>&quot;</span><span class='haskell-string-quoted-double'>Hardware malfunction </span><span class='haskell-string-quoted-double'>&quot;</span><span class='haskell-source'> ++ e ++ </span><span class='haskell-string-quoted-double'>&quot;</span><span class='haskell-string-quoted-double'>.</span><span class='haskell-string-quoted-double'>&quot;</span><span class='haskell-source'>
+</span><span class='haskell-source'>
+</span><span class='haskell-keyword-other'>instance</span><span class='haskell-source'> </span><span class='haskell-entity-name-type'>Exception</span><span class='haskell-source'> </span><span class='haskell-entity-name-type'>VapourError</span><span class='haskell-source'>
+</span></code></pre>
 <p>The three steps we need are:</p>
-<ol type="1">
+<ol>
 <li>Build the custom error type as a data type</li>
 <li>Provide a show instance, this could be generated but your error messages would not be great.</li>
 <li>Make your custom error an instance of <code>Exception</code></li>
 </ol>
 <p>At this point you can use <code>throw</code>, <code>catch</code> and <code>handle</code> with your custom error type.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ot">runVendingMachine ::</span> <span class="dt">VendingMachineState</span> <span class="ot">-&gt;</span> <span class="dt">Coin</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                   <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">Product</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>runVendingMachine state coin <span class="ot">=</span> <span class="kw">do</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  unless (coin <span class="op">&gt;</span> <span class="dv">0</span>) <span class="op">$</span> throw <span class="dt">InsufficientFunds</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  dispenseItem state coin</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="ot">dispenseItem ::</span> <span class="dt">VendingMachineState</span> <span class="ot">-&gt;</span> <span class="dt">Coin</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>             <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">VendingMachineState</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>dispenseItem <span class="ot">=</span> <span class="op">....</span></span></code></pre></div>
+<pre><code><span class='haskell-entity-name-function'>runVendingMachine</span><span class='haskell-source'> ::</span><span class='haskell-source'> </span><span class='haskell-entity-name-type'>VendingMachineState</span><span class='haskell-source'> -&gt; </span><span class='haskell-entity-name-type'>Coin</span><span class='haskell-source'>
+</span><span class='haskell-source'>                   -&gt; </span><span class='haskell-entity-name-type'>IO</span><span class='haskell-source'> </span><span class='haskell-entity-name-type'>Product</span><span class='haskell-source'>
+</span><span class='haskell-source'>runVendingMachine state coin = </span><span class='haskell-keyword-other'>do</span><span class='haskell-source'>
+</span><span class='haskell-source'>  unless (coin &gt; </span><span class='haskell-constant-numeric'>0</span><span class='haskell-source'>) $ throw </span><span class='haskell-entity-name-type'>InsufficientFunds</span><span class='haskell-source'>
+</span><span class='haskell-source'>  dispenseItem state coin
+</span><span class='haskell-source'>
+</span><span class='haskell-entity-name-function'>dispenseItem</span><span class='haskell-source'> ::</span><span class='haskell-source'> </span><span class='haskell-entity-name-type'>VendingMachineState</span><span class='haskell-source'> -&gt; </span><span class='haskell-entity-name-type'>Coin</span><span class='haskell-source'>
+</span><span class='haskell-source'>             -&gt; </span><span class='haskell-entity-name-type'>IO</span><span class='haskell-source'> </span><span class='haskell-entity-name-type'>VendingMachineState</span><span class='haskell-source'>
+</span><span class='haskell-source'>dispenseItem = ....
+</span></code></pre>
 <p>Looking at the signature of <code>runVendingMachine</code> you can see that it returns a <code>Product</code> by running a
-computation in <code>IO</code>. The problem you have when looking at that code is the signature doesn’t
+computation in <code>IO</code>. The problem you have when looking at that code is the signature doesn't
 give you any indication that it might fail outside of the <code>IO</code> which we saw earlier can fail with anything.
 So as a consumer of this function, how are you to know what exceptions to catch. Your options are:</p>
 <ul>
@@ -199,43 +188,45 @@ help me find the places I need to consider the errors, just like pattern matchin
 the gory details of exceptions in Haskell, which ones are safe to catch and what to do. Getting this right is
 hard and tricky, and really belongs in a library so that it can be written one and reused.</p>
 <p>Finally the behaviour of a Haskell system in production is such that throwing an exception would yield you exactly
-what the show instance for <code>VapourError</code> is. It wouldn’t give you a classic stack trace (unless you set that up)
+what the show instance for <code>VapourError</code> is. It wouldn't give you a classic stack trace (unless you set that up)
 so you loose context where the exception was raised and what was happening around it. At a previous workplace we
 spend many weeks tracking down SSL and connection reset exceptions that occured in a base library but bubbled
-out through multiple layers of application code. It wasn’t fun.</p>
+out through multiple layers of application code. It wasn't fun.</p>
 <p>This style is perfect for a quick script to munge some data, or an ICFP programming contest</p>
 <p>If you really need exceptions, use <code>bracket</code> pattern or <code>safe-exceptions</code> like library. Keep the
 complexity contained and code needs to be written <em>very</em> carefully.</p>
-<h2 id="data-types">Data Types</h2>
+<h2 id="data-types"><a class="anchor" aria-hidden="true" href="#data-types"></a>Data Types</h2>
 <p>We mentioned data types earlier, using data types to model your computation is the natural approach in Haskell.
 You build a data type that accurately reflects the data or states that you want to model. We even
 did it for the custom <code>VapourError</code> type earlier.</p>
 <p>Extending that we will use a particular data type <code>EitherT</code> to model errors. This is a <code>monad transformer</code> with
 an <code>Either</code> where the monad could be anything.</p>
 <p>In context it would look something like:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ot">crankHandle ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">EitherT</span> <span class="dt">VapourError</span> <span class="dt">IO</span> <span class="dt">Product</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- or</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="ot">crankHandle ::</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">EitherT</span> <span class="dt">VapourError</span> m <span class="dt">Product</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- or</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="ot">crankHandle ::</span> <span class="dt">MonadIO</span> m <span class="ot">=&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">EitherT</span> <span class="dt">VapourError</span> m <span class="dt">Product</span></span></code></pre></div>
+<pre><code><span class='haskell-entity-name-function'>crankHandle</span><span class='haskell-source'> ::</span><span class='haskell-source'> </span><span class='haskell-entity-name-type'>Int</span><span class='haskell-source'> -&gt; </span><span class='haskell-entity-name-type'>EitherT</span><span class='haskell-source'> </span><span class='haskell-entity-name-type'>VapourError</span><span class='haskell-source'> </span><span class='haskell-entity-name-type'>IO</span><span class='haskell-source'> </span><span class='haskell-entity-name-type'>Product</span><span class='haskell-source'>
+</span><span class='haskell-comment-line-double-dash'>-- or</span><span class='haskell-source'>
+</span><span class='haskell-entity-name-function'>crankHandle</span><span class='haskell-source'> ::</span><span class='haskell-source'> </span><span class='haskell-entity-name-type'>Monad</span><span class='haskell-source'> m =&gt; </span><span class='haskell-entity-name-type'>Int</span><span class='haskell-source'> -&gt; </span><span class='haskell-entity-name-type'>EitherT</span><span class='haskell-source'> </span><span class='haskell-entity-name-type'>VapourError</span><span class='haskell-source'> m </span><span class='haskell-entity-name-type'>Product</span><span class='haskell-source'>
+</span><span class='haskell-comment-line-double-dash'>-- or</span><span class='haskell-source'>
+</span><span class='haskell-entity-name-function'>crankHandle</span><span class='haskell-source'> ::</span><span class='haskell-source'> </span><span class='haskell-entity-name-type'>MonadIO</span><span class='haskell-source'> m =&gt; </span><span class='haskell-entity-name-type'>Int</span><span class='haskell-source'> -&gt; </span><span class='haskell-entity-name-type'>EitherT</span><span class='haskell-source'> </span><span class='haskell-entity-name-type'>VapourError</span><span class='haskell-source'> m </span><span class='haskell-entity-name-type'>Product</span><span class='haskell-source'>
+</span></code></pre>
 <p>The type of our error is present in the type of our function, a familar situation.
-If the monad <code>m</code> isn’t IO then we have a good degree of confidence that
+If the monad <code>m</code> isn't IO then we have a good degree of confidence that
 none of the base <code>exceptions</code> will be present.</p>
-<h2 id="solution">Solution</h2>
-<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="pp"># Build a data type that represents the possible error states</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">VapourError</span> <span class="ot">=</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">InsufficientFunds</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="dt">ItemUnavailable</span> <span class="dt">Text</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="dt">MachineMalfunction</span> <span class="dt">Text</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="pp"># Provide a function for turning errors into text</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="ot">renderVapourError ::</span> <span class="dt">VapourError</span> <span class="ot">-&gt;</span> <span class="dt">Text</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>renderVapourError <span class="ot">=</span> <span class="op">...</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="pp"># Usage site</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="ot">runVendingMachine ::</span> <span class="dt">VendingMachineState</span> <span class="ot">-&gt;</span> <span class="dt">Coin</span> <span class="ot">-&gt;</span> <span class="dt">EitherT</span> <span class="dt">VapourError</span> <span class="dt">IO</span> <span class="dt">Product</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>runVendingMachine <span class="ot">=</span> <span class="op">...</span></span></code></pre></div>
-<h2 id="either---examples">Either - Examples</h2>
+<h2 id="solution"><a class="anchor" aria-hidden="true" href="#solution"></a>Solution</h2>
+<pre><code><span class='haskell-source'># </span><span class='haskell-entity-name-type'>Build</span><span class='haskell-source'> a </span><span class='haskell-keyword-other'>data</span><span class='haskell-source'> </span><span class='haskell-keyword-other'>type</span><span class='haskell-source'> that represents the possible error states
+</span><span class='haskell-keyword-other'>data</span><span class='haskell-source'> </span><span class='haskell-entity-name-type'>VapourError</span><span class='haskell-source'> =
+</span><span class='haskell-source'>    </span><span class='haskell-entity-name-type'>InsufficientFunds</span><span class='haskell-source'>
+</span><span class='haskell-source'>  | </span><span class='haskell-entity-name-type'>ItemUnavailable</span><span class='haskell-source'> </span><span class='haskell-entity-name-type'>Text</span><span class='haskell-source'>
+</span><span class='haskell-source'>  | </span><span class='haskell-entity-name-type'>MachineMalfunction</span><span class='haskell-source'> </span><span class='haskell-entity-name-type'>Text</span><span class='haskell-source'>
+</span><span class='haskell-source'>
+</span><span class='haskell-source'># </span><span class='haskell-entity-name-type'>Provide</span><span class='haskell-source'> a function for turning errors into text
+</span><span class='haskell-entity-name-function'>renderVapourError</span><span class='haskell-source'> ::</span><span class='haskell-source'> </span><span class='haskell-entity-name-type'>VapourError</span><span class='haskell-source'> -&gt; </span><span class='haskell-entity-name-type'>Text</span><span class='haskell-source'>
+</span><span class='haskell-source'>renderVapourError = ...
+</span><span class='haskell-source'>
+</span><span class='haskell-source'># </span><span class='haskell-entity-name-type'>Usage</span><span class='haskell-source'> site
+</span><span class='haskell-entity-name-function'>runVendingMachine</span><span class='haskell-source'> ::</span><span class='haskell-source'> </span><span class='haskell-entity-name-type'>VendingMachineState</span><span class='haskell-source'> -&gt; </span><span class='haskell-entity-name-type'>Coin</span><span class='haskell-source'> -&gt; </span><span class='haskell-entity-name-type'>EitherT</span><span class='haskell-source'> </span><span class='haskell-entity-name-type'>VapourError</span><span class='haskell-source'> </span><span class='haskell-entity-name-type'>IO</span><span class='haskell-source'> </span><span class='haskell-entity-name-type'>Product</span><span class='haskell-source'>
+</span><span class='haskell-source'>runVendingMachine = ...
+</span></code></pre>
+<h2 id="either---examples"><a class="anchor" aria-hidden="true" href="#either---examples"></a>Either - Examples</h2>
 <p>Examples of substantial pieces of code using <code>EitherT</code> to organise errors.</p>
 <ul>
 <li>mafia - https://github.com/haskell-mafia/mafia/search?utf8=✓&amp;q=EitherT&amp;type=</li>
@@ -243,20 +234,20 @@ none of the base <code>exceptions</code> will be present.</p>
 <li>traction - https://github.com/markhibberd/traction/search?utf8=✓&amp;q=EitherT&amp;type=</li>
 <li>mismi - https://github.com/nhibberd/mismi/search?q=EitherT&amp;type=Code&amp;utf8=✓</li>
 </ul>
-<h2 id="either-advantages">Either Advantages</h2>
+<h2 id="either-advantages"><a class="anchor" aria-hidden="true" href="#either-advantages"></a>Either Advantages</h2>
 <ul>
 <li>function signatures clearly indicate error states</li>
 <li>exhaustive pattern matching indicates where errors have/have not been handled</li>
 <li>requires explicit composition of error data types</li>
 </ul>
 <p>Basically the compiler helps you handle the various states required using the type system.</p>
-<h2 id="exception---examples">Exception - Examples</h2>
+<h2 id="exception---examples"><a class="anchor" aria-hidden="true" href="#exception---examples"></a>Exception - Examples</h2>
 <p>Example of code using <code>Exceptions</code> to organise errors</p>
 <ul>
 <li>http-client - using non-200 response codes as exceptions</li>
 <li>stack - internally follows an exception style</li>
 </ul>
-<h2 id="exception-disadvantages">Exception Disadvantages</h2>
+<h2 id="exception-disadvantages"><a class="anchor" aria-hidden="true" href="#exception-disadvantages"></a>Exception Disadvantages</h2>
 <p>The main downsides as I see it to exception oriented code are:</p>
 <ul>
 <li>exception throwing functions compose too easily you are not forced to think about what it means.</li>
@@ -266,7 +257,7 @@ none of the base <code>exceptions</code> will be present.</p>
 <p>Here the compiler is less helpful in guiding you, giving little or no help with
 handling particular exceptions or giving compile errors for new exceptions that you might
 need to consider.</p>
-<h2 id="supporting-libraries">Supporting Libraries</h2>
+<h2 id="supporting-libraries"><a class="anchor" aria-hidden="true" href="#supporting-libraries"></a>Supporting Libraries</h2>
 <p>The supporting libraries for this pattern of error handling are:</p>
 <ul>
 <li>transformers-either - Provides a type alias <code>type EitherT = ExceptT</code> plus addition operators.</li>
@@ -276,7 +267,7 @@ need to consider.</p>
 easily or use the <code>ExceptT</code> transformer provided in the <code>transformers</code> package (adding any helper
 functions you need). The value codes in a structured, consious handling of errors and using the
 Haskell compiler to help.</p>
-<h2 id="conclusion">Conclusion</h2>
+<h2 id="conclusion"><a class="anchor" aria-hidden="true" href="#conclusion"></a>Conclusion</h2>
 <blockquote>
 <p>The primary value of avoiding exceptions is that it makes error behavior explicit in the
 type of the function. If you’re in an environment where everything might fail, being explicit
@@ -295,25 +286,22 @@ be there, and so you get an opportunity to think about what the difference reall
 <li>Yaron Minsky</li>
 </ul>
 </blockquote>
-<h2 id="references">References</h2>
-<ol type="1">
+<h2 id="references"><a class="anchor" aria-hidden="true" href="#references"></a>References</h2>
+<ol>
 <li><a href="https://simonmar.github.io/posts/2017-01-24/asynchronous-exceptions.html">Asynchronous Exceptions in Practice</a></li>
 <li><a href="https://simonmar.github.io/bib/papers/async.pdf">Asynchronous Exceptions in Haskell</a></li>
 <li><a href="https://www.fpcomplete.com/blog/2016/11/exceptions-best-practices-haskell">Exceptions Best Practices in Haskell</a></li>
 <li><a href="https://www.fpcomplete/com/blog/2017/07/the-rio-monad">The RIO Monad</a></li>
-<li><a href="https://discuss.ocaml.org/t/specific-reason-for-not-embracing-the-use-of-exceptions-for-error-propagation/1666/15">Yaron’s Thoughts</a></li>
+<li><a href="https://discuss.ocaml.org/t/specific-reason-for-not-embracing-the-use-of-exceptions-for-error-propagation/1666/15">Yaron's Thoughts</a></li>
 <li><a href="https://www.well-typed.com/blog/2015/07/checked-exceptions/">Checked Exceptions</a></li>
 </ol>
-  
-  <p class="post-tags">Tags: <a title="All pages tagged 'haskell'." href="../tags/haskell/index.html" rel="tag">haskell</a></p>
-  
+
+  <p class="post-tags">Tags: <a title="All pages tagged 'haskell'." href="/tags/haskell/index.html" rel="tag">haskell</a></p>
 </div>
-
-
-        <div class="container content">
+<div class="container content">
           <small>Copyright © Tim McGilchrist 2007-2026</small>
           <br>
-          <small>Powered by <a href="https://github.com/tmcgilchrist/lambdafoo.com">Hakyll</a></small>
+          <small>Powered by <a href="https://github.com/xhtmlboi/yocaml">YOCaml</a></small>
         </div>
       </div>
     </div>

@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
   <head>
@@ -10,40 +11,28 @@
   <!-- Enable responsiveness on mobile devices-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-  <title>
-      
-        Collecting Failed SSH Logins &middot; Perpetually Curious
-      
-  </title>
+  <title>Collecting Failed SSH Logins &middot; Perpetually Curious</title>
 
   <!-- CSS -->
-  <link rel="stylesheet" href="../css/poole.css">
-  <link rel="stylesheet" href="../css/syntax.css">
-  <link rel="stylesheet" href="../css/lanyon.css">
-  <link rel="stylesheet" href="../css/book.css">
+  <link rel="stylesheet" href="/css/poole.css">
+  <link rel="stylesheet" href="/css/syntax.css">
+  <link rel="stylesheet" href="/css/syntax-tm.css">
+  <link rel="stylesheet" href="/css/lanyon.css">
+  <link rel="stylesheet" href="/css/book.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
 
   <!-- Icons -->
-  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-precomposed.png">
-  <link rel="shortcut icon" href="../images/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/images/favicon.ico">
 
   <!-- RSS -->
-  <link rel="alternate" type="application/rss+xml" title="RSS" href="../atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
 
-  <!-- Google Analytics -->
-  <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-28532776-1', 'auto');
-    ga('send', 'pageview');
-  </script>
-<!-- End Google Analytics -->
+  <!-- Analytics -->
+  <script data-goatcounter="https://lambdafoo.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
   <a rel="me" hidden="true" href="https://hachyderm.io/@tsmc">Mastodon</a>
 </head>
-
 
   <body class="sidebar-overlay">
 
@@ -55,15 +44,15 @@
 <div class="sidebar" id="sidebar">
 
   <div class="sidebar-item">
-    <p><a href="../"><strong>Tim McGilchrist</strong></a></p>
+    <p><a href="/"><strong>Tim McGilchrist</strong></a></p>
   </div>
 
   <nav class="sidebar-nav">
-    <a class="sidebar-nav-item" href="../">Blog</a>
-    <a class="sidebar-nav-item" href="../pages/about.html">About</a>
-    <a class="sidebar-nav-item" href="../pages/talks.html">Talks</a>
-    <a class="sidebar-nav-item" href="../pages/server-room.html">Server Room</a>
-    <a class="sidebar-nav-item" href="../archive.html">Archive</a>
+    <a class="sidebar-nav-item" href="/">Blog</a>
+    <a class="sidebar-nav-item" href="/pages/about.html">About</a>
+    <a class="sidebar-nav-item" href="/pages/talks.html">Talks</a>
+    <a class="sidebar-nav-item" href="/pages/server-room.html">Server Room</a>
+    <a class="sidebar-nav-item" href="/archive.html">Archive</a>
   </nav>
 
   <div class="sidebar-item">
@@ -72,8 +61,8 @@
       <a href="https://bsky.app/profile/tsmc.purely-functional.com">Bluesky</a>
     </p>
     <p>
-      <a href="../rss.xml">RSS</a> ·
-      <a href="../atom.xml">Atom</a>
+      <a href="/rss.xml">RSS</a> ·
+      <a href="/atom.xml">Atom</a>
     </p>
     <p>
       &copy; Tim McGilchrist 2007-2026
@@ -81,82 +70,84 @@
   </div>
 </div>
 
-
     <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
          content to avoid any CSS collisions with our real content. -->
     <div class="wrap">
       <div class="masthead">
         <div class="container">
           <h3 class="masthead-title">
-            <a href="../" title="Home">Perpetually Curious</a>
-            
+            <a href="/" title="Home">Perpetually Curious</a>
             <span class="masthead-links">
-              <a href="../pages/about.html">About</a> |
-              <a href="../pages/talks.html">Talks</a> |
-              <a href="../pages/server-room.html">Server Room</a> |
-              <a href="../archive.html">Archive</a>
+              <a href="/pages/about.html">About</a> |
+              <a href="/pages/talks.html">Talks</a> |
+              <a href="/pages/server-room.html">Server Room</a> |
+              <a href="/archive.html">Archive</a>
             </span>
           </h3>
         </div>
       </div>
 
-      <div class="container content">
-        <div class="post">
+      <div class="container content"><div class="post">
   <h1 class="post-title">Collecting Failed SSH Logins</h1>
-  <span class="post-date">December 14, 2007</span>
-  <p>It’s always a good idea to keep an eye on what’s happening on your servers,
-especially when they’re connected to a hostile environment like the
-Interweb. Following in this vein, I’m going to show how I configured my Solaris
+  <span class="post-date">December 14, 2007</span><p>It's always a good idea to keep an eye on what's happening on your servers,
+especially when they're connected to a hostile environment like the
+Interweb. Following in this vein, I'm going to show how I configured my Solaris
 server to collect failed login attempts.</p>
-<p>First, you’ll need a root shell and then open up the sshd configuration file:</p>
-<pre><code>vi /etc/ssh/sshd_config</code></pre>
-<p>Find the line containing ‘LogLevel’. On my machine it looked like</p>
-<pre><code>LogLevel    info</code></pre>
+<p>First, you'll need a root shell and then open up the sshd configuration file:</p>
+<pre><code>vi /etc/ssh/sshd_config
+</code></pre>
+<p>Find the line containing 'LogLevel'. On my machine it looked like</p>
+<pre><code>LogLevel    info
+</code></pre>
 <p>We need to change the info to debug, so it should look like this:</p>
-<pre><code>LogLevel    debug</code></pre>
+<pre><code>LogLevel    debug
+</code></pre>
 <p>Save that file and open up the one for syslog</p>
-<pre><code>vi /etc/syslog.conf</code></pre>
+<pre><code>vi /etc/syslog.conf
+</code></pre>
 <p>Go to the bottom of that file and add the following line:</p>
-<pre><code>auth.debug                      ifdef(`LOGHOST', /var/log/authlog, @loghost)</code></pre>
+<pre><code>auth.debug                      ifdef(`LOGHOST', /var/log/authlog, @loghost)
+</code></pre>
 <p>This should direct the sshd debug messages, which includes failed login attempts
 to a new logfile <strong>authlog</strong> under <strong>/var/log</strong>. One thing to be careful of is
 the spacing needs to be tabs not spaces otherwise it wont work.</p>
 <p>Now we need to restart both services so they pickup the changes in
-configuration, then we’ll test that it all works.</p>
+configuration, then we'll test that it all works.</p>
 <p>Restart syslog:</p>
-<pre><code>svcadm restart svc:/system/system-log:default</code></pre>
+<pre><code>svcadm restart svc:/system/system-log:default
+</code></pre>
 <p>and to restart sshd:</p>
-<pre><code>svcadm restart svc:/network/ssh:default</code></pre>
+<pre><code>svcadm restart svc:/network/ssh:default
+</code></pre>
 <p>Just check that everything started correctly, if you type</p>
-<pre><code>svcs -x</code></pre>
-<p>you should see no errors, alternatively you could type it without the ‘-x’ which
+<pre><code>svcs -x
+</code></pre>
+<p>you should see no errors, alternatively you could type it without the '-x' which
 shows all the started services and the restarted ones will appear at the end of
 the list.</p>
 <p>Now you can test it works by tailing the logfile <strong>/var/adm/authlog</strong> in one
 terminal and attempting to login via another. Hopefully now it all works and you
-see the failed login attempt in authlog. One option piece of configuration I’ve
-added is to rotate the authlog, this isn’t strictly necessary but it does clean
+see the failed login attempt in authlog. One option piece of configuration I've
+added is to rotate the authlog, this isn't strictly necessary but it does clean
 things up a bit.</p>
 <p>I decided on rotating the logs every month and keeping 4 months worth of logs
 apart from the current log.</p>
-<pre><code>logadm -w /var/log/authlog -C 4 -p 1m -t '$dirname/$basename-%m-%Y.log'</code></pre>
+<pre><code>logadm -w /var/log/authlog -C 4 -p 1m -t '$dirname/$basename-%m-%Y.log'
+</code></pre>
 <p>If you want to keep more logs, change the 4 to something more or less and the
 time period before rotating the logs is after the <strong>-p</strong> switch so you can change
 that to 6m for 6 months or 1w for 1 week. Have a look at the manpage for logadm
 for more details.</p>
 <p>The only extra thing you might want to add is compression of the logfile after
-rotating, or processing the logfile to give you a summary of activity. I’ve been
-looking into the summary but haven’t found anything that fits my needs.</p>
-  
-  <p class="post-tags">Tags: <a title="All pages tagged 'solaris'." href="../tags/solaris/index.html" rel="tag">solaris</a></p>
-  
+rotating, or processing the logfile to give you a summary of activity. I've been
+looking into the summary but haven't found anything that fits my needs.</p>
+
+  <p class="post-tags">Tags: <a title="All pages tagged 'solaris'." href="/tags/solaris/index.html" rel="tag">solaris</a></p>
 </div>
-
-
-        <div class="container content">
+<div class="container content">
           <small>Copyright © Tim McGilchrist 2007-2026</small>
           <br>
-          <small>Powered by <a href="https://github.com/tmcgilchrist/lambdafoo.com">Hakyll</a></small>
+          <small>Powered by <a href="https://github.com/xhtmlboi/yocaml">YOCaml</a></small>
         </div>
       </div>
     </div>

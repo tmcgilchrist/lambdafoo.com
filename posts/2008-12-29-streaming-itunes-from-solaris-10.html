@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
   <head>
@@ -10,40 +11,28 @@
   <!-- Enable responsiveness on mobile devices-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-  <title>
-      
-        Streaming iTunes from Solaris 10 &middot; Perpetually Curious
-      
-  </title>
+  <title>Streaming iTunes from Solaris 10 &middot; Perpetually Curious</title>
 
   <!-- CSS -->
-  <link rel="stylesheet" href="../css/poole.css">
-  <link rel="stylesheet" href="../css/syntax.css">
-  <link rel="stylesheet" href="../css/lanyon.css">
-  <link rel="stylesheet" href="../css/book.css">
+  <link rel="stylesheet" href="/css/poole.css">
+  <link rel="stylesheet" href="/css/syntax.css">
+  <link rel="stylesheet" href="/css/syntax-tm.css">
+  <link rel="stylesheet" href="/css/lanyon.css">
+  <link rel="stylesheet" href="/css/book.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
 
   <!-- Icons -->
-  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-precomposed.png">
-  <link rel="shortcut icon" href="../images/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/images/favicon.ico">
 
   <!-- RSS -->
-  <link rel="alternate" type="application/rss+xml" title="RSS" href="../atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
 
-  <!-- Google Analytics -->
-  <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-28532776-1', 'auto');
-    ga('send', 'pageview');
-  </script>
-<!-- End Google Analytics -->
+  <!-- Analytics -->
+  <script data-goatcounter="https://lambdafoo.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
   <a rel="me" hidden="true" href="https://hachyderm.io/@tsmc">Mastodon</a>
 </head>
-
 
   <body class="sidebar-overlay">
 
@@ -55,15 +44,15 @@
 <div class="sidebar" id="sidebar">
 
   <div class="sidebar-item">
-    <p><a href="../"><strong>Tim McGilchrist</strong></a></p>
+    <p><a href="/"><strong>Tim McGilchrist</strong></a></p>
   </div>
 
   <nav class="sidebar-nav">
-    <a class="sidebar-nav-item" href="../">Blog</a>
-    <a class="sidebar-nav-item" href="../pages/about.html">About</a>
-    <a class="sidebar-nav-item" href="../pages/talks.html">Talks</a>
-    <a class="sidebar-nav-item" href="../pages/server-room.html">Server Room</a>
-    <a class="sidebar-nav-item" href="../archive.html">Archive</a>
+    <a class="sidebar-nav-item" href="/">Blog</a>
+    <a class="sidebar-nav-item" href="/pages/about.html">About</a>
+    <a class="sidebar-nav-item" href="/pages/talks.html">Talks</a>
+    <a class="sidebar-nav-item" href="/pages/server-room.html">Server Room</a>
+    <a class="sidebar-nav-item" href="/archive.html">Archive</a>
   </nav>
 
   <div class="sidebar-item">
@@ -72,8 +61,8 @@
       <a href="https://bsky.app/profile/tsmc.purely-functional.com">Bluesky</a>
     </p>
     <p>
-      <a href="../rss.xml">RSS</a> ·
-      <a href="../atom.xml">Atom</a>
+      <a href="/rss.xml">RSS</a> ·
+      <a href="/atom.xml">Atom</a>
     </p>
     <p>
       &copy; Tim McGilchrist 2007-2026
@@ -81,30 +70,26 @@
   </div>
 </div>
 
-
     <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
          content to avoid any CSS collisions with our real content. -->
     <div class="wrap">
       <div class="masthead">
         <div class="container">
           <h3 class="masthead-title">
-            <a href="../" title="Home">Perpetually Curious</a>
-            
+            <a href="/" title="Home">Perpetually Curious</a>
             <span class="masthead-links">
-              <a href="../pages/about.html">About</a> |
-              <a href="../pages/talks.html">Talks</a> |
-              <a href="../pages/server-room.html">Server Room</a> |
-              <a href="../archive.html">Archive</a>
+              <a href="/pages/about.html">About</a> |
+              <a href="/pages/talks.html">Talks</a> |
+              <a href="/pages/server-room.html">Server Room</a> |
+              <a href="/archive.html">Archive</a>
             </span>
           </h3>
         </div>
       </div>
 
-      <div class="container content">
-        <div class="post">
+      <div class="container content"><div class="post">
   <h1 class="post-title">Streaming iTunes from Solaris 10</h1>
-  <span class="post-date">December 29, 2008</span>
-  <p><strong>Problem:</strong> Sharing iTunes library from home server running Solaris.</p>
+  <span class="post-date">December 29, 2008</span><p><strong>Problem:</strong> Sharing iTunes library from home server running Solaris.</p>
 <p><strong>Solution:</strong> Firefly Media Server (aka mt-daapd).</p>
 <p>Firefly acts as a shared iTunes volume to any iTunes clients. Since all my
 clients will be Macs this is the perfect solution. I had previously tried to
@@ -123,36 +108,35 @@ used the latest nightly svn download.</p>
 <p>A couple of pre-requisites before running configure, make sure you have the Sun
 Studio compilers in your PATH. Otherwise it will try to use the gcc compiler or
 not find one at all.</p>
-<pre class="shell"><code>export PATH=/opt/SUNWspro/bin:$PATH
-
-./configure --enable-sqlite3 --with-sqlite3-includes=/opt/csw/include \
- -with-sqlite3-libs=/opt/csw/lib \
---with-gdbm-includes=/opt/csw/include --with-gdbm-libs=/opt/csw/lib \
- LDFLAGS=&quot;-L/opt/csw/lib&quot; \
-CPPFLAGS=&quot;-I/opt/csw/include&quot; --prefix=/opt/local
-</code></pre>
+<pre><code><span class='shell-storage-modifier'>export</span><span class='shell-source'> PATH=/opt/SUNWspro/bin:</span><span class='shell-punctuation-definition-variable'>$</span><span class='shell-variable-other-normal'>PATH</span><span class='shell-source'>
+</span><span class='shell-source'>
+</span><span class='shell-source'>./configure --enable-sqlite3 --with-sqlite3-includes=/opt/csw/include </span><span class='shell-constant-character-escape-newline'>\
+</span><span class='shell-source'> -with-sqlite3-libs=/opt/csw/lib </span><span class='shell-constant-character-escape-newline'>\
+</span><span class='shell-source'>--with-gdbm-includes=/opt/csw/include --with-gdbm-libs=/opt/csw/lib </span><span class='shell-constant-character-escape-newline'>\
+</span><span class='shell-source'> LDFLAGS=</span><span class='shell-punctuation-definition-string-begin'>&quot;</span><span class='shell-string-quoted-double'>-L/opt/csw/lib</span><span class='shell-punctuation-definition-string-end'>&quot;</span><span class='shell-source'> </span><span class='shell-constant-character-escape-newline'>\
+</span><span class='shell-source'>CPPFLAGS=</span><span class='shell-punctuation-definition-string-begin'>&quot;</span><span class='shell-string-quoted-double'>-I/opt/csw/include</span><span class='shell-punctuation-definition-string-end'>&quot;</span><span class='shell-source'> --prefix=/opt/local
+</span><span class='shell-source'>
+</span></code></pre>
 <p>Which looks for the sqlite3 and gdbm libraries from my Blastwave install, and
 will install the final binary under <strong>/opt/local</strong>. Change this if you want
 to install elsewhere.</p>
 <p><strong>Step 4:</strong> Compiling
 Run a quick make to compile everything,</p>
-<pre class="shell"><code>
-gmake
-gmake install
-</code></pre>
-<h3 id="note-fri-feb-3-082548">NOTE Fri Feb 3 08:25:48</h3>
+<pre><code><span class='shell-source'>
+</span><span class='shell-source'>gmake
+</span><span class='shell-source'>gmake install
+</span><span class='shell-source'>
+</span></code></pre>
+<h3 id="note-fri-feb-3-082548"><a class="anchor" aria-hidden="true" href="#note-fri-feb-3-082548"></a>NOTE Fri Feb  3 08:25:48</h3>
 <p>I no longer have a Solaris install available, or a SPARC machine for that
-matter, so I can’t check whether these instructions still work.</p>
-  
-  <p class="post-tags">Tags: <a title="All pages tagged 'solaris'." href="../tags/solaris/index.html" rel="tag">solaris</a>, <a title="All pages tagged 'itunes'." href="../tags/itunes/index.html" rel="tag">itunes</a></p>
-  
+matter, so I can't check whether these instructions still work.</p>
+
+  <p class="post-tags">Tags: <a title="All pages tagged 'solaris'." href="/tags/solaris/index.html" rel="tag">solaris</a>, <a title="All pages tagged 'itunes'." href="/tags/itunes/index.html" rel="tag">itunes</a></p>
 </div>
-
-
-        <div class="container content">
+<div class="container content">
           <small>Copyright © Tim McGilchrist 2007-2026</small>
           <br>
-          <small>Powered by <a href="https://github.com/tmcgilchrist/lambdafoo.com">Hakyll</a></small>
+          <small>Powered by <a href="https://github.com/xhtmlboi/yocaml">YOCaml</a></small>
         </div>
       </div>
     </div>

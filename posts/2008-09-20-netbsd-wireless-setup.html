@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
   <head>
@@ -10,40 +11,28 @@
   <!-- Enable responsiveness on mobile devices-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-  <title>
-      
-        NetBSD wireless setup &middot; Perpetually Curious
-      
-  </title>
+  <title>NetBSD wireless setup &middot; Perpetually Curious</title>
 
   <!-- CSS -->
-  <link rel="stylesheet" href="../css/poole.css">
-  <link rel="stylesheet" href="../css/syntax.css">
-  <link rel="stylesheet" href="../css/lanyon.css">
-  <link rel="stylesheet" href="../css/book.css">
+  <link rel="stylesheet" href="/css/poole.css">
+  <link rel="stylesheet" href="/css/syntax.css">
+  <link rel="stylesheet" href="/css/syntax-tm.css">
+  <link rel="stylesheet" href="/css/lanyon.css">
+  <link rel="stylesheet" href="/css/book.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
 
   <!-- Icons -->
-  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-precomposed.png">
-  <link rel="shortcut icon" href="../images/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/images/favicon.ico">
 
   <!-- RSS -->
-  <link rel="alternate" type="application/rss+xml" title="RSS" href="../atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
 
-  <!-- Google Analytics -->
-  <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-28532776-1', 'auto');
-    ga('send', 'pageview');
-  </script>
-<!-- End Google Analytics -->
+  <!-- Analytics -->
+  <script data-goatcounter="https://lambdafoo.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
   <a rel="me" hidden="true" href="https://hachyderm.io/@tsmc">Mastodon</a>
 </head>
-
 
   <body class="sidebar-overlay">
 
@@ -55,15 +44,15 @@
 <div class="sidebar" id="sidebar">
 
   <div class="sidebar-item">
-    <p><a href="../"><strong>Tim McGilchrist</strong></a></p>
+    <p><a href="/"><strong>Tim McGilchrist</strong></a></p>
   </div>
 
   <nav class="sidebar-nav">
-    <a class="sidebar-nav-item" href="../">Blog</a>
-    <a class="sidebar-nav-item" href="../pages/about.html">About</a>
-    <a class="sidebar-nav-item" href="../pages/talks.html">Talks</a>
-    <a class="sidebar-nav-item" href="../pages/server-room.html">Server Room</a>
-    <a class="sidebar-nav-item" href="../archive.html">Archive</a>
+    <a class="sidebar-nav-item" href="/">Blog</a>
+    <a class="sidebar-nav-item" href="/pages/about.html">About</a>
+    <a class="sidebar-nav-item" href="/pages/talks.html">Talks</a>
+    <a class="sidebar-nav-item" href="/pages/server-room.html">Server Room</a>
+    <a class="sidebar-nav-item" href="/archive.html">Archive</a>
   </nav>
 
   <div class="sidebar-item">
@@ -72,8 +61,8 @@
       <a href="https://bsky.app/profile/tsmc.purely-functional.com">Bluesky</a>
     </p>
     <p>
-      <a href="../rss.xml">RSS</a> ·
-      <a href="../atom.xml">Atom</a>
+      <a href="/rss.xml">RSS</a> ·
+      <a href="/atom.xml">Atom</a>
     </p>
     <p>
       &copy; Tim McGilchrist 2007-2026
@@ -81,41 +70,39 @@
   </div>
 </div>
 
-
     <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
          content to avoid any CSS collisions with our real content. -->
     <div class="wrap">
       <div class="masthead">
         <div class="container">
           <h3 class="masthead-title">
-            <a href="../" title="Home">Perpetually Curious</a>
-            
+            <a href="/" title="Home">Perpetually Curious</a>
             <span class="masthead-links">
-              <a href="../pages/about.html">About</a> |
-              <a href="../pages/talks.html">Talks</a> |
-              <a href="../pages/server-room.html">Server Room</a> |
-              <a href="../archive.html">Archive</a>
+              <a href="/pages/about.html">About</a> |
+              <a href="/pages/talks.html">Talks</a> |
+              <a href="/pages/server-room.html">Server Room</a> |
+              <a href="/archive.html">Archive</a>
             </span>
           </h3>
         </div>
       </div>
 
-      <div class="container content">
-        <div class="post">
+      <div class="container content"><div class="post">
   <h1 class="post-title">NetBSD wireless setup</h1>
-  <span class="post-date">September 20, 2008</span>
-  <p>After installing NetBSD 4, the ethernet connection worked but not the
+  <span class="post-date">September 20, 2008</span><p>After installing NetBSD 4, the ethernet connection worked but not the
 wireless. The easiest option available was a 3Com CRWE777A wireless PCMCIA card,
-which originally came with a PCI bridge but I’m using it as a normal PCMCIA
+which originally came with a PCI bridge but I'm using it as a normal PCMCIA
 card.</p>
 <p>Searching around the man pages for various BSD variants showed that the wi(4)
-driver should work with this card. Unfortunately the NetBSD source doesn’t have
+driver should work with this card. Unfortunately the NetBSD source doesn't have
 a Product Id for this particular card under the PCMCIA, but it does for the
 PCI. Strange!</p>
-<p>So it was a simple case of putting the Product Id into ‘pcmciadevs’:</p>
-<pre><code>product 3COM 3CRWE777A          0x0777 3Com AirConnect CRWE777A Wireless LAN</code></pre>
+<p>So it was a simple case of putting the Product Id into 'pcmciadevs':</p>
+<pre><code>product 3COM 3CRWE777A          0x0777 3Com AirConnect CRWE777A Wireless LAN
+</code></pre>
 <p>Then run:</p>
-<pre><code>make -f Makefile.pcmciadevs</code></pre>
+<pre><code>make -f Makefile.pcmciadevs
+</code></pre>
 <p>which generates the correct structs in the header files.</p>
 <p>A short kernel recompile later, making sure <strong>wi</strong> is enabled for pcmcia, and the
 card should be recognised on startup. Here is the <strong>dmesg</strong> output from my laptop.</p>
@@ -123,30 +110,30 @@ card should be recognised on startup. Here is the <strong>dmesg</strong> output 
 wi0: 802.11 address 00:01:03:78:e6:7f
 wi0: using RF:PRISM2 MAC:HFA3841 CARD:HWB3163 rev.A
 wi0: Intersil Firmware: Primary (0.3.0), Station (0.7.6)
-wi0: 11b rates: 1Mbps 2Mbps 5.5Mbps 11Mbps</code></pre>
+wi0: 11b rates: 1Mbps 2Mbps 5.5Mbps 11Mbps
+</code></pre>
 <p>If not something like this might help:</p>
-<pre><code>ifconfig wi0 create</code></pre>
+<pre><code>ifconfig wi0 create
+</code></pre>
 <p>On an unsecured 802.11b wireless network this should work to associate it with
 <strong>test-network</strong> and get you an IP. Modify the network name and IP range for
 you local conditions.</p>
 <pre><code>ifconfig wi0 ssid test-network
-ifconfig wi0 192.168.0.5 netmask 255.255.255.0</code></pre>
-<h3 id="note">Note:</h3>
-<p>I’m not sure whether this works with WPA correctly. I personally haven’t had it
-working but I’ll update this entry if I do. The original instructions on how to do this came from
+ifconfig wi0 192.168.0.5 netmask 255.255.255.0
+</code></pre>
+<h3 id="note"><a class="anchor" aria-hidden="true" href="#note"></a>Note:</h3>
+<p>I'm not sure whether this works with WPA correctly. I personally haven't had it
+working but I'll update this entry if I do. The original instructions on how to do this came from
 <a href="http://www.sfc.wide.ad.jp/~hiddy/software/wi_pci_netbsd/index.html">here</a>. How
 to compile a NetBSD kernel is explained on the
 <a href="http://www.netbsd.org/docs/guide/en/chap-kernel.html">NetBSD site</a>.</p>
-  
-  <p class="post-tags">Tags: <a title="All pages tagged 'netbsd'." href="../tags/netbsd/index.html" rel="tag">netbsd</a></p>
-  
+
+  <p class="post-tags">Tags: <a title="All pages tagged 'netbsd'." href="/tags/netbsd/index.html" rel="tag">netbsd</a></p>
 </div>
-
-
-        <div class="container content">
+<div class="container content">
           <small>Copyright © Tim McGilchrist 2007-2026</small>
           <br>
-          <small>Powered by <a href="https://github.com/tmcgilchrist/lambdafoo.com">Hakyll</a></small>
+          <small>Powered by <a href="https://github.com/xhtmlboi/yocaml">YOCaml</a></small>
         </div>
       </div>
     </div>

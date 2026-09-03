@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
   <head>
@@ -10,40 +11,28 @@
   <!-- Enable responsiveness on mobile devices-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-  <title>
-      
-        OCaml FFI bindings &middot; Perpetually Curious
-      
-  </title>
+  <title>OCaml FFI bindings &middot; Perpetually Curious</title>
 
   <!-- CSS -->
-  <link rel="stylesheet" href="../css/poole.css">
-  <link rel="stylesheet" href="../css/syntax.css">
-  <link rel="stylesheet" href="../css/lanyon.css">
-  <link rel="stylesheet" href="../css/book.css">
+  <link rel="stylesheet" href="/css/poole.css">
+  <link rel="stylesheet" href="/css/syntax.css">
+  <link rel="stylesheet" href="/css/syntax-tm.css">
+  <link rel="stylesheet" href="/css/lanyon.css">
+  <link rel="stylesheet" href="/css/book.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
 
   <!-- Icons -->
-  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-precomposed.png">
-  <link rel="shortcut icon" href="../images/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/images/favicon.ico">
 
   <!-- RSS -->
-  <link rel="alternate" type="application/rss+xml" title="RSS" href="../atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
 
-  <!-- Google Analytics -->
-  <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-28532776-1', 'auto');
-    ga('send', 'pageview');
-  </script>
-<!-- End Google Analytics -->
+  <!-- Analytics -->
+  <script data-goatcounter="https://lambdafoo.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
   <a rel="me" hidden="true" href="https://hachyderm.io/@tsmc">Mastodon</a>
 </head>
-
 
   <body class="sidebar-overlay">
 
@@ -55,15 +44,15 @@
 <div class="sidebar" id="sidebar">
 
   <div class="sidebar-item">
-    <p><a href="../"><strong>Tim McGilchrist</strong></a></p>
+    <p><a href="/"><strong>Tim McGilchrist</strong></a></p>
   </div>
 
   <nav class="sidebar-nav">
-    <a class="sidebar-nav-item" href="../">Blog</a>
-    <a class="sidebar-nav-item" href="../pages/about.html">About</a>
-    <a class="sidebar-nav-item" href="../pages/talks.html">Talks</a>
-    <a class="sidebar-nav-item" href="../pages/server-room.html">Server Room</a>
-    <a class="sidebar-nav-item" href="../archive.html">Archive</a>
+    <a class="sidebar-nav-item" href="/">Blog</a>
+    <a class="sidebar-nav-item" href="/pages/about.html">About</a>
+    <a class="sidebar-nav-item" href="/pages/talks.html">Talks</a>
+    <a class="sidebar-nav-item" href="/pages/server-room.html">Server Room</a>
+    <a class="sidebar-nav-item" href="/archive.html">Archive</a>
   </nav>
 
   <div class="sidebar-item">
@@ -72,8 +61,8 @@
       <a href="https://bsky.app/profile/tsmc.purely-functional.com">Bluesky</a>
     </p>
     <p>
-      <a href="../rss.xml">RSS</a> ·
-      <a href="../atom.xml">Atom</a>
+      <a href="/rss.xml">RSS</a> ·
+      <a href="/atom.xml">Atom</a>
     </p>
     <p>
       &copy; Tim McGilchrist 2007-2026
@@ -81,104 +70,106 @@
   </div>
 </div>
 
-
     <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
          content to avoid any CSS collisions with our real content. -->
     <div class="wrap">
       <div class="masthead">
         <div class="container">
           <h3 class="masthead-title">
-            <a href="../" title="Home">Perpetually Curious</a>
-            
+            <a href="/" title="Home">Perpetually Curious</a>
             <span class="masthead-links">
-              <a href="../pages/about.html">About</a> |
-              <a href="../pages/talks.html">Talks</a> |
-              <a href="../pages/server-room.html">Server Room</a> |
-              <a href="../archive.html">Archive</a>
+              <a href="/pages/about.html">About</a> |
+              <a href="/pages/talks.html">Talks</a> |
+              <a href="/pages/server-room.html">Server Room</a> |
+              <a href="/archive.html">Archive</a>
             </span>
           </h3>
         </div>
       </div>
 
-      <div class="container content">
-        <div class="post">
+      <div class="container content"><div class="post">
   <h1 class="post-title">OCaml FFI bindings</h1>
-  <span class="post-date">August 17, 2015</span>
-  <p>One thing that always comes up with your favourite language is how do you use
+  <span class="post-date">August 17, 2015</span><p>One thing that always comes up with your favourite language is how do you use
 libraries written in another language. Typically this involves needing to talk
-to a particular C library, either because it’s faster than a native one or just
+to a particular C library, either because it's faster than a native one or just
 that it is already written.</p>
 <p>For OCaml there is the ctypes library for binding to C libraries using pure
 OCaml. Written by the people at the good people at OCaml Labs
 <a href="http://ocaml.io">http://ocaml.io</a></p>
 <p>The core of ctypes is a set of combinators for describing the structure of C
-types – numeric types, arrays, pointers, structs, unions and functions. You can
+types -- numeric types, arrays, pointers, structs, unions and functions. You can
 use these combinators to describe the types of the functions that you want to
-call, then bind directly to those functions – all without writing or generating
+call, then bind directly to those functions -- all without writing or generating
 any C!</p>
-<p>Lets go through a simple example binding to libyaml. Here’s a declaration form
+<p>Lets go through a simple example binding to libyaml. Here's a declaration form
 libyaml to get the version string.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">/**</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"> * Get the library version as a string.</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"> *</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"> * </span><span class="an">@returns</span><span class="co"> The function returns the pointer to a static string of the form</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"> * </span><span class="an">@c</span><span class="co"> </span><span class="cv">&quot;X.Y.Z&quot;</span><span class="co">, where </span><span class="an">@c</span><span class="co"> </span><span class="cv">X</span><span class="co"> is the major version number, </span><span class="an">@c</span><span class="co"> </span><span class="cv">Y</span><span class="co"> is a minor version</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"> * number, and </span><span class="an">@c</span><span class="co"> </span><span class="cv">Z</span><span class="co"> is the patch version number.</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"> */</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>YAML_DECLARE<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*)</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>yaml_get_version_string<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span></code></pre></div>
+<pre><code><span class='c-punctuation-definition-comment-begin-documentation'>/**
+</span><span class='c-comment-block-documentation'> * Get the library version as a string.
+</span><span class='c-comment-block-documentation'> *
+</span><span class='c-comment-block-documentation'> * </span><span class='c-storage-type-class-doxygen'>@returns</span><span class='c-comment-block-documentation'> The function returns the pointer to a static string of the form
+</span><span class='c-comment-block-documentation'> * </span><span class='c-storage-type-class-doxygen'>@c</span><span class='c-comment-block-documentation'> </span><span class='c-markup-inline-raw-string'>&quot;X.Y.Z&quot;,</span><span class='c-comment-block-documentation'> where </span><span class='c-storage-type-class-doxygen'>@c</span><span class='c-comment-block-documentation'> </span><span class='c-markup-inline-raw-string'>X</span><span class='c-comment-block-documentation'> is the major version number, </span><span class='c-storage-type-class-doxygen'>@c</span><span class='c-comment-block-documentation'> </span><span class='c-markup-inline-raw-string'>Y</span><span class='c-comment-block-documentation'> is a minor version
+</span><span class='c-comment-block-documentation'> * number, and </span><span class='c-storage-type-class-doxygen'>@c</span><span class='c-comment-block-documentation'> </span><span class='c-markup-inline-raw-string'>Z</span><span class='c-comment-block-documentation'> is the patch version number.
+</span><span class='c-comment-block-documentation'> </span><span class='c-punctuation-definition-comment-end-documentation'>*/</span><span class='c-source'>
+</span><span class='c-source'>
+</span><span class='c-entity-name-function'>YAML_DECLARE</span><span class='c-punctuation-section-parameters-begin-bracket-round'>(</span><span class='c-storage-modifier'>const</span><span class='c-meta-function-definition-parameters'> </span><span class='c-storage-type-built-in-primitive'>char</span><span class='c-meta-function-definition-parameters'> </span><span class='c-keyword-operator'>*</span><span class='c-punctuation-section-parameters-end-bracket-round'>)</span><span class='c-meta-function'>
+</span><span class='c-entity-name-function'>yaml_get_version_string</span><span class='c-punctuation-section-parameters-begin-bracket-round'>(</span><span class='c-storage-type-built-in-primitive'>void</span><span class='c-punctuation-section-parameters-end-bracket-round'>)</span><span class='c-punctuation-terminator-statement'>;</span><span class='c-meta-function'>
+</span><span class='c-meta-function'>
+</span></code></pre>
 <p>To bind to this we need to declare a compatible signature for our OCaml code.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">open</span> Ctypes</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">open</span> Foreign</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> get_version_string =</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  foreign <span class="st">&quot;yaml_get_version_string&quot;</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    (void @-&gt; returning <span class="dt">string</span>)</span></code></pre></div>
-<p>We’re pulling in Ctypes and Foreign. Then the let binding is using foreign with
+<pre><code><span class='ocaml-source'>
+</span><span class='ocaml-keyword-other'>open</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>Ctypes</span><span class='ocaml-source'>
+</span><span class='ocaml-keyword-other'>open</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>Foreign</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>
+</span><span class='ocaml-keyword'>let</span><span class='ocaml-source'> </span><span class='ocaml-entity-name-function-binding'>get_version_string</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>  </span><span class='ocaml-source'>foreign</span><span class='ocaml-source'> </span><span class='ocaml-string-quoted-double'>&quot;</span><span class='ocaml-string-quoted-double'>yaml_get_version_string</span><span class='ocaml-string-quoted-double'>&quot;</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>    </span><span class='ocaml-source'>(</span><span class='ocaml-source'>void</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>@-&gt;</span><span class='ocaml-source'> </span><span class='ocaml-source'>returning</span><span class='ocaml-source'> </span><span class='ocaml-support-type'>string</span><span class='ocaml-source'>)</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>
+</span></code></pre>
+<p>We're pulling in Ctypes and Foreign. Then the let binding is using foreign with
 the name of the c method we want to call plus a type signature for that method.</p>
 <p>Next we need some calling code to print out the version string.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">open</span> Core.Std</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> () =</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> version_string = get_version_string() <span class="kw">in</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  printf <span class="st">&quot;Version: %s</span><span class="ch">\n</span><span class="st">&quot;</span> version_string</span></code></pre></div>
-<p>Assuming you’ve got opam installed you can get the dependencies <code>opam install core ctypes</code> and compile the whole thing.</p>
-<pre class="shell"><code>
-&gt; corebuild -pkg ctypes.foreign -lflags -cclib,-lyaml version_string.native
-...
-./version_string.native
-Version: 0.1.6
-</code></pre>
-<p>We’ve got bindings to a native C library without writing any C.</p>
+<pre><code><span class='ocaml-source'>
+</span><span class='ocaml-keyword-other'>open</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>Core</span><span class='ocaml-keyword-other-ocaml punctuation-other-period punctuation-separator'>.</span><span class='ocaml-constant-language-capital-identifier'>Std</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>
+</span><span class='ocaml-keyword-other'>let</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-unit'>()</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>  </span><span class='ocaml-keyword'>let</span><span class='ocaml-source'> </span><span class='ocaml-entity-name-function-binding'>version_string</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'> </span><span class='ocaml-source'>get_version_string</span><span class='ocaml-constant-language-unit'>()</span><span class='ocaml-source'> </span><span class='ocaml-keyword-other'>in</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>  </span><span class='ocaml-source'>printf</span><span class='ocaml-source'> </span><span class='ocaml-string-quoted-double'>&quot;</span><span class='ocaml-string-quoted-double'>Version: </span><span class='ocaml-constant-character-printf'>%s</span><span class='ocaml-constant-character-escape'>\n</span><span class='ocaml-string-quoted-double'>&quot;</span><span class='ocaml-source'> </span><span class='ocaml-source'>version_string</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>
+</span></code></pre>
+<p>Assuming you've got opam installed you can get the dependencies <code>opam install core ctypes</code> and compile the whole thing.</p>
+<pre><code><span class='shell-source'>
+</span><span class='shell-keyword-operator-redirect'>&gt;</span><span class='shell-source'> corebuild -pkg ctypes.foreign -lflags -cclib,-lyaml version_string.native
+</span><span class='shell-source'>...
+</span><span class='shell-source'>./version_string.native
+</span><span class='shell-source'>Version: 0.1.6
+</span><span class='shell-source'>
+</span></code></pre>
+<p>We've got bindings to a native C library without writing any C.</p>
 <p>More complicated example involving passing an allocated string back from C, lets
 look at the <code>proc_pidpath</code> call from OSX. This particular library call takes a
 process id (PID) and returns back</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>proc_pidpath<span class="op">(</span><span class="dt">int</span> pid<span class="op">,</span> <span class="dt">void</span> <span class="op">*</span> buffer<span class="op">,</span> <span class="dt">uint32_t</span>  buffersize<span class="op">)</span></span></code></pre></div>
+<pre><code><span class='c++-storage-type-primitive-cpp storage-type-built-in-primitive'>int</span><span class='c++-source'>
+</span><span class='c++-entity-name-function-call'>proc_pidpath</span><span class='c++-punctuation-section-arguments-begin-bracket-round-function-call'>(</span><span class='c++-storage-type-primitive-cpp storage-type-built-in-primitive'>int</span><span class='c++-source'> </span><span class='c++-variable-lower-case-cpp variable-other-unknown-$1'>pid</span><span class='c++-punctuation-separator-delimiter-comma'>,</span><span class='c++-source'> </span><span class='c++-storage-type-primitive-cpp storage-type-built-in-primitive'>void</span><span class='c++-source'> </span><span class='c++-keyword-operator-arithmetic'>*</span><span class='c++-source'> </span><span class='c++-variable-lower-case-cpp variable-other-unknown-$1'>buffer</span><span class='c++-punctuation-separator-delimiter-comma'>,</span><span class='c++-source'> </span><span class='c++-storage-type-cpp storage-type-built-in'>uint32_t</span><span class='c++-source'>  </span><span class='c++-variable-lower-case-cpp variable-other-unknown-$1'>buffersize</span><span class='c++-punctuation-section-arguments-end-bracket-round-function-call'>)</span><span class='c++-source'>
+</span></code></pre>
 <p>To bind to this call we again define a compatible signature.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> pidpath =</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    foreign ~check_errno:<span class="kw">true</span> <span class="st">&quot;proc_pidpath&quot;</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>            (<span class="dt">int</span> @-&gt; ptr <span class="dt">char</span> @-&gt; <span class="dt">int</span> @-&gt; returning <span class="dt">int</span>)</span></code></pre></div>
+<pre><code><span class='ocaml-keyword'>let</span><span class='ocaml-source'> </span><span class='ocaml-entity-name-function-binding'>pidpath</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>    </span><span class='ocaml-source'>foreign</span><span class='ocaml-source'> ~</span><span class='ocaml-source'>check_errno</span><span class='ocaml-keyword-other-ocaml punctuation-other-colon punctuation'>:</span><span class='ocaml-constant-language-boolean'>true</span><span class='ocaml-source'> </span><span class='ocaml-string-quoted-double'>&quot;</span><span class='ocaml-string-quoted-double'>proc_pidpath</span><span class='ocaml-string-quoted-double'>&quot;</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>            </span><span class='ocaml-source'>(</span><span class='ocaml-support-type'>int</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>@-&gt;</span><span class='ocaml-source'> </span><span class='ocaml-source'>ptr</span><span class='ocaml-source'> </span><span class='ocaml-support-type'>char</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>@-&gt;</span><span class='ocaml-source'> </span><span class='ocaml-support-type'>int</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>@-&gt;</span><span class='ocaml-source'> </span><span class='ocaml-source'>returning</span><span class='ocaml-source'> </span><span class='ocaml-support-type'>int</span><span class='ocaml-source'>)</span><span class='ocaml-source'>
+</span></code></pre>
 <p>The arguments simply mirror those for the C library call, along with a new
 argument <code>check_errno</code> which indicates the c library sets errno if it encounters
 a problem.</p>
 <p>http://stackoverflow.com/questions/22651910/returning-a-string-from-a-c-library-to-ocaml-using-ctypes-and-foreign</p>
-<p>Ctypes provides native bindings for most things you’ll need. There’s all sorts
-of pointers and types matching pretty much every native C type you’ll need
+<p>Ctypes provides native bindings for most things you'll need. There's all sorts
+of pointers and types matching pretty much every native C type you'll need
 <a href="https://github.com/ocamllabs/ocaml-ctypes/blob/master/src/ctypes/ctypes.mli">here</a>.</p>
-  
-  <p class="post-tags">Tags: <a title="All pages tagged 'ocaml'." href="../tags/ocaml/index.html" rel="tag">ocaml</a></p>
-  
+
+  <p class="post-tags">Tags: <a title="All pages tagged 'ocaml'." href="/tags/ocaml/index.html" rel="tag">ocaml</a></p>
 </div>
-
-
-        <div class="container content">
+<div class="container content">
           <small>Copyright © Tim McGilchrist 2007-2026</small>
           <br>
-          <small>Powered by <a href="https://github.com/tmcgilchrist/lambdafoo.com">Hakyll</a></small>
+          <small>Powered by <a href="https://github.com/xhtmlboi/yocaml">YOCaml</a></small>
         </div>
       </div>
     </div>

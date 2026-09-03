@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
   <head>
@@ -10,40 +11,28 @@
   <!-- Enable responsiveness on mobile devices-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-  <title>
-      
-        Rails, ORA-000972 and you &middot; Perpetually Curious
-      
-  </title>
+  <title>Rails, ORA-000972 and you &middot; Perpetually Curious</title>
 
   <!-- CSS -->
-  <link rel="stylesheet" href="../css/poole.css">
-  <link rel="stylesheet" href="../css/syntax.css">
-  <link rel="stylesheet" href="../css/lanyon.css">
-  <link rel="stylesheet" href="../css/book.css">
+  <link rel="stylesheet" href="/css/poole.css">
+  <link rel="stylesheet" href="/css/syntax.css">
+  <link rel="stylesheet" href="/css/syntax-tm.css">
+  <link rel="stylesheet" href="/css/lanyon.css">
+  <link rel="stylesheet" href="/css/book.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
 
   <!-- Icons -->
-  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-precomposed.png">
-  <link rel="shortcut icon" href="../images/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/images/favicon.ico">
 
   <!-- RSS -->
-  <link rel="alternate" type="application/rss+xml" title="RSS" href="../atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
 
-  <!-- Google Analytics -->
-  <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-28532776-1', 'auto');
-    ga('send', 'pageview');
-  </script>
-<!-- End Google Analytics -->
+  <!-- Analytics -->
+  <script data-goatcounter="https://lambdafoo.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
   <a rel="me" hidden="true" href="https://hachyderm.io/@tsmc">Mastodon</a>
 </head>
-
 
   <body class="sidebar-overlay">
 
@@ -55,15 +44,15 @@
 <div class="sidebar" id="sidebar">
 
   <div class="sidebar-item">
-    <p><a href="../"><strong>Tim McGilchrist</strong></a></p>
+    <p><a href="/"><strong>Tim McGilchrist</strong></a></p>
   </div>
 
   <nav class="sidebar-nav">
-    <a class="sidebar-nav-item" href="../">Blog</a>
-    <a class="sidebar-nav-item" href="../pages/about.html">About</a>
-    <a class="sidebar-nav-item" href="../pages/talks.html">Talks</a>
-    <a class="sidebar-nav-item" href="../pages/server-room.html">Server Room</a>
-    <a class="sidebar-nav-item" href="../archive.html">Archive</a>
+    <a class="sidebar-nav-item" href="/">Blog</a>
+    <a class="sidebar-nav-item" href="/pages/about.html">About</a>
+    <a class="sidebar-nav-item" href="/pages/talks.html">Talks</a>
+    <a class="sidebar-nav-item" href="/pages/server-room.html">Server Room</a>
+    <a class="sidebar-nav-item" href="/archive.html">Archive</a>
   </nav>
 
   <div class="sidebar-item">
@@ -72,8 +61,8 @@
       <a href="https://bsky.app/profile/tsmc.purely-functional.com">Bluesky</a>
     </p>
     <p>
-      <a href="../rss.xml">RSS</a> ·
-      <a href="../atom.xml">Atom</a>
+      <a href="/rss.xml">RSS</a> ·
+      <a href="/atom.xml">Atom</a>
     </p>
     <p>
       &copy; Tim McGilchrist 2007-2026
@@ -81,78 +70,77 @@
   </div>
 </div>
 
-
     <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
          content to avoid any CSS collisions with our real content. -->
     <div class="wrap">
       <div class="masthead">
         <div class="container">
           <h3 class="masthead-title">
-            <a href="../" title="Home">Perpetually Curious</a>
-            
+            <a href="/" title="Home">Perpetually Curious</a>
             <span class="masthead-links">
-              <a href="../pages/about.html">About</a> |
-              <a href="../pages/talks.html">Talks</a> |
-              <a href="../pages/server-room.html">Server Room</a> |
-              <a href="../archive.html">Archive</a>
+              <a href="/pages/about.html">About</a> |
+              <a href="/pages/talks.html">Talks</a> |
+              <a href="/pages/server-room.html">Server Room</a> |
+              <a href="/archive.html">Archive</a>
             </span>
           </h3>
         </div>
       </div>
 
-      <div class="container content">
-        <div class="post">
+      <div class="container content"><div class="post">
   <h1 class="post-title">Rails, ORA-000972 and you</h1>
-  <span class="post-date">June 24, 2011</span>
-  <p>Lately I’ve been running up against <em>“ORA-00972: identifier is too long”</em>, when
+  <span class="post-date">June 24, 2011</span><p>Lately I've been running up against <em>&quot;ORA-00972: identifier is too long&quot;</em>, when
 writing Rails migrations for Oracle. This particular error indicates that one of
 your identifiers is longer than 32 characters which is the maximum length for
 Oracle.</p>
-<p>It’ll look something like this in your code:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="cf">class</span> <span class="dt">CreateLongTable</span> <span class="op">&lt;</span> <span class="dt">ActiveRecord</span><span class="op">::</span><span class="dt">Migration</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">def</span> <span class="dv">self</span><span class="at">.up</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    create_table <span class="wa">:long_table</span> <span class="cf">do</span> <span class="op">|</span>t<span class="op">|</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>      t<span class="at">.string</span> <span class="wa">:title</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>      t<span class="at">.references</span> <span class="wa">:someother_really_long_identifier</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">end</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="op">...</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code></pre></div>
+<p>It'll look something like this in your code:</p>
+<pre><code><span class='ruby-source'>
+</span><span class='ruby-keyword-control-class'>class</span><span class='ruby-meta-class'> </span><span class='ruby-entity-name-type-class'>CreateLongTable</span><span class='ruby-meta-class'> </span><span class='ruby-keyword-operator-other'>&lt;</span><span class='ruby-meta-class'> </span><span class='ruby-entity-other-inherited-class'>ActiveRecord::Migration</span><span class='ruby-source'>
+</span><span class='ruby-source'>  </span><span class='ruby-keyword-control-def'>def</span><span class='ruby-meta-function-method-without-arguments'> </span><span class='ruby-entity-name-function'>self.up</span><span class='ruby-source'>
+</span><span class='ruby-source'>    create_table </span><span class='ruby-punctuation-definition-constant'>:</span><span class='ruby-constant-other-symbol'>long_table</span><span class='ruby-source'> </span><span class='ruby-keyword-control-start-block'>do</span><span class='ruby-source'> </span><span class='ruby-punctuation-separator-arguments'>|</span><span class='ruby-variable-other-block'>t</span><span class='ruby-punctuation-separator-arguments'>|</span><span class='ruby-source'>
+</span><span class='ruby-source'>      t</span><span class='ruby-punctuation-separator-method'>.</span><span class='ruby-source'>string </span><span class='ruby-punctuation-definition-constant'>:</span><span class='ruby-constant-other-symbol'>title</span><span class='ruby-source'>
+</span><span class='ruby-source'>      t</span><span class='ruby-punctuation-separator-method'>.</span><span class='ruby-source'>references </span><span class='ruby-punctuation-definition-constant'>:</span><span class='ruby-constant-other-symbol'>someother_really_long_identifier</span><span class='ruby-source'>
+</span><span class='ruby-source'>    </span><span class='ruby-keyword-control'>end</span><span class='ruby-source'>
+</span><span class='ruby-source'>  </span><span class='ruby-keyword-control'>end</span><span class='ruby-source'>
+</span><span class='ruby-source'>  </span><span class='ruby-punctuation-separator-method'>.</span><span class='ruby-punctuation-separator-method'>.</span><span class='ruby-punctuation-separator-method'>.</span><span class='ruby-source'>
+</span><span class='ruby-keyword-control'>end</span><span class='ruby-source'>
+</span><span class='ruby-source'>
+</span></code></pre>
 <p>This migration will give you a foreign key id called
 <strong>someother_really_long_identifier_id</strong> which is obviously too long for
 Oracle. The solution is to use your own foreign key id name. In your migration
 add a shorter reference.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="cf">class</span> <span class="dt">CreateLongTable</span> <span class="op">&lt;</span> <span class="dt">ActiveRecord</span><span class="op">::</span><span class="dt">Migration</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">def</span> <span class="dv">self</span><span class="at">.up</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    create_table <span class="wa">:long_table</span> <span class="cf">do</span> <span class="op">|</span>t<span class="op">|</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>      t<span class="at">.string</span> <span class="wa">:title</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>      t<span class="at">.references</span> <span class="wa">:short_name</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">end</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="op">...</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code></pre></div>
+<pre><code><span class='ruby-source'>
+</span><span class='ruby-keyword-control-class'>class</span><span class='ruby-meta-class'> </span><span class='ruby-entity-name-type-class'>CreateLongTable</span><span class='ruby-meta-class'> </span><span class='ruby-keyword-operator-other'>&lt;</span><span class='ruby-meta-class'> </span><span class='ruby-entity-other-inherited-class'>ActiveRecord::Migration</span><span class='ruby-source'>
+</span><span class='ruby-source'>  </span><span class='ruby-keyword-control-def'>def</span><span class='ruby-meta-function-method-without-arguments'> </span><span class='ruby-entity-name-function'>self.up</span><span class='ruby-source'>
+</span><span class='ruby-source'>    create_table </span><span class='ruby-punctuation-definition-constant'>:</span><span class='ruby-constant-other-symbol'>long_table</span><span class='ruby-source'> </span><span class='ruby-keyword-control-start-block'>do</span><span class='ruby-source'> </span><span class='ruby-punctuation-separator-arguments'>|</span><span class='ruby-variable-other-block'>t</span><span class='ruby-punctuation-separator-arguments'>|</span><span class='ruby-source'>
+</span><span class='ruby-source'>      t</span><span class='ruby-punctuation-separator-method'>.</span><span class='ruby-source'>string </span><span class='ruby-punctuation-definition-constant'>:</span><span class='ruby-constant-other-symbol'>title</span><span class='ruby-source'>
+</span><span class='ruby-source'>      t</span><span class='ruby-punctuation-separator-method'>.</span><span class='ruby-source'>references </span><span class='ruby-punctuation-definition-constant'>:</span><span class='ruby-constant-other-symbol'>short_name</span><span class='ruby-source'>
+</span><span class='ruby-source'>    </span><span class='ruby-keyword-control'>end</span><span class='ruby-source'>
+</span><span class='ruby-source'>  </span><span class='ruby-keyword-control'>end</span><span class='ruby-source'>
+</span><span class='ruby-source'>  </span><span class='ruby-punctuation-separator-method'>.</span><span class='ruby-punctuation-separator-method'>.</span><span class='ruby-punctuation-separator-method'>.</span><span class='ruby-source'>
+</span><span class='ruby-keyword-control'>end</span><span class='ruby-source'>
+</span><span class='ruby-source'>
+</span></code></pre>
 <p>Then in your model use the shorter foreign key name.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="cf">class</span> <span class="dt">LongTable</span> <span class="op">&lt;</span> <span class="dt">ActiveRecord</span><span class="op">::</span><span class="dt">Base</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  belongs_to <span class="wa">:someother_really_long_identifier</span>,</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>             <span class="wa">:class_name</span> <span class="op">=&gt;</span> <span class="vs">'ClassName'</span>,</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>             <span class="wa">:foreign_key</span> <span class="op">=&gt;</span> <span class="vs">'short_name_id'</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code></pre></div>
+<pre><code><span class='ruby-source'>
+</span><span class='ruby-keyword-control-class'>class</span><span class='ruby-meta-class'> </span><span class='ruby-entity-name-type-class'>LongTable</span><span class='ruby-meta-class'> </span><span class='ruby-keyword-operator-other'>&lt;</span><span class='ruby-meta-class'> </span><span class='ruby-entity-other-inherited-class'>ActiveRecord::Base</span><span class='ruby-source'>
+</span><span class='ruby-source'>  belongs_to </span><span class='ruby-punctuation-definition-constant'>:</span><span class='ruby-constant-other-symbol'>someother_really_long_identifier</span><span class='ruby-punctuation-separator-object'>,</span><span class='ruby-source'>
+</span><span class='ruby-source'>             </span><span class='ruby-punctuation-definition-constant'>:</span><span class='ruby-constant-other-symbol-hashkey'>class_name</span><span class='ruby-source'> </span><span class='ruby-punctuation-separator'>=&gt;</span><span class='ruby-source'> </span><span class='ruby-punctuation-definition-string-begin'>'</span><span class='ruby-string-quoted-single'>ClassName</span><span class='ruby-punctuation-definition-string-end'>'</span><span class='ruby-punctuation-separator-object'>,</span><span class='ruby-source'>
+</span><span class='ruby-source'>             </span><span class='ruby-punctuation-definition-constant'>:</span><span class='ruby-constant-other-symbol-hashkey'>foreign_key</span><span class='ruby-source'> </span><span class='ruby-punctuation-separator'>=&gt;</span><span class='ruby-source'> </span><span class='ruby-punctuation-definition-string-begin'>'</span><span class='ruby-string-quoted-single'>short_name_id</span><span class='ruby-punctuation-definition-string-end'>'</span><span class='ruby-source'>
+</span><span class='ruby-keyword-control'>end</span><span class='ruby-source'>
+</span><span class='ruby-source'>
+</span></code></pre>
 <p>And everything should be sweet, your model will use
 <strong>someother_really_long_identifier</strong> and no-one need know that the table is
 really using <strong>short_name_id</strong>.</p>
-  
-  <p class="post-tags">Tags: <a title="All pages tagged 'rails'." href="../tags/rails/index.html" rel="tag">rails</a>, <a title="All pages tagged 'ruby'." href="../tags/ruby/index.html" rel="tag">ruby</a></p>
-  
+
+  <p class="post-tags">Tags: <a title="All pages tagged 'rails'." href="/tags/rails/index.html" rel="tag">rails</a>, <a title="All pages tagged 'ruby'." href="/tags/ruby/index.html" rel="tag">ruby</a></p>
 </div>
-
-
-        <div class="container content">
+<div class="container content">
           <small>Copyright © Tim McGilchrist 2007-2026</small>
           <br>
-          <small>Powered by <a href="https://github.com/tmcgilchrist/lambdafoo.com">Hakyll</a></small>
+          <small>Powered by <a href="https://github.com/xhtmlboi/yocaml">YOCaml</a></small>
         </div>
       </div>
     </div>

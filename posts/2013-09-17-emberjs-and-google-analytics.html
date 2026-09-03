@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
   <head>
@@ -10,40 +11,28 @@
   <!-- Enable responsiveness on mobile devices-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-  <title>
-      
-        Ember.js and Google Analytics &middot; Perpetually Curious
-      
-  </title>
+  <title>Ember.js and Google Analytics &middot; Perpetually Curious</title>
 
   <!-- CSS -->
-  <link rel="stylesheet" href="../css/poole.css">
-  <link rel="stylesheet" href="../css/syntax.css">
-  <link rel="stylesheet" href="../css/lanyon.css">
-  <link rel="stylesheet" href="../css/book.css">
+  <link rel="stylesheet" href="/css/poole.css">
+  <link rel="stylesheet" href="/css/syntax.css">
+  <link rel="stylesheet" href="/css/syntax-tm.css">
+  <link rel="stylesheet" href="/css/lanyon.css">
+  <link rel="stylesheet" href="/css/book.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
 
   <!-- Icons -->
-  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-precomposed.png">
-  <link rel="shortcut icon" href="../images/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/images/favicon.ico">
 
   <!-- RSS -->
-  <link rel="alternate" type="application/rss+xml" title="RSS" href="../atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
 
-  <!-- Google Analytics -->
-  <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-28532776-1', 'auto');
-    ga('send', 'pageview');
-  </script>
-<!-- End Google Analytics -->
+  <!-- Analytics -->
+  <script data-goatcounter="https://lambdafoo.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
   <a rel="me" hidden="true" href="https://hachyderm.io/@tsmc">Mastodon</a>
 </head>
-
 
   <body class="sidebar-overlay">
 
@@ -55,15 +44,15 @@
 <div class="sidebar" id="sidebar">
 
   <div class="sidebar-item">
-    <p><a href="../"><strong>Tim McGilchrist</strong></a></p>
+    <p><a href="/"><strong>Tim McGilchrist</strong></a></p>
   </div>
 
   <nav class="sidebar-nav">
-    <a class="sidebar-nav-item" href="../">Blog</a>
-    <a class="sidebar-nav-item" href="../pages/about.html">About</a>
-    <a class="sidebar-nav-item" href="../pages/talks.html">Talks</a>
-    <a class="sidebar-nav-item" href="../pages/server-room.html">Server Room</a>
-    <a class="sidebar-nav-item" href="../archive.html">Archive</a>
+    <a class="sidebar-nav-item" href="/">Blog</a>
+    <a class="sidebar-nav-item" href="/pages/about.html">About</a>
+    <a class="sidebar-nav-item" href="/pages/talks.html">Talks</a>
+    <a class="sidebar-nav-item" href="/pages/server-room.html">Server Room</a>
+    <a class="sidebar-nav-item" href="/archive.html">Archive</a>
   </nav>
 
   <div class="sidebar-item">
@@ -72,8 +61,8 @@
       <a href="https://bsky.app/profile/tsmc.purely-functional.com">Bluesky</a>
     </p>
     <p>
-      <a href="../rss.xml">RSS</a> ·
-      <a href="../atom.xml">Atom</a>
+      <a href="/rss.xml">RSS</a> ·
+      <a href="/atom.xml">Atom</a>
     </p>
     <p>
       &copy; Tim McGilchrist 2007-2026
@@ -81,53 +70,51 @@
   </div>
 </div>
 
-
     <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
          content to avoid any CSS collisions with our real content. -->
     <div class="wrap">
       <div class="masthead">
         <div class="container">
           <h3 class="masthead-title">
-            <a href="../" title="Home">Perpetually Curious</a>
-            
+            <a href="/" title="Home">Perpetually Curious</a>
             <span class="masthead-links">
-              <a href="../pages/about.html">About</a> |
-              <a href="../pages/talks.html">Talks</a> |
-              <a href="../pages/server-room.html">Server Room</a> |
-              <a href="../archive.html">Archive</a>
+              <a href="/pages/about.html">About</a> |
+              <a href="/pages/talks.html">Talks</a> |
+              <a href="/pages/server-room.html">Server Room</a> |
+              <a href="/archive.html">Archive</a>
             </span>
           </h3>
         </div>
       </div>
 
-      <div class="container content">
-        <div class="post">
+      <div class="container content"><div class="post">
   <h1 class="post-title">Ember.js and Google Analytics</h1>
-  <span class="post-date">September 17, 2013</span>
-  <h2 id="update">Update</h2>
+  <span class="post-date">September 17, 2013</span><h2 id="update"><a class="anchor" aria-hidden="true" href="#update"></a>Update</h2>
 <p>As iStefo pointed out in the comments the code I gave has a bug in it.
-The <code>observes('currentPath')</code> on an application controller doesn’t fire when you
-transition between paths in the same route. eg ‘/lesson/1/activity/1’ to ‘/lesson/1/activity/2’</p>
+The <code>observes('currentPath')</code> on an application controller doesn't fire when you
+transition between paths in the same route. eg '/lesson/1/activity/1' to '/lesson/1/activity/2'</p>
 <p>A better approach is to add the code to your router.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode coffeescript"><code class="sourceCode coffee"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>App<span class="kw">.</span>Router<span class="kw">.</span>reopen</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  didTransition<span class="kw">:</span> <span class="fu">(infos) -&gt;</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">@_super</span><span class="kw">(</span>infos<span class="kw">);</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">return</span> <span class="kw">unless</span> window<span class="kw">.</span>ga</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    Em<span class="kw">.</span>run<span class="kw">.</span>next <span class="fu">-&gt;</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>      ga<span class="kw">(</span><span class="st">'send'</span><span class="kw">,</span> <span class="st">'pageview'</span><span class="kw">,</span> <span class="kw">{</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>         <span class="st">'page'</span><span class="kw">:</span> window<span class="kw">.</span>location<span class="kw">.</span>hash<span class="kw">,</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>         <span class="st">'title'</span><span class="kw">:</span> window<span class="kw">.</span>location<span class="kw">.</span>hash</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>      <span class="kw">});</span></span></code></pre></div>
+<pre><code><span class='coffeescript-source'>
+</span><span class='coffeescript-variable-other-object'>App</span><span class='coffeescript-punctuation-separator-property-period'>.</span><span class='coffeescript-variable-other-object-property'>Router</span><span class='coffeescript-punctuation-separator-property-period'>.</span><span class='coffeescript-variable-other-property'>reopen</span><span class='coffeescript-source'>
+</span><span class='coffeescript-source'>
+</span><span class='coffeescript-source'>  </span><span class='coffeescript-entity-name-function'>didTransition</span><span class='coffeescript-keyword-operator-assignment'>:</span><span class='coffeescript-meta-function'> </span><span class='coffeescript-punctuation-definition-parameters-begin-bracket-round'>(</span><span class='coffeescript-variable-parameter-function'>infos</span><span class='coffeescript-punctuation-definition-parameters-end-bracket-round'>)</span><span class='coffeescript-meta-function'> </span><span class='coffeescript-storage-type-function'>-&gt;</span><span class='coffeescript-source'>
+</span><span class='coffeescript-source'>    </span><span class='coffeescript-variable-other-readwrite-instance'>@</span><span class='coffeescript-source'>_super</span><span class='coffeescript-punctuation-definition-arguments-begin-bracket-round'>(</span><span class='coffeescript-meta-arguments'>infos</span><span class='coffeescript-punctuation-definition-arguments-end-bracket-round'>)</span><span class='coffeescript-punctuation-terminator-statement'>;</span><span class='coffeescript-source'>
+</span><span class='coffeescript-source'>    </span><span class='coffeescript-keyword-control'>return</span><span class='coffeescript-source'> </span><span class='coffeescript-keyword-control'>unless</span><span class='coffeescript-source'> </span><span class='coffeescript-support-class'>window</span><span class='coffeescript-punctuation-separator-property-period'>.</span><span class='coffeescript-variable-other-property'>ga</span><span class='coffeescript-source'>
+</span><span class='coffeescript-source'>    </span><span class='coffeescript-variable-other-object'>Em</span><span class='coffeescript-punctuation-separator-property-period'>.</span><span class='coffeescript-variable-other-object-property'>run</span><span class='coffeescript-punctuation-separator-method-period'>.</span><span class='coffeescript-source'>next</span><span class='coffeescript-meta-method-call'> </span><span class='coffeescript-storage-type-function'>-&gt;</span><span class='coffeescript-source'>
+</span><span class='coffeescript-source'>      </span><span class='coffeescript-source'>ga</span><span class='coffeescript-punctuation-definition-arguments-begin-bracket-round'>(</span><span class='coffeescript-punctuation-definition-string-begin'>'</span><span class='coffeescript-string-quoted-single'>send</span><span class='coffeescript-punctuation-definition-string-end'>'</span><span class='coffeescript-punctuation-separator-delimiter'>,</span><span class='coffeescript-meta-arguments'> </span><span class='coffeescript-punctuation-definition-string-begin'>'</span><span class='coffeescript-string-quoted-single'>pageview</span><span class='coffeescript-punctuation-definition-string-end'>'</span><span class='coffeescript-punctuation-separator-delimiter'>,</span><span class='coffeescript-meta-arguments'> </span><span class='coffeescript-meta-brace-curly'>{</span><span class='coffeescript-meta-arguments'>
+</span><span class='coffeescript-meta-arguments'>         </span><span class='coffeescript-punctuation-definition-string-begin'>'</span><span class='coffeescript-string-quoted-single'>page</span><span class='coffeescript-punctuation-definition-string-end'>'</span><span class='coffeescript-keyword-operator-assignment'>:</span><span class='coffeescript-meta-arguments'> </span><span class='coffeescript-support-class'>window</span><span class='coffeescript-punctuation-separator-property-period'>.</span><span class='coffeescript-variable-other-object-property'>location</span><span class='coffeescript-punctuation-separator-property-period'>.</span><span class='coffeescript-variable-other-property'>hash</span><span class='coffeescript-punctuation-separator-delimiter'>,</span><span class='coffeescript-meta-arguments'>
+</span><span class='coffeescript-meta-arguments'>         </span><span class='coffeescript-punctuation-definition-string-begin'>'</span><span class='coffeescript-string-quoted-single'>title</span><span class='coffeescript-punctuation-definition-string-end'>'</span><span class='coffeescript-keyword-operator-assignment'>:</span><span class='coffeescript-meta-arguments'> </span><span class='coffeescript-support-class'>window</span><span class='coffeescript-punctuation-separator-property-period'>.</span><span class='coffeescript-variable-other-object-property'>location</span><span class='coffeescript-punctuation-separator-property-period'>.</span><span class='coffeescript-variable-other-property'>hash</span><span class='coffeescript-meta-arguments'>
+</span><span class='coffeescript-meta-arguments'>      </span><span class='coffeescript-meta-brace-curly'>}</span><span class='coffeescript-punctuation-definition-arguments-end-bracket-round'>)</span><span class='coffeescript-punctuation-terminator-statement'>;</span><span class='coffeescript-source'>
+</span><span class='coffeescript-source'>
+</span></code></pre>
 <p>Matthew Beale also pointed out below that there may be a new API coming on the
 router to achieve the same result.
 <a href="https://github.com/emberjs/ember.js/pull/3452">PR#3452</a> and
 <a href="https://github.com/emberjs/ember.js/pull/3453">PR#3453</a></p>
-<hr />
-<h2 id="original">Original</h2>
-<p>Single Page Javascript Applications and specifically Ember.js applications don’t
-always expose the right information to Google Analytics. Usually you’ll see
+<hr>
+<h2 id="original"><a class="anchor" aria-hidden="true" href="#original"></a>Original</h2>
+<p>Single Page Javascript Applications and specifically Ember.js applications don't
+always expose the right information to Google Analytics. Usually you'll see
 100% traffic to <code>/</code> and nothing else.</p>
 <p>What I wanted to be able to see what areas of the site people were using in real time.
 A bit of searching led to various solutions with
@@ -137,27 +124,29 @@ of older solutions posted and start filtering search results based on time.
 Hopefully now that 1.0 is out the correct solutions will start bubbling to the
 top of Google searches.</p>
 <p>To make your Ember.js application more visible to Google Analytics you need to
-expose the value of your application state. I’m using the hash
+expose the value of your application state. I'm using the hash
 scheme (eg <code>#/album</code>) so whatever is after the hash in the url shows where a
 person is in the application.</p>
-<p>First you’ll need to have the Google Analytics Javascript library loaded, I’ve
+<p>First you'll need to have the Google Analytics Javascript library loaded, I've
 been using the more recent
 <a href="https://developers.google.com/analytics/devguides/collection/analyticsjs/">analytics.js</a>
-library which has a different API to the older ga.js library. After you’ve
-followed Google’s instructions the library is available at <code>ga</code>.</p>
+library which has a different API to the older ga.js library. After you've
+followed Google's instructions the library is available at <code>ga</code>.</p>
 <p>Next you want to observe whenever the hash path changes within your app. The
-code below assumes you’re using hashes rather than HTML5 pushState.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode coffeescript"><code class="sourceCode coffee"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>App<span class="kw">.</span>ApplicationController <span class="kw">=</span> Em<span class="kw">.</span>Controller<span class="kw">.</span>extend</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    routeChanged<span class="kw">:</span> <span class="kw">(</span><span class="fu">-&gt;</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        <span class="kw">return</span> <span class="kw">unless</span> window<span class="kw">.</span>ga</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        Em<span class="kw">.</span>run<span class="kw">.</span>next <span class="fu">-&gt;</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>            ga<span class="kw">(</span><span class="st">'send'</span><span class="kw">,</span> <span class="st">'pageview'</span><span class="kw">,</span> <span class="kw">{</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>                <span class="st">'page'</span><span class="kw">:</span> window<span class="kw">.</span>location<span class="kw">.</span>hash<span class="kw">,</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>                <span class="st">'title'</span><span class="kw">:</span> window<span class="kw">.</span>location<span class="kw">.</span>hash</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>                <span class="kw">});</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">).</span>observes<span class="kw">(</span><span class="st">'currentPath'</span><span class="kw">)</span></span></code></pre></div>
+code below assumes you're using hashes rather than HTML5 pushState.</p>
+<pre><code><span class='coffeescript-source'>
+</span><span class='coffeescript-variable-other-object'>App</span><span class='coffeescript-punctuation-separator-property-period'>.</span><span class='coffeescript-variable-other-property'>ApplicationController</span><span class='coffeescript-source'> </span><span class='coffeescript-keyword-operator-assignment'>=</span><span class='coffeescript-source'> </span><span class='coffeescript-variable-other-object'>Em</span><span class='coffeescript-punctuation-separator-property-period'>.</span><span class='coffeescript-variable-other-object-property'>Controller</span><span class='coffeescript-punctuation-separator-property-period'>.</span><span class='coffeescript-variable-other-property'>extend</span><span class='coffeescript-source'>
+</span><span class='coffeescript-source'>
+</span><span class='coffeescript-source'>    </span><span class='coffeescript-variable-assignment'>routeChanged</span><span class='coffeescript-keyword-operator-assignment'>:</span><span class='coffeescript-source'> </span><span class='coffeescript-meta-brace-round'>(</span><span class='coffeescript-storage-type-function'>-&gt;</span><span class='coffeescript-source'>
+</span><span class='coffeescript-source'>        </span><span class='coffeescript-keyword-control'>return</span><span class='coffeescript-source'> </span><span class='coffeescript-keyword-control'>unless</span><span class='coffeescript-source'> </span><span class='coffeescript-support-class'>window</span><span class='coffeescript-punctuation-separator-property-period'>.</span><span class='coffeescript-variable-other-property'>ga</span><span class='coffeescript-source'>
+</span><span class='coffeescript-source'>        </span><span class='coffeescript-variable-other-object'>Em</span><span class='coffeescript-punctuation-separator-property-period'>.</span><span class='coffeescript-variable-other-object-property'>run</span><span class='coffeescript-punctuation-separator-method-period'>.</span><span class='coffeescript-source'>next</span><span class='coffeescript-meta-method-call'> </span><span class='coffeescript-storage-type-function'>-&gt;</span><span class='coffeescript-source'>
+</span><span class='coffeescript-source'>            </span><span class='coffeescript-source'>ga</span><span class='coffeescript-punctuation-definition-arguments-begin-bracket-round'>(</span><span class='coffeescript-punctuation-definition-string-begin'>'</span><span class='coffeescript-string-quoted-single'>send</span><span class='coffeescript-punctuation-definition-string-end'>'</span><span class='coffeescript-punctuation-separator-delimiter'>,</span><span class='coffeescript-meta-arguments'> </span><span class='coffeescript-punctuation-definition-string-begin'>'</span><span class='coffeescript-string-quoted-single'>pageview</span><span class='coffeescript-punctuation-definition-string-end'>'</span><span class='coffeescript-punctuation-separator-delimiter'>,</span><span class='coffeescript-meta-arguments'> </span><span class='coffeescript-meta-brace-curly'>{</span><span class='coffeescript-meta-arguments'>
+</span><span class='coffeescript-meta-arguments'>                </span><span class='coffeescript-punctuation-definition-string-begin'>'</span><span class='coffeescript-string-quoted-single'>page</span><span class='coffeescript-punctuation-definition-string-end'>'</span><span class='coffeescript-keyword-operator-assignment'>:</span><span class='coffeescript-meta-arguments'> </span><span class='coffeescript-support-class'>window</span><span class='coffeescript-punctuation-separator-property-period'>.</span><span class='coffeescript-variable-other-object-property'>location</span><span class='coffeescript-punctuation-separator-property-period'>.</span><span class='coffeescript-variable-other-property'>hash</span><span class='coffeescript-punctuation-separator-delimiter'>,</span><span class='coffeescript-meta-arguments'>
+</span><span class='coffeescript-meta-arguments'>                </span><span class='coffeescript-punctuation-definition-string-begin'>'</span><span class='coffeescript-string-quoted-single'>title</span><span class='coffeescript-punctuation-definition-string-end'>'</span><span class='coffeescript-keyword-operator-assignment'>:</span><span class='coffeescript-meta-arguments'> </span><span class='coffeescript-support-class'>window</span><span class='coffeescript-punctuation-separator-property-period'>.</span><span class='coffeescript-variable-other-object-property'>location</span><span class='coffeescript-punctuation-separator-property-period'>.</span><span class='coffeescript-variable-other-property'>hash</span><span class='coffeescript-meta-arguments'>
+</span><span class='coffeescript-meta-arguments'>                </span><span class='coffeescript-meta-brace-curly'>}</span><span class='coffeescript-punctuation-definition-arguments-end-bracket-round'>)</span><span class='coffeescript-punctuation-terminator-statement'>;</span><span class='coffeescript-source'>
+</span><span class='coffeescript-source'>    </span><span class='coffeescript-meta-brace-round'>)</span><span class='coffeescript-punctuation-separator-method-period'>.</span><span class='coffeescript-source'>observes</span><span class='coffeescript-punctuation-definition-arguments-begin-bracket-round'>(</span><span class='coffeescript-punctuation-definition-string-begin'>'</span><span class='coffeescript-string-quoted-single'>currentPath</span><span class='coffeescript-punctuation-definition-string-end'>'</span><span class='coffeescript-punctuation-definition-arguments-end-bracket-round'>)</span><span class='coffeescript-source'>
+</span><span class='coffeescript-source'>
+</span></code></pre>
 <p>The <code>routeChanged</code> function gets called when <code>currentPath</code> changes; it checks
 whether <code>ga</code> is defined and if it is it sends a pageview event with the current
 value of location.hash. The <code>Em.run.next</code> is there to make sure all the routing
@@ -166,16 +155,13 @@ has occured and the hash value is final before using it.</p>
 based on what your application does. The next obvious step is to add
 <a href="https://developers.google.com/analytics/devguides/collection/analyticsjs/events">event tracking</a>
 to really see how people interact with the app.</p>
-  
-  <p class="post-tags">Tags: <a title="All pages tagged 'emberjs'." href="../tags/emberjs/index.html" rel="tag">emberjs</a></p>
-  
+
+  <p class="post-tags">Tags: <a title="All pages tagged 'emberjs'." href="/tags/emberjs/index.html" rel="tag">emberjs</a></p>
 </div>
-
-
-        <div class="container content">
+<div class="container content">
           <small>Copyright © Tim McGilchrist 2007-2026</small>
           <br>
-          <small>Powered by <a href="https://github.com/tmcgilchrist/lambdafoo.com">Hakyll</a></small>
+          <small>Powered by <a href="https://github.com/xhtmlboi/yocaml">YOCaml</a></small>
         </div>
       </div>
     </div>

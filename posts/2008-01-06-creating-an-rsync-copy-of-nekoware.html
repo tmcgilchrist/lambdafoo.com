@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
   <head>
@@ -10,40 +11,28 @@
   <!-- Enable responsiveness on mobile devices-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-  <title>
-      
-        Creating an rsync copy of Nekoware &middot; Perpetually Curious
-      
-  </title>
+  <title>Creating an rsync copy of Nekoware &middot; Perpetually Curious</title>
 
   <!-- CSS -->
-  <link rel="stylesheet" href="../css/poole.css">
-  <link rel="stylesheet" href="../css/syntax.css">
-  <link rel="stylesheet" href="../css/lanyon.css">
-  <link rel="stylesheet" href="../css/book.css">
+  <link rel="stylesheet" href="/css/poole.css">
+  <link rel="stylesheet" href="/css/syntax.css">
+  <link rel="stylesheet" href="/css/syntax-tm.css">
+  <link rel="stylesheet" href="/css/lanyon.css">
+  <link rel="stylesheet" href="/css/book.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
 
   <!-- Icons -->
-  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-precomposed.png">
-  <link rel="shortcut icon" href="../images/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/images/favicon.ico">
 
   <!-- RSS -->
-  <link rel="alternate" type="application/rss+xml" title="RSS" href="../atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
 
-  <!-- Google Analytics -->
-  <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-28532776-1', 'auto');
-    ga('send', 'pageview');
-  </script>
-<!-- End Google Analytics -->
+  <!-- Analytics -->
+  <script data-goatcounter="https://lambdafoo.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
   <a rel="me" hidden="true" href="https://hachyderm.io/@tsmc">Mastodon</a>
 </head>
-
 
   <body class="sidebar-overlay">
 
@@ -55,15 +44,15 @@
 <div class="sidebar" id="sidebar">
 
   <div class="sidebar-item">
-    <p><a href="../"><strong>Tim McGilchrist</strong></a></p>
+    <p><a href="/"><strong>Tim McGilchrist</strong></a></p>
   </div>
 
   <nav class="sidebar-nav">
-    <a class="sidebar-nav-item" href="../">Blog</a>
-    <a class="sidebar-nav-item" href="../pages/about.html">About</a>
-    <a class="sidebar-nav-item" href="../pages/talks.html">Talks</a>
-    <a class="sidebar-nav-item" href="../pages/server-room.html">Server Room</a>
-    <a class="sidebar-nav-item" href="../archive.html">Archive</a>
+    <a class="sidebar-nav-item" href="/">Blog</a>
+    <a class="sidebar-nav-item" href="/pages/about.html">About</a>
+    <a class="sidebar-nav-item" href="/pages/talks.html">Talks</a>
+    <a class="sidebar-nav-item" href="/pages/server-room.html">Server Room</a>
+    <a class="sidebar-nav-item" href="/archive.html">Archive</a>
   </nav>
 
   <div class="sidebar-item">
@@ -72,8 +61,8 @@
       <a href="https://bsky.app/profile/tsmc.purely-functional.com">Bluesky</a>
     </p>
     <p>
-      <a href="../rss.xml">RSS</a> ·
-      <a href="../atom.xml">Atom</a>
+      <a href="/rss.xml">RSS</a> ·
+      <a href="/atom.xml">Atom</a>
     </p>
     <p>
       &copy; Tim McGilchrist 2007-2026
@@ -81,31 +70,27 @@
   </div>
 </div>
 
-
     <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
          content to avoid any CSS collisions with our real content. -->
     <div class="wrap">
       <div class="masthead">
         <div class="container">
           <h3 class="masthead-title">
-            <a href="../" title="Home">Perpetually Curious</a>
-            
+            <a href="/" title="Home">Perpetually Curious</a>
             <span class="masthead-links">
-              <a href="../pages/about.html">About</a> |
-              <a href="../pages/talks.html">Talks</a> |
-              <a href="../pages/server-room.html">Server Room</a> |
-              <a href="../archive.html">Archive</a>
+              <a href="/pages/about.html">About</a> |
+              <a href="/pages/talks.html">Talks</a> |
+              <a href="/pages/server-room.html">Server Room</a> |
+              <a href="/archive.html">Archive</a>
             </span>
           </h3>
         </div>
       </div>
 
-      <div class="container content">
-        <div class="post">
+      <div class="container content"><div class="post">
   <h1 class="post-title">Creating an rsync copy of Nekoware</h1>
-  <span class="post-date">January  6, 2008</span>
-  <p>If you’re running an SGI at home or maybe at work, and you haven’t heard of
--Nekoware, then you must be new around here. It’s a collection of opensource
+  <span class="post-date">January  6, 2008</span><p>If you're running an SGI at home or maybe at work, and you haven't heard of
+-Nekoware, then you must be new around here. It's a collection of opensource
 -software all compiled and ready to install for your SGI. Check out
 -<a href="http://www.nekochan.net/downloads.php">Nekoware</a> for a complete list of what
 -is available .</p>
@@ -113,104 +98,108 @@
 <p>Download a copy of Nekoware rsync from one of the mirrors, I used this
 <a href="http://www.mechanics.citg.tudelft.nl/~everdij/nekoware/index.php?path=current/">Mirror</a>
 and downloaded the file in a browser.</p>
-<p>Installing rsync really depends on whether you have a monitor hooked up to your SGI or you’re using ssh/remote X , note that telnet is <strong>not</strong> an option. I’m using remote X so that’s what is shown here.</p>
+<p>Installing rsync really depends on whether you have a monitor hooked up to your SGI or you're using ssh/remote X , note that telnet is <strong>not</strong> an option. I'm using remote X so that's what is shown here.</p>
 <p>Login as root and change to the directory where you downloaded rsync to.</p>
-<pre><code>cd /usr/people/me/downloads</code></pre>
+<pre><code>cd /usr/people/me/downloads
+</code></pre>
 <p>To install software from the command line you need to use the software
 installation tool <strong>inst(1)</strong>.</p>
-<pre class="shell"><code>
-inst
-
-Default distribution to install from: /var/tmp/tardista000i0
-
-For help on inst commands, type &quot;help overview&quot;.
-
-
-Inst 4.1 Main Menu
-
- 1. from [source ...]            Specify location of software to be installed
- 2. open [source ...]            Specify additional software locations
- 3. close [source ...]           Close a software distribution location
- 4. list [keywords] [names]      Display information about software subsystems
- 5. go                           Perform software installation and removal now
- 6. install [keywords] [names]   Select subsystems to be installed
- 7. remove [keywords] [names]    Select subsystems to be removed
- 8. keep [keywords] [names]      Do not install or remove these subsystems
- 9. step [keywords] [names]      Interactive mode for install/remove/keep
-10. conflicts [choice ...]       List or resolve installation conflicts
-11. help [topic]                 Get help in general or on a specific word
-12. view ...                     Go to the View Commands Menu
-13. admin ...                    Go to the Administrative Commands Menu
-14. quit                         Terminate software installation
-
-Inst&gt;
-
-# from /usr/people/me/downloads/neko_rsync-2.6.8.tardist
-
-Unpacking tardist file into temporary distribution directory /var/tmp/tardista0
-00F7
-Unpacking tardist file .. 100% Done.
-Reading product descriptions ..  13%
-Reading /var/inst/hist
-Reading product descriptions ..  25%
-Setting distribution to /var/tmp/tardista000F7
-Reading product descriptions .. 100% Done.
-</code></pre>
+<pre><code><span class='shell-source'>
+</span><span class='shell-source'>inst
+</span><span class='shell-source'>
+</span><span class='shell-source'>Default distribution to install from: /var/tmp/tardista000i0
+</span><span class='shell-source'>
+</span><span class='shell-source'>For </span><span class='shell-support-function-builtin'>help</span><span class='shell-source'> on inst commands, </span><span class='shell-support-function-builtin'>type</span><span class='shell-source'> </span><span class='shell-punctuation-definition-string-begin'>&quot;</span><span class='shell-string-quoted-double'>help overview</span><span class='shell-punctuation-definition-string-end'>&quot;</span><span class='shell-source'>.
+</span><span class='shell-source'>
+</span><span class='shell-source'>
+</span><span class='shell-source'>Inst 4.1 Main Menu
+</span><span class='shell-source'>
+</span><span class='shell-source'> 1. from [source ...]            Specify location of software to be installed
+</span><span class='shell-source'> 2. open [source ...]            Specify additional software locations
+</span><span class='shell-source'> 3. close [source ...]           Close a software distribution location
+</span><span class='shell-source'> 4. list [keywords] [names]      Display information about software subsystems
+</span><span class='shell-source'> 5. go                           Perform software installation and removal now
+</span><span class='shell-source'> 6. install [keywords] [names]   Select subsystems to be installed
+</span><span class='shell-source'> 7. remove [keywords] [names]    Select subsystems to be removed
+</span><span class='shell-source'> 8. keep [keywords] [names]      Do not install or remove these subsystems
+</span><span class='shell-source'> 9. step [keywords] [names]      Interactive mode </span><span class='shell-keyword-control'>for</span><span class='shell-meta-scope-for-in-loop'> </span><span class='shell-variable-other-loop'>install/remove/keep</span><span class='shell-meta-scope-for-in-loop'>
+</span><span class='shell-meta-scope-for-in-loop'>10. conflicts [choice ...]       List or resolve installation conflicts
+</span><span class='shell-meta-scope-for-in-loop'>11. </span><span class='shell-support-function-builtin'>help</span><span class='shell-meta-scope-for-in-loop'> [topic]                 Get </span><span class='shell-support-function-builtin'>help</span><span class='shell-meta-scope-for-in-loop'> </span><span class='shell-keyword-control'>in</span><span class='shell-meta-scope-for-in-loop'> general or on a specific word
+</span><span class='shell-meta-scope-for-in-loop'>12. view ...                     Go to the View Commands Menu
+</span><span class='shell-meta-scope-for-in-loop'>13. admin ...                    Go to the Administrative Commands Menu
+</span><span class='shell-meta-scope-for-in-loop'>14. quit                         Terminate software installation
+</span><span class='shell-meta-scope-for-in-loop'>
+</span><span class='shell-meta-scope-for-in-loop'>Inst</span><span class='shell-keyword-operator-redirect'>&gt;</span><span class='shell-meta-scope-for-in-loop'>
+</span><span class='shell-meta-scope-for-in-loop'>
+</span><span class='shell-punctuation-definition-comment'>#</span><span class='shell-comment-line-number-sign'> from /usr/people/me/downloads/neko_rsync-2.6.8.tardist</span><span class='shell-comment-line-number-sign'>
+</span><span class='shell-meta-scope-for-in-loop'>
+</span><span class='shell-meta-scope-for-in-loop'>Unpacking tardist file into temporary distribution directory /var/tmp/tardista0
+</span><span class='shell-meta-scope-for-in-loop'>00F7
+</span><span class='shell-meta-scope-for-in-loop'>Unpacking tardist file .. 100% Done.
+</span><span class='shell-meta-scope-for-in-loop'>Reading product descriptions ..  13%
+</span><span class='shell-meta-scope-for-in-loop'>Reading /var/inst/hist
+</span><span class='shell-meta-scope-for-in-loop'>Reading product descriptions ..  25%
+</span><span class='shell-meta-scope-for-in-loop'>Setting distribution to /var/tmp/tardista000F7
+</span><span class='shell-meta-scope-for-in-loop'>Reading product descriptions .. 100% Done.
+</span><span class='shell-meta-scope-for-in-loop'>
+</span></code></pre>
 <p>List the files available in this package</p>
-<pre class="shell"><code>
-Inst&gt; list
-  View:      distribution
-  Status:    N=new, U=upgrade, S=same, D=downgrade
-  Stream:    feature
-  Selection: i=install, r=remove, k=keep
-
-  Subsystem Types [bdro]:  b=reBoot needed, d=Default, r=Required, o=overlay
-
-  S  neko_rsync.man.manpages [d]        0   man pages
-  S  neko_rsync.opt.dist                0   distribution files
-  S  neko_rsync.opt.relnotes            0   release notes
-  S  neko_rsync.opt.src                 0   original source code
-  S  neko_rsync.sw.eoe [d]              0   execution only env
-
-Disk space summary (Kbytes):            /
-
-Current free space                 981640
-- Selections net change                 0
-- Temporary inst overhead               0
-= Minimum free during install      981640
-
-Final projected free space         981640
-</code></pre>
+<pre><code><span class='shell-source'>
+</span><span class='shell-source'>Inst</span><span class='shell-keyword-operator-redirect'>&gt;</span><span class='shell-source'> list
+</span><span class='shell-source'>  View:      distribution
+</span><span class='shell-source'>  Status:    N=new, U=upgrade, S=same, D=downgrade
+</span><span class='shell-source'>  Stream:    feature
+</span><span class='shell-source'>  Selection: i=install, r=remove, k=keep
+</span><span class='shell-source'>
+</span><span class='shell-source'>  Subsystem Types [bdro]:  b=reBoot needed, d=Default, r=Required, o=overlay
+</span><span class='shell-source'>
+</span><span class='shell-source'>  S  neko_rsync.man.manpages [d]        0   man pages
+</span><span class='shell-source'>  S  neko_rsync.opt.dist                0   distribution files
+</span><span class='shell-source'>  S  neko_rsync.opt.relnotes            0   release notes
+</span><span class='shell-source'>  S  neko_rsync.opt.src                 0   original </span><span class='shell-support-function-builtin'>source</span><span class='shell-source'> code
+</span><span class='shell-source'>  S  neko_rsync.sw.eoe [d]              0   execution only env
+</span><span class='shell-source'>
+</span><span class='shell-source'>Disk space summary </span><span class='shell-punctuation-definition-subshell'>(</span><span class='shell-meta-scope-subshell'>Kbytes</span><span class='shell-punctuation-definition-subshell'>)</span><span class='shell-source'>:            /
+</span><span class='shell-source'>
+</span><span class='shell-source'>Current free space                 981640
+</span><span class='shell-source'>- Selections net change                 0
+</span><span class='shell-source'>- Temporary inst overhead               0
+</span><span class='shell-source'>= Minimum free during install      981640
+</span><span class='shell-source'>
+</span><span class='shell-source'>Final projected free space         981640
+</span><span class='shell-source'>
+</span></code></pre>
 <p>Now select the files you want installed, I went for the default which includes the executable and the man page.</p>
-<pre class="shell"><code>
-Inst&gt; install d
-
-Inst&gt; list
-  View:      distribution
-  Status:    N=new, U=upgrade, S=same, D=downgrade
-  Stream:    feature
-  Selection: i=install, r=remove, k=keep
-
-  Subsystem Types [bdro]:  b=reBoot needed, d=Default, r=Required, o=overlay
-
-i S  neko_rsync.man.manpages [d]        0   man pages
-  S  neko_rsync.opt.dist                0   distribution files
-  S  neko_rsync.opt.relnotes            0   release notes
-  S  neko_rsync.opt.src                 0   original source code
-i S  neko_rsync.sw.eoe [d]              0   execution only env
-
-Disk space summary (Kbytes):            /
-
-Current free space                 981640
-- Selections net change                 0
-- Temporary inst overhead            1628+
-= Minimum free during install      980012
-
-Final projected free space         981640
-
-Inst&gt;
-</code></pre>
-<p>All that remains is the install, so type <strong>go</strong> and watch it go. After it has
+<pre><code><span class='shell-source'>
+</span><span class='shell-source'>Inst</span><span class='shell-keyword-operator-redirect'>&gt;</span><span class='shell-source'> install d
+</span><span class='shell-source'>
+</span><span class='shell-source'>Inst</span><span class='shell-keyword-operator-redirect'>&gt;</span><span class='shell-source'> list
+</span><span class='shell-source'>  View:      distribution
+</span><span class='shell-source'>  Status:    N=new, U=upgrade, S=same, D=downgrade
+</span><span class='shell-source'>  Stream:    feature
+</span><span class='shell-source'>  Selection: i=install, r=remove, k=keep
+</span><span class='shell-source'>
+</span><span class='shell-source'>  Subsystem Types [bdro]:  b=reBoot needed, d=Default, r=Required, o=overlay
+</span><span class='shell-source'>
+</span><span class='shell-source'>i S  neko_rsync.man.manpages [d]        0   man pages
+</span><span class='shell-source'>  S  neko_rsync.opt.dist                0   distribution files
+</span><span class='shell-source'>  S  neko_rsync.opt.relnotes            0   release notes
+</span><span class='shell-source'>  S  neko_rsync.opt.src                 0   original </span><span class='shell-support-function-builtin'>source</span><span class='shell-source'> code
+</span><span class='shell-source'>i S  neko_rsync.sw.eoe [d]              0   execution only env
+</span><span class='shell-source'>
+</span><span class='shell-source'>Disk space summary </span><span class='shell-punctuation-definition-subshell'>(</span><span class='shell-meta-scope-subshell'>Kbytes</span><span class='shell-punctuation-definition-subshell'>)</span><span class='shell-source'>:            /
+</span><span class='shell-source'>
+</span><span class='shell-source'>Current free space                 981640
+</span><span class='shell-source'>- Selections net change                 0
+</span><span class='shell-source'>- Temporary inst overhead            1628+
+</span><span class='shell-source'>= Minimum free during install      980012
+</span><span class='shell-source'>
+</span><span class='shell-source'>Final projected free space         981640
+</span><span class='shell-source'>
+</span><span class='shell-source'>Inst</span><span class='shell-keyword-operator-redirect'>&gt;</span><span class='shell-source'>
+</span><span class='shell-source'>
+</span></code></pre>
+<p>All that remains is the install, so type <strong>go</strong> and watch it go.  After it has
 finished installing, you can simply quit isnt.</p>
 <pre><code>
 You may continue with installations or quit now.
@@ -224,32 +213,32 @@ or remove it?
 2. Remove this distribution
 Please enter a choice [2]: 2
 Requickstarting ELF files (see rqsall(1)) ..  25%
+
 </code></pre>
-<p>The requickstarting stage may take a while, so just leave it to do it’s thing.</p>
-<p>Once finished it’s time to rsync some Nekoware. Open up a terminal, it doesn’t have to be as root, create a directory and change into it.</p>
+<p>The requickstarting stage may take a while, so just leave it to do it's thing.</p>
+<p>Once finished it's time to rsync some Nekoware. Open up a terminal, it doesn't have to be as root, create a directory and change into it.</p>
 <pre><code>mkdir nekoware
-cd nekoware</code></pre>
+cd nekoware
+</code></pre>
 <p>I only wanted a copy of the current MIPS4 packages, you will most likely want
 the same, unless you have a really old SGI. So copy the following command and
 wait for it to finish, which may be a while for a new copy.</p>
 <pre><code>/usr/nekoware/bin/rsync -az --progress \
-mech001.citg.tudelft.nl::nekoware/current  /usr/people/me/nekoware</code></pre>
+mech001.citg.tudelft.nl::nekoware/current  /usr/people/me/nekoware
+</code></pre>
 <p>Once finished we have an rsync copy of nekoware, that we can install from and
 can be upgraded when new versions of packages come out. To upgrade simply run
 the previous command again, and it should only download the updated/changed
 packages.</p>
 <p>For futher information about rsync and all the brilliant things it can do visit
 <a href="http://samba.anu.edu.au/rsync/">rsync homepage</a></p>
-  
-  <p class="post-tags">Tags: <a title="All pages tagged 'irix'." href="../tags/irix/index.html" rel="tag">irix</a>, <a title="All pages tagged 'sgi'." href="../tags/sgi/index.html" rel="tag">sgi</a></p>
-  
+
+  <p class="post-tags">Tags: <a title="All pages tagged 'irix'." href="/tags/irix/index.html" rel="tag">irix</a>, <a title="All pages tagged 'sgi'." href="/tags/sgi/index.html" rel="tag">sgi</a></p>
 </div>
-
-
-        <div class="container content">
+<div class="container content">
           <small>Copyright © Tim McGilchrist 2007-2026</small>
           <br>
-          <small>Powered by <a href="https://github.com/tmcgilchrist/lambdafoo.com">Hakyll</a></small>
+          <small>Powered by <a href="https://github.com/xhtmlboi/yocaml">YOCaml</a></small>
         </div>
       </div>
     </div>

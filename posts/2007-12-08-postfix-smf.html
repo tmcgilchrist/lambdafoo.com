@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
   <head>
@@ -10,40 +11,28 @@
   <!-- Enable responsiveness on mobile devices-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-  <title>
-      
-        Postfix & SMF &middot; Perpetually Curious
-      
-  </title>
+  <title>Postfix &amp; SMF &middot; Perpetually Curious</title>
 
   <!-- CSS -->
-  <link rel="stylesheet" href="../css/poole.css">
-  <link rel="stylesheet" href="../css/syntax.css">
-  <link rel="stylesheet" href="../css/lanyon.css">
-  <link rel="stylesheet" href="../css/book.css">
+  <link rel="stylesheet" href="/css/poole.css">
+  <link rel="stylesheet" href="/css/syntax.css">
+  <link rel="stylesheet" href="/css/syntax-tm.css">
+  <link rel="stylesheet" href="/css/lanyon.css">
+  <link rel="stylesheet" href="/css/book.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
 
   <!-- Icons -->
-  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-precomposed.png">
-  <link rel="shortcut icon" href="../images/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/images/favicon.ico">
 
   <!-- RSS -->
-  <link rel="alternate" type="application/rss+xml" title="RSS" href="../atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
 
-  <!-- Google Analytics -->
-  <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-28532776-1', 'auto');
-    ga('send', 'pageview');
-  </script>
-<!-- End Google Analytics -->
+  <!-- Analytics -->
+  <script data-goatcounter="https://lambdafoo.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
   <a rel="me" hidden="true" href="https://hachyderm.io/@tsmc">Mastodon</a>
 </head>
-
 
   <body class="sidebar-overlay">
 
@@ -55,15 +44,15 @@
 <div class="sidebar" id="sidebar">
 
   <div class="sidebar-item">
-    <p><a href="../"><strong>Tim McGilchrist</strong></a></p>
+    <p><a href="/"><strong>Tim McGilchrist</strong></a></p>
   </div>
 
   <nav class="sidebar-nav">
-    <a class="sidebar-nav-item" href="../">Blog</a>
-    <a class="sidebar-nav-item" href="../pages/about.html">About</a>
-    <a class="sidebar-nav-item" href="../pages/talks.html">Talks</a>
-    <a class="sidebar-nav-item" href="../pages/server-room.html">Server Room</a>
-    <a class="sidebar-nav-item" href="../archive.html">Archive</a>
+    <a class="sidebar-nav-item" href="/">Blog</a>
+    <a class="sidebar-nav-item" href="/pages/about.html">About</a>
+    <a class="sidebar-nav-item" href="/pages/talks.html">Talks</a>
+    <a class="sidebar-nav-item" href="/pages/server-room.html">Server Room</a>
+    <a class="sidebar-nav-item" href="/archive.html">Archive</a>
   </nav>
 
   <div class="sidebar-item">
@@ -72,8 +61,8 @@
       <a href="https://bsky.app/profile/tsmc.purely-functional.com">Bluesky</a>
     </p>
     <p>
-      <a href="../rss.xml">RSS</a> ·
-      <a href="../atom.xml">Atom</a>
+      <a href="/rss.xml">RSS</a> ·
+      <a href="/atom.xml">Atom</a>
     </p>
     <p>
       &copy; Tim McGilchrist 2007-2026
@@ -81,38 +70,35 @@
   </div>
 </div>
 
-
     <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
          content to avoid any CSS collisions with our real content. -->
     <div class="wrap">
       <div class="masthead">
         <div class="container">
           <h3 class="masthead-title">
-            <a href="../" title="Home">Perpetually Curious</a>
-            
+            <a href="/" title="Home">Perpetually Curious</a>
             <span class="masthead-links">
-              <a href="../pages/about.html">About</a> |
-              <a href="../pages/talks.html">Talks</a> |
-              <a href="../pages/server-room.html">Server Room</a> |
-              <a href="../archive.html">Archive</a>
+              <a href="/pages/about.html">About</a> |
+              <a href="/pages/talks.html">Talks</a> |
+              <a href="/pages/server-room.html">Server Room</a> |
+              <a href="/archive.html">Archive</a>
             </span>
           </h3>
         </div>
       </div>
 
-      <div class="container content">
-        <div class="post">
-  <h1 class="post-title">Postfix & SMF</h1>
-  <span class="post-date">December  8, 2007</span>
-  <p>Blastwave’s Postfix doesn’t currently use SMF, but I really wanted it to. So I
-converted the SysV init script supplied into a more usable form. I’ll assume
-you’ve installed Postfix and have it configured the way you like. There are
+      <div class="container content"><div class="post">
+  <h1 class="post-title">Postfix &amp; SMF</h1>
+  <span class="post-date">December  8, 2007</span><p>Blastwave's Postfix doesn't currently use SMF, but I really wanted it to. So I
+converted the SysV init script supplied into a more usable form. I'll assume
+you've installed Postfix and have it configured the way you like. There are
 lots of tutorials around that can give you a start on how to do that,
-personally I’ve found the Gentoo documentation quite useful even on non-Linux
+personally I've found the Gentoo documentation quite useful even on non-Linux
 systems.</p>
 <p>Type the svcs command into a root shell like so:</p>
 <pre><code>$ svcs |grep postfix
-legacy_run     20:09:50 lrc:/etc/rc2_d/S50postfix</code></pre>
+legacy_run     20:09:50 lrc:/etc/rc2_d/S50postfix
+</code></pre>
 <p>this means that SMF is using the old style init scripts.</p>
 <p>The first thing we need to do is write a series of targets to let SMF know how
 to stop, start and reload postfix. Luckily Blastwave comes with such a script,
@@ -128,47 +114,52 @@ guide to writing mine. Here is the
 <a href="http://gothmog.homeunix.net/downloads/smf-postfix/cswpostfix.xml">Manifest</a>
 which you need to copy this into <strong>/opt/csw/var/svc/manifest/site</strong>.</p>
 <p>Now to import the manifest so SMF knows about it.</p>
-<pre><code>$ /usr/sbin/svccfg -v import /opt/csw/var/svc/manifest/site/cswpostfix.xml</code></pre>
+<pre><code>$ /usr/sbin/svccfg -v import /opt/csw/var/svc/manifest/site/cswpostfix.xml
+</code></pre>
 <p>The new service should now appear in the list of available services.</p>
 <pre><code>$ svcs -a |grep postfix
-online         Dec_06   svc:/network/smtp:cswpostfix&lt;</code></pre>
+online         Dec_06   svc:/network/smtp:cswpostfix&lt;
+</code></pre>
 <p>Now to disable the old init script.</p>
-<pre><code>$ cd /etc/rc2.d</code></pre>
+<pre><code>$ cd /etc/rc2.d
+</code></pre>
 <p>Stop the service</p>
-<pre><code>$ ./S50postfix stop</code></pre>
-<p>Move the symlink out of harms way, I usually don’t delete them incase I need
+<pre><code>$ ./S50postfix stop
+</code></pre>
+<p>Move the symlink out of harms way, I usually don't delete them incase I need
 them later, like if I disable a core service.</p>
-<pre><code>$ mv S50postfix noS50postfix</code></pre>
-<p>And ensure that it’s no longer executable, probably overkill but we really don’t
+<pre><code>$ mv S50postfix noS50postfix
+</code></pre>
+<p>And ensure that it's no longer executable, probably overkill but we really don't
 want it running.</p>
-<pre><code>$ chmod 000 noS50postfix</code></pre>
+<pre><code>$ chmod 000 noS50postfix
+</code></pre>
 <p>Then we can enable the fancy new SMF service.</p>
-<pre><code>$ svcadm enable cswpostfix</code></pre>
+<pre><code>$ svcadm enable cswpostfix
+</code></pre>
 <p>Check that is started properly.</p>
-<pre><code>$  svcs -x</code></pre>
-<p>And that should be it, it’s usually a good idea to reboot when you’ve been
-messing with startup scripts. It ensures that you haven’t made any mistakes
+<pre><code>$  svcs -x
+</code></pre>
+<p>And that should be it, it's usually a good idea to reboot when you've been
+messing with startup scripts. It ensures that you haven't made any mistakes
 configuring things and the last thing you want is to find you messed up when
 something really does break.</p>
-<h4 id="note">Note:</h4>
+<h4 id="note"><a class="anchor" aria-hidden="true" href="#note"></a>Note:</h4>
 <p>This is my first go at converting a SysV init script into an SMF version
 so if there are any glaring mistakes, please drop me a line.</p>
 <p>The inspiration for this post supplied by:
 <a href="http://prefetch.net/blog/index.php/2005/11/12/converting-an-rc-script-to-an-smf-manifest/">Converting an rcscript into an smf manifest</a></p>
-<h4 id="downloads">Downloads</h4>
+<h4 id="downloads"><a class="anchor" aria-hidden="true" href="#downloads"></a>Downloads</h4>
 <p>Currently offline due to blog conversion to markdown, will post in github soon.</p>
 <p><a href="http://gothmog.homeunix.net/downloads/smf-postfix/cswpostfix.xml">Manifest</a>
 <a href="http://gothmog.homeunix.net/downloads/smf-postfix/svc-postfix">Methods</a></p>
-  
-  <p class="post-tags">Tags: <a title="All pages tagged 'postfix'." href="../tags/postfix/index.html" rel="tag">postfix</a>, <a title="All pages tagged 'solaris'." href="../tags/solaris/index.html" rel="tag">solaris</a></p>
-  
+
+  <p class="post-tags">Tags: <a title="All pages tagged 'postfix'." href="/tags/postfix/index.html" rel="tag">postfix</a>, <a title="All pages tagged 'solaris'." href="/tags/solaris/index.html" rel="tag">solaris</a></p>
 </div>
-
-
-        <div class="container content">
+<div class="container content">
           <small>Copyright © Tim McGilchrist 2007-2026</small>
           <br>
-          <small>Powered by <a href="https://github.com/tmcgilchrist/lambdafoo.com">Hakyll</a></small>
+          <small>Powered by <a href="https://github.com/xhtmlboi/yocaml">YOCaml</a></small>
         </div>
       </div>
     </div>

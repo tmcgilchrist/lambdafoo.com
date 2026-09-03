@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
   <head>
@@ -10,40 +11,28 @@
   <!-- Enable responsiveness on mobile devices-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-  <title>
-      
-        Unreliable guide to OCaml modules &middot; Perpetually Curious
-      
-  </title>
+  <title>Unreliable guide to OCaml modules &middot; Perpetually Curious</title>
 
   <!-- CSS -->
-  <link rel="stylesheet" href="../css/poole.css">
-  <link rel="stylesheet" href="../css/syntax.css">
-  <link rel="stylesheet" href="../css/lanyon.css">
-  <link rel="stylesheet" href="../css/book.css">
+  <link rel="stylesheet" href="/css/poole.css">
+  <link rel="stylesheet" href="/css/syntax.css">
+  <link rel="stylesheet" href="/css/syntax-tm.css">
+  <link rel="stylesheet" href="/css/lanyon.css">
+  <link rel="stylesheet" href="/css/book.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
 
   <!-- Icons -->
-  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-precomposed.png">
-  <link rel="shortcut icon" href="../images/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/images/favicon.ico">
 
   <!-- RSS -->
-  <link rel="alternate" type="application/rss+xml" title="RSS" href="../atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
 
-  <!-- Google Analytics -->
-  <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-28532776-1', 'auto');
-    ga('send', 'pageview');
-  </script>
-<!-- End Google Analytics -->
+  <!-- Analytics -->
+  <script data-goatcounter="https://lambdafoo.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
   <a rel="me" hidden="true" href="https://hachyderm.io/@tsmc">Mastodon</a>
 </head>
-
 
   <body class="sidebar-overlay">
 
@@ -55,15 +44,15 @@
 <div class="sidebar" id="sidebar">
 
   <div class="sidebar-item">
-    <p><a href="../"><strong>Tim McGilchrist</strong></a></p>
+    <p><a href="/"><strong>Tim McGilchrist</strong></a></p>
   </div>
 
   <nav class="sidebar-nav">
-    <a class="sidebar-nav-item" href="../">Blog</a>
-    <a class="sidebar-nav-item" href="../pages/about.html">About</a>
-    <a class="sidebar-nav-item" href="../pages/talks.html">Talks</a>
-    <a class="sidebar-nav-item" href="../pages/server-room.html">Server Room</a>
-    <a class="sidebar-nav-item" href="../archive.html">Archive</a>
+    <a class="sidebar-nav-item" href="/">Blog</a>
+    <a class="sidebar-nav-item" href="/pages/about.html">About</a>
+    <a class="sidebar-nav-item" href="/pages/talks.html">Talks</a>
+    <a class="sidebar-nav-item" href="/pages/server-room.html">Server Room</a>
+    <a class="sidebar-nav-item" href="/archive.html">Archive</a>
   </nav>
 
   <div class="sidebar-item">
@@ -72,8 +61,8 @@
       <a href="https://bsky.app/profile/tsmc.purely-functional.com">Bluesky</a>
     </p>
     <p>
-      <a href="../rss.xml">RSS</a> ·
-      <a href="../atom.xml">Atom</a>
+      <a href="/rss.xml">RSS</a> ·
+      <a href="/atom.xml">Atom</a>
     </p>
     <p>
       &copy; Tim McGilchrist 2007-2026
@@ -81,183 +70,188 @@
   </div>
 </div>
 
-
     <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
          content to avoid any CSS collisions with our real content. -->
     <div class="wrap">
       <div class="masthead">
         <div class="container">
           <h3 class="masthead-title">
-            <a href="../" title="Home">Perpetually Curious</a>
-            
+            <a href="/" title="Home">Perpetually Curious</a>
             <span class="masthead-links">
-              <a href="../pages/about.html">About</a> |
-              <a href="../pages/talks.html">Talks</a> |
-              <a href="../pages/server-room.html">Server Room</a> |
-              <a href="../archive.html">Archive</a>
+              <a href="/pages/about.html">About</a> |
+              <a href="/pages/talks.html">Talks</a> |
+              <a href="/pages/server-room.html">Server Room</a> |
+              <a href="/archive.html">Archive</a>
             </span>
           </h3>
         </div>
       </div>
 
-      <div class="container content">
-        <div class="post">
+      <div class="container content"><div class="post">
   <h1 class="post-title">Unreliable guide to OCaml modules</h1>
-  <span class="post-date">May 17, 2015</span>
-  <p>Being on the curious side of things I have been interested lately in the dualities
+  <span class="post-date">May 17, 2015</span><p>Being on the curious side of things I have been interested lately in the dualities
 between programming languages. Like how one feature say Type Classes in
 Haskell compares to what is available in Scala or OCaml. This has lead to me
 reading a substantial amount of academic papers about the subject.</p>
 <p>So with that in mind I would like to give a brief introduction to OCaml style
 modules. Perhaps in another post going into how can you encode something like
-rank n types from Haskell in OCaml which natively doesn’t support them.</p>
+rank n types from Haskell in OCaml which natively doesn't support them.</p>
 <p>Preface, the use of the word module can be confusing, and it sometimes seems
-that module is used to refer to structures interchangeably. I’ve tried to avoid
-that but it’s helpful to keep in mind for further reading. Look at what’s on the
+that module is used to refer to structures interchangeably. I've tried to avoid
+that but it's helpful to keep in mind for further reading. Look at what's on the
 right hand side of the equals in the code. Let start.</p>
-<h2 id="terminology">Terminology</h2>
+<h2 id="terminology"><a class="anchor" aria-hidden="true" href="#terminology"></a>Terminology</h2>
 <p>OCaml is a member of the ML family of languages, sharing common features like
 modules,
 <a href="http://en.wikipedia.org/wiki/Hindley-Milner_type_system">Hindley-Milner type sytem</a>
 and strict evaluation. OCaml as a language can be though of 2 distinct part; one
-a core language that’s values and types and a second module language that
+a core language that's values and types and a second module language that
 revolves around modules and signatures. While OCaml does provide some support
-for bridging these parts in the form of First Class Modules, I won’t cover them here.</p>
+for bridging these parts in the form of First Class Modules, I won't cover them here.</p>
 <p>The key parts of the module system in OCaml are:</p>
 <ul>
 <li>Structures</li>
 <li>Signatures</li>
 <li>Functors</li>
 </ul>
-<h2 id="structures">Structures</h2>
+<h2 id="structures"><a class="anchor" aria-hidden="true" href="#structures"></a>Structures</h2>
 <p>Structures provide a way for grouping together related declarations like data
 types and functions the operate on them; they also provide the values in the
 module langauge. Below is a module for integer Sets:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>    <span class="kw">module</span> IntSet = <span class="kw">struct</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>      <span class="kw">type</span> t = <span class="dt">int</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>      <span class="kw">type</span> set = t <span class="dt">list</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>      <span class="kw">let</span> empty = []</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>      <span class="kw">let</span> member i s = <span class="dt">List</span>.exists (<span class="kw">fun</span> x -&gt; x = i) s</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>      <span class="kw">let</span> insert i s = <span class="kw">if</span> member i s <span class="kw">then</span> s <span class="kw">else</span> (i::s)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span></span></code></pre></div>
+<pre><code><span class='ocaml-source'>    </span><span class='ocaml-keyword-other'>module</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>IntSet</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'> </span><span class='ocaml-keyword-other'>struct</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>      </span><span class='ocaml-keyword-other'>type</span><span class='ocaml-source'> </span><span class='ocaml-source'>t</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'> </span><span class='ocaml-support-type'>int</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>      </span><span class='ocaml-keyword-other'>type</span><span class='ocaml-source'> </span><span class='ocaml-source'>set</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'> </span><span class='ocaml-source'>t</span><span class='ocaml-source'> </span><span class='ocaml-source'>list</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>      </span><span class='ocaml-keyword'>let</span><span class='ocaml-source'> </span><span class='ocaml-entity-name-function-binding'>empty</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-list'>[]</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>      </span><span class='ocaml-keyword'>let</span><span class='ocaml-source'> </span><span class='ocaml-entity-name-function-binding'>member</span><span class='ocaml-source'> </span><span class='ocaml-source'>i</span><span class='ocaml-source'> </span><span class='ocaml-source'>s</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>List</span><span class='ocaml-keyword-other-ocaml punctuation-other-period punctuation-separator'>.</span><span class='ocaml-source'>exists</span><span class='ocaml-source'> </span><span class='ocaml-source'>(</span><span class='ocaml-keyword-other'>fun</span><span class='ocaml-source'> </span><span class='ocaml-source'>x</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>-&gt;</span><span class='ocaml-source'> </span><span class='ocaml-source'>x</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'> </span><span class='ocaml-source'>i</span><span class='ocaml-source'>)</span><span class='ocaml-source'> </span><span class='ocaml-source'>s</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>      </span><span class='ocaml-keyword'>let</span><span class='ocaml-source'> </span><span class='ocaml-entity-name-function-binding'>insert</span><span class='ocaml-source'> </span><span class='ocaml-source'>i</span><span class='ocaml-source'> </span><span class='ocaml-source'>s</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'> </span><span class='ocaml-keyword-other'>if</span><span class='ocaml-source'> </span><span class='ocaml-source'>member</span><span class='ocaml-source'> </span><span class='ocaml-source'>i</span><span class='ocaml-source'> </span><span class='ocaml-source'>s</span><span class='ocaml-source'> </span><span class='ocaml-keyword-other'>then</span><span class='ocaml-source'> </span><span class='ocaml-source'>s</span><span class='ocaml-source'> </span><span class='ocaml-keyword-other'>else</span><span class='ocaml-source'> </span><span class='ocaml-source'>(</span><span class='ocaml-source'>i</span><span class='ocaml-keyword-other-ocaml punctuation-other-colon punctuation'>:</span><span class='ocaml-keyword-other-ocaml punctuation-other-colon punctuation'>:</span><span class='ocaml-source'>s</span><span class='ocaml-source'>)</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>    </span><span class='ocaml-keyword-other'>end</span><span class='ocaml-source'>
+</span></code></pre>
 <p>This code defines a new structure using the <code>struct</code> keyword and binds it to a name
-using module. It’s useful to note that OCaml types are written in lowercase (<code>t</code>,
+using module. It's useful to note that OCaml types are written in lowercase (<code>t</code>,
 <code>list</code> and <code>set</code>) and type variables are written with a single quote <code>'a</code>. Also
-type constructors are written differently to Haskell, in Haskell you’d have
+type constructors are written differently to Haskell, in Haskell you'd have
 <code>List a</code> while in OCaml the order is reveresed <code>t list</code>.</p>
 <p>Basically a struct is an opening <code>struct</code> followed by a bunch of <code>type</code> and
 <code>let</code> bindings, and closed with an <code>end</code>.</p>
 <p>At the call site exposed declarations are referred to by dot notation:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>    IntSet.t</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    IntSet.empty</span></code></pre></div>
+<pre><code><span class='ocaml-source'>    </span><span class='ocaml-constant-language-capital-identifier'>IntSet</span><span class='ocaml-keyword-other-ocaml punctuation-other-period punctuation-separator'>.</span><span class='ocaml-source'>t</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>    </span><span class='ocaml-constant-language-capital-identifier'>IntSet</span><span class='ocaml-keyword-other-ocaml punctuation-other-period punctuation-separator'>.</span><span class='ocaml-source'>empty</span><span class='ocaml-source'>
+</span></code></pre>
 <p>If no module name is defined within a file, say you have a file called <code>set.ml</code>
 with:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>      <span class="kw">type</span> t = <span class="dt">int</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>      <span class="kw">type</span> set = t <span class="dt">list</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>      <span class="kw">let</span> empty = []</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>      <span class="kw">let</span> member i s = <span class="dt">List</span>.exists (<span class="kw">fun</span> x -&gt; x = i) s</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>      <span class="kw">let</span> insert i s = <span class="kw">if</span> member i s <span class="kw">then</span> s <span class="kw">else</span> (i::s)</span></code></pre></div>
+<pre><code><span class='ocaml-source'>      </span><span class='ocaml-keyword-other'>type</span><span class='ocaml-source'> </span><span class='ocaml-source'>t</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'> </span><span class='ocaml-support-type'>int</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>      </span><span class='ocaml-keyword-other'>type</span><span class='ocaml-source'> </span><span class='ocaml-source'>set</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'> </span><span class='ocaml-source'>t</span><span class='ocaml-source'> </span><span class='ocaml-source'>list</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>      </span><span class='ocaml-keyword'>let</span><span class='ocaml-source'> </span><span class='ocaml-entity-name-function-binding'>empty</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-list'>[]</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>      </span><span class='ocaml-keyword'>let</span><span class='ocaml-source'> </span><span class='ocaml-entity-name-function-binding'>member</span><span class='ocaml-source'> </span><span class='ocaml-source'>i</span><span class='ocaml-source'> </span><span class='ocaml-source'>s</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>List</span><span class='ocaml-keyword-other-ocaml punctuation-other-period punctuation-separator'>.</span><span class='ocaml-source'>exists</span><span class='ocaml-source'> </span><span class='ocaml-source'>(</span><span class='ocaml-keyword-other'>fun</span><span class='ocaml-source'> </span><span class='ocaml-source'>x</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>-&gt;</span><span class='ocaml-source'> </span><span class='ocaml-source'>x</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'> </span><span class='ocaml-source'>i</span><span class='ocaml-source'>)</span><span class='ocaml-source'> </span><span class='ocaml-source'>s</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>      </span><span class='ocaml-keyword'>let</span><span class='ocaml-source'> </span><span class='ocaml-entity-name-function-binding'>insert</span><span class='ocaml-source'> </span><span class='ocaml-source'>i</span><span class='ocaml-source'> </span><span class='ocaml-source'>s</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'> </span><span class='ocaml-keyword-other'>if</span><span class='ocaml-source'> </span><span class='ocaml-source'>member</span><span class='ocaml-source'> </span><span class='ocaml-source'>i</span><span class='ocaml-source'> </span><span class='ocaml-source'>s</span><span class='ocaml-source'> </span><span class='ocaml-keyword-other'>then</span><span class='ocaml-source'> </span><span class='ocaml-source'>s</span><span class='ocaml-source'> </span><span class='ocaml-keyword-other'>else</span><span class='ocaml-source'> </span><span class='ocaml-source'>(</span><span class='ocaml-source'>i</span><span class='ocaml-keyword-other-ocaml punctuation-other-colon punctuation'>:</span><span class='ocaml-keyword-other-ocaml punctuation-other-colon punctuation'>:</span><span class='ocaml-source'>s</span><span class='ocaml-source'>)</span><span class='ocaml-source'>
+</span></code></pre>
 <p>It will implicitly be given a structure name derived from the file name <code>Set</code> but
 as you may have worked out module names are not bound to file names. Further
 structures can be nested within other structures, leading to more freedom than
 just having 1 file becoming 1 module.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>    <span class="kw">module</span> IntSet = <span class="kw">struct</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>      <span class="kw">module</span> Compare = <span class="kw">struct</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>         <span class="kw">type</span> t = <span class="dt">int</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>         <span class="kw">let</span> eql x y = x = y</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>      <span class="kw">end</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span>;;</span></code></pre></div>
+<pre><code><span class='ocaml-source'>    </span><span class='ocaml-keyword-other'>module</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>IntSet</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'> </span><span class='ocaml-keyword-other'>struct</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>      </span><span class='ocaml-keyword-other'>module</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>Compare</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'> </span><span class='ocaml-keyword-other'>struct</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>         </span><span class='ocaml-keyword-other'>type</span><span class='ocaml-source'> </span><span class='ocaml-source'>t</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'> </span><span class='ocaml-support-type'>int</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>         </span><span class='ocaml-keyword'>let</span><span class='ocaml-source'> </span><span class='ocaml-entity-name-function-binding'>eql</span><span class='ocaml-source'> </span><span class='ocaml-source'>x</span><span class='ocaml-source'> </span><span class='ocaml-source'>y</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'> </span><span class='ocaml-source'>x</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'> </span><span class='ocaml-source'>y</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>      </span><span class='ocaml-keyword-other'>end</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>    </span><span class='ocaml-keyword-other'>end</span><span class='ocaml-keyword-other-ocaml punctuation-separator-terminator punctuation-separator'>;</span><span class='ocaml-keyword-other-ocaml punctuation-separator-terminator punctuation-separator'>;</span><span class='ocaml-source'>
+</span></code></pre>
 <p>The values within the nested module are referred to like so:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>    IntSet.Compare.eql <span class="dv">1</span> <span class="dv">1</span>;;</span></code></pre></div>
+<pre><code><span class='ocaml-source'>    </span><span class='ocaml-constant-language-capital-identifier'>IntSet</span><span class='ocaml-keyword-other-ocaml punctuation-other-period punctuation-separator'>.</span><span class='ocaml-constant-language-capital-identifier'>Compare</span><span class='ocaml-keyword-other-ocaml punctuation-other-period punctuation-separator'>.</span><span class='ocaml-source'>eql</span><span class='ocaml-source'> </span><span class='ocaml-constant-numeric-decimal-integer'>1</span><span class='ocaml-source'> </span><span class='ocaml-constant-numeric-decimal-integer'>1</span><span class='ocaml-keyword-other-ocaml punctuation-separator-terminator punctuation-separator'>;</span><span class='ocaml-keyword-other-ocaml punctuation-separator-terminator punctuation-separator'>;</span><span class='ocaml-source'>
+</span></code></pre>
 <p>While it is great to have functions namespaced like so, it would become tedious
 if you needed to use the longer name to refer to a nested module. OCaml provides
 a couple of solutions, first local opens.</p>
 <p>Rather than having an <code>open</code> statement at the top of the file and bringing
 every thing into scope for that file we can do a local open and restrict the
 scope to between the two brackets.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>     IntSet.Compare.(eql <span class="dv">1</span> <span class="dv">1</span>);;</span></code></pre></div>
+<pre><code><span class='ocaml-source'>     </span><span class='ocaml-constant-language-capital-identifier'>IntSet</span><span class='ocaml-keyword-other-ocaml punctuation-other-period punctuation-separator'>.</span><span class='ocaml-constant-language-capital-identifier'>Compare</span><span class='ocaml-keyword-other-ocaml punctuation-other-period punctuation-separator'>.</span><span class='ocaml-source'>(</span><span class='ocaml-source'>eql</span><span class='ocaml-source'> </span><span class='ocaml-constant-numeric-decimal-integer'>1</span><span class='ocaml-source'> </span><span class='ocaml-constant-numeric-decimal-integer'>1</span><span class='ocaml-source'>)</span><span class='ocaml-keyword-other-ocaml punctuation-separator-terminator punctuation-separator'>;</span><span class='ocaml-keyword-other-ocaml punctuation-separator-terminator punctuation-separator'>;</span><span class='ocaml-source'>
+</span></code></pre>
 <p>The other option available is aliasing the module name to something shorter</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>     <span class="kw">module</span> X = IntSet.Compare;;</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>     X.eql <span class="dv">1</span> <span class="dv">1</span>;;</span></code></pre></div>
+<pre><code><span class='ocaml-source'>     </span><span class='ocaml-keyword-other'>module</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>X</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>IntSet</span><span class='ocaml-keyword-other-ocaml punctuation-other-period punctuation-separator'>.</span><span class='ocaml-constant-language-capital-identifier'>Compare</span><span class='ocaml-keyword-other-ocaml punctuation-separator-terminator punctuation-separator'>;</span><span class='ocaml-keyword-other-ocaml punctuation-separator-terminator punctuation-separator'>;</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>     </span><span class='ocaml-constant-language-capital-identifier'>X</span><span class='ocaml-keyword-other-ocaml punctuation-other-period punctuation-separator'>.</span><span class='ocaml-source'>eql</span><span class='ocaml-source'> </span><span class='ocaml-constant-numeric-decimal-integer'>1</span><span class='ocaml-source'> </span><span class='ocaml-constant-numeric-decimal-integer'>1</span><span class='ocaml-keyword-other-ocaml punctuation-separator-terminator punctuation-separator'>;</span><span class='ocaml-keyword-other-ocaml punctuation-separator-terminator punctuation-separator'>;</span><span class='ocaml-source'>
+</span></code></pre>
 <p>I mentioned <code>open</code> before without saying what it does. Simply open brings the
 contents of a module within another module, so they can be referred to without
 the module name prefix.</p>
-<h2 id="signatures">Signatures</h2>
+<h2 id="signatures"><a class="anchor" aria-hidden="true" href="#signatures"></a>Signatures</h2>
 <p>Signatures are the interfaces for structures, a signature defines what parts of
 a structure is visable from the outside. A signature can be used to hide
 components of a structure or export some definitions with more general types.</p>
 <p>A signature is introduced with the <code>sig</code> keyword</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>    <span class="kw">module</span> <span class="kw">type</span> <span class="dt">Set</span> =</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>      <span class="kw">sig</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>        <span class="kw">type</span> elt</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>        <span class="kw">type</span> t</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>        <span class="kw">val</span> empty : t</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>        <span class="kw">val</span> member : elt -&gt; t -&gt; <span class="dt">bool</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>        <span class="kw">val</span> insert : elt-&gt; t -&gt; t</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>      <span class="kw">end</span></span></code></pre></div>
+<pre><code><span class='ocaml-source'>    </span><span class='ocaml-keyword-other'>module</span><span class='ocaml-source'> </span><span class='ocaml-keyword-other'>type</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>Set</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>      </span><span class='ocaml-keyword-other'>sig</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>        </span><span class='ocaml-keyword'>type</span><span class='ocaml-source'> </span><span class='ocaml-entity-name-function-binding'>elt</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>        </span><span class='ocaml-keyword'>type</span><span class='ocaml-source'> </span><span class='ocaml-entity-name-function-binding'>t</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>        </span><span class='ocaml-keyword'>val</span><span class='ocaml-source'> </span><span class='ocaml-entity-name-function-binding'>empty</span><span class='ocaml-source'> : t
+</span><span class='ocaml-source'>        </span><span class='ocaml-keyword'>val</span><span class='ocaml-source'> </span><span class='ocaml-entity-name-function-binding'>member</span><span class='ocaml-source'> : elt -&gt; t -&gt; bool
+</span><span class='ocaml-source'>        </span><span class='ocaml-keyword'>val</span><span class='ocaml-source'> </span><span class='ocaml-entity-name-function-binding'>insert</span><span class='ocaml-source'> : elt-&gt; t -&gt; t
+</span><span class='ocaml-source'>      </span><span class='ocaml-keyword-other'>end</span><span class='ocaml-source'>
+</span></code></pre>
 <p>As you can see looking at our definition of Set, it lists a type and function
-signatures without specifying a concrete implementation. It’s also bound to a
+signatures without specifying a concrete implementation. It's also bound to a
 name <code>Set</code> using <code>module type</code>.</p>
 <p>As I metnioned before signatures are typically used to hide or change the
 interface a module exposes. By default all types and functions are exported from
 a module. Useful for doing things like hiding implementation details or only
 construct the data type via the invariant-preserving operations that the module
 provides.</p>
-<p>Typically in OCaml you’ll define your <code>struct</code> in one file <code>set.ml</code> and then
+<p>Typically in OCaml you'll define your <code>struct</code> in one file <code>set.ml</code> and then
 create a second file <code>set.mli</code> which contains the signature for the module set.
 Only occasionally will you see the signature and structure defined together.</p>
-<h2 id="functors">Functors</h2>
-<p>Now to the functors, they’re not exactly like Haskell’s though they do perform a
+<h2 id="functors"><a class="anchor" aria-hidden="true" href="#functors"></a>Functors</h2>
+<p>Now to the functors, they're not exactly like Haskell's though they do perform a
 kind of mapping.</p>
 <p>Functors are for lifting functions into the module language, or another way
 they are <code>functions</code> from structures to structures. Which brings the abstract
 idea of functors from category theory back to 2 concrete examples, where
-Haskell functors are <code>functions</code> from types to types, OCaml’s functors are
+Haskell functors are <code>functions</code> from types to types, OCaml's functors are
 <code>functions</code> from structures to structures.</p>
 <p>Following out set example we can make set operations abstract across both the
 type inside the set and the equality comparison.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>    <span class="kw">module</span> <span class="kw">type</span> ORDERING =</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>      <span class="kw">sig</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>        <span class="kw">type</span> t</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>        <span class="kw">val</span> <span class="dt">compare</span> : t -&gt; t -&gt; <span class="dt">int</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>      <span class="kw">end</span>;;</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">module</span> <span class="kw">type</span> <span class="dt">Set</span> =</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>      <span class="kw">sig</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>        <span class="kw">type</span> elt</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>        <span class="kw">type</span> t</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>        <span class="kw">val</span> empty : t</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>        <span class="kw">val</span> member : elt -&gt; t -&gt; <span class="dt">bool</span></span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>        <span class="kw">val</span> insert : elt-&gt; t -&gt; t</span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>      <span class="kw">end</span>;;</span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">module</span> MkSet (Ord : ORDERING) : (<span class="dt">Set</span> <span class="kw">with</span> <span class="kw">type</span> elt := Ord.t) =</span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>      <span class="kw">struct</span></span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>        <span class="kw">type</span> elt = Ord.t</span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>        <span class="kw">type</span> t = Empty | Node <span class="kw">of</span> t * elt * t</span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>        <span class="kw">let</span> empty = Empty</span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>        <span class="kw">let</span> <span class="kw">rec</span> insert x = <span class="kw">function</span></span>
-<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>          | Empty -&gt; Node(Empty, x, Empty)</span>
-<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>          | Node(a, y, b) <span class="kw">when</span> Ord.<span class="dt">compare</span> x y &lt; <span class="dv">0</span> -&gt; Node(insert x a, y, b)</span>
-<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>          | Node(a, y, b) <span class="kw">when</span> Ord.<span class="dt">compare</span> x y &gt; <span class="dv">0</span> -&gt; Node(a, y, insert x b)</span>
-<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>          | Node(a, y, b) <span class="kw">as</span> s -&gt; s</span>
-<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>        <span class="kw">let</span> <span class="kw">rec</span> member x = <span class="kw">function</span></span>
-<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>          | Empty -&gt; <span class="kw">false</span></span>
-<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>          | Node(l, v, r) -&gt;</span>
-<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>              <span class="kw">let</span> c = Ord.<span class="dt">compare</span> x v <span class="kw">in</span></span>
-<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>              c = <span class="dv">0</span> || member x (<span class="kw">if</span> c &lt; <span class="dv">0</span> <span class="kw">then</span> l <span class="kw">else</span> r)</span>
-<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span>;;</span>
-<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>    <span class="kw">module</span> IntOrdering = <span class="kw">struct</span></span>
-<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>        <span class="kw">type</span> t = <span class="dt">int</span></span>
-<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>        <span class="kw">let</span> <span class="dt">compare</span> x y = Pervasives.<span class="dt">compare</span> x y</span>
-<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>      <span class="kw">end</span>;;</span>
-<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a>    <span class="kw">module</span> IntSet' = MkSet(IntOrdering);;</span></code></pre></div>
+<pre><code><span class='ocaml-source'>    </span><span class='ocaml-keyword-other'>module</span><span class='ocaml-source'> </span><span class='ocaml-keyword-other'>type</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>ORDERING</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>      </span><span class='ocaml-keyword-other'>sig</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>        </span><span class='ocaml-keyword'>type</span><span class='ocaml-source'> </span><span class='ocaml-entity-name-function-binding'>t</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>        </span><span class='ocaml-keyword'>val</span><span class='ocaml-source'> </span><span class='ocaml-entity-name-function-binding'>compare</span><span class='ocaml-source'> : t -&gt; t -&gt; int
+</span><span class='ocaml-source'>      </span><span class='ocaml-keyword-other'>end</span><span class='ocaml-keyword-other-ocaml punctuation-separator-terminator punctuation-separator'>;</span><span class='ocaml-keyword-other-ocaml punctuation-separator-terminator punctuation-separator'>;</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>    </span><span class='ocaml-keyword-other'>module</span><span class='ocaml-source'> </span><span class='ocaml-keyword-other'>type</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>Set</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>      </span><span class='ocaml-keyword-other'>sig</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>        </span><span class='ocaml-keyword'>type</span><span class='ocaml-source'> </span><span class='ocaml-entity-name-function-binding'>elt</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>        </span><span class='ocaml-keyword'>type</span><span class='ocaml-source'> </span><span class='ocaml-entity-name-function-binding'>t</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>        </span><span class='ocaml-keyword'>val</span><span class='ocaml-source'> </span><span class='ocaml-entity-name-function-binding'>empty</span><span class='ocaml-source'> : t
+</span><span class='ocaml-source'>        </span><span class='ocaml-keyword'>val</span><span class='ocaml-source'> </span><span class='ocaml-entity-name-function-binding'>member</span><span class='ocaml-source'> : elt -&gt; t -&gt; bool
+</span><span class='ocaml-source'>        </span><span class='ocaml-keyword'>val</span><span class='ocaml-source'> </span><span class='ocaml-entity-name-function-binding'>insert</span><span class='ocaml-source'> : elt-&gt; t -&gt; t
+</span><span class='ocaml-source'>      </span><span class='ocaml-keyword-other'>end</span><span class='ocaml-keyword-other-ocaml punctuation-separator-terminator punctuation-separator'>;</span><span class='ocaml-keyword-other-ocaml punctuation-separator-terminator punctuation-separator'>;</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>    </span><span class='ocaml-keyword-other'>module</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>MkSet</span><span class='ocaml-source'> </span><span class='ocaml-source'>(</span><span class='ocaml-constant-language-capital-identifier'>Ord</span><span class='ocaml-source'> </span><span class='ocaml-keyword-other-ocaml punctuation-other-colon punctuation'>:</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>ORDERING</span><span class='ocaml-source'>)</span><span class='ocaml-source'> </span><span class='ocaml-keyword-other-ocaml punctuation-other-colon punctuation'>:</span><span class='ocaml-source'> </span><span class='ocaml-source'>(</span><span class='ocaml-constant-language-capital-identifier'>Set</span><span class='ocaml-source'> </span><span class='ocaml-keyword-other'>with</span><span class='ocaml-source'> </span><span class='ocaml-keyword-other'>type</span><span class='ocaml-source'> </span><span class='ocaml-source'>elt</span><span class='ocaml-source'> </span><span class='ocaml-keyword-other-ocaml punctuation-other-colon punctuation'>:</span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>Ord</span><span class='ocaml-keyword-other-ocaml punctuation-other-period punctuation-separator'>.</span><span class='ocaml-source'>t</span><span class='ocaml-source'>)</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>      </span><span class='ocaml-keyword-other'>struct</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>        </span><span class='ocaml-keyword-other'>type</span><span class='ocaml-source'> </span><span class='ocaml-source'>elt</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>Ord</span><span class='ocaml-keyword-other-ocaml punctuation-other-period punctuation-separator'>.</span><span class='ocaml-source'>t</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>        </span><span class='ocaml-keyword-other'>type</span><span class='ocaml-source'> </span><span class='ocaml-source'>t</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>Empty</span><span class='ocaml-source'> </span><span class='ocaml-keyword-other'>|</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>Node</span><span class='ocaml-source'> </span><span class='ocaml-keyword-other'>of</span><span class='ocaml-source'> </span><span class='ocaml-source'>t</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>*</span><span class='ocaml-source'> </span><span class='ocaml-source'>elt</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>*</span><span class='ocaml-source'> </span><span class='ocaml-source'>t</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>        </span><span class='ocaml-keyword'>let</span><span class='ocaml-source'> </span><span class='ocaml-entity-name-function-binding'>empty</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>Empty</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>        </span><span class='ocaml-keyword'>let</span><span class='ocaml-source'> </span><span class='ocaml-keyword'>rec </span><span class='ocaml-entity-name-function-binding'>insert</span><span class='ocaml-source'> </span><span class='ocaml-source'>x</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'> </span><span class='ocaml-keyword-other'>function</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>          </span><span class='ocaml-keyword-other'>|</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>Empty</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>-&gt;</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>Node</span><span class='ocaml-source'>(</span><span class='ocaml-constant-language-capital-identifier'>Empty</span><span class='ocaml-keyword-other-ocaml punctuation-comma punctuation-separator'>,</span><span class='ocaml-source'> </span><span class='ocaml-source'>x</span><span class='ocaml-keyword-other-ocaml punctuation-comma punctuation-separator'>,</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>Empty</span><span class='ocaml-source'>)</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>          </span><span class='ocaml-keyword-other'>|</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>Node</span><span class='ocaml-source'>(</span><span class='ocaml-source'>a</span><span class='ocaml-keyword-other-ocaml punctuation-comma punctuation-separator'>,</span><span class='ocaml-source'> </span><span class='ocaml-source'>y</span><span class='ocaml-keyword-other-ocaml punctuation-comma punctuation-separator'>,</span><span class='ocaml-source'> </span><span class='ocaml-source'>b</span><span class='ocaml-source'>)</span><span class='ocaml-source'> </span><span class='ocaml-keyword-other'>when</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>Ord</span><span class='ocaml-keyword-other-ocaml punctuation-other-period punctuation-separator'>.</span><span class='ocaml-source'>compare</span><span class='ocaml-source'> </span><span class='ocaml-source'>x</span><span class='ocaml-source'> </span><span class='ocaml-source'>y</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>&lt;</span><span class='ocaml-source'> </span><span class='ocaml-constant-numeric-decimal-integer'>0</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>-&gt;</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>Node</span><span class='ocaml-source'>(</span><span class='ocaml-source'>insert</span><span class='ocaml-source'> </span><span class='ocaml-source'>x</span><span class='ocaml-source'> </span><span class='ocaml-source'>a</span><span class='ocaml-keyword-other-ocaml punctuation-comma punctuation-separator'>,</span><span class='ocaml-source'> </span><span class='ocaml-source'>y</span><span class='ocaml-keyword-other-ocaml punctuation-comma punctuation-separator'>,</span><span class='ocaml-source'> </span><span class='ocaml-source'>b</span><span class='ocaml-source'>)</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>          </span><span class='ocaml-keyword-other'>|</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>Node</span><span class='ocaml-source'>(</span><span class='ocaml-source'>a</span><span class='ocaml-keyword-other-ocaml punctuation-comma punctuation-separator'>,</span><span class='ocaml-source'> </span><span class='ocaml-source'>y</span><span class='ocaml-keyword-other-ocaml punctuation-comma punctuation-separator'>,</span><span class='ocaml-source'> </span><span class='ocaml-source'>b</span><span class='ocaml-source'>)</span><span class='ocaml-source'> </span><span class='ocaml-keyword-other'>when</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>Ord</span><span class='ocaml-keyword-other-ocaml punctuation-other-period punctuation-separator'>.</span><span class='ocaml-source'>compare</span><span class='ocaml-source'> </span><span class='ocaml-source'>x</span><span class='ocaml-source'> </span><span class='ocaml-source'>y</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>&gt;</span><span class='ocaml-source'> </span><span class='ocaml-constant-numeric-decimal-integer'>0</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>-&gt;</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>Node</span><span class='ocaml-source'>(</span><span class='ocaml-source'>a</span><span class='ocaml-keyword-other-ocaml punctuation-comma punctuation-separator'>,</span><span class='ocaml-source'> </span><span class='ocaml-source'>y</span><span class='ocaml-keyword-other-ocaml punctuation-comma punctuation-separator'>,</span><span class='ocaml-source'> </span><span class='ocaml-source'>insert</span><span class='ocaml-source'> </span><span class='ocaml-source'>x</span><span class='ocaml-source'> </span><span class='ocaml-source'>b</span><span class='ocaml-source'>)</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>          </span><span class='ocaml-keyword-other'>|</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>Node</span><span class='ocaml-source'>(</span><span class='ocaml-source'>a</span><span class='ocaml-keyword-other-ocaml punctuation-comma punctuation-separator'>,</span><span class='ocaml-source'> </span><span class='ocaml-source'>y</span><span class='ocaml-keyword-other-ocaml punctuation-comma punctuation-separator'>,</span><span class='ocaml-source'> </span><span class='ocaml-source'>b</span><span class='ocaml-source'>)</span><span class='ocaml-source'> </span><span class='ocaml-keyword-other'>as</span><span class='ocaml-source'> </span><span class='ocaml-source'>s</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>-&gt;</span><span class='ocaml-source'> </span><span class='ocaml-source'>s</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>        </span><span class='ocaml-keyword'>let</span><span class='ocaml-source'> </span><span class='ocaml-keyword'>rec </span><span class='ocaml-entity-name-function-binding'>member</span><span class='ocaml-source'> </span><span class='ocaml-source'>x</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'> </span><span class='ocaml-keyword-other'>function</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>          </span><span class='ocaml-keyword-other'>|</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>Empty</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>-&gt;</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-boolean'>false</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>          </span><span class='ocaml-keyword-other'>|</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>Node</span><span class='ocaml-source'>(</span><span class='ocaml-source'>l</span><span class='ocaml-keyword-other-ocaml punctuation-comma punctuation-separator'>,</span><span class='ocaml-source'> </span><span class='ocaml-source'>v</span><span class='ocaml-keyword-other-ocaml punctuation-comma punctuation-separator'>,</span><span class='ocaml-source'> </span><span class='ocaml-source'>r</span><span class='ocaml-source'>)</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>-&gt;</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>              </span><span class='ocaml-keyword'>let</span><span class='ocaml-source'> </span><span class='ocaml-entity-name-function-binding'>c</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>Ord</span><span class='ocaml-keyword-other-ocaml punctuation-other-period punctuation-separator'>.</span><span class='ocaml-source'>compare</span><span class='ocaml-source'> </span><span class='ocaml-source'>x</span><span class='ocaml-source'> </span><span class='ocaml-source'>v</span><span class='ocaml-source'> </span><span class='ocaml-keyword-other'>in</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>              </span><span class='ocaml-source'>c</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'> </span><span class='ocaml-constant-numeric-decimal-integer'>0</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>||</span><span class='ocaml-source'> </span><span class='ocaml-source'>member</span><span class='ocaml-source'> </span><span class='ocaml-source'>x</span><span class='ocaml-source'> </span><span class='ocaml-source'>(</span><span class='ocaml-keyword-other'>if</span><span class='ocaml-source'> </span><span class='ocaml-source'>c</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>&lt;</span><span class='ocaml-source'> </span><span class='ocaml-constant-numeric-decimal-integer'>0</span><span class='ocaml-source'> </span><span class='ocaml-keyword-other'>then</span><span class='ocaml-source'> </span><span class='ocaml-source'>l</span><span class='ocaml-source'> </span><span class='ocaml-keyword-other'>else</span><span class='ocaml-source'> </span><span class='ocaml-source'>r</span><span class='ocaml-source'>)</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>    </span><span class='ocaml-keyword-other'>end</span><span class='ocaml-keyword-other-ocaml punctuation-separator-terminator punctuation-separator'>;</span><span class='ocaml-keyword-other-ocaml punctuation-separator-terminator punctuation-separator'>;</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>    </span><span class='ocaml-keyword-other'>module</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>IntOrdering</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'> </span><span class='ocaml-keyword-other'>struct</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>        </span><span class='ocaml-keyword-other'>type</span><span class='ocaml-source'> </span><span class='ocaml-source'>t</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'> </span><span class='ocaml-support-type'>int</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>        </span><span class='ocaml-keyword'>let</span><span class='ocaml-source'> </span><span class='ocaml-entity-name-function-binding'>compare</span><span class='ocaml-source'> </span><span class='ocaml-source'>x</span><span class='ocaml-source'> </span><span class='ocaml-source'>y</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>Pervasives</span><span class='ocaml-keyword-other-ocaml punctuation-other-period punctuation-separator'>.</span><span class='ocaml-source'>compare</span><span class='ocaml-source'> </span><span class='ocaml-source'>x</span><span class='ocaml-source'> </span><span class='ocaml-source'>y</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>      </span><span class='ocaml-keyword-other'>end</span><span class='ocaml-keyword-other-ocaml punctuation-separator-terminator punctuation-separator'>;</span><span class='ocaml-keyword-other-ocaml punctuation-separator-terminator punctuation-separator'>;</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>    </span><span class='ocaml-keyword-other'>module</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>IntSet'</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>MkSet</span><span class='ocaml-source'>(</span><span class='ocaml-constant-language-capital-identifier'>IntOrdering</span><span class='ocaml-source'>)</span><span class='ocaml-keyword-other-ocaml punctuation-separator-terminator punctuation-separator'>;</span><span class='ocaml-keyword-other-ocaml punctuation-separator-terminator punctuation-separator'>;</span><span class='ocaml-source'>
+</span></code></pre>
 <p>Here we define <code>ORDERING</code> and <code>Set</code> as signatures, similar to our previous
 definitons. Then a functor is defined <code>MkSet</code> that takes the <code>ORDERING</code>
 signature and defines the types and functions for set based off that interface.
@@ -266,59 +260,65 @@ the set and the functions used on those types. As long as it implements
 <code>ORDERING</code>.</p>
 <p>The last part defines a particular ordering for <code>int</code> using, binding t to <code>int</code>
 and compare to <code>Int.compare</code>.</p>
-<h2 id="using-modules">Using Modules</h2>
+<h2 id="using-modules"><a class="anchor" aria-hidden="true" href="#using-modules"></a>Using Modules</h2>
 <p>After covering what is in the OCaml module system, what exactly do we use it
 for. At the very basic level we collect together types and functions, which is
 pretty much what all modules do. Outside of that we can:</p>
-<ol type="1">
+<ol>
 <li>Hide implementation details, like the types exported by the module. If we
 wanted to hide how our Set was implemented we could redefine the functor as:</li>
 </ol>
-<div class="sourceCode" id="cb10"><pre class="sourceCode ocaml"><code class="sourceCode ocaml"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="kw">type</span> SETFUNCTOR =</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">functor</span> (O: ORDERING) -&gt;</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>      <span class="kw">sig</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>        <span class="kw">type</span> t = O.t      <span class="co">(* concrete *)</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>        <span class="kw">type</span> set          <span class="co">(* abstract *)</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>        <span class="kw">val</span> empty : set</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>        <span class="kw">val</span> add : t -&gt; set -&gt; set</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>        <span class="kw">val</span> member : t -&gt; set -&gt; <span class="dt">bool</span></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>      <span class="kw">end</span>;;</span></code></pre></div>
-<p>Here we expose the elements within the set via <code>type t = O.t</code> so they’re a
-concrete type, while <code>set</code> isn’t given a definition so the consumers of this
-module can’t look into that type without using the functions provided in the Set
+<pre><code><span class='ocaml-keyword-other'>module</span><span class='ocaml-source'> </span><span class='ocaml-keyword-other'>type</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>SETFUNCTOR</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>=</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>    </span><span class='ocaml-keyword-other'>functor</span><span class='ocaml-source'> </span><span class='ocaml-source'>(</span><span class='ocaml-constant-language-capital-identifier'>O</span><span class='ocaml-keyword-other-ocaml punctuation-other-colon punctuation'>:</span><span class='ocaml-source'> </span><span class='ocaml-constant-language-capital-identifier'>ORDERING</span><span class='ocaml-source'>)</span><span class='ocaml-source'> </span><span class='ocaml-keyword-operator'>-&gt;</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>      </span><span class='ocaml-keyword-other'>sig</span><span class='ocaml-source'>
+</span><span class='ocaml-source'>        </span><span class='ocaml-keyword'>type</span><span class='ocaml-source'> </span><span class='ocaml-entity-name-function-binding'>t</span><span class='ocaml-source'> = O.t      (* concrete *)
+</span><span class='ocaml-source'>        </span><span class='ocaml-keyword'>type</span><span class='ocaml-source'> </span><span class='ocaml-entity-name-function-binding'>set</span><span class='ocaml-source'>          (* abstract *)
+</span><span class='ocaml-source'>        </span><span class='ocaml-keyword'>val</span><span class='ocaml-source'> </span><span class='ocaml-entity-name-function-binding'>empty</span><span class='ocaml-source'> : set
+</span><span class='ocaml-source'>        </span><span class='ocaml-keyword'>val</span><span class='ocaml-source'> </span><span class='ocaml-entity-name-function-binding'>add</span><span class='ocaml-source'> : t -&gt; set -&gt; set
+</span><span class='ocaml-source'>        </span><span class='ocaml-keyword'>val</span><span class='ocaml-source'> </span><span class='ocaml-entity-name-function-binding'>member</span><span class='ocaml-source'> : t -&gt; set -&gt; bool
+</span><span class='ocaml-source'>      </span><span class='ocaml-keyword-other'>end</span><span class='ocaml-keyword-other-ocaml punctuation-separator-terminator punctuation-separator'>;</span><span class='ocaml-keyword-other-ocaml punctuation-separator-terminator punctuation-separator'>;</span><span class='ocaml-source'>
+</span></code></pre>
+<p>Here we expose the elements within the set via <code>type t = O.t</code> so they're a
+concrete type, while <code>set</code> isn't given a definition so the consumers of this
+module can't look into that type without using the functions provided in the Set
 module. This hiding using abstract types lets us swap out different
 implementations for testing purposes or if requirements change.</p>
-<ol start="2" type="1">
-<li><p>Namespace functions and type, all types and functions live within some
-module.</p></li>
-<li><p>Extending existing modules in a type safe way. You may want to extend a
+<ol start="2">
+<li>
+<p>Namespace functions and type, all types and functions live within some
+module.</p>
+</li>
+<li>
+<p>Extending existing modules in a type safe way. You may want to extend a
 module from a library with extra derived functions. For example the <code>Core</code>
 library from Jane Street extends the built in OCaml library with a number of
-new and different functions. eg Say Lists didn’t provide a <code>transpose</code>
-function.</p></li>
-<li><p>Instantiating modules with State, OCaml allows modules to include mutable
-state (while we may not particularly like mutable things) sometimes it’s
+new and different functions. eg Say Lists didn't provide a <code>transpose</code>
+function.</p>
+</li>
+<li>
+<p>Instantiating modules with State, OCaml allows modules to include mutable
+state (while we may not particularly like mutable things) sometimes it's
 necessary and you may want multiple instances of a particular module with
-their own state. Functors make doing this more succinct.</p></li>
-<li><p>Collecting definitions and exporting as a single module, e.g. Core.Std inside
-Jane Street Core library.</p></li>
+their own state. Functors make doing this more succinct.</p>
+</li>
+<li>
+<p>Collecting definitions and exporting as a single module, e.g. Core.Std inside
+Jane Street Core library.</p>
+</li>
 </ol>
-<h2 id="further-reading">Further Reading</h2>
+<h2 id="further-reading"><a class="anchor" aria-hidden="true" href="#further-reading"></a>Further Reading</h2>
 <p>The best reference is really <a href="http://realworldocaml.org">Real World OCaml</a>. If
-you’ve got some Haskell experience and don’t mind reading a paper then “ML
-Modules and Haskell Type Classes: A Constructive Comparison” by Stefan Wehr and
+you've got some Haskell experience and don't mind reading a paper then &quot;ML
+Modules and Haskell Type Classes: A Constructive Comparison&quot; by Stefan Wehr and
 Manuel Chakravarty gives a thorough coverage of how ML modules stack up to Type
 Classes.</p>
-  
-  <p class="post-tags">Tags: <a title="All pages tagged 'ocaml'." href="../tags/ocaml/index.html" rel="tag">ocaml</a></p>
-  
+
+  <p class="post-tags">Tags: <a title="All pages tagged 'ocaml'." href="/tags/ocaml/index.html" rel="tag">ocaml</a></p>
 </div>
-
-
-        <div class="container content">
+<div class="container content">
           <small>Copyright © Tim McGilchrist 2007-2026</small>
           <br>
-          <small>Powered by <a href="https://github.com/tmcgilchrist/lambdafoo.com">Hakyll</a></small>
+          <small>Powered by <a href="https://github.com/xhtmlboi/yocaml">YOCaml</a></small>
         </div>
       </div>
     </div>

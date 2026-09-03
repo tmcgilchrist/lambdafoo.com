@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
   <head>
@@ -10,40 +11,28 @@
   <!-- Enable responsiveness on mobile devices-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-  <title>
-      
-        Hakyll Blog setup &middot; Perpetually Curious
-      
-  </title>
+  <title>Hakyll Blog setup &middot; Perpetually Curious</title>
 
   <!-- CSS -->
-  <link rel="stylesheet" href="../css/poole.css">
-  <link rel="stylesheet" href="../css/syntax.css">
-  <link rel="stylesheet" href="../css/lanyon.css">
-  <link rel="stylesheet" href="../css/book.css">
+  <link rel="stylesheet" href="/css/poole.css">
+  <link rel="stylesheet" href="/css/syntax.css">
+  <link rel="stylesheet" href="/css/syntax-tm.css">
+  <link rel="stylesheet" href="/css/lanyon.css">
+  <link rel="stylesheet" href="/css/book.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
 
   <!-- Icons -->
-  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-precomposed.png">
-  <link rel="shortcut icon" href="../images/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/images/favicon.ico">
 
   <!-- RSS -->
-  <link rel="alternate" type="application/rss+xml" title="RSS" href="../atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
 
-  <!-- Google Analytics -->
-  <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-28532776-1', 'auto');
-    ga('send', 'pageview');
-  </script>
-<!-- End Google Analytics -->
+  <!-- Analytics -->
+  <script data-goatcounter="https://lambdafoo.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
   <a rel="me" hidden="true" href="https://hachyderm.io/@tsmc">Mastodon</a>
 </head>
-
 
   <body class="sidebar-overlay">
 
@@ -55,15 +44,15 @@
 <div class="sidebar" id="sidebar">
 
   <div class="sidebar-item">
-    <p><a href="../"><strong>Tim McGilchrist</strong></a></p>
+    <p><a href="/"><strong>Tim McGilchrist</strong></a></p>
   </div>
 
   <nav class="sidebar-nav">
-    <a class="sidebar-nav-item" href="../">Blog</a>
-    <a class="sidebar-nav-item" href="../pages/about.html">About</a>
-    <a class="sidebar-nav-item" href="../pages/talks.html">Talks</a>
-    <a class="sidebar-nav-item" href="../pages/server-room.html">Server Room</a>
-    <a class="sidebar-nav-item" href="../archive.html">Archive</a>
+    <a class="sidebar-nav-item" href="/">Blog</a>
+    <a class="sidebar-nav-item" href="/pages/about.html">About</a>
+    <a class="sidebar-nav-item" href="/pages/talks.html">Talks</a>
+    <a class="sidebar-nav-item" href="/pages/server-room.html">Server Room</a>
+    <a class="sidebar-nav-item" href="/archive.html">Archive</a>
   </nav>
 
   <div class="sidebar-item">
@@ -72,8 +61,8 @@
       <a href="https://bsky.app/profile/tsmc.purely-functional.com">Bluesky</a>
     </p>
     <p>
-      <a href="../rss.xml">RSS</a> ·
-      <a href="../atom.xml">Atom</a>
+      <a href="/rss.xml">RSS</a> ·
+      <a href="/atom.xml">Atom</a>
     </p>
     <p>
       &copy; Tim McGilchrist 2007-2026
@@ -81,34 +70,30 @@
   </div>
 </div>
 
-
     <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
          content to avoid any CSS collisions with our real content. -->
     <div class="wrap">
       <div class="masthead">
         <div class="container">
           <h3 class="masthead-title">
-            <a href="../" title="Home">Perpetually Curious</a>
-            
+            <a href="/" title="Home">Perpetually Curious</a>
             <span class="masthead-links">
-              <a href="../pages/about.html">About</a> |
-              <a href="../pages/talks.html">Talks</a> |
-              <a href="../pages/server-room.html">Server Room</a> |
-              <a href="../archive.html">Archive</a>
+              <a href="/pages/about.html">About</a> |
+              <a href="/pages/talks.html">Talks</a> |
+              <a href="/pages/server-room.html">Server Room</a> |
+              <a href="/archive.html">Archive</a>
             </span>
           </h3>
         </div>
       </div>
 
-      <div class="container content">
-        <div class="post">
+      <div class="container content"><div class="post">
   <h1 class="post-title">Hakyll Blog setup</h1>
-  <span class="post-date">August 27, 2021</span>
-  <p>I wanted to port my blog across from an old Jeykll setup to Haykll.
+  <span class="post-date">August 27, 2021</span><p>I wanted to port my blog across from an old Jeykll setup to Haykll.
 The Jekyll was out of date and keeping the required ruby tools installed
-when I swapped machines was a huge pain. I don’t write ruby much anymore.</p>
+when I swapped machines was a huge pain. I don't write ruby much anymore.</p>
 <p>Considering my options, I looked at Hugo and Hakyll, discarding Hugo because
-I don’t want to keep up with the JS churn, even though they have lots of
+I don't want to keep up with the JS churn, even though they have lots of
 great resources and themes available. So Hakyll seems like the best option. I
 already regularily write Haskell so the tools will be up to date and I can make
 it do everything I want by digging into the source code.</p>
@@ -124,7 +109,7 @@ it do everything I want by digging into the source code.</p>
 <li>generated sitemap.xml</li>
 <li>integrate Google Analytics</li>
 </ul>
-<h2 id="getting-hakyll-setup">Getting Hakyll Setup</h2>
+<h2 id="getting-hakyll-setup"><a class="anchor" aria-hidden="true" href="#getting-hakyll-setup"></a>Getting Hakyll Setup</h2>
 <p>First things first! I like the following layout when setting up a basic Haskell project:</p>
 <pre><code>$ tree -L 1
 .
@@ -140,29 +125,31 @@ it do everything I want by digging into the source code.</p>
 ├── pages
 ├── posts
 ├── talks
-└── templates</code></pre>
+└── templates
+</code></pre>
 <p>Initially I used <code>cabal init --cabal-version=2.4 --license=BSD3 -p lambdafoo.com</code> to get a skeleton
 project with a reasonable cabal file. Then I moved things around, making <code>main/site.hs</code> the
 entry point for running Hakyll and adding a TODO list of features into the README.md</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="at"> * ~~basic pages~~</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="at">   * ~~about~~</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="at">   * ~~talks~~</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="at">   * ~~archive~~</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="at"> * ~~individual post with code highlighting~~</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="at"> * ~~rss/atom feed~~</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="at"> * ~~add rss/atom feed to archive page~~</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="at"> * ~~github action build and deploy~~</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="at"> * ~~html url redirects to new url structure~~</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="at"> * ~~serve js talks/slides directly from Hakyll~~</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="at"> * configure dependabot for Haskell</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="at"> * ~~add generated sitemap.xml~~</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="at"> * ~~integrate Google Analytics~~</span></span></code></pre></div>
+<pre><code><span class='yaml-source'> * </span><span class='yaml-string-unquoted-plain-out'>~</span><span class='yaml-string-unquoted-plain-out'>~basic pages~~</span><span class='yaml-source'>
+</span><span class='yaml-source'>   * </span><span class='yaml-string-unquoted-plain-out'>~</span><span class='yaml-string-unquoted-plain-out'>~about~~</span><span class='yaml-source'>
+</span><span class='yaml-source'>   * </span><span class='yaml-string-unquoted-plain-out'>~</span><span class='yaml-string-unquoted-plain-out'>~talks~~</span><span class='yaml-source'>
+</span><span class='yaml-source'>   * </span><span class='yaml-string-unquoted-plain-out'>~</span><span class='yaml-string-unquoted-plain-out'>~archive~~</span><span class='yaml-source'>
+</span><span class='yaml-source'> * </span><span class='yaml-string-unquoted-plain-out'>~</span><span class='yaml-string-unquoted-plain-out'>~individual post with code highlighting~~</span><span class='yaml-source'>
+</span><span class='yaml-source'> * </span><span class='yaml-string-unquoted-plain-out'>~</span><span class='yaml-string-unquoted-plain-out'>~rss/atom feed~~</span><span class='yaml-source'>
+</span><span class='yaml-source'> * </span><span class='yaml-string-unquoted-plain-out'>~</span><span class='yaml-string-unquoted-plain-out'>~add rss/atom feed to archive page~~</span><span class='yaml-source'>
+</span><span class='yaml-source'> * </span><span class='yaml-string-unquoted-plain-out'>~</span><span class='yaml-string-unquoted-plain-out'>~github action build and deploy~~</span><span class='yaml-source'>
+</span><span class='yaml-source'> * </span><span class='yaml-string-unquoted-plain-out'>~</span><span class='yaml-string-unquoted-plain-out'>~html url redirects to new url structure~~</span><span class='yaml-source'>
+</span><span class='yaml-source'> * </span><span class='yaml-string-unquoted-plain-out'>~</span><span class='yaml-string-unquoted-plain-out'>~serve js talks/slides directly from Hakyll~~</span><span class='yaml-source'>
+</span><span class='yaml-source'> * </span><span class='yaml-string-unquoted-plain-out'>c</span><span class='yaml-string-unquoted-plain-out'>onfigure dependabot for Haskell</span><span class='yaml-source'>
+</span><span class='yaml-source'> * </span><span class='yaml-string-unquoted-plain-out'>~</span><span class='yaml-string-unquoted-plain-out'>~add generated sitemap.xml~~</span><span class='yaml-source'>
+</span><span class='yaml-source'> * </span><span class='yaml-string-unquoted-plain-out'>~</span><span class='yaml-string-unquoted-plain-out'>~integrate Google Analytics~~</span><span class='yaml-source'>
+</span></code></pre>
 <p>These directories are used for Hakyll content:</p>
 <ul>
 <li>pages - includes various regular pages on the site like talks or about me</li>
 <li>css - includes the style sheets for the HTML</li>
 <li>images - is the static images for the site</li>
-<li>drafts - containts the draft posts I’m writing</li>
+<li>drafts - containts the draft posts I'm writing</li>
 <li>talks - contains static JS/HTML based slides from presentations that I want to serve directly
 from the site</li>
 <li>templates - site templates in a markup language for doing page layouts</li>
@@ -171,120 +158,132 @@ from the site</li>
 <p>The trickiest part was getting a version of the cabal file that worked with GHC 8.10 and a
 recent version of Hakyll. I ended up needing to pin Hakyll as <code>hakyll ^&gt;= 4.13</code> and left the
 other dependencies floating.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="at">executable site</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">main-is</span><span class="kw">:</span><span class="at">             site.hs</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">hs-source-dirs</span><span class="kw">:</span><span class="at">      main</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">default-language</span><span class="kw">:</span><span class="at">    Haskell2010</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">build-depends</span><span class="kw">:</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="at">                       base      &gt;= 4.6  &amp;&amp; &lt; 5</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="at">                     , binary    &gt;= 0.5</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="at">                     , directory &gt;= 1.2</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="at">                     , filepath  &gt;= 1.3</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="at">                     , hakyll    ^&gt;= 4.13</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="at">                     , blaze-html</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="at">                     , lens</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="at">                     , time</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="at">                     , aeson</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="at">                     , lens-aeson</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="at">                     , containers</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="at">                     , pandoc</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="at">                     , process   &gt;= 1.6</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="at">                     , text      &gt;= 1.2</span></span></code></pre></div>
+<pre><code><span class='yaml-string-unquoted-plain-out'>e</span><span class='yaml-string-unquoted-plain-out'>xecutable site</span><span class='yaml-source'>
+</span><span class='yaml-source'>  </span><span class='yaml-entity-name-tag'>m</span><span class='yaml-entity-name-tag'>ain-is</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'>             </span><span class='yaml-string-unquoted-plain-out'>s</span><span class='yaml-string-unquoted-plain-out'>ite.hs</span><span class='yaml-source'>
+</span><span class='yaml-source'>  </span><span class='yaml-entity-name-tag'>h</span><span class='yaml-entity-name-tag'>s-source-dirs</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'>      </span><span class='yaml-string-unquoted-plain-out'>m</span><span class='yaml-string-unquoted-plain-out'>ain</span><span class='yaml-source'>
+</span><span class='yaml-source'>  </span><span class='yaml-entity-name-tag'>d</span><span class='yaml-entity-name-tag'>efault-language</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'>    </span><span class='yaml-string-unquoted-plain-out'>H</span><span class='yaml-string-unquoted-plain-out'>askell2010</span><span class='yaml-source'>
+</span><span class='yaml-source'>  </span><span class='yaml-entity-name-tag'>b</span><span class='yaml-entity-name-tag'>uild-depends</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'>
+</span><span class='yaml-source'>                       </span><span class='yaml-string-unquoted-plain-out'>b</span><span class='yaml-string-unquoted-plain-out'>ase      &gt;= 4.6  &amp;&amp; &lt; 5</span><span class='yaml-source'>
+</span><span class='yaml-source'>                     , </span><span class='yaml-string-unquoted-plain-out'>b</span><span class='yaml-string-unquoted-plain-out'>inary    &gt;= 0.5</span><span class='yaml-source'>
+</span><span class='yaml-source'>                     , </span><span class='yaml-string-unquoted-plain-out'>d</span><span class='yaml-string-unquoted-plain-out'>irectory &gt;= 1.2</span><span class='yaml-source'>
+</span><span class='yaml-source'>                     , </span><span class='yaml-string-unquoted-plain-out'>f</span><span class='yaml-string-unquoted-plain-out'>ilepath  &gt;= 1.3</span><span class='yaml-source'>
+</span><span class='yaml-source'>                     , </span><span class='yaml-string-unquoted-plain-out'>h</span><span class='yaml-string-unquoted-plain-out'>akyll    ^&gt;= 4.13</span><span class='yaml-source'>
+</span><span class='yaml-source'>                     , </span><span class='yaml-string-unquoted-plain-out'>b</span><span class='yaml-string-unquoted-plain-out'>laze-html</span><span class='yaml-source'>
+</span><span class='yaml-source'>                     , </span><span class='yaml-string-unquoted-plain-out'>l</span><span class='yaml-string-unquoted-plain-out'>ens</span><span class='yaml-source'>
+</span><span class='yaml-source'>                     , </span><span class='yaml-string-unquoted-plain-out'>t</span><span class='yaml-string-unquoted-plain-out'>ime</span><span class='yaml-source'>
+</span><span class='yaml-source'>                     , </span><span class='yaml-string-unquoted-plain-out'>a</span><span class='yaml-string-unquoted-plain-out'>eson</span><span class='yaml-source'>
+</span><span class='yaml-source'>                     , </span><span class='yaml-string-unquoted-plain-out'>l</span><span class='yaml-string-unquoted-plain-out'>ens-aeson</span><span class='yaml-source'>
+</span><span class='yaml-source'>                     , </span><span class='yaml-string-unquoted-plain-out'>c</span><span class='yaml-string-unquoted-plain-out'>ontainers</span><span class='yaml-source'>
+</span><span class='yaml-source'>                     , </span><span class='yaml-string-unquoted-plain-out'>p</span><span class='yaml-string-unquoted-plain-out'>andoc</span><span class='yaml-source'>
+</span><span class='yaml-source'>                     , </span><span class='yaml-string-unquoted-plain-out'>p</span><span class='yaml-string-unquoted-plain-out'>rocess   &gt;= 1.6</span><span class='yaml-source'>
+</span><span class='yaml-source'>                     , </span><span class='yaml-string-unquoted-plain-out'>t</span><span class='yaml-string-unquoted-plain-out'>ext      &gt;= 1.2</span><span class='yaml-source'>
+</span><span class='yaml-source'>
+</span></code></pre>
 <p>At this point, I could have either continued setting up Hakyll or setup CI. I usually
 prefer setting up CI as early as possible in a project, so I stared there.
 Here is what that looks like:</p>
-<h2 id="hakyll-ci">Hakyll CI</h2>
+<h2 id="hakyll-ci"><a class="anchor" aria-hidden="true" href="#hakyll-ci"></a>Hakyll CI</h2>
 <p>There are a few options for cloud CI, and my requirements were simple: no cost, easy setup, and integration
-with GitHub pages where I host my site. It was a toss up between CircleCI and Github Actions, as I’ve had
+with GitHub pages where I host my site. It was a toss up between CircleCI and Github Actions, as I've had
 good experience with CircleCI, but Idecided to try Github Actions.</p>
 <p>First, create a directory <code>mkdir -p .github/workflows/</code> with a <code>ci.yml</code> file</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> CI</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">on</span><span class="kw">:</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">push</span><span class="kw">:</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">branches</span><span class="kw">:</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> master</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">pull_request</span><span class="kw">:</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">types</span><span class="kw">:</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> opened</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> synchronize</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="fu">jobs</span><span class="kw">:</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">build</span><span class="kw">:</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">runs-on</span><span class="kw">:</span><span class="at"> ubuntu-latest</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">strategy</span><span class="kw">:</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">matrix</span><span class="kw">:</span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">cabal</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">&quot;3.4.0.0&quot;</span><span class="kw">]</span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">ghc</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">&quot;8.10.7&quot;</span><span class="kw">]</span></span></code></pre></div>
+<pre><code><span class='yaml-entity-name-tag'>n</span><span class='yaml-entity-name-tag'>ame</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'> </span><span class='yaml-string-unquoted-plain-out'>C</span><span class='yaml-string-unquoted-plain-out'>I</span><span class='yaml-source'>
+</span><span class='yaml-constant-language-boolean'>on</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'>
+</span><span class='yaml-source'>  </span><span class='yaml-entity-name-tag'>p</span><span class='yaml-entity-name-tag'>ush</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'>
+</span><span class='yaml-source'>    </span><span class='yaml-entity-name-tag'>b</span><span class='yaml-entity-name-tag'>ranches</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'>
+</span><span class='yaml-source'>      </span><span class='yaml-punctuation-definition-block-sequence-item'>-</span><span class='yaml-source'> </span><span class='yaml-string-unquoted-plain-out'>m</span><span class='yaml-string-unquoted-plain-out'>aster</span><span class='yaml-source'>
+</span><span class='yaml-source'>  </span><span class='yaml-entity-name-tag'>p</span><span class='yaml-entity-name-tag'>ull_request</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'>
+</span><span class='yaml-source'>    </span><span class='yaml-entity-name-tag'>t</span><span class='yaml-entity-name-tag'>ypes</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'>
+</span><span class='yaml-source'>      </span><span class='yaml-punctuation-definition-block-sequence-item'>-</span><span class='yaml-source'> </span><span class='yaml-string-unquoted-plain-out'>o</span><span class='yaml-string-unquoted-plain-out'>pened</span><span class='yaml-source'>
+</span><span class='yaml-source'>      </span><span class='yaml-punctuation-definition-block-sequence-item'>-</span><span class='yaml-source'> </span><span class='yaml-string-unquoted-plain-out'>s</span><span class='yaml-string-unquoted-plain-out'>ynchronize</span><span class='yaml-source'>
+</span><span class='yaml-entity-name-tag'>j</span><span class='yaml-entity-name-tag'>obs</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'>
+</span><span class='yaml-source'>  </span><span class='yaml-entity-name-tag'>b</span><span class='yaml-entity-name-tag'>uild</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'>
+</span><span class='yaml-source'>    </span><span class='yaml-entity-name-tag'>r</span><span class='yaml-entity-name-tag'>uns-on</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'> </span><span class='yaml-string-unquoted-plain-out'>u</span><span class='yaml-string-unquoted-plain-out'>buntu-latest</span><span class='yaml-source'>
+</span><span class='yaml-source'>    </span><span class='yaml-entity-name-tag'>s</span><span class='yaml-entity-name-tag'>trategy</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'>
+</span><span class='yaml-source'>      </span><span class='yaml-entity-name-tag'>m</span><span class='yaml-entity-name-tag'>atrix</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'>
+</span><span class='yaml-source'>        </span><span class='yaml-entity-name-tag'>c</span><span class='yaml-entity-name-tag'>abal</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'> </span><span class='yaml-punctuation-definition-sequence-begin'>[</span><span class='yaml-punctuation-definition-string-begin'>&quot;</span><span class='yaml-string-quoted-double'>3.4.0.0</span><span class='yaml-punctuation-definition-string-end'>&quot;</span><span class='yaml-punctuation-definition-sequence-end'>]</span><span class='yaml-source'>
+</span><span class='yaml-source'>        </span><span class='yaml-entity-name-tag'>g</span><span class='yaml-entity-name-tag'>hc</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'> </span><span class='yaml-punctuation-definition-sequence-begin'>[</span><span class='yaml-punctuation-definition-string-begin'>&quot;</span><span class='yaml-string-quoted-double'>8.10.7</span><span class='yaml-punctuation-definition-string-end'>&quot;</span><span class='yaml-punctuation-definition-sequence-end'>]</span><span class='yaml-source'>
+</span><span class='yaml-source'>
+</span></code></pre>
 <p>The <code>matrix</code> section sets up a build for <code>ghc 8.10.7</code> and cabal <code>3.4</code>, which is enough for a simple blog,
-but is where you’d add extra options, for say a library. Next, we use some community GitHub Actions to
+but is where you'd add extra options, for say a library. Next, we use some community GitHub Actions to
 <code>checkout</code> and setup Haskell.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">steps</span><span class="kw">:</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/checkout@v2</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> haskell/actions/setup@v1</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">id</span><span class="kw">:</span><span class="at"> setup-haskell-cabal</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">ghc-version</span><span class="kw">:</span><span class="at"> ${{ matrix.ghc }}</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">cabal-version</span><span class="kw">:</span><span class="at"> ${{ matrix.cabal }}</span></span></code></pre></div>
+<pre><code><span class='yaml-source'>
+</span><span class='yaml-source'>    </span><span class='yaml-entity-name-tag'>s</span><span class='yaml-entity-name-tag'>teps</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'>
+</span><span class='yaml-source'>      </span><span class='yaml-punctuation-definition-block-sequence-item'>-</span><span class='yaml-source'> </span><span class='yaml-entity-name-tag'>u</span><span class='yaml-entity-name-tag'>ses</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'> </span><span class='yaml-string-unquoted-plain-out'>a</span><span class='yaml-string-unquoted-plain-out'>ctions/checkout@v2</span><span class='yaml-source'>
+</span><span class='yaml-source'>      </span><span class='yaml-punctuation-definition-block-sequence-item'>-</span><span class='yaml-source'> </span><span class='yaml-entity-name-tag'>u</span><span class='yaml-entity-name-tag'>ses</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'> </span><span class='yaml-string-unquoted-plain-out'>h</span><span class='yaml-string-unquoted-plain-out'>askell/actions/setup@v1</span><span class='yaml-source'>
+</span><span class='yaml-source'>        </span><span class='yaml-entity-name-tag'>i</span><span class='yaml-entity-name-tag'>d</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'> </span><span class='yaml-string-unquoted-plain-out'>s</span><span class='yaml-string-unquoted-plain-out'>etup-haskell-cabal</span><span class='yaml-source'>
+</span><span class='yaml-source'>        </span><span class='yaml-entity-name-tag'>w</span><span class='yaml-entity-name-tag'>ith</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'>
+</span><span class='yaml-source'>          </span><span class='yaml-entity-name-tag'>g</span><span class='yaml-entity-name-tag'>hc-version</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'> </span><span class='yaml-string-unquoted-plain-out'>$</span><span class='yaml-string-unquoted-plain-out'>{{ matrix.ghc }}</span><span class='yaml-source'>
+</span><span class='yaml-source'>          </span><span class='yaml-entity-name-tag'>c</span><span class='yaml-entity-name-tag'>abal-version</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'> </span><span class='yaml-string-unquoted-plain-out'>$</span><span class='yaml-string-unquoted-plain-out'>{{ matrix.cabal }}</span><span class='yaml-source'>
+</span><span class='yaml-source'>
+</span></code></pre>
 <p>Here we run <code>cabal update</code> to update our Hackage index and then setup some build caching for
 our dependencies. You can copy this directly and it should work:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Cabal Update</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">        run</span><span class="kw">: </span><span class="ch">|</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>          cabal v2-update</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>          cabal v2-freeze $CONFIG</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/cache@v2.1.4</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">          path</span><span class="kw">: </span><span class="ch">|</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>            ${{ steps.setup-haskell-cabal.outputs.cabal-store }}</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>            dist-newstyle</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">key</span><span class="kw">:</span><span class="at"> ${{ runner.os }}-${{ matrix.ghc }}-${{ hashFiles('cabal.project.freeze') }}</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="fu">          restore-keys</span><span class="kw">: </span><span class="ch">|</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>            ${{ runner.os }}-${{ matrix.ghc }}-</span></code></pre></div>
+<pre><code><span class='yaml-source'>
+</span><span class='yaml-source'>      </span><span class='yaml-punctuation-definition-block-sequence-item'>-</span><span class='yaml-source'> </span><span class='yaml-entity-name-tag'>n</span><span class='yaml-entity-name-tag'>ame</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'> </span><span class='yaml-string-unquoted-plain-out'>C</span><span class='yaml-string-unquoted-plain-out'>abal Update</span><span class='yaml-source'>
+</span><span class='yaml-source'>        </span><span class='yaml-entity-name-tag'>r</span><span class='yaml-entity-name-tag'>un</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'> </span><span class='yaml-keyword-control-flow-block-scalar-literal'>|</span><span class='yaml-source'>
+</span><span class='yaml-string-unquoted-block'>          </span><span class='yaml-string-unquoted-block'>cabal v2-update
+</span><span class='yaml-string-unquoted-block'>          cabal v2-freeze $CONFIG
+</span><span class='yaml-string-unquoted-block'>      - uses: actions/cache@v2.1.4
+</span><span class='yaml-string-unquoted-block'>        with:
+</span><span class='yaml-string-unquoted-block'>          path: |
+</span><span class='yaml-string-unquoted-block'>            ${{ steps.setup-haskell-cabal.outputs.cabal-store }}
+</span><span class='yaml-string-unquoted-block'>            dist-newstyle
+</span><span class='yaml-string-unquoted-block'>          key: ${{ runner.os }}-${{ matrix.ghc }}-${{ hashFiles('cabal.project.freeze') }}
+</span><span class='yaml-string-unquoted-block'>          restore-keys: |
+</span><span class='yaml-string-unquoted-block'>            ${{ runner.os }}-${{ matrix.ghc }}-
+</span><span class='yaml-string-unquoted-block'>
+</span></code></pre>
 <p>Then we run the cabal build and Hakyll site build.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Build Site</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">        run</span><span class="kw">: </span><span class="ch">|</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>          cabal v2-build $CONFIG</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>          cabal exec site build</span></code></pre></div>
-<p>Adding that into your repo’s main branch of your repo should yield a working CI.
+<pre><code><span class='yaml-source'>
+</span><span class='yaml-source'>      </span><span class='yaml-punctuation-definition-block-sequence-item'>-</span><span class='yaml-source'> </span><span class='yaml-entity-name-tag'>n</span><span class='yaml-entity-name-tag'>ame</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'> </span><span class='yaml-string-unquoted-plain-out'>B</span><span class='yaml-string-unquoted-plain-out'>uild Site</span><span class='yaml-source'>
+</span><span class='yaml-source'>        </span><span class='yaml-entity-name-tag'>r</span><span class='yaml-entity-name-tag'>un</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'> </span><span class='yaml-keyword-control-flow-block-scalar-literal'>|</span><span class='yaml-source'>
+</span><span class='yaml-string-unquoted-block'>          </span><span class='yaml-string-unquoted-block'>cabal v2-build $CONFIG
+</span><span class='yaml-string-unquoted-block'>          cabal exec site build
+</span></code></pre>
+<p>Adding that into your repo's  main branch of your repo should yield a working CI.
 On top of that, I added a dependabot configuration to check that my GitHub Actions
 config was up to date.</p>
 <p>Add a file <code>dependabot.yml</code> to <code>.github</code>:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">version</span><span class="kw">:</span><span class="at"> </span><span class="dv">2</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">updates</span><span class="kw">:</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">package-ecosystem</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;github-actions&quot;</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">directory</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;/&quot;</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">schedule</span><span class="kw">:</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">interval</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;daily&quot;</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">commit-message</span><span class="kw">:</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">prefix</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;GA&quot;</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">include</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;scope&quot;</span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">labels</span><span class="kw">:</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="st">&quot;CI&quot;</span></span></code></pre></div>
+<pre><code><span class='yaml-entity-name-tag'>v</span><span class='yaml-entity-name-tag'>ersion</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'> </span><span class='yaml-constant-numeric-integer'>2</span><span class='yaml-source'>
+</span><span class='yaml-entity-name-tag'>u</span><span class='yaml-entity-name-tag'>pdates</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'>
+</span><span class='yaml-source'>  </span><span class='yaml-punctuation-definition-block-sequence-item'>-</span><span class='yaml-source'> </span><span class='yaml-entity-name-tag'>p</span><span class='yaml-entity-name-tag'>ackage-ecosystem</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'> </span><span class='yaml-punctuation-definition-string-begin'>&quot;</span><span class='yaml-string-quoted-double'>github-actions</span><span class='yaml-punctuation-definition-string-end'>&quot;</span><span class='yaml-source'>
+</span><span class='yaml-source'>    </span><span class='yaml-entity-name-tag'>d</span><span class='yaml-entity-name-tag'>irectory</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'> </span><span class='yaml-punctuation-definition-string-begin'>&quot;</span><span class='yaml-string-quoted-double'>/</span><span class='yaml-punctuation-definition-string-end'>&quot;</span><span class='yaml-source'>
+</span><span class='yaml-source'>    </span><span class='yaml-entity-name-tag'>s</span><span class='yaml-entity-name-tag'>chedule</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'>
+</span><span class='yaml-source'>      </span><span class='yaml-entity-name-tag'>i</span><span class='yaml-entity-name-tag'>nterval</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'> </span><span class='yaml-punctuation-definition-string-begin'>&quot;</span><span class='yaml-string-quoted-double'>daily</span><span class='yaml-punctuation-definition-string-end'>&quot;</span><span class='yaml-source'>
+</span><span class='yaml-source'>    </span><span class='yaml-entity-name-tag'>c</span><span class='yaml-entity-name-tag'>ommit-message</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'>
+</span><span class='yaml-source'>      </span><span class='yaml-entity-name-tag'>p</span><span class='yaml-entity-name-tag'>refix</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'> </span><span class='yaml-punctuation-definition-string-begin'>&quot;</span><span class='yaml-string-quoted-double'>GA</span><span class='yaml-punctuation-definition-string-end'>&quot;</span><span class='yaml-source'>
+</span><span class='yaml-source'>      </span><span class='yaml-entity-name-tag'>i</span><span class='yaml-entity-name-tag'>nclude</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'> </span><span class='yaml-punctuation-definition-string-begin'>&quot;</span><span class='yaml-string-quoted-double'>scope</span><span class='yaml-punctuation-definition-string-end'>&quot;</span><span class='yaml-source'>
+</span><span class='yaml-source'>    </span><span class='yaml-entity-name-tag'>l</span><span class='yaml-entity-name-tag'>abels</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'>
+</span><span class='yaml-source'>      </span><span class='yaml-punctuation-definition-block-sequence-item'>-</span><span class='yaml-source'> </span><span class='yaml-punctuation-definition-string-begin'>&quot;</span><span class='yaml-string-quoted-double'>CI</span><span class='yaml-punctuation-definition-string-end'>&quot;</span><span class='yaml-source'>
+</span></code></pre>
 <p>This will check that your GitHub Actions use the latest version and open a PR to bump versions
-if you aren’t. Something like this for Haskell would be super sweet.</p>
-<h2 id="generating-the-site">Generating the Site</h2>
-<p>Let’s quickly walk through the contents of <code>main/site.hs</code>, but there are more in-depth tutorials on the
+if you aren't. Something like this for Haskell would be super sweet.</p>
+<h2 id="generating-the-site"><a class="anchor" aria-hidden="true" href="#generating-the-site"></a>Generating the Site</h2>
+<p>Let's quickly walk through the contents of <code>main/site.hs</code>, but there are more in-depth tutorials on the
 main <a href="https://jaspervdj.be/hakyll/tutorials.html">Hakyll site</a></p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE OverloadedStrings #-}</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Hakyll</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="ot">main ::</span> <span class="dt">IO</span> ()</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> hakyll <span class="op">$</span> <span class="kw">do</span></span></code></pre></div>
+<pre><code><span class='haskell-comment-block'>{-</span><span class='haskell-comment-block'># LANGUAGE OverloadedStrings #</span><span class='haskell-comment-block'>-}</span><span class='haskell-source'>
+</span><span class='haskell-source'>
+</span><span class='haskell-keyword-other'>import</span><span class='haskell-source'> </span><span class='haskell-entity-name-type'>Hakyll</span><span class='haskell-source'>
+</span><span class='haskell-source'>
+</span><span class='haskell-entity-name-function'>main</span><span class='haskell-source'> ::</span><span class='haskell-source'> </span><span class='haskell-entity-name-type'>IO</span><span class='haskell-source'> ()
+</span><span class='haskell-source'>main = hakyll $ </span><span class='haskell-keyword-other'>do</span><span class='haskell-source'>
+</span></code></pre>
 <p>Here we import Hakyll, setup overloaded strings, and create a main function:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>  match <span class="st">&quot;images/*&quot;</span> <span class="op">$</span> <span class="kw">do</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    route idRoute</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    compile copyFileCompiler</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  match <span class="st">&quot;css/*&quot;</span> <span class="op">$</span> <span class="kw">do</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    route idRoute</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    compile compressCssCompiler</span></code></pre></div>
+<pre><code><span class='haskell-source'>  match </span><span class='haskell-string-quoted-double'>&quot;</span><span class='haskell-string-quoted-double'>images/*</span><span class='haskell-string-quoted-double'>&quot;</span><span class='haskell-source'> $ </span><span class='haskell-keyword-other'>do</span><span class='haskell-source'>
+</span><span class='haskell-source'>    route idRoute
+</span><span class='haskell-source'>    compile copyFileCompiler
+</span><span class='haskell-source'>
+</span><span class='haskell-source'>  match </span><span class='haskell-string-quoted-double'>&quot;</span><span class='haskell-string-quoted-double'>css/*</span><span class='haskell-string-quoted-double'>&quot;</span><span class='haskell-source'> $ </span><span class='haskell-keyword-other'>do</span><span class='haskell-source'>
+</span><span class='haskell-source'>    route idRoute
+</span><span class='haskell-source'>    compile compressCssCompiler
+</span></code></pre>
 <p>Serve stylesheets and images from directories <code>css</code> and <code>images</code>, respectively. This is standard code
 that can be copied directly, it basically copies the files into the final static site directory <code>_site</code>.</p>
 <p>Next I wanted to serve some old talk slides written in HTML and JavaScript directly from my site.
-I couldn’t find any posts talking about how to do this, but after thinking about it, I realized that I
-just wanted to serve static assets again like the <code>css</code> and <code>images</code> above. So that’s exactly what was required!
+I couldn't find any posts talking about how to do this, but after thinking about it, I realized that I
+just wanted to serve static assets again like the <code>css</code> and <code>images</code> above. So that's exactly what was required!
 If course, I lie. I had to fix a few hard coded paths in the HTML but otherwise it worked.</p>
 <p>The layout for <code>talks</code> looks like:</p>
 <pre><code>talks
@@ -295,72 +294,76 @@ If course, I lie. I had to fix a few hard coded paths in the HTML but otherwise 
 ├── lambda-jam-2015-ocaml-functors
 ├── lambda-jam-2016-performance
 ├── roro-2012-riak
-└── scala-syd-2015-modules</code></pre>
+└── scala-syd-2015-modules
+</code></pre>
 <p>So I needed an extra wildcard in my <code>match</code> statement:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>  match <span class="st">&quot;talks/**/*&quot;</span> <span class="op">$</span> <span class="kw">do</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    route idRoute</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    compile <span class="op">$</span> copyFileCompiler</span></code></pre></div>
+<pre><code><span class='haskell-source'>  match </span><span class='haskell-string-quoted-double'>&quot;</span><span class='haskell-string-quoted-double'>talks/**/*</span><span class='haskell-string-quoted-double'>&quot;</span><span class='haskell-source'> $ </span><span class='haskell-keyword-other'>do</span><span class='haskell-source'>
+</span><span class='haskell-source'>    route idRoute
+</span><span class='haskell-source'>    compile $ copyFileCompiler
+</span></code></pre>
 <p>This content then gets served under <code>lambdafoo.com/talks/scala-syd-2015-modules/</code>.
 In retrospect, this is an obvious solution to serving any static content generated outside of Hakyll,
 but it did take me a while to realise it.</p>
 <p>Next we load the individual blog posts:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>  match <span class="st">&quot;posts/*&quot;</span> <span class="op">$</span> <span class="kw">do</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    route <span class="op">$</span> setExtension <span class="st">&quot;html&quot;</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    compile <span class="op">$</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>      pandocCompiler</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>        <span class="op">&gt;&gt;=</span> loadAndApplyTemplate <span class="st">&quot;templates/post.html&quot;</span> postCtx</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>        <span class="co">-- Used by the RSS/Atom feed</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>        <span class="op">&gt;&gt;=</span> saveSnapshot <span class="st">&quot;content&quot;</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>        <span class="op">&gt;&gt;=</span> loadAndApplyTemplate <span class="st">&quot;templates/default.html&quot;</span> postCtx</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>        <span class="op">&gt;&gt;=</span> relativizeUrls</span></code></pre></div>
-<h2 id="authoring-posts">Authoring Posts</h2>
+<pre><code><span class='haskell-source'>  match </span><span class='haskell-string-quoted-double'>&quot;</span><span class='haskell-string-quoted-double'>posts/*</span><span class='haskell-string-quoted-double'>&quot;</span><span class='haskell-source'> $ </span><span class='haskell-keyword-other'>do</span><span class='haskell-source'>
+</span><span class='haskell-source'>    route $ setExtension </span><span class='haskell-string-quoted-double'>&quot;</span><span class='haskell-string-quoted-double'>html</span><span class='haskell-string-quoted-double'>&quot;</span><span class='haskell-source'>
+</span><span class='haskell-source'>    compile $
+</span><span class='haskell-source'>      pandocCompiler
+</span><span class='haskell-source'>        &gt;&gt;= loadAndApplyTemplate </span><span class='haskell-string-quoted-double'>&quot;</span><span class='haskell-string-quoted-double'>templates/post.html</span><span class='haskell-string-quoted-double'>&quot;</span><span class='haskell-source'> postCtx
+</span><span class='haskell-source'>        </span><span class='haskell-comment-line-double-dash'>-- Used by the RSS/Atom feed</span><span class='haskell-source'>
+</span><span class='haskell-source'>        &gt;&gt;= saveSnapshot </span><span class='haskell-string-quoted-double'>&quot;</span><span class='haskell-string-quoted-double'>content</span><span class='haskell-string-quoted-double'>&quot;</span><span class='haskell-source'>
+</span><span class='haskell-source'>        &gt;&gt;= loadAndApplyTemplate </span><span class='haskell-string-quoted-double'>&quot;</span><span class='haskell-string-quoted-double'>templates/default.html</span><span class='haskell-string-quoted-double'>&quot;</span><span class='haskell-source'> postCtx
+</span><span class='haskell-source'>        &gt;&gt;= relativizeUrls
+</span><span class='haskell-source'>
+</span></code></pre>
+<h2 id="authoring-posts"><a class="anchor" aria-hidden="true" href="#authoring-posts"></a>Authoring Posts</h2>
 <p>After getting a few simple things out of the way, the Markdown-based workflow already worked with
-Hakyll, so there’s nothing really to see there. Creating a simple YAML file with the following meta-data
+Hakyll, so there's nothing really to see there. Creating a simple YAML file with the following meta-data
 and content is enough to get a simple post working.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span><span class="kw">:</span><span class="at"> Hakyll Blog setup</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">author</span><span class="kw">:</span><span class="at"> Tim McGilchrist</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="fu">date</span><span class="kw">:</span><span class="at"> 2021-02-01 00:00</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tags</span><span class="kw">:</span><span class="at"> haskell</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="fu">description</span><span class="kw">:</span><span class="at"> How I setup my blog with Hakyll</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="at">Content of post</span></span></code></pre></div>
-<h2 id="deploying">Deploying</h2>
+<pre><code><span class='yaml-entity-other-document-begin'>---</span><span class='yaml-source'>
+</span><span class='yaml-entity-name-tag'>t</span><span class='yaml-entity-name-tag'>itle</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'> </span><span class='yaml-string-unquoted-plain-out'>H</span><span class='yaml-string-unquoted-plain-out'>akyll Blog setup</span><span class='yaml-source'>
+</span><span class='yaml-entity-name-tag'>a</span><span class='yaml-entity-name-tag'>uthor</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'> </span><span class='yaml-string-unquoted-plain-out'>T</span><span class='yaml-string-unquoted-plain-out'>im McGilchrist</span><span class='yaml-source'>
+</span><span class='yaml-entity-name-tag'>d</span><span class='yaml-entity-name-tag'>ate</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'> </span><span class='yaml-string-unquoted-plain-out'>2</span><span class='yaml-string-unquoted-plain-out'>021-02-01 00:00</span><span class='yaml-source'>
+</span><span class='yaml-entity-name-tag'>t</span><span class='yaml-entity-name-tag'>ags</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'> </span><span class='yaml-string-unquoted-plain-out'>h</span><span class='yaml-string-unquoted-plain-out'>askell</span><span class='yaml-source'>
+</span><span class='yaml-entity-name-tag'>d</span><span class='yaml-entity-name-tag'>escription</span><span class='yaml-punctuation-separator-key-value-mapping'>:</span><span class='yaml-source'> </span><span class='yaml-string-unquoted-plain-out'>H</span><span class='yaml-string-unquoted-plain-out'>ow I setup my blog with Hakyll</span><span class='yaml-source'>
+</span><span class='yaml-entity-other-document-begin'>---</span><span class='yaml-source'>
+</span><span class='yaml-source'>
+</span><span class='yaml-string-unquoted-plain-out'>C</span><span class='yaml-string-unquoted-plain-out'>ontent of post</span><span class='yaml-source'>
+</span></code></pre>
+<h2 id="deploying"><a class="anchor" aria-hidden="true" href="#deploying"></a>Deploying</h2>
 <p>I have a domain <code>lambdafoo.com</code> that I use to serve my blog. Github pages has up-to-date
 information on how to set this up with your DNS provider.</p>
 <p>Here is where choosing Github Actions really pays off! There is a community action to do it all!
-Assuming you’ve turned on GitHub Pages in the settings for you repo, add this to the end of the <code>ci.yml</code>:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Deploy 🚀</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> JamesIves/github-pages-deploy-action@4.1.5</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">if</span><span class="kw">:</span><span class="at"> github.ref == 'refs/heads/master'</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">token</span><span class="kw">:</span><span class="at"> ${{ secrets.GITHUB_TOKEN }}</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">branch</span><span class="kw">:</span><span class="at"> gh-pages</span><span class="co"> # The branch the action should deploy to.</span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">folder</span><span class="kw">:</span><span class="at"> _site</span><span class="co"> # The folder the action should deploy.</span></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">clean</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span><span class="co"> # Automatically remove deleted files from the deploy branch</span></span></code></pre></div>
+Assuming you've turned on GitHub Pages in the settings for you repo, add this to the end of the <code>ci.yml</code>:</p>
+<pre><code><span class='yml-source'>      </span><span class='yml-punctuation-definition-block-sequence-item'>-</span><span class='yml-source'> </span><span class='yml-entity-name-tag'>n</span><span class='yml-entity-name-tag'>ame</span><span class='yml-punctuation-separator-key-value-mapping'>:</span><span class='yml-source'> </span><span class='yml-string-unquoted-plain-out'>D</span><span class='yml-string-unquoted-plain-out'>eploy 🚀</span><span class='yml-source'>
+</span><span class='yml-source'>        </span><span class='yml-entity-name-tag'>u</span><span class='yml-entity-name-tag'>ses</span><span class='yml-punctuation-separator-key-value-mapping'>:</span><span class='yml-source'> </span><span class='yml-string-unquoted-plain-out'>J</span><span class='yml-string-unquoted-plain-out'>amesIves/github-pages-deploy-action@4.1.5</span><span class='yml-source'>
+</span><span class='yml-source'>        </span><span class='yml-entity-name-tag'>i</span><span class='yml-entity-name-tag'>f</span><span class='yml-punctuation-separator-key-value-mapping'>:</span><span class='yml-source'> </span><span class='yml-string-unquoted-plain-out'>g</span><span class='yml-string-unquoted-plain-out'>ithub.ref == 'refs/heads/master'</span><span class='yml-source'>
+</span><span class='yml-source'>        </span><span class='yml-entity-name-tag'>w</span><span class='yml-entity-name-tag'>ith</span><span class='yml-punctuation-separator-key-value-mapping'>:</span><span class='yml-source'>
+</span><span class='yml-source'>          </span><span class='yml-entity-name-tag'>t</span><span class='yml-entity-name-tag'>oken</span><span class='yml-punctuation-separator-key-value-mapping'>:</span><span class='yml-source'> </span><span class='yml-string-unquoted-plain-out'>$</span><span class='yml-string-unquoted-plain-out'>{{ secrets.GITHUB_TOKEN }}</span><span class='yml-source'>
+</span><span class='yml-source'>          </span><span class='yml-entity-name-tag'>b</span><span class='yml-entity-name-tag'>ranch</span><span class='yml-punctuation-separator-key-value-mapping'>:</span><span class='yml-source'> </span><span class='yml-string-unquoted-plain-out'>g</span><span class='yml-string-unquoted-plain-out'>h-pages</span><span class='yml-source'> </span><span class='yml-punctuation-definition-comment'>#</span><span class='yml-comment-line-number-sign'> The branch the action should deploy to.</span><span class='yml-comment-line-number-sign'>
+</span><span class='yml-source'>          folder: _site </span><span class='yml-punctuation-definition-comment'>#</span><span class='yml-comment-line-number-sign'> The folder the action should deploy.</span><span class='yml-comment-line-number-sign'>
+</span><span class='yml-source'>          clean: true </span><span class='yml-punctuation-definition-comment'>#</span><span class='yml-comment-line-number-sign'> Automatically remove deleted files from the deploy branch</span><span class='yml-comment-line-number-sign'>
+</span><span class='yml-source'>
+</span></code></pre>
 <p>This deploys the output of the <code>Build Site</code> step from folder <code>_site</code> to the branch <code>gh-pages</code>
 on all <code>master</code> builds (controlled via <code>if: github.ref == 'refs/heads/master'</code>).</p>
 <p>On the first build, there is a bit of lag to deploy. I had issues with my DNS setup and two
 personal repositories using the same CNAME values. Apart from that, the process was smooth, and I
 quickly had a new version working. Again, if you setup dependabot, it will check that this action is
 up-to-date.</p>
-<h2 id="resources">Resources</h2>
+<h2 id="resources"><a class="anchor" aria-hidden="true" href="#resources"></a>Resources</h2>
 <ul>
 <li><a href="https://github.com/tmcgilchrist/lambdafoo.com">Blog source</a></li>
 <li><a href="https://markkarpov.com/post/github-actions-for-haskell-ci.html">GitHub Actions for Haskell</a></li>
 <li><a href="https://kodimensional.dev/github-actions#dependabot">Dependabot</a></li>
 </ul>
-  
-  <p class="post-tags">Tags: <a title="All pages tagged 'haskell'." href="../tags/haskell/index.html" rel="tag">haskell</a></p>
-  
+
+  <p class="post-tags">Tags: <a title="All pages tagged 'haskell'." href="/tags/haskell/index.html" rel="tag">haskell</a></p>
 </div>
-
-
-        <div class="container content">
+<div class="container content">
           <small>Copyright © Tim McGilchrist 2007-2026</small>
           <br>
-          <small>Powered by <a href="https://github.com/tmcgilchrist/lambdafoo.com">Hakyll</a></small>
+          <small>Powered by <a href="https://github.com/xhtmlboi/yocaml">YOCaml</a></small>
         </div>
       </div>
     </div>

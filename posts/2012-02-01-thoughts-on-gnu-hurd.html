@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
   <head>
@@ -10,40 +11,28 @@
   <!-- Enable responsiveness on mobile devices-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-  <title>
-      
-        Thoughts on GNU Hurd &middot; Perpetually Curious
-      
-  </title>
+  <title>Thoughts on GNU Hurd &middot; Perpetually Curious</title>
 
   <!-- CSS -->
-  <link rel="stylesheet" href="../css/poole.css">
-  <link rel="stylesheet" href="../css/syntax.css">
-  <link rel="stylesheet" href="../css/lanyon.css">
-  <link rel="stylesheet" href="../css/book.css">
+  <link rel="stylesheet" href="/css/poole.css">
+  <link rel="stylesheet" href="/css/syntax.css">
+  <link rel="stylesheet" href="/css/syntax-tm.css">
+  <link rel="stylesheet" href="/css/lanyon.css">
+  <link rel="stylesheet" href="/css/book.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
 
   <!-- Icons -->
-  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-precomposed.png">
-  <link rel="shortcut icon" href="../images/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/images/favicon.ico">
 
   <!-- RSS -->
-  <link rel="alternate" type="application/rss+xml" title="RSS" href="../atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
 
-  <!-- Google Analytics -->
-  <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-28532776-1', 'auto');
-    ga('send', 'pageview');
-  </script>
-<!-- End Google Analytics -->
+  <!-- Analytics -->
+  <script data-goatcounter="https://lambdafoo.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
   <a rel="me" hidden="true" href="https://hachyderm.io/@tsmc">Mastodon</a>
 </head>
-
 
   <body class="sidebar-overlay">
 
@@ -55,15 +44,15 @@
 <div class="sidebar" id="sidebar">
 
   <div class="sidebar-item">
-    <p><a href="../"><strong>Tim McGilchrist</strong></a></p>
+    <p><a href="/"><strong>Tim McGilchrist</strong></a></p>
   </div>
 
   <nav class="sidebar-nav">
-    <a class="sidebar-nav-item" href="../">Blog</a>
-    <a class="sidebar-nav-item" href="../pages/about.html">About</a>
-    <a class="sidebar-nav-item" href="../pages/talks.html">Talks</a>
-    <a class="sidebar-nav-item" href="../pages/server-room.html">Server Room</a>
-    <a class="sidebar-nav-item" href="../archive.html">Archive</a>
+    <a class="sidebar-nav-item" href="/">Blog</a>
+    <a class="sidebar-nav-item" href="/pages/about.html">About</a>
+    <a class="sidebar-nav-item" href="/pages/talks.html">Talks</a>
+    <a class="sidebar-nav-item" href="/pages/server-room.html">Server Room</a>
+    <a class="sidebar-nav-item" href="/archive.html">Archive</a>
   </nav>
 
   <div class="sidebar-item">
@@ -72,8 +61,8 @@
       <a href="https://bsky.app/profile/tsmc.purely-functional.com">Bluesky</a>
     </p>
     <p>
-      <a href="../rss.xml">RSS</a> ·
-      <a href="../atom.xml">Atom</a>
+      <a href="/rss.xml">RSS</a> ·
+      <a href="/atom.xml">Atom</a>
     </p>
     <p>
       &copy; Tim McGilchrist 2007-2026
@@ -81,32 +70,28 @@
   </div>
 </div>
 
-
     <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
          content to avoid any CSS collisions with our real content. -->
     <div class="wrap">
       <div class="masthead">
         <div class="container">
           <h3 class="masthead-title">
-            <a href="../" title="Home">Perpetually Curious</a>
-            
+            <a href="/" title="Home">Perpetually Curious</a>
             <span class="masthead-links">
-              <a href="../pages/about.html">About</a> |
-              <a href="../pages/talks.html">Talks</a> |
-              <a href="../pages/server-room.html">Server Room</a> |
-              <a href="../archive.html">Archive</a>
+              <a href="/pages/about.html">About</a> |
+              <a href="/pages/talks.html">Talks</a> |
+              <a href="/pages/server-room.html">Server Room</a> |
+              <a href="/archive.html">Archive</a>
             </span>
           </h3>
         </div>
       </div>
 
-      <div class="container content">
-        <div class="post">
+      <div class="container content"><div class="post">
   <h1 class="post-title">Thoughts on GNU Hurd</h1>
-  <span class="post-date">February  1, 2012</span>
-  <p>After reading a recent
+  <span class="post-date">February  1, 2012</span><p>After reading a recent
 <a href="http://news.ycombinator.com/item?id=1474941">article</a>
-about GNU Hurd on hacker news I’m struck by the thought that GNUs development of Hurd
+about GNU Hurd on hacker news I'm struck by the thought that GNUs development of Hurd
 is a perfect example of a failed software project.</p>
 <p>There was an initial great idea to build a
 <a href="http://en.wikipedia.org/wiki/Microkernel">microkernel</a> based OS with all these
@@ -116,7 +101,7 @@ cool features. But what crippled the project was a combination of:</p>
 did they consider and start work on only to abandon work when something
 better/shinier came along.</li>
 <li>failure to focus on getting something working and out the door. Great teams ship software!</li>
-<li>they didn’t capture a community around developing Hurd like Linux and BSD have.</li>
+<li>they didn't capture a community around developing Hurd like Linux and BSD have.</li>
 <li>seems like they followed the Big Design up front approach to software
 development whilst Linux went for the more agile iterative approach. Thus
 capturing all the positive feedback and momentum that comes with getting
@@ -125,7 +110,7 @@ customer input and alway having a working product.</li>
 <p>Despite all this the idea of a Hurd system is still attractive to many and
 personally I look upon it with some nostalgia. I was completely obsessed by
 operating systems and coding them around 2000.</p>
-<p>I’d love to see a successful Hurd project running on something like L4. But
+<p>I'd love to see a successful Hurd project running on something like L4. But
 would such a system gain enough interest in the current open source
 environment. If Hurd was available before Linux it seems like it would have
 taken off and they could have rode the wave of open source enthusiasm. Now it
@@ -136,20 +121,17 @@ in a Hurd system.</p>
 run, even in a limited sense. Debian has a
 <a href="http://www.debian.org/ports/hurd/">port</a> but it seems progress is slow.</p>
 <p><strong>Why people dont consider gnu projects?</strong>
-Poor public image, it doesn’t appear fun to work on gnu. Look at the buzz around
+Poor public image, it doesn't appear fun to work on gnu. Look at the buzz around
 rails for how to manage your public image. Restrictive coding standards and
 legal hassle.</p>
 <p><a href="http://www.h-online.com/open/features/GNU-HURD-Altered-visions-and-lost-promise-1030942.html">Original link</a></p>
-  
-  <p class="post-tags">Tags: <a title="All pages tagged 'hurd'." href="../tags/hurd/index.html" rel="tag">hurd</a>, <a title="All pages tagged 'opinion'." href="../tags/opinion/index.html" rel="tag">opinion</a></p>
-  
+
+  <p class="post-tags">Tags: <a title="All pages tagged 'hurd'." href="/tags/hurd/index.html" rel="tag">hurd</a>, <a title="All pages tagged 'opinion'." href="/tags/opinion/index.html" rel="tag">opinion</a></p>
 </div>
-
-
-        <div class="container content">
+<div class="container content">
           <small>Copyright © Tim McGilchrist 2007-2026</small>
           <br>
-          <small>Powered by <a href="https://github.com/tmcgilchrist/lambdafoo.com">Hakyll</a></small>
+          <small>Powered by <a href="https://github.com/xhtmlboi/yocaml">YOCaml</a></small>
         </div>
       </div>
     </div>

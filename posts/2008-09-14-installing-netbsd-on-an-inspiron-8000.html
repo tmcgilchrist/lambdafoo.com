@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
   <head>
@@ -10,40 +11,28 @@
   <!-- Enable responsiveness on mobile devices-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-  <title>
-      
-        Installing NetBSD on a Dell Inspiron 8000 &middot; Perpetually Curious
-      
-  </title>
+  <title>Installing NetBSD on a Dell Inspiron 8000 &middot; Perpetually Curious</title>
 
   <!-- CSS -->
-  <link rel="stylesheet" href="../css/poole.css">
-  <link rel="stylesheet" href="../css/syntax.css">
-  <link rel="stylesheet" href="../css/lanyon.css">
-  <link rel="stylesheet" href="../css/book.css">
+  <link rel="stylesheet" href="/css/poole.css">
+  <link rel="stylesheet" href="/css/syntax.css">
+  <link rel="stylesheet" href="/css/syntax-tm.css">
+  <link rel="stylesheet" href="/css/lanyon.css">
+  <link rel="stylesheet" href="/css/book.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
 
   <!-- Icons -->
-  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-precomposed.png">
-  <link rel="shortcut icon" href="../images/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/images/favicon.ico">
 
   <!-- RSS -->
-  <link rel="alternate" type="application/rss+xml" title="RSS" href="../atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
 
-  <!-- Google Analytics -->
-  <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-28532776-1', 'auto');
-    ga('send', 'pageview');
-  </script>
-<!-- End Google Analytics -->
+  <!-- Analytics -->
+  <script data-goatcounter="https://lambdafoo.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
   <a rel="me" hidden="true" href="https://hachyderm.io/@tsmc">Mastodon</a>
 </head>
-
 
   <body class="sidebar-overlay">
 
@@ -55,15 +44,15 @@
 <div class="sidebar" id="sidebar">
 
   <div class="sidebar-item">
-    <p><a href="../"><strong>Tim McGilchrist</strong></a></p>
+    <p><a href="/"><strong>Tim McGilchrist</strong></a></p>
   </div>
 
   <nav class="sidebar-nav">
-    <a class="sidebar-nav-item" href="../">Blog</a>
-    <a class="sidebar-nav-item" href="../pages/about.html">About</a>
-    <a class="sidebar-nav-item" href="../pages/talks.html">Talks</a>
-    <a class="sidebar-nav-item" href="../pages/server-room.html">Server Room</a>
-    <a class="sidebar-nav-item" href="../archive.html">Archive</a>
+    <a class="sidebar-nav-item" href="/">Blog</a>
+    <a class="sidebar-nav-item" href="/pages/about.html">About</a>
+    <a class="sidebar-nav-item" href="/pages/talks.html">Talks</a>
+    <a class="sidebar-nav-item" href="/pages/server-room.html">Server Room</a>
+    <a class="sidebar-nav-item" href="/archive.html">Archive</a>
   </nav>
 
   <div class="sidebar-item">
@@ -72,8 +61,8 @@
       <a href="https://bsky.app/profile/tsmc.purely-functional.com">Bluesky</a>
     </p>
     <p>
-      <a href="../rss.xml">RSS</a> ·
-      <a href="../atom.xml">Atom</a>
+      <a href="/rss.xml">RSS</a> ·
+      <a href="/atom.xml">Atom</a>
     </p>
     <p>
       &copy; Tim McGilchrist 2007-2026
@@ -81,45 +70,41 @@
   </div>
 </div>
 
-
     <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
          content to avoid any CSS collisions with our real content. -->
     <div class="wrap">
       <div class="masthead">
         <div class="container">
           <h3 class="masthead-title">
-            <a href="../" title="Home">Perpetually Curious</a>
-            
+            <a href="/" title="Home">Perpetually Curious</a>
             <span class="masthead-links">
-              <a href="../pages/about.html">About</a> |
-              <a href="../pages/talks.html">Talks</a> |
-              <a href="../pages/server-room.html">Server Room</a> |
-              <a href="../archive.html">Archive</a>
+              <a href="/pages/about.html">About</a> |
+              <a href="/pages/talks.html">Talks</a> |
+              <a href="/pages/server-room.html">Server Room</a> |
+              <a href="/archive.html">Archive</a>
             </span>
           </h3>
         </div>
       </div>
 
-      <div class="container content">
-        <div class="post">
+      <div class="container content"><div class="post">
   <h1 class="post-title">Installing NetBSD on a Dell Inspiron 8000</h1>
-  <span class="post-date">September 14, 2008</span>
-  <p>I just finished installing NetBSD on my old laptop and I must say it’s quite an
+  <span class="post-date">September 14, 2008</span><p>I just finished installing NetBSD on my old laptop and I must say it's quite an
 impressive system especially when it comes to updating to a new release.</p>
 <p>The victim is my ancient Dell Insprion 8000, featuring a 800Mhz P3 and 384Mb
-RAM. Not exactly a powerhouse but the 15” 1400x1050 screen makes up for the lack
+RAM. Not exactly a powerhouse but the 15&quot; 1400x1050 screen makes up for the lack
 of power.</p>
-<p>To understand the various steps I had to take, it’s important to note that the
+<p>To understand the various steps I had to take, it's important to note that the
 DVD drive is flakey and it has no native Network adapter. Stupidly I tried to
 save money and left it out at the time.</p>
 <p>Now to the details.</p>
 <p>I originally wanted <a href="http://www.openbsd.org">OpenBSD</a> on this thing
 but none of the floppy boot disks supported the PCMCIA network cards I have, and
-I’m too new to BSDs to know how to fix this. Also none of the recent
+I'm too new to BSDs to know how to fix this. Also none of the recent
 <a href="http://www.netbsd.org">NetBSD</a> boot CDs would work, they kept getting IO errors
 from the DVD drive.</p>
 <p>Finally ended up getting an ancient NetBSD 2.0 cd to work and did an install of
-that. Somehow the 2.0 installer didn’t hit any of the IO errors that stopped the
+that. Somehow the 2.0 installer didn't hit any of the IO errors that stopped the
 other installs. The PCMCIA network worked and after a bit of messing about with
 the NetBSD Guide I was up and running on the home network.</p>
 <p>Now for the impressive part upgrading to 4.0.</p>
@@ -128,27 +113,30 @@ the NetBSD Guide I was up and running on the home network.</p>
 <li>Fetch a new kernel and the binary sets and store them /some/where/</li>
 <li>Install the new kernel (but keep the old one!!)</li>
 </ul>
-<pre class="shell"><code>
-    mv /netbsd /netbsd.old
-    pax -zrf /some/where/newkernel.tgz
-    mv /some/where/newkernel /netbsd
-</code></pre>
+<pre><code><span class='shell-source'>
+</span><span class='shell-source'>    mv /netbsd /netbsd.old
+</span><span class='shell-source'>    pax -zrf /some/where/newkernel.tgz
+</span><span class='shell-source'>    mv /some/where/newkernel /netbsd
+</span><span class='shell-source'>
+</span></code></pre>
 <ul>
 <li>Reboot using <strong>reboot</strong></li>
 <li>Install all the sets <em>except</em> etc.tzg and xetc.tgz!!</li>
 </ul>
-<pre class="shell"><code>
-    cd /
-    pax -zrf /some/where/set.tgz
-    ...
-</code></pre>
+<pre><code><span class='shell-source'>
+</span><span class='shell-source'>    </span><span class='shell-support-function-builtin'>cd</span><span class='shell-source'> /
+</span><span class='shell-source'>    pax -zrf /some/where/set.tgz
+</span><span class='shell-source'>    ...
+</span><span class='shell-source'>
+</span></code></pre>
 <ul>
 <li>Run etcupdate to merge important changes:</li>
 </ul>
-<pre class="shell"><code>
-    cd /
-    etcupdate -s /some/where/etc.tgz -s /some/where/xetc.tgz
-</code></pre>
+<pre><code><span class='shell-source'>
+</span><span class='shell-source'>    </span><span class='shell-support-function-builtin'>cd</span><span class='shell-source'> /
+</span><span class='shell-source'>    etcupdate -s /some/where/etc.tgz -s /some/where/xetc.tgz
+</span><span class='shell-source'>
+</span></code></pre>
 <ul>
 <li>Upgrade finished, time to reboot.</li>
 </ul>
@@ -157,16 +145,13 @@ the NetBSD Guide I was up and running on the home network.</p>
 easy! The etcupdate set takes a while and I must admit I did stuff it up (a few
 times), but this is much easier that I remember from my last Linux update. Now
 to recompile the kernel and get the 3Com AirConnect 3CRWE777A card working.</p>
-  
-  <p class="post-tags">Tags: <a title="All pages tagged 'netbsd'." href="../tags/netbsd/index.html" rel="tag">netbsd</a></p>
-  
+
+  <p class="post-tags">Tags: <a title="All pages tagged 'netbsd'." href="/tags/netbsd/index.html" rel="tag">netbsd</a></p>
 </div>
-
-
-        <div class="container content">
+<div class="container content">
           <small>Copyright © Tim McGilchrist 2007-2026</small>
           <br>
-          <small>Powered by <a href="https://github.com/tmcgilchrist/lambdafoo.com">Hakyll</a></small>
+          <small>Powered by <a href="https://github.com/xhtmlboi/yocaml">YOCaml</a></small>
         </div>
       </div>
     </div>

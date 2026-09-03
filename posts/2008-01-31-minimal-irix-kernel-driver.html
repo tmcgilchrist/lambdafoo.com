@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
   <head>
@@ -10,40 +11,28 @@
   <!-- Enable responsiveness on mobile devices-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-  <title>
-      
-        Minimal IRIX Kernel Driver &middot; Perpetually Curious
-      
-  </title>
+  <title>Minimal IRIX Kernel Driver &middot; Perpetually Curious</title>
 
   <!-- CSS -->
-  <link rel="stylesheet" href="../css/poole.css">
-  <link rel="stylesheet" href="../css/syntax.css">
-  <link rel="stylesheet" href="../css/lanyon.css">
-  <link rel="stylesheet" href="../css/book.css">
+  <link rel="stylesheet" href="/css/poole.css">
+  <link rel="stylesheet" href="/css/syntax.css">
+  <link rel="stylesheet" href="/css/syntax-tm.css">
+  <link rel="stylesheet" href="/css/lanyon.css">
+  <link rel="stylesheet" href="/css/book.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
 
   <!-- Icons -->
-  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-precomposed.png">
-  <link rel="shortcut icon" href="../images/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/images/favicon.ico">
 
   <!-- RSS -->
-  <link rel="alternate" type="application/rss+xml" title="RSS" href="../atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
 
-  <!-- Google Analytics -->
-  <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-28532776-1', 'auto');
-    ga('send', 'pageview');
-  </script>
-<!-- End Google Analytics -->
+  <!-- Analytics -->
+  <script data-goatcounter="https://lambdafoo.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
   <a rel="me" hidden="true" href="https://hachyderm.io/@tsmc">Mastodon</a>
 </head>
-
 
   <body class="sidebar-overlay">
 
@@ -55,15 +44,15 @@
 <div class="sidebar" id="sidebar">
 
   <div class="sidebar-item">
-    <p><a href="../"><strong>Tim McGilchrist</strong></a></p>
+    <p><a href="/"><strong>Tim McGilchrist</strong></a></p>
   </div>
 
   <nav class="sidebar-nav">
-    <a class="sidebar-nav-item" href="../">Blog</a>
-    <a class="sidebar-nav-item" href="../pages/about.html">About</a>
-    <a class="sidebar-nav-item" href="../pages/talks.html">Talks</a>
-    <a class="sidebar-nav-item" href="../pages/server-room.html">Server Room</a>
-    <a class="sidebar-nav-item" href="../archive.html">Archive</a>
+    <a class="sidebar-nav-item" href="/">Blog</a>
+    <a class="sidebar-nav-item" href="/pages/about.html">About</a>
+    <a class="sidebar-nav-item" href="/pages/talks.html">Talks</a>
+    <a class="sidebar-nav-item" href="/pages/server-room.html">Server Room</a>
+    <a class="sidebar-nav-item" href="/archive.html">Archive</a>
   </nav>
 
   <div class="sidebar-item">
@@ -72,8 +61,8 @@
       <a href="https://bsky.app/profile/tsmc.purely-functional.com">Bluesky</a>
     </p>
     <p>
-      <a href="../rss.xml">RSS</a> ·
-      <a href="../atom.xml">Atom</a>
+      <a href="/rss.xml">RSS</a> ·
+      <a href="/atom.xml">Atom</a>
     </p>
     <p>
       &copy; Tim McGilchrist 2007-2026
@@ -81,37 +70,33 @@
   </div>
 </div>
 
-
     <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
          content to avoid any CSS collisions with our real content. -->
     <div class="wrap">
       <div class="masthead">
         <div class="container">
           <h3 class="masthead-title">
-            <a href="../" title="Home">Perpetually Curious</a>
-            
+            <a href="/" title="Home">Perpetually Curious</a>
             <span class="masthead-links">
-              <a href="../pages/about.html">About</a> |
-              <a href="../pages/talks.html">Talks</a> |
-              <a href="../pages/server-room.html">Server Room</a> |
-              <a href="../archive.html">Archive</a>
+              <a href="/pages/about.html">About</a> |
+              <a href="/pages/talks.html">Talks</a> |
+              <a href="/pages/server-room.html">Server Room</a> |
+              <a href="/archive.html">Archive</a>
             </span>
           </h3>
         </div>
       </div>
 
-      <div class="container content">
-        <div class="post">
+      <div class="container content"><div class="post">
   <h1 class="post-title">Minimal IRIX Kernel Driver</h1>
-  <span class="post-date">January 31, 2008</span>
-  <p>There are loads of articles and examples about how to develop a simple device
+  <span class="post-date">January 31, 2008</span><p>There are loads of articles and examples about how to develop a simple device
 driver for Linux or any of the BSDs, but outside of that there are very few. So
-why not have one for IRIX, it’s not exaclty the most common OS but there’s a
+why not have one for IRIX, it's not exaclty the most common OS but there's a
 good community around it at <a href="http://www.nekochan.net">Nekochan</a> and
 for anyone curious about Unix its a worthwhile task.</p>
-<p>So presented here is a rather short “Hello, world” driver for the IRIX operating
+<p>So presented here is a rather short &quot;Hello, world&quot; driver for the IRIX operating
 system.</p>
-<ol type="1">
+<ol>
 <li>Introduction</li>
 <li>Basic Requirements</li>
 <li>Kernel Driver</li>
@@ -119,7 +104,7 @@ system.</p>
 <li>Testing</li>
 <li>Conclusion</li>
 </ol>
-<h3 id="introduction">1. Introduction</h3>
+<h3 id="1-introduction"><a class="anchor" aria-hidden="true" href="#1-introduction"></a>1. Introduction</h3>
 <p>This article is for anyone interested in kernel development under IRIX. It
 assumes that the reader has had previous exposure to C and is familar with some
 form of Unix, hopefully IRIX but Linux or *BSD is sufficient. There are already
@@ -130,194 +115,207 @@ document. The problem I found with this document is, the depth of the material
 presented makes if difficult to know where to start from. So hopefully this
 article will provide a gentle introduction to IRIX before you jump into the SGI
 documentation.</p>
-<h3 id="basic-requirements">2. Basic Requirements</h3>
-<p>The main requirements for using the driver presented are:
-* root access to a SGI machine running IRIX 6.5
-* MIPSPro Compiler</p>
+<h3 id="2-basic-requirements"><a class="anchor" aria-hidden="true" href="#2-basic-requirements"></a>2. Basic Requirements</h3>
+<p>The main requirements for using the driver presented are:</p>
+<ul>
+<li>root access to a SGI machine running IRIX 6.5</li>
+<li>MIPSPro Compiler</li>
+</ul>
 <p>Unfortunately, these requirements may be a little difficult to fulfill but
 <a href="http://www.ebay.com">eBay</a> is your friend when looking for SGI equipment. All
 code was tested on an SGI O2 R10K 250Mhz running IRIX 6.5.27, and compiled with
 MIPSPro 7.3.</p>
-<h3 id="kernel-driver">3. Kernel Driver</h3>
+<h3 id="3-kernel-driver"><a class="anchor" aria-hidden="true" href="#3-kernel-driver"></a>3. Kernel Driver</h3>
 <p>The driver is very simple but provides a starting point for investigation about
 IRIX.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;sys/types.h&gt;</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;sys/param.h&gt;</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;sys/systm.h&gt;</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;sys/sysmacros.h&gt;</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;sys/ddi.h&gt;</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">/* ====================================================================</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"> * Module version information, required for loadable modules.</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"> */</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;sys/mload.h&gt;</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span> <span class="op">*</span>sim_mversion <span class="op">=</span> M_VERSION<span class="op">;</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">/* ====================================================================</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"> * Device-Related Constants and Structures</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"> */</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> sim_devflag <span class="op">=</span> D_MP<span class="op">;</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co">/* ==================================================================</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co"> *    FUNCTION TABLE OF CONTENTS</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co"> */</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> sim_init<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> sim_unload<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> sim_reg<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> sim_unreg<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> sim_open<span class="op">(</span><span class="dt">dev_t</span> devp<span class="op">,</span> <span class="dt">int</span> oflag<span class="op">,</span> <span class="dt">int</span> otyp<span class="op">,</span> <span class="kw">struct</span> cred crp<span class="op">);</span></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> sim_close<span class="op">(</span><span class="dt">dev_t</span> dev<span class="op">,</span> <span class="dt">int</span> oflag<span class="op">,</span> <span class="dt">int</span> otyp<span class="op">,</span> <span class="kw">struct</span> cred crp<span class="op">);</span></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="co">/*</span></span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="co"> * For Irix6.4 compatability only, do nothing here.</span></span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="co"> */</span></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> sim_init<span class="op">(</span><span class="dt">void</span><span class="op">)</span> <span class="op">{</span></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>   printf<span class="op">(</span><span class="st">&quot;sim_init()</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="co">/*</span></span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="co"> * Called by the kernel when the driver is loaded.</span></span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="co"> * Here you'd do things like setup per device data and</span></span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="co"> * register this driver for the hardware.</span></span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="co"> */</span></span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> sim_reg<span class="op">(</span><span class="dt">void</span><span class="op">)</span> <span class="op">{</span></span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;sim_reg()</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="co">/*</span></span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="co"> * Unloads the driver.</span></span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a><span class="co"> */</span></span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> sim_unload<span class="op">(</span><span class="dt">void</span><span class="op">)</span> <span class="op">{</span></span>
-<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;sim_unload()</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
-<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a><span class="co">/*</span></span>
-<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a><span class="co"> * Unregisters the driver.</span></span>
-<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a><span class="co"> */</span></span>
-<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> sim_unreg<span class="op">(</span><span class="dt">void</span><span class="op">)</span> <span class="op">{</span></span>
-<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;sim_unreg()</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
-<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a><span class="co">/*</span></span>
-<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a><span class="co"> * Opens the driver.</span></span>
-<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a><span class="co"> */</span></span>
-<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> sim_open<span class="op">(</span><span class="dt">dev_t</span> devp<span class="op">,</span> <span class="dt">int</span> oflag<span class="op">,</span> <span class="dt">int</span> otyp<span class="op">,</span> <span class="kw">struct</span> cred crp<span class="op">)</span></span>
-<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
-<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;sim_open()</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
-<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a><span class="co">/*</span></span>
-<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a><span class="co"> * Closes the driver.</span></span>
-<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a><span class="co"> */</span></span>
-<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> sim_close<span class="op">(</span><span class="dt">dev_t</span> dev<span class="op">,</span> <span class="dt">int</span> oflag<span class="op">,</span> <span class="dt">int</span> otyp<span class="op">,</span> <span class="kw">struct</span> cred crp<span class="op">)</span></span>
-<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
-<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;sim_close()</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
-<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-<h3 id="compiling">4. Compiling</h3>
+<pre><code><span class='c++-source'>
+</span><span class='c++-punctuation-definition-directive'>#</span><span class='c++-keyword-control-directive-$5'>include</span><span class='c++-meta-preprocessor-include'> </span><span class='c++-punctuation-definition-string-begin'>&lt;</span><span class='c++-string-quoted-other-lt-gt-include'>sys/types.h</span><span class='c++-punctuation-definition-string-end'>&gt;</span><span class='c++-source'>
+</span><span class='c++-punctuation-definition-directive'>#</span><span class='c++-keyword-control-directive-$5'>include</span><span class='c++-meta-preprocessor-include'> </span><span class='c++-punctuation-definition-string-begin'>&lt;</span><span class='c++-string-quoted-other-lt-gt-include'>sys/param.h</span><span class='c++-punctuation-definition-string-end'>&gt;</span><span class='c++-source'>
+</span><span class='c++-punctuation-definition-directive'>#</span><span class='c++-keyword-control-directive-$5'>include</span><span class='c++-meta-preprocessor-include'> </span><span class='c++-punctuation-definition-string-begin'>&lt;</span><span class='c++-string-quoted-other-lt-gt-include'>sys/systm.h</span><span class='c++-punctuation-definition-string-end'>&gt;</span><span class='c++-source'>
+</span><span class='c++-punctuation-definition-directive'>#</span><span class='c++-keyword-control-directive-$5'>include</span><span class='c++-meta-preprocessor-include'> </span><span class='c++-punctuation-definition-string-begin'>&lt;</span><span class='c++-string-quoted-other-lt-gt-include'>sys/sysmacros.h</span><span class='c++-punctuation-definition-string-end'>&gt;</span><span class='c++-source'>
+</span><span class='c++-punctuation-definition-directive'>#</span><span class='c++-keyword-control-directive-$5'>include</span><span class='c++-meta-preprocessor-include'> </span><span class='c++-punctuation-definition-string-begin'>&lt;</span><span class='c++-string-quoted-other-lt-gt-include'>sys/ddi.h</span><span class='c++-punctuation-definition-string-end'>&gt;</span><span class='c++-source'>
+</span><span class='c++-source'>
+</span><span class='c++-punctuation-definition-comment-begin'>/*</span><span class='c++-comment-block'> ====================================================================
+</span><span class='c++-comment-block'> *</span><span class='c++-comment-block'> Module version information, required for loadable modules.
+</span><span class='c++-comment-block'> </span><span class='c++-punctuation-definition-comment-end'>*/</span><span class='c++-source'>
+</span><span class='c++-source'>
+</span><span class='c++-punctuation-definition-directive'>#</span><span class='c++-keyword-control-directive-$5'>include</span><span class='c++-meta-preprocessor-include'> </span><span class='c++-punctuation-definition-string-begin'>&lt;</span><span class='c++-string-quoted-other-lt-gt-include'>sys/mload.h</span><span class='c++-punctuation-definition-string-end'>&gt;</span><span class='c++-source'>
+</span><span class='c++-storage-type-primitive-cpp storage-type-built-in-primitive'>char</span><span class='c++-source'> </span><span class='c++-keyword-operator-arithmetic'>*</span><span class='c++-variable-snake-case-cpp variable-other-unknown-$2'>sim_mversion</span><span class='c++-source'> </span><span class='c++-keyword-operator-assignment'>=</span><span class='c++-source'> </span><span class='c++-variable-snake-case-cpp variable-other-unknown-$2'>M_VERSION</span><span class='c++-punctuation-terminator-statement'>;</span><span class='c++-source'>
+</span><span class='c++-source'>
+</span><span class='c++-punctuation-definition-comment-begin'>/*</span><span class='c++-comment-block'> ====================================================================
+</span><span class='c++-comment-block'> *</span><span class='c++-comment-block'> Device-Related Constants and Structures
+</span><span class='c++-comment-block'> </span><span class='c++-punctuation-definition-comment-end'>*/</span><span class='c++-source'>
+</span><span class='c++-source'>
+</span><span class='c++-storage-type-primitive-cpp storage-type-built-in-primitive'>int</span><span class='c++-source'> </span><span class='c++-variable-snake-case-cpp variable-other-unknown-$2'>sim_devflag</span><span class='c++-source'> </span><span class='c++-keyword-operator-assignment'>=</span><span class='c++-source'> </span><span class='c++-variable-snake-case-cpp variable-other-unknown-$2'>D_MP</span><span class='c++-punctuation-terminator-statement'>;</span><span class='c++-source'>
+</span><span class='c++-source'>
+</span><span class='c++-punctuation-definition-comment-begin'>/*</span><span class='c++-comment-block'> ==================================================================
+</span><span class='c++-comment-block'> *</span><span class='c++-comment-block'>    FUNCTION TABLE OF CONTENTS
+</span><span class='c++-comment-block'> </span><span class='c++-punctuation-definition-comment-end'>*/</span><span class='c++-source'>
+</span><span class='c++-meta-qualified-type'>void</span><span class='c++-source'> </span><span class='c++-entity-name-function-definition'>sim_init</span><span class='c++-punctuation-section-parameters-begin-bracket-round'>(</span><span class='c++-storage-type-primitive-cpp storage-type-built-in-primitive'>void</span><span class='c++-punctuation-section-parameters-end-bracket-round'>)</span><span class='c++-punctuation-terminator-statement'>;</span><span class='c++-source'>
+</span><span class='c++-meta-qualified-type'>int</span><span class='c++-source'> </span><span class='c++-entity-name-function-definition'>sim_unload</span><span class='c++-punctuation-section-parameters-begin-bracket-round'>(</span><span class='c++-storage-type-primitive-cpp storage-type-built-in-primitive'>void</span><span class='c++-punctuation-section-parameters-end-bracket-round'>)</span><span class='c++-punctuation-terminator-statement'>;</span><span class='c++-source'>
+</span><span class='c++-meta-qualified-type'>int</span><span class='c++-source'> </span><span class='c++-entity-name-function-definition'>sim_reg</span><span class='c++-punctuation-section-parameters-begin-bracket-round'>(</span><span class='c++-storage-type-primitive-cpp storage-type-built-in-primitive'>void</span><span class='c++-punctuation-section-parameters-end-bracket-round'>)</span><span class='c++-punctuation-terminator-statement'>;</span><span class='c++-source'>
+</span><span class='c++-meta-qualified-type'>int</span><span class='c++-source'> </span><span class='c++-entity-name-function-definition'>sim_unreg</span><span class='c++-punctuation-section-parameters-begin-bracket-round'>(</span><span class='c++-storage-type-primitive-cpp storage-type-built-in-primitive'>void</span><span class='c++-punctuation-section-parameters-end-bracket-round'>)</span><span class='c++-punctuation-terminator-statement'>;</span><span class='c++-source'>
+</span><span class='c++-meta-qualified-type'>int</span><span class='c++-source'> </span><span class='c++-entity-name-function-definition'>sim_open</span><span class='c++-punctuation-section-parameters-begin-bracket-round'>(</span><span class='c++-storage-type-cpp storage-type-built-in'>dev_t</span><span class='c++-meta-parameter'> </span><span class='c++-variable-parameter'>devp</span><span class='c++-punctuation-separator-delimiter-comma'>,</span><span class='c++-meta-function-definition'> </span><span class='c++-storage-type-primitive-cpp storage-type-built-in-primitive'>int</span><span class='c++-meta-parameter'> </span><span class='c++-variable-parameter'>oflag</span><span class='c++-punctuation-separator-delimiter-comma'>,</span><span class='c++-meta-function-definition'> </span><span class='c++-storage-type-primitive-cpp storage-type-built-in-primitive'>int</span><span class='c++-meta-parameter'> </span><span class='c++-variable-parameter'>otyp</span><span class='c++-punctuation-separator-delimiter-comma'>,</span><span class='c++-meta-function-definition'> </span><span class='c++-storage-type-$0'>struct</span><span class='c++-meta-parameter'> </span><span class='c++-entity-name-type-parameter'>cred</span><span class='c++-meta-parameter'> </span><span class='c++-variable-parameter'>crp</span><span class='c++-punctuation-section-parameters-end-bracket-round'>)</span><span class='c++-punctuation-terminator-statement'>;</span><span class='c++-source'>
+</span><span class='c++-meta-qualified-type'>int</span><span class='c++-source'> </span><span class='c++-entity-name-function-definition'>sim_close</span><span class='c++-punctuation-section-parameters-begin-bracket-round'>(</span><span class='c++-storage-type-cpp storage-type-built-in'>dev_t</span><span class='c++-meta-parameter'> </span><span class='c++-variable-parameter'>dev</span><span class='c++-punctuation-separator-delimiter-comma'>,</span><span class='c++-meta-function-definition'> </span><span class='c++-storage-type-primitive-cpp storage-type-built-in-primitive'>int</span><span class='c++-meta-parameter'> </span><span class='c++-variable-parameter'>oflag</span><span class='c++-punctuation-separator-delimiter-comma'>,</span><span class='c++-meta-function-definition'> </span><span class='c++-storage-type-primitive-cpp storage-type-built-in-primitive'>int</span><span class='c++-meta-parameter'> </span><span class='c++-variable-parameter'>otyp</span><span class='c++-punctuation-separator-delimiter-comma'>,</span><span class='c++-meta-function-definition'> </span><span class='c++-storage-type-$0'>struct</span><span class='c++-meta-parameter'> </span><span class='c++-entity-name-type-parameter'>cred</span><span class='c++-meta-parameter'> </span><span class='c++-variable-parameter'>crp</span><span class='c++-punctuation-section-parameters-end-bracket-round'>)</span><span class='c++-punctuation-terminator-statement'>;</span><span class='c++-source'>
+</span><span class='c++-source'>
+</span><span class='c++-punctuation-definition-comment-begin'>/*</span><span class='c++-comment-block'>
+</span><span class='c++-comment-block'> *</span><span class='c++-comment-block'> For Irix6.4 compatability only, do nothing here.
+</span><span class='c++-comment-block'> </span><span class='c++-punctuation-definition-comment-end'>*/</span><span class='c++-source'>
+</span><span class='c++-meta-qualified-type'>void</span><span class='c++-source'> </span><span class='c++-entity-name-function-definition'>sim_init</span><span class='c++-punctuation-section-parameters-begin-bracket-round'>(</span><span class='c++-storage-type-primitive-cpp storage-type-built-in-primitive'>void</span><span class='c++-punctuation-section-parameters-end-bracket-round'>)</span><span class='c++-meta-head-function-definition'> </span><span class='c++-punctuation-section-block-begin-bracket-curly-function-definition'>{</span><span class='c++-meta-head-function-definition'>
+</span><span class='c++-meta-head-function-definition'>   </span><span class='c++-entity-name-function-call'>printf</span><span class='c++-punctuation-section-arguments-begin-bracket-round-function-call'>(</span><span class='c++-punctuation-definition-string-begin'>&quot;</span><span class='c++-string-quoted-double'>sim_init()</span><span class='c++-constant-character-escape'>\n</span><span class='c++-punctuation-definition-string-end'>&quot;</span><span class='c++-punctuation-section-arguments-end-bracket-round-function-call'>)</span><span class='c++-punctuation-terminator-statement'>;</span><span class='c++-source'>
+</span><span class='c++-source'>}
+</span><span class='c++-source'>
+</span><span class='c++-punctuation-definition-comment-begin'>/*</span><span class='c++-comment-block'>
+</span><span class='c++-comment-block'> *</span><span class='c++-comment-block'> Called by the kernel when the driver is loaded.
+</span><span class='c++-comment-block'> *</span><span class='c++-comment-block'> Here you'd do things like setup per device data and
+</span><span class='c++-comment-block'> *</span><span class='c++-comment-block'> register this driver for the hardware.
+</span><span class='c++-comment-block'> </span><span class='c++-punctuation-definition-comment-end'>*/</span><span class='c++-source'>
+</span><span class='c++-meta-qualified-type'>int</span><span class='c++-source'> </span><span class='c++-entity-name-function-definition'>sim_reg</span><span class='c++-punctuation-section-parameters-begin-bracket-round'>(</span><span class='c++-storage-type-primitive-cpp storage-type-built-in-primitive'>void</span><span class='c++-punctuation-section-parameters-end-bracket-round'>)</span><span class='c++-meta-head-function-definition'> </span><span class='c++-punctuation-section-block-begin-bracket-curly-function-definition'>{</span><span class='c++-meta-head-function-definition'>
+</span><span class='c++-meta-head-function-definition'>    </span><span class='c++-entity-name-function-call'>printf</span><span class='c++-punctuation-section-arguments-begin-bracket-round-function-call'>(</span><span class='c++-punctuation-definition-string-begin'>&quot;</span><span class='c++-string-quoted-double'>sim_reg()</span><span class='c++-constant-character-escape'>\n</span><span class='c++-punctuation-definition-string-end'>&quot;</span><span class='c++-punctuation-section-arguments-end-bracket-round-function-call'>)</span><span class='c++-punctuation-terminator-statement'>;</span><span class='c++-source'>
+</span><span class='c++-source'>    </span><span class='c++-keyword-control-$3'>return</span><span class='c++-source'> </span><span class='c++-source'>0</span><span class='c++-punctuation-terminator-statement'>;</span><span class='c++-source'>
+</span><span class='c++-source'>}
+</span><span class='c++-source'>
+</span><span class='c++-punctuation-definition-comment-begin'>/*</span><span class='c++-comment-block'>
+</span><span class='c++-comment-block'> *</span><span class='c++-comment-block'> Unloads the driver.
+</span><span class='c++-comment-block'> </span><span class='c++-punctuation-definition-comment-end'>*/</span><span class='c++-source'>
+</span><span class='c++-meta-qualified-type'>int</span><span class='c++-source'> </span><span class='c++-entity-name-function-definition'>sim_unload</span><span class='c++-punctuation-section-parameters-begin-bracket-round'>(</span><span class='c++-storage-type-primitive-cpp storage-type-built-in-primitive'>void</span><span class='c++-punctuation-section-parameters-end-bracket-round'>)</span><span class='c++-meta-head-function-definition'> </span><span class='c++-punctuation-section-block-begin-bracket-curly-function-definition'>{</span><span class='c++-meta-head-function-definition'>
+</span><span class='c++-meta-head-function-definition'>    </span><span class='c++-entity-name-function-call'>printf</span><span class='c++-punctuation-section-arguments-begin-bracket-round-function-call'>(</span><span class='c++-punctuation-definition-string-begin'>&quot;</span><span class='c++-string-quoted-double'>sim_unload()</span><span class='c++-constant-character-escape'>\n</span><span class='c++-punctuation-definition-string-end'>&quot;</span><span class='c++-punctuation-section-arguments-end-bracket-round-function-call'>)</span><span class='c++-punctuation-terminator-statement'>;</span><span class='c++-source'>
+</span><span class='c++-source'>    </span><span class='c++-keyword-control-$3'>return</span><span class='c++-source'> </span><span class='c++-source'>0</span><span class='c++-punctuation-terminator-statement'>;</span><span class='c++-source'>
+</span><span class='c++-source'>}
+</span><span class='c++-source'>
+</span><span class='c++-punctuation-definition-comment-begin'>/*</span><span class='c++-comment-block'>
+</span><span class='c++-comment-block'> *</span><span class='c++-comment-block'> Unregisters the driver.
+</span><span class='c++-comment-block'> </span><span class='c++-punctuation-definition-comment-end'>*/</span><span class='c++-source'>
+</span><span class='c++-meta-qualified-type'>int</span><span class='c++-source'> </span><span class='c++-entity-name-function-definition'>sim_unreg</span><span class='c++-punctuation-section-parameters-begin-bracket-round'>(</span><span class='c++-storage-type-primitive-cpp storage-type-built-in-primitive'>void</span><span class='c++-punctuation-section-parameters-end-bracket-round'>)</span><span class='c++-meta-head-function-definition'> </span><span class='c++-punctuation-section-block-begin-bracket-curly-function-definition'>{</span><span class='c++-meta-head-function-definition'>
+</span><span class='c++-meta-head-function-definition'>    </span><span class='c++-entity-name-function-call'>printf</span><span class='c++-punctuation-section-arguments-begin-bracket-round-function-call'>(</span><span class='c++-punctuation-definition-string-begin'>&quot;</span><span class='c++-string-quoted-double'>sim_unreg()</span><span class='c++-constant-character-escape'>\n</span><span class='c++-punctuation-definition-string-end'>&quot;</span><span class='c++-punctuation-section-arguments-end-bracket-round-function-call'>)</span><span class='c++-punctuation-terminator-statement'>;</span><span class='c++-source'>
+</span><span class='c++-source'>    </span><span class='c++-keyword-control-$3'>return</span><span class='c++-source'> </span><span class='c++-source'>0</span><span class='c++-punctuation-terminator-statement'>;</span><span class='c++-source'>
+</span><span class='c++-source'>}
+</span><span class='c++-source'>
+</span><span class='c++-punctuation-definition-comment-begin'>/*</span><span class='c++-comment-block'>
+</span><span class='c++-comment-block'> *</span><span class='c++-comment-block'> Opens the driver.
+</span><span class='c++-comment-block'> </span><span class='c++-punctuation-definition-comment-end'>*/</span><span class='c++-source'>
+</span><span class='c++-meta-qualified-type'>int</span><span class='c++-source'> </span><span class='c++-entity-name-function-definition'>sim_open</span><span class='c++-punctuation-section-parameters-begin-bracket-round'>(</span><span class='c++-storage-type-cpp storage-type-built-in'>dev_t</span><span class='c++-meta-parameter'> </span><span class='c++-variable-parameter'>devp</span><span class='c++-punctuation-separator-delimiter-comma'>,</span><span class='c++-meta-function-definition'> </span><span class='c++-storage-type-primitive-cpp storage-type-built-in-primitive'>int</span><span class='c++-meta-parameter'> </span><span class='c++-variable-parameter'>oflag</span><span class='c++-punctuation-separator-delimiter-comma'>,</span><span class='c++-meta-function-definition'> </span><span class='c++-storage-type-primitive-cpp storage-type-built-in-primitive'>int</span><span class='c++-meta-parameter'> </span><span class='c++-variable-parameter'>otyp</span><span class='c++-punctuation-separator-delimiter-comma'>,</span><span class='c++-meta-function-definition'> </span><span class='c++-storage-type-$0'>struct</span><span class='c++-meta-parameter'> </span><span class='c++-entity-name-type-parameter'>cred</span><span class='c++-meta-parameter'> </span><span class='c++-variable-parameter'>crp</span><span class='c++-punctuation-section-parameters-end-bracket-round'>)</span><span class='c++-meta-head-function-definition'>
+</span><span class='c++-punctuation-section-block-begin-bracket-curly-function-definition'>{</span><span class='c++-meta-head-function-definition'>
+</span><span class='c++-meta-head-function-definition'>    </span><span class='c++-entity-name-function-call'>printf</span><span class='c++-punctuation-section-arguments-begin-bracket-round-function-call'>(</span><span class='c++-punctuation-definition-string-begin'>&quot;</span><span class='c++-string-quoted-double'>sim_open()</span><span class='c++-constant-character-escape'>\n</span><span class='c++-punctuation-definition-string-end'>&quot;</span><span class='c++-punctuation-section-arguments-end-bracket-round-function-call'>)</span><span class='c++-punctuation-terminator-statement'>;</span><span class='c++-source'>
+</span><span class='c++-source'>    </span><span class='c++-keyword-control-$3'>return</span><span class='c++-source'> </span><span class='c++-source'>0</span><span class='c++-punctuation-terminator-statement'>;</span><span class='c++-source'>
+</span><span class='c++-source'>}
+</span><span class='c++-source'>
+</span><span class='c++-punctuation-definition-comment-begin'>/*</span><span class='c++-comment-block'>
+</span><span class='c++-comment-block'> *</span><span class='c++-comment-block'> Closes the driver.
+</span><span class='c++-comment-block'> </span><span class='c++-punctuation-definition-comment-end'>*/</span><span class='c++-source'>
+</span><span class='c++-meta-qualified-type'>int</span><span class='c++-source'> </span><span class='c++-entity-name-function-definition'>sim_close</span><span class='c++-punctuation-section-parameters-begin-bracket-round'>(</span><span class='c++-storage-type-cpp storage-type-built-in'>dev_t</span><span class='c++-meta-parameter'> </span><span class='c++-variable-parameter'>dev</span><span class='c++-punctuation-separator-delimiter-comma'>,</span><span class='c++-meta-function-definition'> </span><span class='c++-storage-type-primitive-cpp storage-type-built-in-primitive'>int</span><span class='c++-meta-parameter'> </span><span class='c++-variable-parameter'>oflag</span><span class='c++-punctuation-separator-delimiter-comma'>,</span><span class='c++-meta-function-definition'> </span><span class='c++-storage-type-primitive-cpp storage-type-built-in-primitive'>int</span><span class='c++-meta-parameter'> </span><span class='c++-variable-parameter'>otyp</span><span class='c++-punctuation-separator-delimiter-comma'>,</span><span class='c++-meta-function-definition'> </span><span class='c++-storage-type-$0'>struct</span><span class='c++-meta-parameter'> </span><span class='c++-entity-name-type-parameter'>cred</span><span class='c++-meta-parameter'> </span><span class='c++-variable-parameter'>crp</span><span class='c++-punctuation-section-parameters-end-bracket-round'>)</span><span class='c++-meta-head-function-definition'>
+</span><span class='c++-punctuation-section-block-begin-bracket-curly-function-definition'>{</span><span class='c++-meta-head-function-definition'>
+</span><span class='c++-meta-head-function-definition'>    </span><span class='c++-entity-name-function-call'>printf</span><span class='c++-punctuation-section-arguments-begin-bracket-round-function-call'>(</span><span class='c++-punctuation-definition-string-begin'>&quot;</span><span class='c++-string-quoted-double'>sim_close()</span><span class='c++-constant-character-escape'>\n</span><span class='c++-punctuation-definition-string-end'>&quot;</span><span class='c++-punctuation-section-arguments-end-bracket-round-function-call'>)</span><span class='c++-punctuation-terminator-statement'>;</span><span class='c++-source'>
+</span><span class='c++-source'>    </span><span class='c++-keyword-control-$3'>return</span><span class='c++-source'> </span><span class='c++-source'>0</span><span class='c++-punctuation-terminator-statement'>;</span><span class='c++-source'>
+</span><span class='c++-source'>}
+</span><span class='c++-source'>
+</span></code></pre>
+<h3 id="4-compiling"><a class="anchor" aria-hidden="true" href="#4-compiling"></a>4. Compiling</h3>
 <p>The major area missing from the SGI Driver manual is how to get your code to
 compile and load into the kernel. To help solve this problem a makefile has been
 provided and the important sections will be covered here.</p>
-<pre class="shell"><code>
-#!smake
-
-CPUBOARD=IP32
-</code></pre>
+<pre><code><span class='shell-source'>
+</span><span class='shell-punctuation-definition-comment-line-shebang'>#!</span><span class='shell-comment-line-shebang'>smake</span><span class='shell-comment-line-shebang'>
+</span><span class='shell-source'>
+</span><span class='shell-source'>CPUBOARD=IP32
+</span><span class='shell-source'>
+</span></code></pre>
 <p>The first line is pretty self explainatory, run smake, which is a slightly
 different version of the standard unix make command. The CPUBOARD indicates
 which architecture to compile the driver for. The architecture differs between
 machines even if they have the same CPU so to find correct number run.</p>
-<pre><code>hinv |grep IP</code></pre>
-<p>which will printout the board number to use. I’m using an R10K in an O2, so my
+<pre><code>hinv |grep IP
+</code></pre>
+<p>which will printout the board number to use. I'm using an R10K in an O2, so my
 board number is IP32.</p>
-<pre><code>include /var/sysgen/Makefile.kernloadio</code></pre>
+<pre><code>include /var/sysgen/Makefile.kernloadio
+</code></pre>
 <p>The file /var/sysgen/Makefile.kernloadio is a sample Makefile for kernel
-drivers, it sets up all the compiler and linker preferences for us. So far I’ve
-treated this as a black-box and haven’t changed anything in it, I assume the SGI
+drivers, it sets up all the compiler and linker preferences for us. So far I've
+treated this as a black-box and haven't changed anything in it, I assume the SGI
 engineers knew what they were doing.</p>
 <pre><code>all: compile
 compile:
-    $(CC) $(CFLAGS) $(LDFLAGS) -c simple.c</code></pre>
+    $(CC) $(CFLAGS) $(LDFLAGS) -c simple.c
+</code></pre>
 <p>This is will compile the driver, and should be pretty familiar to any C coder.</p>
 <pre><code>load:
     $(ML) ld -v -c simple.o -p sim -s 13
 
 clean:
-    $(RM) -f simple.o</code></pre>
-<p>The load target here will do exactly what it says, load the driver into the
-kernel, and the clean will cleanup the files created. When running the ‘load’
+    $(RM) -f simple.o
+</code></pre>
+<p>The load target here will do exactly what it says, load the driver  into the
+kernel, and the clean will cleanup the files created. When  running the 'load'
 target you may get an error like:</p>
 <pre><code>-- load ---
 /sbin/ml ld -v -c simple.o -p sim_ -s 13
 Error loading module sim_: Major number already in use.
 *** Error code 255
-smake: Error: 1 error</code></pre>
-<p>This is simply saying that an existing driver is using the major device number
-that we specified, so keep changing the number until it doesn’t clash. There
-must be some sort of logic to assigning major device numbers but it isn’t
+smake: Error: 1 error
+</code></pre>
+<p>This is simply saying that an existing driver is using the major  device number
+that we specified, so keep changing the number until it  doesn't clash. There
+must be some sort of logic to assigning major  device numbers but it isn't
 terribly important here.</p>
-<h3 id="testing">5. Testing</h3>
-<p>Being a simple dirver there isn’t a whole lot to test. The main thing is that it
+<h3 id="5-testing"><a class="anchor" aria-hidden="true" href="#5-testing"></a>5. Testing</h3>
+<p>Being a simple dirver there isn't a whole lot to test. The main thing is that it
 can be loaded and unloaded successfully, and that you can see the messages
 printed out when this happens. So open a new shell</p>
-<pre><code>tail -f /var/adm/SYSLOG</code></pre>
+<pre><code>tail -f /var/adm/SYSLOG
+</code></pre>
 <p>This will open the main logfile under IRIX so you can see the output of the
-driver. Now compile the driver and load the driver, you’ll need to be root
+driver. Now compile the driver and load the driver, you'll need to be root
 for this to work.</p>
-<pre><code>make &amp;&amp; make load</code></pre>
+<pre><code>make &amp;&amp; make load
+</code></pre>
 <p>Make a note of the id assigned to the driver, as it is required to unload
 it. Check that the driver has been loaded by listing all loadable drivers. The
 ml command is used for manipulating loadable kernel drivers, check out man ml
 for more details. In the other shell you should see something like</p>
 <pre><code>Jan 31 01:34:20 6A:sgi unix: sim_init()
 Jan 31 01:34:20 6A:sgi unix: sim_reg()
-Jan 31 01:34:20 5E:sgi lboot: Module /usr/people/you/code/simple/simple.o dynamically loaded.</code></pre>
+Jan 31 01:34:20 5E:sgi lboot: Module /usr/people/you/code/simple/simple.o dynamically loaded.
+</code></pre>
 <p>To unload the driver use the id assigned to it earlier, eg 5
 ml unld 5</p>
 <p>In the other shell you should see</p>
 <pre><code>Jan 31 01:34:20 6A:sgi unix: sim_unreg()
-Jan 31 01:34:20 6A:sgi unix: sim_unload()</code></pre>
-<h3 id="conclusion">6. Conclusion</h3>
+Jan 31 01:34:20 6A:sgi unix: sim_unload()
+</code></pre>
+<h3 id="6-conclusion"><a class="anchor" aria-hidden="true" href="#6-conclusion"></a>6. Conclusion</h3>
 <p>So now you should have a working driver for IRIX that can be modified to support
 any sort of hardware outlined in the
 <a href="http://techpubs.sgi.com/library/tpl/cgi-bin/browse.cgi?coll=0650&amp;db=bks&amp;cmd=toc&amp;pth=/SGI_Developer/DevDriver_PG">SGI Device Driver</a>
 document. There are plenty of more advanced examples of how to write drivers for
 PCI cards, SCSI, TCP/IP networking, amongst others. The PCI card examples are
 the most relevant if you have an O2 as they have PCI built in, unlike other SGI
-machines, and cheap PCI cards are everywhere, so you’ll always have good
+machines, and cheap PCI cards are everywhere, so you'll always have good
 material to work with.</p>
-<h3 id="extra">Extra</h3>
+<h3 id="extra"><a class="anchor" aria-hidden="true" href="#extra"></a>Extra</h3>
 <p>Just an additional thing I came across when messing about withloadable
 drivers. Most of the examples in the SGI Device Driverdocument are for
-non-loadable drivers if you add the following sections you’ll be able to treat
+non-loadable drivers if you add the following sections you'll be able to treat
 them as loadable drivers. A Loadable Driver will fail when attempting to load
 with this cryptic error message.</p>
 <pre><code>Error loading module sim_:  Module version string is missing.
-*** Error code 255</code></pre>
+*** Error code 255
+</code></pre>
 <p>This means that the loadable version string is missing from this driver. To fix
 add the following code to the driver, and the error should disappear.</p>
-<pre><code> #include &lt;sys&gt;char *pfxmversion = M_VERSION;</code></pre>
+<pre><code> #include &lt;sys&gt;char *pfxmversion = M_VERSION;
+</code></pre>
 <p>where <strong>pfx</strong> is the prefix used in the driver. In this article the prefix would
 be <strong>sim_</strong>.</p>
-<h3 id="downloads">Downloads</h3>
+<h3 id="downloads"><a class="anchor" aria-hidden="true" href="#downloads"></a>Downloads</h3>
 <p>The source code is up on github: <a href="https://github.com/tmcgilchrist/simple_irix_driver">Simple IRIX Device Driver</a></p>
-  
-  <p class="post-tags">Tags: <a title="All pages tagged 'irix'." href="../tags/irix/index.html" rel="tag">irix</a></p>
-  
+
+  <p class="post-tags">Tags: <a title="All pages tagged 'irix'." href="/tags/irix/index.html" rel="tag">irix</a></p>
 </div>
-
-
-        <div class="container content">
+<div class="container content">
           <small>Copyright © Tim McGilchrist 2007-2026</small>
           <br>
-          <small>Powered by <a href="https://github.com/tmcgilchrist/lambdafoo.com">Hakyll</a></small>
+          <small>Powered by <a href="https://github.com/xhtmlboi/yocaml">YOCaml</a></small>
         </div>
       </div>
     </div>

@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
   <head>
@@ -10,40 +11,28 @@
   <!-- Enable responsiveness on mobile devices-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-  <title>
-      
-        Ripple on Rails &middot; Perpetually Curious
-      
-  </title>
+  <title>Ripple on Rails &middot; Perpetually Curious</title>
 
   <!-- CSS -->
-  <link rel="stylesheet" href="../css/poole.css">
-  <link rel="stylesheet" href="../css/syntax.css">
-  <link rel="stylesheet" href="../css/lanyon.css">
-  <link rel="stylesheet" href="../css/book.css">
+  <link rel="stylesheet" href="/css/poole.css">
+  <link rel="stylesheet" href="/css/syntax.css">
+  <link rel="stylesheet" href="/css/syntax-tm.css">
+  <link rel="stylesheet" href="/css/lanyon.css">
+  <link rel="stylesheet" href="/css/book.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
 
   <!-- Icons -->
-  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-precomposed.png">
-  <link rel="shortcut icon" href="../images/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/images/favicon.ico">
 
   <!-- RSS -->
-  <link rel="alternate" type="application/rss+xml" title="RSS" href="../atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
 
-  <!-- Google Analytics -->
-  <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-28532776-1', 'auto');
-    ga('send', 'pageview');
-  </script>
-<!-- End Google Analytics -->
+  <!-- Analytics -->
+  <script data-goatcounter="https://lambdafoo.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
   <a rel="me" hidden="true" href="https://hachyderm.io/@tsmc">Mastodon</a>
 </head>
-
 
   <body class="sidebar-overlay">
 
@@ -55,15 +44,15 @@
 <div class="sidebar" id="sidebar">
 
   <div class="sidebar-item">
-    <p><a href="../"><strong>Tim McGilchrist</strong></a></p>
+    <p><a href="/"><strong>Tim McGilchrist</strong></a></p>
   </div>
 
   <nav class="sidebar-nav">
-    <a class="sidebar-nav-item" href="../">Blog</a>
-    <a class="sidebar-nav-item" href="../pages/about.html">About</a>
-    <a class="sidebar-nav-item" href="../pages/talks.html">Talks</a>
-    <a class="sidebar-nav-item" href="../pages/server-room.html">Server Room</a>
-    <a class="sidebar-nav-item" href="../archive.html">Archive</a>
+    <a class="sidebar-nav-item" href="/">Blog</a>
+    <a class="sidebar-nav-item" href="/pages/about.html">About</a>
+    <a class="sidebar-nav-item" href="/pages/talks.html">Talks</a>
+    <a class="sidebar-nav-item" href="/pages/server-room.html">Server Room</a>
+    <a class="sidebar-nav-item" href="/archive.html">Archive</a>
   </nav>
 
   <div class="sidebar-item">
@@ -72,8 +61,8 @@
       <a href="https://bsky.app/profile/tsmc.purely-functional.com">Bluesky</a>
     </p>
     <p>
-      <a href="../rss.xml">RSS</a> ·
-      <a href="../atom.xml">Atom</a>
+      <a href="/rss.xml">RSS</a> ·
+      <a href="/atom.xml">Atom</a>
     </p>
     <p>
       &copy; Tim McGilchrist 2007-2026
@@ -81,62 +70,61 @@
   </div>
 </div>
 
-
     <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
          content to avoid any CSS collisions with our real content. -->
     <div class="wrap">
       <div class="masthead">
         <div class="container">
           <h3 class="masthead-title">
-            <a href="../" title="Home">Perpetually Curious</a>
-            
+            <a href="/" title="Home">Perpetually Curious</a>
             <span class="masthead-links">
-              <a href="../pages/about.html">About</a> |
-              <a href="../pages/talks.html">Talks</a> |
-              <a href="../pages/server-room.html">Server Room</a> |
-              <a href="../archive.html">Archive</a>
+              <a href="/pages/about.html">About</a> |
+              <a href="/pages/talks.html">Talks</a> |
+              <a href="/pages/server-room.html">Server Room</a> |
+              <a href="/archive.html">Archive</a>
             </span>
           </h3>
         </div>
       </div>
 
-      <div class="container content">
-        <div class="post">
+      <div class="container content"><div class="post">
   <h1 class="post-title">Ripple on Rails</h1>
-  <span class="post-date">May 22, 2012</span>
-  <h2 id="introduction">Introduction</h2>
+  <span class="post-date">May 22, 2012</span><h2 id="introduction"><a class="anchor" aria-hidden="true" href="#introduction"></a>Introduction</h2>
 <p>Motivation?? Checkout the RailsCasts episode on Mongoid</p>
 <p>Started with the Seven DB in Seven weeks book.
 Wanted to see how Riak would mix with Rails / Ruby.</p>
-<h2 id="what-is-riak">What is Riak</h2>
+<h2 id="what-is-riak"><a class="anchor" aria-hidden="true" href="#what-is-riak"></a>What is Riak</h2>
 <p>Riak is a distributed key-value store based on the Amazon Dynamo papers. Written
-in Erlang by the people at Basho, it’s an exciting addition to the crowded NoSQL
+in Erlang by the people at Basho, it's an exciting addition to the crowded NoSQL
 zoo.</p>
 <ul>
 <li>Map Reduce</li>
 <li>eventually consistent</li>
 <li>read / write balancing</li>
 </ul>
-<h2 id="installing-riak">Installing Riak</h2>
-<p>Installing Riak is pretty straight forward for development, if you’re on a Mac
-use the excellent Homebrew package and you’ll get the latest 1.2 release.</p>
-<pre><code>brew install riak</code></pre>
+<h2 id="installing-riak"><a class="anchor" aria-hidden="true" href="#installing-riak"></a>Installing Riak</h2>
+<p>Installing Riak is pretty straight forward for development, if you're on a Mac
+use the excellent Homebrew package and you'll get the latest 1.2 release.</p>
+<pre><code>brew install riak
+</code></pre>
 <p>Similarly on Linux it should be a matter of invoking your local package manager
-and you should be set. I’m assuming you’re using a Mac here, cause that’s what
-I’ve got but Linux should work as well. And Windows, well use a VM :-)</p>
-<h2 id="ruby-environment">Ruby Environment</h2>
-<p>You’ll need some form of Ruby installed, I’d recommend installing via rvm over
+and you should be set. I'm assuming you're using a Mac here, cause that's what
+I've got but Linux should work as well. And Windows, well use a VM :-)</p>
+<h2 id="ruby-environment"><a class="anchor" aria-hidden="true" href="#ruby-environment"></a>Ruby Environment</h2>
+<p>You'll need some form of Ruby installed, I'd recommend installing via rvm over
 using your local ruby version. See rvm.io for details, it should simply be a
 matter of running a command in your terminal.</p>
-<p>Next we’ll create a gemset and install rails into that.</p>
+<p>Next we'll create a gemset and install rails into that.</p>
 <pre><code>rvm --create use 1.9.3@ripple
-gem install rails</code></pre>
-<h2 id="creating-a-new-rails-application-with-ripple">Creating a new Rails Application with Ripple</h2>
-<p>Now that we have Riak installed we’ll create a new Rails 3 application that uses
+gem install rails
+</code></pre>
+<h2 id="creating-a-new-rails-application-with-ripple"><a class="anchor" aria-hidden="true" href="#creating-a-new-rails-application-with-ripple"></a>Creating a new Rails Application with Ripple</h2>
+<p>Now that we have Riak installed we'll create a new Rails 3 application that uses
 Riak. Continuing in the Rails tradition, lets create a blogging app.</p>
-<pre><code>$ rails new blog --skip-active-record --skip-bundle -T</code></pre>
+<pre><code>$ rails new blog --skip-active-record --skip-bundle -T
+</code></pre>
 <p>Now the first thing to do is add the Ripple gem to the Gemfile. Currently the
-latest version doesn’t work with latest rails so lets use the latest from git.</p>
+latest version doesn't work with latest rails so lets use the latest from git.</p>
 <pre><code>source 'http://rubygems.org'
 gem 'rails', '3.2.2'
 
@@ -145,10 +133,12 @@ gem 'ripple', '1.0.0.beta'
 group :development, :test do
     gem 'rspec'
     gem 'rspec-rails'
-end</code></pre>
+end
+</code></pre>
 <p>Then install the gems in the usual way.</p>
-<pre><code> $ bundle</code></pre>
-<p>Once the gems have installed we’ll need to generate the Ripple configuration.</p>
+<pre><code> $ bundle
+</code></pre>
+<p>Once the gems have installed we'll need to generate the Ripple configuration.</p>
 <pre><code>$ rails g
 ...
 Ripple:
@@ -157,7 +147,8 @@ Ripple:
   ripple:js
   ripple:model
   ripple:observer
-  ripple:test</code></pre>
+  ripple:test
+</code></pre>
 <p>So we want the default ripple one.</p>
 <pre><code>$ rails g ripple
 create  config/ripple.yml
@@ -166,11 +157,12 @@ create  app/mapreduce/contrib.js
 create  app/mapreduce/iso8601.js
 create  app/mapreduce/ripple.js
 insert  spec/spec_helper.rb
-insert  spec/spec_helper.rb</code></pre>
+insert  spec/spec_helper.rb
+</code></pre>
 <p>As you can see it creates a ripple configuration file, some mapreduce assets and
 updates my spec_helper. Lets look just at the <code>config/ripple.yml</code> file for now.</p>
-<p>The default config file is shown below. You may have to modify or add the ‘source:’
-property to point to where you’ve installed Riak. I’ve put mine in the same
+<p>The default config file is shown below. You may have to modify or add the 'source:'
+property to point to where you've installed Riak. I've put mine in the same
 directory as the rails project so it looks like this</p>
 <pre><code># TODO use the default homebrew path here.
 # Configure Riak connections for the Ripple library.
@@ -198,19 +190,22 @@ production:
     http_port: 8098
     pb_port: 8087
     host: 127.0.0.1
-    source: /usr/local/bin   # Default for Homebrew.</code></pre>
-<p>With everything in place we can begin to build our application. We’ll start by
+    source: /usr/local/bin   # Default for Homebrew.
+</code></pre>
+<p>With everything in place we can begin to build our application. We'll start by
 generating an <code>Article</code> model with name and content fields and use the Rails
 scaffolding to create all the dependent bits.</p>
-<pre><code>$ rails g scaffold article name:string content:text</code></pre>
-<p>Ripple provides generators for models so that Ripple’s model generator is
-invoked when a model is created and ActiveRecord isn’t used. When we open up the
-model file we’ll see that it’s a simple class that includes <code>Ripple::Document</code>.</p>
+<pre><code>$ rails g scaffold article name:string content:text
+</code></pre>
+<p>Ripple provides generators for models so that Ripple's model generator is
+invoked when a model is created and ActiveRecord isn't used. When we open up the
+model file we'll see that it's a simple class that includes <code>Ripple::Document</code>.</p>
 <pre><code>class Article
     include Ripple::Document
     property :name, String
     property :content, String
-end</code></pre>
+end
+</code></pre>
 <p>The big difference to an ActiveModel model is that the class defines each
 property, along with the type.</p>
 <p>Ripple also adds a number of helpful rake tasks for Riak.</p>
@@ -222,27 +217,25 @@ rake riak:destroy       # Destroys the generated Riak cluster for the current en
 rake riak:drop          # Drops data only from the Riak cluster for the current environment.
 rake riak:drop:all      # Drops data Riak clusters for all environments defined in config/r...
 rake riak:start         # Starts the Riak cluster for the current environment
-rake riak:stop          # Stops the Riak cluster for the current environment</code></pre>
-<h2 id="load-the-controller-and-show-some-actions">Load the controller and show some actions</h2>
-<h2 id="make-the-controller-run-some-basic-rspec-things">Make the controller run some basic rspec things</h2>
-<h2 id="show-some-basic-validations-on-the-data.">Show some basic validations on the data.</h2>
-<h2 id="point-to-part2">Point to Part2</h2>
-<h2 id="running-mapreduce-queries-against-riak">Running MapReduce queries against Riak</h2>
-<h2 id="pulling-in-postgres">Pulling in Postgres</h2>
-<h2 id="writing-queries-in-coffeescript">Writing queries in CoffeeScript</h2>
-<h2 id="using-the-rails-console">Using the rails console</h2>
-<h2 id="using-the-riak-console">Using the Riak Console</h2>
-<h2 id="what-else-does-railscasts-mongoid-cover">What else does RailsCasts Mongoid cover?</h2>
-  
-  <p class="post-tags">Tags: <a title="All pages tagged 'riak'." href="../tags/riak/index.html" rel="tag">riak</a>, <a title="All pages tagged 'ruby'." href="../tags/ruby/index.html" rel="tag">ruby</a>, <a title="All pages tagged 'nosql'." href="../tags/nosql/index.html" rel="tag">nosql</a></p>
-  
+rake riak:stop          # Stops the Riak cluster for the current environment
+</code></pre>
+<h2 id="load-the-controller-and-show-some-actions"><a class="anchor" aria-hidden="true" href="#load-the-controller-and-show-some-actions"></a>Load the controller and show some actions</h2>
+<h2 id="make-the-controller-run-some-basic-rspec-things"><a class="anchor" aria-hidden="true" href="#make-the-controller-run-some-basic-rspec-things"></a>Make the controller run some basic rspec things</h2>
+<h2 id="show-some-basic-validations-on-the-data"><a class="anchor" aria-hidden="true" href="#show-some-basic-validations-on-the-data"></a>Show some basic validations on the data.</h2>
+<h2 id="point-to-part2"><a class="anchor" aria-hidden="true" href="#point-to-part2"></a>Point to Part2</h2>
+<h2 id="running-mapreduce-queries-against-riak"><a class="anchor" aria-hidden="true" href="#running-mapreduce-queries-against-riak"></a>Running MapReduce queries against Riak</h2>
+<h2 id="pulling-in-postgres"><a class="anchor" aria-hidden="true" href="#pulling-in-postgres"></a>Pulling in Postgres</h2>
+<h2 id="writing-queries-in-coffeescript"><a class="anchor" aria-hidden="true" href="#writing-queries-in-coffeescript"></a>Writing queries in CoffeeScript</h2>
+<h2 id="using-the-rails-console"><a class="anchor" aria-hidden="true" href="#using-the-rails-console"></a>Using the rails console</h2>
+<h2 id="using-the-riak-console"><a class="anchor" aria-hidden="true" href="#using-the-riak-console"></a>Using the Riak Console</h2>
+<h2 id="what-else-does-railscasts-mongoid-cover"><a class="anchor" aria-hidden="true" href="#what-else-does-railscasts-mongoid-cover"></a>What else does RailsCasts Mongoid cover?</h2>
+
+  <p class="post-tags">Tags: <a title="All pages tagged 'riak'." href="/tags/riak/index.html" rel="tag">riak</a>, <a title="All pages tagged 'ruby'." href="/tags/ruby/index.html" rel="tag">ruby</a>, <a title="All pages tagged 'nosql'." href="/tags/nosql/index.html" rel="tag">nosql</a></p>
 </div>
-
-
-        <div class="container content">
+<div class="container content">
           <small>Copyright © Tim McGilchrist 2007-2026</small>
           <br>
-          <small>Powered by <a href="https://github.com/tmcgilchrist/lambdafoo.com">Hakyll</a></small>
+          <small>Powered by <a href="https://github.com/xhtmlboi/yocaml">YOCaml</a></small>
         </div>
       </div>
     </div>

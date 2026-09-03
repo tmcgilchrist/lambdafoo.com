@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
   <head>
@@ -10,40 +11,28 @@
   <!-- Enable responsiveness on mobile devices-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-  <title>
-      
-        Why do frame pointers matter for OCaml? &middot; Perpetually Curious
-      
-  </title>
+  <title>Why do frame pointers matter for OCaml? &middot; Perpetually Curious</title>
 
   <!-- CSS -->
-  <link rel="stylesheet" href="../css/poole.css">
-  <link rel="stylesheet" href="../css/syntax.css">
-  <link rel="stylesheet" href="../css/lanyon.css">
-  <link rel="stylesheet" href="../css/book.css">
+  <link rel="stylesheet" href="/css/poole.css">
+  <link rel="stylesheet" href="/css/syntax.css">
+  <link rel="stylesheet" href="/css/syntax-tm.css">
+  <link rel="stylesheet" href="/css/lanyon.css">
+  <link rel="stylesheet" href="/css/book.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
 
   <!-- Icons -->
-  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-precomposed.png">
-  <link rel="shortcut icon" href="../images/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/images/favicon.ico">
 
   <!-- RSS -->
-  <link rel="alternate" type="application/rss+xml" title="RSS" href="../atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
 
-  <!-- Google Analytics -->
-  <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-28532776-1', 'auto');
-    ga('send', 'pageview');
-  </script>
-<!-- End Google Analytics -->
+  <!-- Analytics -->
+  <script data-goatcounter="https://lambdafoo.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
   <a rel="me" hidden="true" href="https://hachyderm.io/@tsmc">Mastodon</a>
 </head>
-
 
   <body class="sidebar-overlay">
 
@@ -55,15 +44,15 @@
 <div class="sidebar" id="sidebar">
 
   <div class="sidebar-item">
-    <p><a href="../"><strong>Tim McGilchrist</strong></a></p>
+    <p><a href="/"><strong>Tim McGilchrist</strong></a></p>
   </div>
 
   <nav class="sidebar-nav">
-    <a class="sidebar-nav-item" href="../">Blog</a>
-    <a class="sidebar-nav-item" href="../pages/about.html">About</a>
-    <a class="sidebar-nav-item" href="../pages/talks.html">Talks</a>
-    <a class="sidebar-nav-item" href="../pages/server-room.html">Server Room</a>
-    <a class="sidebar-nav-item" href="../archive.html">Archive</a>
+    <a class="sidebar-nav-item" href="/">Blog</a>
+    <a class="sidebar-nav-item" href="/pages/about.html">About</a>
+    <a class="sidebar-nav-item" href="/pages/talks.html">Talks</a>
+    <a class="sidebar-nav-item" href="/pages/server-room.html">Server Room</a>
+    <a class="sidebar-nav-item" href="/archive.html">Archive</a>
   </nav>
 
   <div class="sidebar-item">
@@ -72,8 +61,8 @@
       <a href="https://bsky.app/profile/tsmc.purely-functional.com">Bluesky</a>
     </p>
     <p>
-      <a href="../rss.xml">RSS</a> ·
-      <a href="../atom.xml">Atom</a>
+      <a href="/rss.xml">RSS</a> ·
+      <a href="/atom.xml">Atom</a>
     </p>
     <p>
       &copy; Tim McGilchrist 2007-2026
@@ -81,97 +70,102 @@
   </div>
 </div>
 
-
     <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
          content to avoid any CSS collisions with our real content. -->
     <div class="wrap">
       <div class="masthead">
         <div class="container">
           <h3 class="masthead-title">
-            <a href="../" title="Home">Perpetually Curious</a>
-            
+            <a href="/" title="Home">Perpetually Curious</a>
             <span class="masthead-links">
-              <a href="../pages/about.html">About</a> |
-              <a href="../pages/talks.html">Talks</a> |
-              <a href="../pages/server-room.html">Server Room</a> |
-              <a href="../archive.html">Archive</a>
+              <a href="/pages/about.html">About</a> |
+              <a href="/pages/talks.html">Talks</a> |
+              <a href="/pages/server-room.html">Server Room</a> |
+              <a href="/archive.html">Archive</a>
             </span>
           </h3>
         </div>
       </div>
 
-      <div class="container content">
-        <div class="post">
+      <div class="container content"><div class="post">
   <h1 class="post-title">Why do frame pointers matter for OCaml?</h1>
-  <span class="post-date">February 24, 2025</span>
-  <p>At the end of last year at Tarides, my colleagues and I worked on improving frame pointer support in OCaml. While pitching the work internally, someone asked: <strong>Why do frame pointers matter for OCaml?</strong> Here’s the answer I gave.</p>
-<p>Frame pointers give us a reliable way to profile OCaml programs using standard tools like perf and eBPF. Instead of building OCaml-specific profiling solutions, we can reuse what already exists. Instruments on macOS, the whole ecosystem of eBPF tools on Linux. That’s a big win for a smaller community like OCaml’s. Targeting all Tier-1 supported platforms (AMD64, ARM64, RISC-V, s390x and Power) would give a consistent experience across them all, it’s embarrassing to omit a platform when listing features. As a bonus, frame pointers help debuggers when DWARF information is missing, providing a last resort option.</p>
-<h1 id="what-are-frame-pointers">What are Frame Pointers?</h1>
+  <span class="post-date">February 24, 2025</span><p>At the end of last year at Tarides, my colleagues and I worked on improving frame pointer support in OCaml. While pitching the work internally, someone asked: <strong>Why do frame pointers matter for OCaml?</strong> Here's the answer I gave.</p>
+<p>Frame pointers give us a reliable way to profile OCaml programs using standard tools like perf and eBPF. Instead of building OCaml-specific profiling solutions, we can reuse what already exists. Instruments on macOS, the whole ecosystem of eBPF tools on Linux. That's a big win for a smaller community like OCaml's. Targeting all Tier-1 supported platforms (AMD64, ARM64, RISC-V, s390x and Power) would give a consistent experience across them all, it's embarrassing to omit a platform when listing features. As a bonus, frame pointers help debuggers when DWARF information is missing, providing a last resort option.</p>
+<h1 id="what-are-frame-pointers"><a class="anchor" aria-hidden="true" href="#what-are-frame-pointers"></a>What are Frame Pointers?</h1>
 <p>The frame pointer is a register (<code>%rbp</code> on AMD64 or <code>x29</code> on ARM64) that points to the base of the current stack frame. The stack frame (also known as the activation frame or the activation record) refers to the portion of the stack allocated to a single function call. This is where a function will save registers to or use for storage while performing work. By saving the frame pointer along with the return address, the call stack for OCaml can be calculated in a process called unwinding. As an example ARM64 call stack looks like this (note that the stack grows downwards to lower addresses):</p>
-<pre class="assembly"><code>          Stack                        Instruction Text
-   ┌────────────────────┐            ┌────────────────────┐
-   │Return Address (x30)┼───────────►│ ancestor function  │
-┌─►│Saved Frame Pointer │            │                    │
-│  ┼────────────────────┼            │                    │
-│  │Local allocations   │     ┌─────►│ parent function    │
-│  │                    │     │      │                    │
-│  ├────────────────────┤     │      │                    │
-│  │Return Address (x30)├─────┼─────►│ grand-parent func  │
-└──┤Saved Frame Pointer │     │      │                    │
-┌─►┼────────────────────┼     │      │                    │
-│  │Local allocations   │     │   ┌─►│ current function   │
-│  │                    │     │   │  │                    │
-│  ├────────────────────┤     │   │  └────────────────────┘
-│  │Return Address (x30)├─────┘   │
-└──┤Saved Frame Pointer │         │
-   ┼────────────────────┼◄──┐     │      Registers
-   │Local allocations   │   │     │ ┌──────────────────────┐
-   │                    │   └─────┼─┤ x29 - frame pointer  │
-   └────────────────────┘◄──┐     │ │ x30 - link register  │
-                            └─────┼─┤ sp  - stack pointer  │
-                                  └─┼ pc  - program counter│
-                                    └──────────────────────┘</code></pre>
+<pre><code><span class='assembly-source'>          Stack                        Instruction Text
+</span><span class='assembly-source'>   ┌────────────────────┐            ┌────────────────────┐
+</span><span class='assembly-source'>   │Return Address (</span><span class='assembly-support-type-register'>x30</span><span class='assembly-source'>)┼───────────►│ ancestor function  │
+</span><span class='assembly-source'>┌─►│Saved Frame Pointer │            │                    │
+</span><span class='assembly-source'>│  ┼────────────────────┼            │                    │
+</span><span class='assembly-source'>│  │Local allocations   │     ┌─────►│ parent function    │
+</span><span class='assembly-source'>│  │                    │     │      │                    │
+</span><span class='assembly-source'>│  ├────────────────────┤     │      │                    │
+</span><span class='assembly-source'>│  │Return Address (</span><span class='assembly-support-type-register'>x30</span><span class='assembly-source'>)├─────┼─────►│ grand-parent func  │
+</span><span class='assembly-source'>└──┤Saved Frame Pointer │     │      │                    │
+</span><span class='assembly-source'>┌─►┼────────────────────┼     │      │                    │
+</span><span class='assembly-source'>│  │Local allocations   │     │   ┌─►│ current function   │
+</span><span class='assembly-source'>│  │                    │     │   │  │                    │
+</span><span class='assembly-source'>│  ├────────────────────┤     │   │  └────────────────────┘
+</span><span class='assembly-source'>│  │Return Address (</span><span class='assembly-support-type-register'>x30</span><span class='assembly-source'>)├─────┘   │
+</span><span class='assembly-source'>└──┤Saved Frame Pointer │         │
+</span><span class='assembly-source'>   ┼────────────────────┼◄──┐     │      Registers
+</span><span class='assembly-source'>   │Local allocations   │   │     │ ┌──────────────────────┐
+</span><span class='assembly-source'>   │                    │   └─────┼─┤ </span><span class='assembly-support-type-register'>x29</span><span class='assembly-source'> - frame pointer  │
+</span><span class='assembly-source'>   └────────────────────┘◄──┐     │ │ </span><span class='assembly-support-type-register'>x30</span><span class='assembly-source'> - link register  │
+</span><span class='assembly-source'>                            └─────┼─┤ </span><span class='assembly-support-type-register'>sp</span><span class='assembly-source'>  - stack pointer  │
+</span><span class='assembly-source'>                                  └─┼ </span><span class='assembly-support-type-register'>pc</span><span class='assembly-source'>  - program counter│
+</span><span class='assembly-source'>                                    └──────────────────────┘
+</span></code></pre>
 <p>More specifically, frame pointers can be used by profilers to unwind the stack in a language agnostic way. Many languages like C/C++, Rust, and Erlang support maintaining frame pointers.</p>
-<h1 id="return-of-the-frame-pointers">Return of the Frame Pointers</h1>
+<h1 id="return-of-the-frame-pointers"><a class="anchor" aria-hidden="true" href="#return-of-the-frame-pointers"></a>Return of the Frame Pointers</h1>
 <p>We started with the ambitious goal of adding frame pointer support to all the Tier-1 platforms supported by OCaml. That included the popular AMD64 and ARM64 platforms that cover most users, and less common platforms like RISC-V, Power and s390x.</p>
-<p>The specific focus was to address the recognised limitations of perf when used with OCaml 5 programs (<a href="https://github.com/ocaml/ocaml/issues/12563">#12563</a>). OCaml 5 (aka multicore) introduced non-contiguous stacks as part of the implementation of effects (see the PLDI 2021 paper on <a href="https://kcsrk.info/papers/retro-concurrency_pldi_21.pdf">retrofitting effect handlers – Section 5.5</a>). At a high level, these stacks are stored in memory allocated by the runtime and not on the stack as would happen with C/C++. These non-contiguous stacks are essentially unknown to perf and will not work correctly with the copying nature of perf, it will copy the wrong things. So traces produced for OCaml 5 will appear truncated or contain incorrect values. This same problem occurs if you use DWARF call graphs, in particular perf will copy a chunk of the stack without decoding it via DWARF and for OCaml 5 onwards what it copies might not be stack. So the best solution is frame pointers.</p>
+<p>The specific focus was to address the recognised limitations of perf when used with OCaml 5 programs (<a href="https://github.com/ocaml/ocaml/issues/12563">#12563</a>). OCaml 5 (aka multicore) introduced non-contiguous stacks as part of the implementation of effects (see the PLDI 2021 paper on <a href="https://kcsrk.info/papers/retro-concurrency_pldi_21.pdf">retrofitting effect handlers -- Section 5.5</a>). At a high level, these stacks are stored in memory allocated by the runtime and not on the stack as would happen with C/C++. These non-contiguous stacks are essentially unknown to perf and will not work correctly with the copying nature of perf, it will copy the wrong things. So traces produced for OCaml 5 will appear truncated or contain incorrect values. This same problem occurs if you use DWARF call graphs, in particular perf will copy a chunk of the stack without decoding it via DWARF and for OCaml 5 onwards what it copies might not be stack. So the best solution is frame pointers.</p>
 <p>We started by looking at <a href="https://github.com/ocaml/ocaml/pull/11144">#11144</a> which restored frame pointer support for AMD64 after the OCaml 5.0 release. It was clear that adding frame pointers required changes to both the backend assembly code generation and the OCaml runtime, and that the general design should follow the existing AMD64 approach. With that understanding the first step was to extend the <code>--enable-frame-pointers</code> autoconf file to allow configuring the compiler on macOS which only required a one line change of <code>[x86_64-*-linux*|x86_64-*-darwin*],</code> to recognise the new platform (more <a href="https://github.com/tmcgilchrist/ocaml/blob/c1eec79948f699f2c9d8425c61bcc29553243bf1/configure.ac#L2458-L2472">context</a>).</p>
 <p>Now, that allowed configuring the compiler with <code>./configure --enable-frame-pointers</code> and since the work had already been done to codegen and runtime, we only needed to test the changes on AMD64 macOS.</p>
 <p>The next platform we chose was ARM64, because it is a common platform for cloud vendors with most offering a Linux ARM64 option and all new Apple laptops come with an ARM64 CPU (aka Apple Silicon). Getting ARM64 working seemed like it would have the most impact, both for OCaml deployments and for local development where Apple laptops are quite common. Implementing again starting with a simple change to add new Linux and macOS cases to autoconf <code>[x86_64-*-linux*|x86_64-*-darwin*|aarch64-*-linux*|aarch64-*-darwin*],</code>. This exposes a configuration flag <code>Config.with_frame_pointers</code> that we can query when implementing the assembly code generation.</p>
-<p>The assembly generation code is in the <code>asmcomp</code> directory of the <a href="https://github.com/ocaml/ocaml">OCaml sources</a>, the common code is in that directory and each platform supported has a sub-directory for it e.g. <code>asmcomp/arm64</code> for ARM64. Conceptually the changes required a modification to the calling convention for OCaml code to only use <code>x29</code> as a frame pointer (previously it was considered as a general purpose register), a second change to the calculation of stack frame sizes to allow for an extra register save, and finally emitting the correct assembly to save/restore <code>x29</code>.</p>
+<p>The assembly generation code is in the <code>asmcomp</code> directory of the <a href="https://github.com/ocaml/ocaml">OCaml sources</a>, the common code is in that directory and each platform supported has a sub-directory for it e.g. <code>asmcomp/arm64</code> for ARM64. Conceptually the changes required a modification to the calling convention for OCaml code to only use <code>x29</code> as a frame pointer (previously it was considered as a general purpose register), a second change to the calculation of stack frame sizes to allow for an extra register save, and finally emitting the correct assembly to save/restore <code>x29</code>.</p>
 <p>The end result is that frame pointer save and restore is implemented using <code>stp</code> and <code>ldp</code> instructions plus an extra <code>add</code> instruction for updating <code>x29</code>. This results in an extra <code>add</code> plus saving an extra register for functions allocating a stack frame. In assembly this looks like:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode asm"><code class="sourceCode fasm"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">;; function prologue</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>	stp	x29<span class="op">,</span> x30<span class="op">,</span> <span class="op">[</span><span class="kw">sp</span><span class="op">,</span> <span class="op">#-</span><span class="dv">16</span><span class="op">]</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>	<span class="bu">sub</span>	<span class="kw">sp</span><span class="op">,</span> <span class="kw">sp</span><span class="op">,</span> <span class="op">#</span><span class="dv">16</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>	<span class="bu">add</span>	x29<span class="op">,</span>  <span class="kw">sp</span><span class="op">,</span> <span class="op">#</span><span class="dv">0</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">;; function epilogue</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>	<span class="bu">add</span>	<span class="kw">sp</span><span class="op">,</span> <span class="kw">sp</span><span class="op">,</span> <span class="op">#</span><span class="dv">16</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>	ldp	x29<span class="op">,</span> x30<span class="op">,</span> <span class="op">[</span><span class="kw">sp</span><span class="op">,</span> <span class="op">#-</span><span class="dv">16</span><span class="op">]</span></span></code></pre></div>
-<p>Whereas previously the store and load would just operate on the <code>x30</code> the link register. The overhead is quite minimal. The compiler already maintained the <code>x29</code> register when calling into C and when using TSan. Plus there is minimal extra stack space usage, as we needed to be quad word aligned anyway, so the <code>x29</code> register is going into an already allocated space on the stack. I’m happy with how this turned out.</p>
-<p>It’s interesting to note that the <a href="https://developer.apple.com/documentation/xcode/writing-arm64-code-for-apple-platforms">ABI on macOS</a> requires maintaining frame pointers, and certain popular Linux distributions like <a href="https://ubuntu.com/blog/ubuntu-performance-engineering-with-frame-pointers-by-default">Ubuntu</a>, <a href="https://pagure.io/fesco/issue/2923">Fedora</a> and <a href="https://gitlab.archlinux.org/archlinux/rfcs/-/merge_requests/26">Arch</a> are reenabling frame pointers in recent distributions. So I expect the impact on usability will be high and the runtime overhead quite low.</p>
-<h1 id="what-we-achieved-and-whats-left">What we achieved and what’s left?</h1>
+<pre><code><span class='asm-comment-line-semicolon'>;; function prologue</span><span class='asm-source'>
+</span><span class='asm-keyword-control-mnemonic'>	stp</span><span class='asm-source'>	</span><span class='asm-support-type-register'>x29</span><span class='asm-source'>, </span><span class='asm-support-type-register'>x30</span><span class='asm-source'>, [</span><span class='asm-support-type-register'>sp</span><span class='asm-source'>, </span><span class='asm-constant-numeric'>#-16</span><span class='asm-source'>]
+</span><span class='asm-keyword-control-mnemonic'>	sub</span><span class='asm-source'>	</span><span class='asm-support-type-register'>sp</span><span class='asm-source'>, </span><span class='asm-support-type-register'>sp</span><span class='asm-source'>, </span><span class='asm-constant-numeric'>#16</span><span class='asm-source'>
+</span><span class='asm-keyword-control-mnemonic'>	add</span><span class='asm-source'>	</span><span class='asm-support-type-register'>x29</span><span class='asm-source'>,  </span><span class='asm-support-type-register'>sp</span><span class='asm-source'>, </span><span class='asm-constant-numeric'>#0</span><span class='asm-source'>
+</span><span class='asm-source'>
+</span><span class='asm-comment-line-semicolon'>;; function epilogue</span><span class='asm-source'>
+</span><span class='asm-keyword-control-mnemonic'>	add</span><span class='asm-source'>	</span><span class='asm-support-type-register'>sp</span><span class='asm-source'>, </span><span class='asm-support-type-register'>sp</span><span class='asm-source'>, </span><span class='asm-constant-numeric'>#16</span><span class='asm-source'>
+</span><span class='asm-keyword-control-mnemonic'>	ldp</span><span class='asm-source'>	</span><span class='asm-support-type-register'>x29</span><span class='asm-source'>, </span><span class='asm-support-type-register'>x30</span><span class='asm-source'>, [</span><span class='asm-support-type-register'>sp</span><span class='asm-source'>, </span><span class='asm-constant-numeric'>#-16</span><span class='asm-source'>]
+</span></code></pre>
+<p>Whereas previously the store and load would just operate on the <code>x30</code> the link register. The overhead is quite minimal. The compiler already maintained the <code>x29</code> register when calling into C and when using TSan. Plus there is minimal extra stack space usage, as we needed to be quad word aligned anyway, so the <code>x29</code> register is going into an already allocated space on the stack. I'm happy with how this turned out.</p>
+<p>It's interesting to note that the <a href="https://developer.apple.com/documentation/xcode/writing-arm64-code-for-apple-platforms">ABI on macOS</a> requires maintaining frame pointers, and certain popular Linux distributions like <a href="https://ubuntu.com/blog/ubuntu-performance-engineering-with-frame-pointers-by-default">Ubuntu</a>, <a href="https://pagure.io/fesco/issue/2923">Fedora</a> and <a href="https://gitlab.archlinux.org/archlinux/rfcs/-/merge_requests/26">Arch</a> are reenabling frame pointers in recent distributions. So I expect the impact on usability will be high and the runtime overhead quite low.</p>
+<h1 id="what-we-achieved-and-whats-left"><a class="anchor" aria-hidden="true" href="#what-we-achieved-and-whats-left"></a>What we achieved and what's left?</h1>
 <p>The short version is that frame pointers are now available for the two most popular Unix platforms (AMD64 and ARM64), that covers most deployments of OCaml and many OCaml developers. The work is split across these PRs:</p>
 <ul>
-<li><p><a href="https://github.com/ocaml/ocaml/pull/13163">#13163</a>: Enabled frame pointers on macOS x86_64 worked with some minor autoconf changes to correctly detect macOS and updating the tests to remove Linux specific backtrace formatting. Available in OCaml 5.3.</p></li>
-<li><p><a href="https://github.com/ocaml/ocaml/pull/13500">#13500</a>: Added frame pointers support for ARM64 on Linux and macOS. This will be released in OCaml 5.4.</p></li>
-<li><p><a href="https://github.com/ocaml/ocaml/pull/13595">#13595</a>: Fixed a bug introduced in #13050 where the wrong Canonical Frame Address (CFA) register was used for calls from OCaml into non-allocating C code. This appeared as incorrect backtraces in debuggers like GDB when setting a breakpoint inside the C code.</p></li>
-<li><p><a href="https://github.com/ocaml/ocaml/issues/13575">#13575</a>, <a href="https://github.com/ocaml/ocaml/pull/13635">#13635</a>: Maintain OCaml frame pointers correctly even when using C libraries that do not support them, allowing mixing OCaml code with frame pointers with an operating system environment that might not have them.</p></li>
-<li><p><a href="https://github.com/ocaml/ocaml/pull/13751/">#13751</a>: Proposes a new section for the OCaml manual detailing how to use frame pointers with Linux perf highlighting what works and what does not work (DWARF stack unwinding). Hopefully this will get merged soon and close the documentation gap for using perf reliably with OCaml programs. Should be available in OCaml 5.4.</p></li>
+<li>
+<p><a href="https://github.com/ocaml/ocaml/pull/13163">#13163</a>: Enabled frame pointers on macOS x86_64 worked with some minor autoconf changes to correctly detect macOS and updating the tests to remove Linux specific backtrace formatting. Available in OCaml 5.3.</p>
+</li>
+<li>
+<p><a href="https://github.com/ocaml/ocaml/pull/13500">#13500</a>: Added frame pointers support for ARM64 on Linux and macOS. This will be released in OCaml 5.4.</p>
+</li>
+<li>
+<p><a href="https://github.com/ocaml/ocaml/pull/13595">#13595</a>: Fixed a bug introduced in #13050 where the wrong Canonical Frame Address (CFA) register was used for calls from OCaml into non-allocating C code. This appeared as incorrect backtraces in debuggers like GDB when setting a breakpoint inside the C code.</p>
+</li>
+<li>
+<p><a href="https://github.com/ocaml/ocaml/issues/13575">#13575</a>, <a href="https://github.com/ocaml/ocaml/pull/13635">#13635</a>: Maintain OCaml frame pointers correctly even when using C libraries that do not support them, allowing mixing OCaml code with frame pointers with an operating system environment that might not have them.</p>
+</li>
+<li>
+<p><a href="https://github.com/ocaml/ocaml/pull/13751/">#13751</a>: Proposes a new section for the OCaml manual detailing how to use frame pointers with Linux perf highlighting what works and what does not work (DWARF stack unwinding). Hopefully this will get merged soon and close the documentation gap for using perf reliably with OCaml programs. Should be available in OCaml 5.4.</p>
+</li>
 </ul>
-<p>The original target of all Tier-1 platforms was an ambitious one. Unfortunately, we didn’t manage to finish everything. The work for adding RISC-V frame pointer support was started but needs further work. The work in progress is available at <a href="https://github.com/tmcgilchrist/ocaml/pull/22">tmcgilchrist/ocaml#22</a>. The work on <a href="https://github.com/tmcgilchrist/ocaml/pull/24">s390x</a> and Power didn’t get much further than diagramming stack frames and reading ABI documents. In particular the Power backend is also missing CFI support which makes debugging very difficult and really needs to be added first before tackling frame pointer support. Essentially you don’t even have a working debugger while debugging any problems with your frame pointer changes.</p>
-<p>Next steps are finding time or help with finishing off the remaining platforms, starting with RISC-V. If you’d like to help please get in touch. Then doing some comprehensive benchmarking for the ARM64 platform, my intuition is there is negligible overhead when adding frame pointers since it uses a load/store pair instruction, but firm results would be better.</p>
-<p>If you’ve made it this far, thanks for reading.</p>
-  
-  <p class="post-tags">Tags: <a title="All pages tagged 'ocaml'." href="../tags/ocaml/index.html" rel="tag">ocaml</a></p>
-  
+<p>The original target of all Tier-1 platforms was an ambitious one. Unfortunately, we didn't manage to finish everything. The work for adding RISC-V frame pointer support was started but needs further work. The work in progress is available at <a href="https://github.com/tmcgilchrist/ocaml/pull/22">tmcgilchrist/ocaml#22</a>. The work on <a href="https://github.com/tmcgilchrist/ocaml/pull/24">s390x</a> and Power didn't get much further than diagramming stack frames and reading ABI documents. In particular the Power backend is also missing CFI support which makes debugging very difficult and really needs to be added first before tackling frame pointer support. Essentially you don't even have a working debugger while debugging any problems with your frame pointer changes.</p>
+<p>Next steps are finding time or help with finishing off the remaining platforms, starting with RISC-V. If you'd like to help please get in touch. Then doing some comprehensive benchmarking for the ARM64 platform, my intuition is there is negligible overhead when adding frame pointers since it uses a load/store pair instruction, but firm results would be better.</p>
+<p>If you've made it this far, thanks for reading.</p>
+
+  <p class="post-tags">Tags: <a title="All pages tagged 'ocaml'." href="/tags/ocaml/index.html" rel="tag">ocaml</a></p>
 </div>
-
-
-        <div class="container content">
+<div class="container content">
           <small>Copyright © Tim McGilchrist 2007-2026</small>
           <br>
-          <small>Powered by <a href="https://github.com/tmcgilchrist/lambdafoo.com">Hakyll</a></small>
+          <small>Powered by <a href="https://github.com/xhtmlboi/yocaml">YOCaml</a></small>
         </div>
       </div>
     </div>

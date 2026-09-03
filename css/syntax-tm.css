@@ -1,0 +1,45 @@
+/* Syntax highlighting for hilite / TextMate output.
+ *
+ * hilite names each span "<lang>-<textmate scope minus its last component>",
+ * so `keyword.other.ocaml` becomes `ocaml-keyword-other` and the same scope in
+ * shell becomes `shell-keyword-other`. Matching on a substring keeps one rule
+ * per concept instead of one rule per language.
+ *
+ * A token can carry several scopes, which hilite joins with spaces, so the
+ * attribute holds more than one class. Rules are ordered least to most
+ * specific: equal specificity means the last match wins.
+ *
+ * Colours are taken from css/syntax.css so the two generators look alike.
+ */
+
+pre code span[class*="meta"],
+pre code span[class*="source"],
+pre code span[class*="variable"] { color: inherit; }
+
+pre code span[class*="storage"]       { color: #902000; }
+pre code span[class*="entity-name-type"],
+pre code span[class*="entity-name-class"],
+pre code span[class*="entity-other-inherited-class"],
+pre code span[class*="support-type"],
+pre code span[class*="support-class"] { color: #902000; }
+
+pre code span[class*="constant"]      { color: #40a070; }
+
+pre code span[class*="entity-name-function"],
+pre code span[class*="entity-name-tag"],
+pre code span[class*="support-function"] { color: #06287e; }
+
+pre code span[class*="keyword"]       { color: #007020; font-weight: bold; }
+
+/* Punctuation is left plain, with one exception: better-c-syntax scopes the
+ * `#` of a preprocessor directive away from the keyword after it, so without
+ * this the `#` of `#include` sits uncoloured next to a green `include`. */
+pre code span[class*="punctuation-definition-directive"] {
+  color: #007020; font-weight: bold;
+}
+
+pre code span[class*="string"]        { color: #4070a0; }
+
+pre code span[class*="comment"]       { color: #60a0b0; font-style: italic; }
+
+pre code span[class*="invalid"]       { color: red; font-weight: bold; }
