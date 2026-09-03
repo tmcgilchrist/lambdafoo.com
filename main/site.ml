@@ -1026,26 +1026,10 @@ let publish_draft ~date file =
               true
             end)
 
-let slug_of_title title =
-  let buf = Buffer.create (String.length title) in
-  String.iter
-    (fun c ->
-      if (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') then
-        Buffer.add_char buf c
-      else if c >= 'A' && c <= 'Z' then
-        Buffer.add_char buf (Char.lowercase_ascii c)
-      else if
-        Buffer.length buf > 0 && Buffer.nth buf (Buffer.length buf - 1) <> '-'
-      then Buffer.add_char buf '-')
-    title;
-  let s = Buffer.contents buf in
-  let n = String.length s in
-  if n > 0 && s.[n - 1] = '-' then String.sub s 0 (n - 1) else s
-
 (* Scaffolds drafts/slug.md. The date is left empty and the filename carries no
    prefix: both are settled when the draft moves to posts/. *)
 let new_draft title =
-  let slug = slug_of_title title in
+  let slug = Slug.from title in
   if slug = "" then (
     prerr_endline
       "new-draft: give a title, e.g. dune exec main/site.exe -- new-draft \"On \
