@@ -767,14 +767,14 @@ let all_tags () =
 let process_all () =
   let open Eff in
   let* tags = all_tags () in
-  Action.restore_cache (Target.cache ()) (* TODO Can this use >>> ? *)
-  >>= process_assets () >>= process_posts >>= process_pages
-  >>= Action.batch_list tags process_tag
-  >>= process_index () >>= process_archive () >>= process_sitemap ()
-  >>= process_atom () >>= process_rss () >>= process_redirects
-  >>= (if !include_drafts then process_drafts >=> process_drafts_index ()
-       else Eff.return)
-  >>= Action.store_cache (Target.cache ())
+  Action.with_cache (Target.cache ())
+    (process_assets () >=> process_posts >=> process_pages
+    >=> Action.batch_list tags process_tag
+    >=> process_index () >=> process_archive () >=> process_sitemap ()
+    >=> process_atom () >=> process_rss () >=> process_redirects
+    >=>
+    if !include_drafts then process_drafts >=> process_drafts_index ()
+    else Eff.return)
 
 (* ------------------------------------------------------------------ *)
 (* Draft tooling                                                      *)
