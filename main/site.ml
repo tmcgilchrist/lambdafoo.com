@@ -550,12 +550,10 @@ let process_post file =
     >>> Yocaml_yaml.Pipeline.read_file_with_metadata (Post.readable_for file)
           file
     >>> content_to_html ()
-    >>> Yocaml_jingoo.Pipeline.as_template
+    >>> Pipeline.chain_templates
+          (module Yocaml_jingoo)
           (module Post)
-          (Source.template "post.html")
-    >>> Yocaml_jingoo.Pipeline.as_template
-          (module Post)
-          (Source.template "layout.html"))
+          [ Source.template "post.html"; Source.template "layout.html" ])
 
 let process_posts =
   Action.batch ~only:`Files ~where:is_post Source.posts process_post
@@ -571,12 +569,10 @@ let process_draft file =
           (Post.readable_draft_for file)
           file
     >>> content_to_html ()
-    >>> Yocaml_jingoo.Pipeline.as_template
+    >>> Pipeline.chain_templates
+          (module Yocaml_jingoo)
           (module Post)
-          (Source.template "draft.html")
-    >>> Yocaml_jingoo.Pipeline.as_template
-          (module Post)
-          (Source.template "layout.html"))
+          [ Source.template "draft.html"; Source.template "layout.html" ])
 
 let process_drafts =
   Action.batch ~only:`Files ~where:is_post Source.drafts process_draft
@@ -586,12 +582,10 @@ let process_drafts_index () =
   Action.Static.write_file (Target.drafts_index ())
     (fetch_drafts
     >>| (fun drafts -> ({ Listing.title = "Drafts"; posts = drafts }, ""))
-    >>> Yocaml_jingoo.Pipeline.as_template
+    >>> Pipeline.chain_templates
+          (module Yocaml_jingoo)
           (module Listing)
-          (Source.template "drafts.html")
-    >>> Yocaml_jingoo.Pipeline.as_template
-          (module Listing)
-          (Source.template "layout.html")
+          [ Source.template "drafts.html"; Source.template "layout.html" ]
     >>| snd)
 
 let process_page file =
@@ -602,12 +596,10 @@ let process_page file =
     >>> Yocaml_yaml.Pipeline.read_file_with_metadata (Page.readable_for file)
           file
     >>> content_to_html ()
-    >>> Yocaml_jingoo.Pipeline.as_template
+    >>> Pipeline.chain_templates
+          (module Yocaml_jingoo)
           (module Page)
-          (Source.template "page.html")
-    >>> Yocaml_jingoo.Pipeline.as_template
-          (module Page)
-          (Source.template "layout.html"))
+          [ Source.template "page.html"; Source.template "layout.html" ])
 
 let process_pages =
   Action.batch ~only:`Files ~where:is_md Source.pages process_page
@@ -620,10 +612,10 @@ let write_listing ~target ~template ~title ~limit =
     >>| (fun posts ->
     let posts = match limit with None -> posts | Some n -> take n posts in
     ({ Listing.title; posts }, ""))
-    >>> Yocaml_jingoo.Pipeline.as_template (module Listing) template
-    >>> Yocaml_jingoo.Pipeline.as_template
+    >>> Pipeline.chain_templates
+          (module Yocaml_jingoo)
           (module Listing)
-          (Source.template "layout.html")
+          [ template; Source.template "layout.html" ]
     >>| snd)
 
 let process_archive () =
@@ -639,12 +631,10 @@ let process_index () =
         Metadata.extract_from_content ~strategy:Metadata.jekyll body
       in
       ({ Listing.title = "Home"; posts = take 10 posts }, body))
-    >>> Yocaml_jingoo.Pipeline.as_template
+    >>> Pipeline.chain_templates
+          (module Yocaml_jingoo)
           (module Listing)
-          (Source.template "index.html")
-    >>> Yocaml_jingoo.Pipeline.as_template
-          (module Listing)
-          (Source.template "layout.html")
+          [ Source.template "index.html"; Source.template "layout.html" ]
     >>| snd)
 
 let process_tag tag =
@@ -655,12 +645,10 @@ let process_tag tag =
     >>| (fun posts ->
     let posts = List.filter (fun p -> List.mem tag p.Post.tags) posts in
     ({ Listing.title = Printf.sprintf "Posts tagged \"%s\"" tag; posts }, ""))
-    >>> Yocaml_jingoo.Pipeline.as_template
+    >>> Pipeline.chain_templates
+          (module Yocaml_jingoo)
           (module Listing)
-          (Source.template "tag.html")
-    >>> Yocaml_jingoo.Pipeline.as_template
-          (module Listing)
-          (Source.template "layout.html")
+          [ Source.template "tag.html"; Source.template "layout.html" ]
     >>| snd)
 
 let process_sitemap () =
