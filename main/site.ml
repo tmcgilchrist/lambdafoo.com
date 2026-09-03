@@ -399,9 +399,15 @@ let take n l = List.filteri (fun i _ -> i < n) l
 (* ------------------------------------------------------------------ *)
 (* Markdown, with syntax highlighting                                 *)
 
-let add_name name = function
-  | `Assoc assoc -> `Assoc (("name", `String name) :: assoc)
-  | j -> j
+(* Registers the grammar under [name], replacing whatever name it carries, so
+   the fence label decides which grammar answers. *)
+let with_name name = function
+  | `Assoc fields ->
+      `Assoc (("name", `String name) :: List.remove_assoc "name" fields)
+  | json -> json
+
+let add_grammar tm json =
+  json |> TmLanguage.of_yojson_exn |> TmLanguage.add_grammar tm
 
 (* Registered under the filename, so `erlang.json` answers to ```erlang. `+`
    in the stem gives aliases: `yaml+yml.json` answers to both. *)
@@ -412,22 +418,12 @@ let load_grammar_file tm path =
     |> String.split_on_char '+'
     |> List.filter (fun s -> s <> "")
   in
-  List.iter
-    (fun name ->
-      let named =
-        match json with
-        | `Assoc fields ->
-            `Assoc (("name", `String name) :: List.remove_assoc "name" fields)
-        | other -> other
-      in
-      named |> TmLanguage.of_yojson_exn |> TmLanguage.add_grammar tm)
-    names
+  List.iter (fun name -> json |> with_name name |> add_grammar tm) names
 
 (* Loaded as-is, keeping the grammar's own `name` and `scopeName`. See
    grammars/vendor/README.md. *)
 let load_vendored_grammar_file tm path =
-  Yojson.Basic.from_file path
-  |> TmLanguage.of_yojson_exn |> TmLanguage.add_grammar tm
+  Yojson.Basic.from_file path |> add_grammar tm
 
 (* Registers a grammar under a fence label that differs from its own `name`.
    See grammars/vendor/README.md. *)
@@ -445,13 +441,8 @@ let load_vendored_aliases tm dir =
             | `String file when not (String.starts_with ~prefix:"_" name) -> (
                 let file = Filename.concat dir file in
                 try
-                  match Yojson.Basic.from_file file with
-                  | `Assoc fields ->
-                      `Assoc
-                        (("name", `String name)
-                        :: List.remove_assoc "name" fields)
-                      |> TmLanguage.of_yojson_exn |> TmLanguage.add_grammar tm
-                  | _ -> ()
+                  Yojson.Basic.from_file file
+                  |> with_name name |> add_grammar tm
                 with exn ->
                   Printf.eprintf "warning: alias %s -> %s (%s)\n" name file
                     (Printexc.to_string exn))
@@ -475,8 +466,7 @@ let load_grammar_dir tm load dir =
 
 let grammars =
   let t = TmLanguage.create () in
-  List.iter
-    (fun g -> g |> TmLanguage.of_yojson_exn |> TmLanguage.add_grammar t)
+  List.iter (add_grammar t)
     Hilite.Grammars.
       [
         ocaml;
@@ -484,9 +474,9 @@ let grammars =
         dune;
         opam;
         diff;
-        add_name "shell" shell;
-        add_name "sh" shell;
-        add_name "bash" shell;
+        with_name "shell" shell;
+        with_name "sh" shell;
+        with_name "bash" shell;
       ];
   load_grammar_dir t load_vendored_grammar_file Source.vendored_grammars;
   load_vendored_aliases t Source.vendored_grammars;
