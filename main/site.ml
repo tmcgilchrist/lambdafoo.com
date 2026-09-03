@@ -507,15 +507,17 @@ let visible p = not (is_hidden p)
 let rec copy_tree ~into source cache =
   let open Eff in
   let* entries = read_directory ~on:`Source ~only:`Both ~where:visible source in
+  (* Each entry is an action, so composing them threads the cache for us. *)
+  let copy entry cache =
+    let* file = is_file ~on:`Source entry in
+    if file then Action.copy_file ~into entry cache
+    else
+      let name = Option.value ~default:"" (Path.basename entry) in
+      copy_tree ~into:Path.(into / name) entry cache
+  in
   Stdlib.List.fold_left
-    (fun acc entry ->
-      let* cache = acc in
-      let* file = is_file ~on:`Source entry in
-      if file then Action.copy_file ~into entry cache
-      else
-        let name = Option.value ~default:"" (Path.basename entry) in
-        copy_tree ~into:Path.(into / name) entry cache)
-    (return cache) entries
+    (fun acc entry -> acc >=> copy entry)
+    return entries cache
 
 let copy_flat ~into source =
   Action.batch ~only:`Files ~where:visible source (Action.copy_file ~into)
@@ -750,19 +752,18 @@ let all_tags () =
   let* files =
     read_directory ~on:`Source ~only:`Files ~where:is_post Source.posts
   in
-  let rec collect acc = function
-    | [] ->
-        return
-          (acc |> Stdlib.List.concat |> Stdlib.List.sort_uniq String.compare)
-    | file :: rest ->
-        let* metadata, _ =
+  let+ tags =
+    List.traverse
+      (fun file ->
+        let+ metadata, _ =
           read_file_with_metadata
             (module Yocaml_yaml)
             (Post.readable_for file) ~on:`Source file
         in
-        collect (metadata.Post.tags :: acc) rest
+        metadata.Post.tags)
+      files
   in
-  collect [] files
+  tags |> Stdlib.List.concat |> Stdlib.List.sort_uniq String.compare
 
 let process_all () =
   let open Eff in
