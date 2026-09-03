@@ -834,49 +834,43 @@ let process_all () =
 (* ------------------------------------------------------------------ *)
 (* Draft tooling                                                      *)
 
-let read_lines path =
-  let ic = open_in path in
-  let rec loop acc =
-    match input_line ic with
-    | exception End_of_file ->
-        close_in ic;
-        List.rev acc
-    | line -> loop (line :: acc)
-  in
-  loop []
+let read_file path =
+  let ic = open_in_bin path in
+  let content = really_input_string ic (in_channel_length ic) in
+  close_in ic;
+  content
 
-(* The block between the first two `---` lines, or None if there is none. *)
-let front_matter lines =
-  match lines with
-  | first :: rest when String.trim first = "---" ->
-      let rec take acc = function
-        | [] -> None (* unterminated *)
-        | line :: _ when String.trim line = "---" -> Some (List.rev acc)
-        | line :: tl -> take (line :: acc) tl
-      in
-      take [] rest
-  | _ -> None
+(* Splits the `---` delimited header from the body. The header is returned
+   unparsed, since [publish_draft] rewrites it a line at a time. *)
+let split_front_matter content =
+  Metadata.extract_from_content ~strategy:Metadata.jekyll content
+
+(* The header as data, or [None] if the YAML does not parse. *)
+let parse_front_matter raw =
+  Yocaml_yaml.from_string raw
+  |> Result.to_option
+  |> Option.map Yocaml_yaml.normalize
 
 (* [has_field] is key present, [field] is key present with a value. A draft may
    leave `date:` and `tags:` empty, so the two are not the same question. *)
-let has_field name lines =
-  let prefix = name ^ ":" in
-  let n = String.length prefix in
-  List.exists
-    (fun line -> String.length line >= n && String.sub line 0 n = prefix)
-    lines
+let has_field name = function
+  | Data.Record fields -> List.mem_assoc name fields
+  | _ -> false
 
-let field name lines =
-  let prefix = name ^ ":" in
-  let n = String.length prefix in
-  List.find_map
-    (fun line ->
-      if String.length line >= n && String.sub line 0 n = prefix then
-        match String.trim (String.sub line n (String.length line - n)) with
-        | "" -> None
-        | v -> Some v
-      else None)
-    lines
+(* Any value that is not null or blank counts, so `tags:` reads as set whether
+   it is written as a flow list, a block list, or a bare string. *)
+let field name = function
+  | Data.Record fields -> (
+      match List.assoc_opt name fields with
+      | None | Some Data.Null -> None
+      | Some (Data.String s) when String.trim s = "" -> None
+      | Some value -> Some value)
+  | _ -> None
+
+let string_field name data =
+  match field name data with
+  | Some (Data.String s) -> Some (String.trim s)
+  | _ -> None
 
 let markdown_files dir =
   let path = Path.to_string dir in
@@ -905,17 +899,18 @@ let check_drafts only =
   let blocked = ref 0 and untagged = ref 0 and odd_date = ref 0 in
   let report file =
     let path = Filename.concat (Path.to_string Source.drafts) file in
-    let lines = read_lines path in
+    let raw, _ = split_front_matter (read_file path) in
     let blockers = ref [] in
     let block s = blockers := s :: !blockers in
     let notes = ref [] in
-    (match front_matter lines with
+    (match Option.map parse_front_matter raw with
     | None -> block "no front matter"
-    | Some fm ->
+    | Some None -> block "front matter is not valid YAML"
+    | Some (Some fm) ->
         if field "title" fm = None then block "no title:";
         if not (has_field "date" fm) then block "no date: field";
         if not (has_field "tags" fm) then block "no tags: field";
-        (match field "date" fm with
+        (match string_field "date" fm with
         | Some d
           when Result.is_error (Archetype.Datetime.validate (Data.string d)) ->
             incr odd_date;
@@ -973,10 +968,11 @@ let publish_draft ~date file =
   in
   if not (Sys.file_exists src) then fail "no such draft: %s" file
   else
-    let lines = read_lines src in
-    match front_matter lines with
+    let raw, body = split_front_matter (read_file src) in
+    match Option.map (fun raw -> (raw, parse_front_matter raw)) raw with
     | None -> fail "%s has no front matter" file
-    | Some fm -> (
+    | Some (_, None) -> fail "%s has front matter that is not valid YAML" file
+    | Some (raw, Some fm) -> (
         (* A post needs all three. A draft may leave date and tags empty, so
            this is where that has to be made good. *)
         let missing =
@@ -986,7 +982,7 @@ let publish_draft ~date file =
           match date with
           | Some d -> Some d
           | None -> (
-              match field "date" fm with
+              match string_field "date" fm with
               | Some d when String.length d >= 10 -> Some (String.sub d 0 10)
               | _ -> Some (today ()))
         in
@@ -1011,24 +1007,18 @@ let publish_draft ~date file =
             in
             if Sys.file_exists dst then fail "%s already exists" dst
             else begin
-              let fm =
-                List.map
-                  (fun l ->
+              (* Line surgery rather than re-serialising the parsed data,
+                 which would reformat the header and drop its comments. *)
+              let header =
+                raw |> String.split_on_char '\n'
+                |> List.map (fun l ->
                     if String.length l >= 5 && String.sub l 0 5 = "date:" then
                       "date: " ^ date
                     else l)
-                  fm
+                |> String.concat "\n"
               in
-              let body =
-                let rec drop n = function
-                  | l :: tl when n > 0 || String.trim l <> "---" ->
-                      drop (n - 1) tl
-                  | rest -> rest
-                in
-                drop 1 lines
-              in
-              let oc = open_out dst in
-              output_string oc (String.concat "\n" (("---" :: fm) @ body));
+              let oc = open_out_bin dst in
+              output_string oc ("---\n" ^ header ^ "---\n" ^ body);
               close_out oc;
               (* Only now is it safe to drop the draft. *)
               if Sys.file_exists dst then Sys.remove src;
