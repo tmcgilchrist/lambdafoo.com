@@ -19,6 +19,7 @@
   <link rel="stylesheet" href="/css/syntax-tm.css">
   <link rel="stylesheet" href="/css/lanyon.css">
   <link rel="stylesheet" href="/css/book.css">
+  <link rel="stylesheet" href="/css/dark.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
 
   <!-- Icons -->
@@ -27,6 +28,21 @@
 
   <!-- RSS -->
   <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  <!-- Theme. Runs before first paint so the page never flashes the wrong one.
+       Follows the OS preference until the visitor picks a side with the
+       toggle, which is then remembered. -->
+  <script>
+    (function () {
+      var theme;
+      try { theme = localStorage.getItem('theme'); } catch (e) {}
+      if (theme !== 'light' && theme !== 'dark') {
+        theme = window.matchMedia('(prefers-color-scheme: dark)').matches
+          ? 'dark' : 'light';
+      }
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
 
   <!-- Analytics -->
   <script data-goatcounter="https://lambdafoo.goatcounter.com/count"
@@ -48,8 +64,8 @@
   </div>
 
   <nav class="sidebar-nav">
-    <a class="sidebar-nav-item" href="/">Blog</a>
     <a class="sidebar-nav-item" href="/pages/about.html">About</a>
+    <a class="sidebar-nav-item" href="/">Blog</a>
     <a class="sidebar-nav-item" href="/pages/talks.html">Talks</a>
     <a class="sidebar-nav-item" href="/pages/server-room.html">Server Room</a>
     <a class="sidebar-nav-item" href="/archive.html">Archive</a>
@@ -245,6 +261,12 @@ packages.</p>
 
     <label for="sidebar-checkbox" class="sidebar-toggle"></label>
 
+    <!-- After .wrap, like the sidebar toggle above. .wrap is positioned with
+         z-index auto, so anything before it in the document is painted over
+         and stops receiving clicks. -->
+    <button type="button" class="theme-toggle" title="Toggle dark mode"
+            aria-label="Toggle dark mode"></button>
+
     <script>
       (function(document) {
         var toggle = document.querySelector('.sidebar-toggle');
@@ -261,6 +283,32 @@ packages.</p>
           checkbox.checked = false;
         }, false);
       })(document);
+    </script>
+
+    <script>
+      (function () {
+        var root = document.documentElement;
+        var button = document.querySelector('.theme-toggle');
+        if (!button) return;
+
+        button.addEventListener('click', function () {
+          var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+          root.setAttribute('data-theme', next);
+          try { localStorage.setItem('theme', next); } catch (e) {}
+        });
+
+        /* Follow the OS preference, but only until the visitor has chosen. */
+        var media = window.matchMedia('(prefers-color-scheme: dark)');
+        var onChange = function (e) {
+          var stored;
+          try { stored = localStorage.getItem('theme'); } catch (err) {}
+          if (stored !== 'light' && stored !== 'dark') {
+            root.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+          }
+        };
+        if (media.addEventListener) media.addEventListener('change', onChange);
+        else if (media.addListener) media.addListener(onChange);
+      })();
     </script>
     </body>
 </html>

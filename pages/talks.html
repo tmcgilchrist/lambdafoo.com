@@ -19,6 +19,7 @@
   <link rel="stylesheet" href="/css/syntax-tm.css">
   <link rel="stylesheet" href="/css/lanyon.css">
   <link rel="stylesheet" href="/css/book.css">
+  <link rel="stylesheet" href="/css/dark.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
 
   <!-- Icons -->
@@ -27,6 +28,21 @@
 
   <!-- RSS -->
   <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  <!-- Theme. Runs before first paint so the page never flashes the wrong one.
+       Follows the OS preference until the visitor picks a side with the
+       toggle, which is then remembered. -->
+  <script>
+    (function () {
+      var theme;
+      try { theme = localStorage.getItem('theme'); } catch (e) {}
+      if (theme !== 'light' && theme !== 'dark') {
+        theme = window.matchMedia('(prefers-color-scheme: dark)').matches
+          ? 'dark' : 'light';
+      }
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
 
   <!-- Analytics -->
   <script data-goatcounter="https://lambdafoo.goatcounter.com/count"
@@ -48,8 +64,8 @@
   </div>
 
   <nav class="sidebar-nav">
-    <a class="sidebar-nav-item" href="/">Blog</a>
     <a class="sidebar-nav-item" href="/pages/about.html">About</a>
+    <a class="sidebar-nav-item" href="/">Blog</a>
     <a class="sidebar-nav-item" href="/pages/talks.html">Talks</a>
     <a class="sidebar-nav-item" href="/pages/server-room.html">Server Room</a>
     <a class="sidebar-nav-item" href="/archive.html">Archive</a>
@@ -90,24 +106,61 @@
       <div class="container content"><div class="page">
   <h1 class="page-title">Talks</h1><p>I like giving talks to User groups and Conferences, along with helping to organise our local Functional Programming User Group. At the moment I'm interested in FP Programming in the large and building maintainable / reliable systems in FP.</p>
 <ul>
-<li>24-04-2024 - <a href="https://github.com/fp-syd/meetings/tree/master/2024#april">OCaml behind the scenes: effects</a> @ <a href="https://www.meetup.com/fp-syd/events/300206218/">FP-SYD</a></li>
-<li>05-12-2023 - <a href="https://yowcon.com/melbourne-2023/speakers/2904/tim-mcgilchrist">OCaml for Fun and Profit</a> @ YOW! Conference 2023 Melbourne, Brisbane and Sydney <a href="">(video)</a></li>
-<li>16-09-2022 - <a href="https://github.com/tmcgilchrist/ocaml-2022-submission/tree/master">Homogeneous builds with OBuilder and OCaml</a> @ OCaml Workshop 2022 (Colocated with ICFP) <a href="https://youtu.be/XopV5Gd6hPo">(Video)</a></li>
-<li>25-05-2022 - <a href="https://github.com/tmcgilchrist/ocaml5-tutorial">Parallel and Concurrent programming in OCaml</a> 5.0 @ <a href="https://www.meetup.com/fp-syd/events/rdzwmsydchbhc/">FP-SYD</a></li>
-<li>22-06-2020 - 1ML Core and Modules United paper review @ FP-SYD</li>
-<li>26-06-2019 - Row Polymorphism in Action @ FP-SYD</li>
-<li>27-08-2018 - <a href="https://speakerdeck.com/lambda_foo/dependently-typed-state-machines">&quot;Dependently Typed State Machines&quot;</a> @ Compose Conference Melbourne 2018 <a href="https://www.youtube.com/watch?v=AgRmpMPCKeU">(Video)</a></li>
-<li>25-07-2018 - <a href="https://speakerdeck.com/lambda_foo/code-reuse-through-polymorphic-variants">&quot;Code reuse through polymorphic variants?&quot;</a> @ FP-SYD</li>
-<li>28-03-2018 - <a href="https://speakerdeck.com/lambda_foo/either-error-success">&quot;Either Error Success&quot;</a> @ FP-SYD</li>
-<li>24-05-2017 - <a href="https://speakerdeck.com/lambda_foo/idris-states-dependent-types-not-just-for-vectors">&quot;Idris States: Dependent types, not just for vectors?&quot;</a> @ FP-SYD</li>
-<li>29-04-2016 - <a href="/talks/lambda-jam-2016-performance">&quot;Practical Haskell Performance&quot;</a> @ YOW LambdaJam 2016 <a href="https://www.youtube.com/watch?v=vmFdJPs3DvU">(Video)</a></li>
-<li>18-04-2016 - <a href="/talks/fp-syd-freer-2016">&quot;Freer Monads, More Extensible Effects&quot;</a> @ FP-SYD (Video)</li>
-<li>23-09-2015 - <a href="/talks/fp-syd-higher-2015">&quot;Lightweight Higherkinded Polymorphism&quot;</a>@ FP-SYD <a href="https://www.youtube.com/watch?v=K3Y01DIMErk">(Video)</a></li>
-<li>08-07-2015 - <a href="/talks/scala-syd-2015-modules">&quot;Scalas Modular Roots&quot;</a> @ Scala-Syd</li>
-<li>21-05-2015 - <a href="/talks/lambda-jam-2015-ocaml-functors">&quot;A Crash Course in OCaml Modules&quot;</a> @ YOW LambdaJam 2015 <a href="https://www.youtube.com/watch?v=lISWTUyNP4c">(Video)</a></li>
-<li>21-05-2014 - <a href="http://yowconference.com.au/slides/yowlambdajam2014/McGilchrist-RAFTImplementingDistributedConsensusWithErlang.pdf">&quot;RAFT: Implementing Distributed Consensus&quot;</a> @ YOW LambdaJam 2014 <a href="https://www.youtube.com/watch?v=PjJuiU7i1Fw&amp;index=18&amp;list=PLIpl4GKFQR6e134FWCj0BirnzKslmOE1f">(Video)</a></li>
-<li>03-04-2012 - <a href="/talks/erl-syd-2012-webmachine">&quot;WebMachine: Building RESTful APIs with Erlang&quot;</a> @ Erl-Syd</li>
-<li>13-03-2012 - <a href="/talks/roro-2012-riak">&quot;Riak, Ripple and Ruby&quot;</a> @ RORO</li>
+<li><strong>Towards a Benchmarking Service for OCaml</strong>
+OCaml Workshop 2026, 24 Aug 2026
+<a href="https://ocaml.org/ocaml-workshop-2026/schedule">[schedule]</a> <a href="">[video]</a></li>
+<li><strong>OCaml behind the scenes: effects</strong>
+<a href="https://www.meetup.com/fp-syd/events/300206218/">FP-SYD</a>, 24 Apr 2024
+<a href="https://github.com/fp-syd/meetings/tree/master/2024#april">[details]</a></li>
+<li><strong>OCaml for Fun and Profit</strong>
+YOW! Conference 2023, Melbourne, Brisbane and Sydney, 5 Dec 2023
+<a href="https://yowcon.com/melbourne-2023/speakers/2904/tim-mcgilchrist">[details]</a> <a href="">[video]</a></li>
+<li><strong>Homogeneous builds with OBuilder and OCaml</strong>
+OCaml Workshop 2022 (Colocated with ICFP), 16 Sep 2022
+<a href="https://github.com/tmcgilchrist/ocaml-2022-submission/tree/master">[paper]</a> <a href="https://youtu.be/XopV5Gd6hPo">[video]</a></li>
+<li><strong>Parallel and Concurrent programming in OCaml 5.0</strong>
+<a href="https://www.meetup.com/fp-syd/events/rdzwmsydchbhc/">FP-SYD</a>, 25 May 2022
+<a href="https://github.com/tmcgilchrist/ocaml5-tutorial">[code]</a></li>
+<li><strong>1ML Core and Modules United paper review</strong>
+FP-SYD, 22 Jun 2020</li>
+<li><strong>Row Polymorphism in Action</strong>
+FP-SYD, 26 Jun 2019</li>
+<li><strong>Dependently Typed State Machines</strong>
+Compose Conference Melbourne 2018, 27 Aug 2018
+<a href="https://speakerdeck.com/lambda_foo/dependently-typed-state-machines">[slides]</a> <a href="https://www.youtube.com/watch?v=AgRmpMPCKeU">[video]</a></li>
+<li><strong>Code reuse through polymorphic variants?</strong>
+FP-SYD, 25 Jul 2018
+<a href="https://speakerdeck.com/lambda_foo/code-reuse-through-polymorphic-variants">[slides]</a></li>
+<li><strong>Either Error Success</strong>
+FP-SYD, 28 Mar 2018
+<a href="https://speakerdeck.com/lambda_foo/either-error-success">[slides]</a></li>
+<li><strong>Idris States: Dependent types, not just for vectors?</strong>
+FP-SYD, 24 May 2017
+<a href="https://speakerdeck.com/lambda_foo/idris-states-dependent-types-not-just-for-vectors">[slides]</a></li>
+<li><strong>Practical Haskell Performance</strong>
+YOW LambdaJam 2016, 29 Apr 2016
+<a href="/talks/lambda-jam-2016-performance">[slides]</a> <a href="https://www.youtube.com/watch?v=vmFdJPs3DvU">[video]</a></li>
+<li><strong>Freer Monads, More Extensible Effects</strong>
+FP-SYD, 18 Apr 2016
+<a href="/talks/fp-syd-freer-2016">[slides]</a> <a href="">[video]</a></li>
+<li><strong>Lightweight Higherkinded Polymorphism</strong>
+FP-SYD, 23 Sep 2015
+<a href="/talks/fp-syd-higher-2015">[slides]</a> <a href="https://www.youtube.com/watch?v=K3Y01DIMErk">[video]</a></li>
+<li><strong>Scalas Modular Roots</strong>
+Scala-Syd, 8 Jul 2015
+<a href="/talks/scala-syd-2015-modules">[slides]</a></li>
+<li><strong>A Crash Course in OCaml Modules</strong>
+YOW LambdaJam 2015, 21 May 2015
+<a href="/talks/lambda-jam-2015-ocaml-functors">[slides]</a> <a href="https://www.youtube.com/watch?v=lISWTUyNP4c">[video]</a></li>
+<li><strong>RAFT: Implementing Distributed Consensus</strong>
+YOW LambdaJam 2014, 21 May 2014
+<a href="http://yowconference.com.au/slides/yowlambdajam2014/McGilchrist-RAFTImplementingDistributedConsensusWithErlang.pdf">[slides (pdf)]</a> <a href="https://www.youtube.com/watch?v=PjJuiU7i1Fw&amp;index=18&amp;list=PLIpl4GKFQR6e134FWCj0BirnzKslmOE1f">[video]</a></li>
+<li><strong>WebMachine: Building RESTful APIs with Erlang</strong>
+Erl-Syd, 3 Apr 2012
+<a href="/talks/erl-syd-2012-webmachine">[slides]</a></li>
+<li><strong>Riak, Ripple and Ruby</strong>
+RORO, 13 Mar 2012
+<a href="/talks/roro-2012-riak">[slides]</a></li>
 </ul>
 </div>
 <div class="container content">
@@ -119,6 +172,12 @@
     </div>
 
     <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <!-- After .wrap, like the sidebar toggle above. .wrap is positioned with
+         z-index auto, so anything before it in the document is painted over
+         and stops receiving clicks. -->
+    <button type="button" class="theme-toggle" title="Toggle dark mode"
+            aria-label="Toggle dark mode"></button>
 
     <script>
       (function(document) {
@@ -136,6 +195,32 @@
           checkbox.checked = false;
         }, false);
       })(document);
+    </script>
+
+    <script>
+      (function () {
+        var root = document.documentElement;
+        var button = document.querySelector('.theme-toggle');
+        if (!button) return;
+
+        button.addEventListener('click', function () {
+          var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+          root.setAttribute('data-theme', next);
+          try { localStorage.setItem('theme', next); } catch (e) {}
+        });
+
+        /* Follow the OS preference, but only until the visitor has chosen. */
+        var media = window.matchMedia('(prefers-color-scheme: dark)');
+        var onChange = function (e) {
+          var stored;
+          try { stored = localStorage.getItem('theme'); } catch (err) {}
+          if (stored !== 'light' && stored !== 'dark') {
+            root.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+          }
+        };
+        if (media.addEventListener) media.addEventListener('change', onChange);
+        else if (media.addListener) media.addListener(onChange);
+      })();
     </script>
     </body>
 </html>

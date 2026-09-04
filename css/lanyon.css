@@ -73,16 +73,16 @@ h1, h2, h3, h4, h5, h6 {
  */
 
 .container {
-  max-width: 45rem;
+  max-width: 28rem;
 }
-@media (min-width: 38em) {
-  .container {
-    max-width: 48rem;
-  }
-}
-@media (min-width: 56em) {
+@media (min-width: 48em) {
   .container {
     max-width: 38rem;
+  }
+}
+@media (min-width: 68em) {
+  .container {
+    max-width: 48rem;
   }
 }
 
@@ -159,15 +159,15 @@ h1, h2, h3, h4, h5, h6 {
   visibility: hidden;
   overflow-y: auto;
   font-family: "PT Sans", Helvetica, Arial, sans-serif;
-  font-size: .875rem; /* 15px */
+  font-size: 1rem; /* 17px */
   color: rgba(255,255,255,.6);
-  background-color: #202020;
+  background-color: #1a2126;
   -webkit-transition: all .3s ease-in-out;
           transition: all .3s ease-in-out;
 }
 @media (min-width: 30em) {
   .sidebar {
-    font-size: .75rem; /* 14px */
+    font-size: .9rem; /* 15.3px */
   }
 }
 
@@ -359,7 +359,7 @@ a.sidebar-nav-item:focus {
   color: #999;
 }
 .related-posts li a:hover {
-  color: #268bd2;
+  color: #456e8a;
   text-decoration: none;
 }
 .related-posts li a:hover small {
