@@ -1,0 +1,334 @@
+/*
+ * Dark mode for lambdafoo.com
+ *
+ * The active theme is set as `data-theme="light|dark"` on <html> by an inline
+ * script in templates/layout.html, before first paint, so there is no flash of
+ * the wrong theme. That script follows the OS preference unless the visitor has
+ * made an explicit choice with the toggle, which is kept in localStorage.
+ *
+ * Every rule here is scoped to html[data-theme="dark"] so the light theme is
+ * exactly what poole.css and lanyon.css already say.
+ *
+ * Contents
+ *
+ * Theme toggle button
+ * Global
+ * Masthead and sidebar
+ * Posts, pages, related, pagination
+ * Tables, quotes, messages
+ * Code and syntax highlighting
+ */
+
+
+/*
+ * Theme toggle button
+ *
+ * Mirrors the Lanyon sidebar toggle: same size and shape, pinned to the
+ * opposite corner.
+ */
+
+.theme-toggle {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: block;
+  width: 2.2rem;
+  padding: .4rem .65rem;
+  font-size: 1rem;
+  line-height: 1.3;
+  text-align: center;
+  color: #505050;
+  background-color: #fff;
+  border: 0;
+  border-radius: .25rem;
+  cursor: pointer;
+  /* Above .wrap, which is positioned with z-index auto, and below the sidebar
+     when it is open. Without this the button depends on document order and
+     silently stops taking clicks if the markup is reordered. */
+  z-index: 9;
+}
+.theme-toggle:before {
+  content: "\263E"; /* moon: click for dark */
+}
+@media (min-width: 30.1em) {
+  .theme-toggle {
+    position: fixed;
+    width: 2.25rem;
+  }
+}
+@media print {
+  .theme-toggle {
+    display: none;
+  }
+}
+
+html[data-theme="dark"] .theme-toggle {
+  color: #c8c8c8;
+  background-color: #181a1b;
+}
+html[data-theme="dark"] .theme-toggle:before {
+  content: "\2600"; /* sun: click for light */
+}
+
+
+/*
+ * Global
+ */
+
+html {
+  color-scheme: light;
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+html[data-theme="dark"] body {
+  color: #c8c8c8;
+  background-color: #181a1b;
+}
+
+html[data-theme="dark"] h1,
+html[data-theme="dark"] h2,
+html[data-theme="dark"] h3,
+html[data-theme="dark"] h4,
+html[data-theme="dark"] h5,
+html[data-theme="dark"] h6 {
+  color: #dadada;
+}
+
+html[data-theme="dark"] strong {
+  color: #e2e2e2;
+}
+
+html[data-theme="dark"] a {
+  color: #8fb3c9;
+}
+
+html[data-theme="dark"] hr {
+  border-top-color: #2e3235;
+  border-bottom-color: #181a1b;
+}
+
+html[data-theme="dark"] abbr {
+  color: #a8a8a8;
+}
+html[data-theme="dark"] abbr[title] {
+  border-bottom-color: #3a3f42;
+}
+
+html[data-theme="dark"] img {
+  /* Full-strength white artwork glares against a dark page. */
+  opacity: .92;
+}
+
+
+/*
+ * Masthead and sidebar
+ *
+ * The sidebar is already dark in the light theme, so it only needs to stop
+ * being lighter than the page behind it.
+ */
+
+html[data-theme="dark"] .masthead {
+  border-bottom-color: #2e3235;
+}
+html[data-theme="dark"] .masthead-title a {
+  color: #dadada;
+}
+html[data-theme="dark"] .masthead-title small,
+html[data-theme="dark"] .masthead-links {
+  color: #8a8a8a;
+}
+
+html[data-theme="dark"] .sidebar {
+  background-color: #12171b;
+}
+
+/* The sidebar has its own palette against its own dark ground, so the body
+   accent must not leak in. `.sidebar a` is only (0,1,1) and loses to the
+   generic dark link rule at (0,1,2), hence this. */
+html[data-theme="dark"] .sidebar a {
+  color: #fff;
+}
+
+/* Lanyon draws the bars as a gradient with the gaps hardcoded to #fff, so on
+   a dark page the gaps outshine the bars and the icon reads inverted. Redraw
+   it with the button colour in the gaps. The closed button also takes the
+   page colour, so it is as invisible here as the white one is on white. */
+html[data-theme="dark"] .sidebar-toggle {
+  color: #c8c8c8;
+  background-color: #181a1b;
+}
+html[data-theme="dark"] .sidebar-toggle:before {
+  background-image: linear-gradient(to bottom,
+    #c8c8c8, #c8c8c8 20%, #181a1b 20%, #181a1b 40%,
+    #c8c8c8 40%, #c8c8c8 60%, #181a1b 60%, #181a1b 80%,
+    #c8c8c8 80%, #c8c8c8 100%);
+}
+html[data-theme="dark"] #sidebar-checkbox:focus ~ .sidebar-toggle,
+html[data-theme="dark"] .sidebar-toggle:active,
+html[data-theme="dark"] #sidebar-checkbox:checked ~ .sidebar-toggle {
+  color: #fff;
+  background-color: #45494c;
+}
+html[data-theme="dark"] #sidebar-checkbox:checked ~ .sidebar-toggle:before {
+  background-image: linear-gradient(to bottom,
+    #fff, #fff 20%, #45494c 20%, #45494c 40%,
+    #fff 40%, #fff 60%, #45494c 60%, #45494c 80%,
+    #fff 80%, #fff 100%);
+}
+
+
+/*
+ * Posts, pages, related, pagination
+ */
+
+html[data-theme="dark"] .page-title,
+html[data-theme="dark"] .post-title,
+html[data-theme="dark"] .post-title a {
+  color: #dadada;
+}
+
+html[data-theme="dark"] .post-date {
+  color: #8a8a8a;
+}
+
+html[data-theme="dark"] .related {
+  border-top-color: #2e3235;
+}
+html[data-theme="dark"] .related-posts li small {
+  color: #8a8a8a;
+}
+
+html[data-theme="dark"] .pagination {
+  color: #6a6a6a;
+}
+html[data-theme="dark"] .pagination-item {
+  border-color: #2e3235;
+}
+html[data-theme="dark"] a.pagination-item:hover {
+  background-color: #222526;
+}
+
+
+/*
+ * Tables, quotes, messages
+ */
+
+html[data-theme="dark"] table,
+html[data-theme="dark"] td,
+html[data-theme="dark"] th {
+  border-color: #2e3235;
+}
+html[data-theme="dark"] tbody tr:nth-child(odd) td,
+html[data-theme="dark"] tbody tr:nth-child(odd) th {
+  background-color: #1f2223;
+}
+
+html[data-theme="dark"] blockquote {
+  color: #a0a0a0;
+  border-left-color: #3a3f42;
+}
+
+html[data-theme="dark"] .message {
+  color: #b0b0b0;
+  background-color: #1f2223;
+}
+
+/* book.css */
+html[data-theme="dark"] .quote {
+  color: #a8a8a8;
+}
+html[data-theme="dark"] .attribution {
+  color: #dadada;
+}
+
+
+/*
+ * Code and syntax highlighting
+ *
+ * The light palette in syntax.css and syntax-tm.css is tuned for a white page
+ * and goes muddy on a dark one, so each concept is re-lit here. The two
+ * stylesheets colour the same concepts, so the rules are kept side by side.
+ */
+
+html[data-theme="dark"] code {
+  color: #e08a94;
+  background-color: #222526;
+}
+html[data-theme="dark"] pre {
+  background-color: #1f2223;
+}
+html[data-theme="dark"] pre code {
+  color: #c8c8c8;
+  background-color: transparent;
+}
+
+html[data-theme="dark"] td.lineNumbers {
+  color: #6a6a6a;
+  border-right-color: #3a3f42;
+}
+
+/* keyword */
+html[data-theme="dark"] code.sourceCode span.kw,
+html[data-theme="dark"] code.sourceCode span.ot,
+html[data-theme="dark"] pre code span[class*="keyword"],
+html[data-theme="dark"] pre code span[class*="punctuation-definition-directive"] {
+  color: #7ec699;
+}
+
+/* type, storage, class */
+html[data-theme="dark"] code.sourceCode span.dt,
+html[data-theme="dark"] pre code span[class*="storage"],
+html[data-theme="dark"] pre code span[class*="entity-name-type"],
+html[data-theme="dark"] pre code span[class*="entity-name-class"],
+html[data-theme="dark"] pre code span[class*="entity-other-inherited-class"],
+html[data-theme="dark"] pre code span[class*="support-type"],
+html[data-theme="dark"] pre code span[class*="support-class"] {
+  color: #e5a06a;
+}
+
+/* Number and other constants. OCaml variant constructors land here, and they
+   are the bulk of a type definition, so they get their own hue rather than a
+   second green next to the keywords. */
+html[data-theme="dark"] code.sourceCode span.dv,
+html[data-theme="dark"] code.sourceCode span.bn,
+html[data-theme="dark"] code.sourceCode span.fl,
+html[data-theme="dark"] pre code span[class*="constant"] {
+  color: #c4a7e7;
+}
+
+/* Operators and separators match [class*="keyword"] too, so `|` and `=` come
+   out as bold keywords. Dial them back to plain text weight and colour. */
+html[data-theme="dark"] pre code span[class*="keyword-operator"] {
+  color: #c8c8c8;
+  font-weight: normal;
+}
+
+/* string and char */
+html[data-theme="dark"] code.sourceCode span.st,
+html[data-theme="dark"] code.sourceCode span.ch,
+html[data-theme="dark"] pre code span[class*="string"] {
+  color: #85b5e0;
+}
+
+/* comment */
+html[data-theme="dark"] code.sourceCode span.co,
+html[data-theme="dark"] pre code span[class*="comment"] {
+  color: #7fa8b5;
+}
+
+/* function and tag */
+html[data-theme="dark"] code.sourceCode span.fu,
+html[data-theme="dark"] pre code span[class*="entity-name-function"],
+html[data-theme="dark"] pre code span[class*="entity-name-tag"],
+html[data-theme="dark"] pre code span[class*="support-function"] {
+  color: #8ab4f8;
+}
+
+/* error and invalid */
+html[data-theme="dark"] code.sourceCode span.al,
+html[data-theme="dark"] code.sourceCode span.er,
+html[data-theme="dark"] pre code span[class*="invalid"] {
+  color: #f28b82;
+}
