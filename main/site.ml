@@ -166,7 +166,7 @@ let date_from_filename file =
 (* ------------------------------------------------------------------ *)
 (* Metadata                                                           *)
 
-let common_fields =
+let common_fields () =
   Data.
     [
       ("site_title", string site_title);
@@ -288,7 +288,7 @@ module Post = struct
         ("has_description", bool (Option.is_some p.description));
         ("author", option string p.author);
       ]
-    @ common_fields
+    @ common_fields ()
 
   let compare_recent_first a b = ~-(Archetype.Datetime.compare a.date b.date)
 end
@@ -323,7 +323,7 @@ module Page = struct
         ("url", string p.url);
         ("isodate", option string (Option.map iso_date p.date));
       ]
-    @ common_fields
+    @ common_fields ()
 end
 
 (* Index, archive and per-tag listing pages all share this shape. *)
@@ -338,7 +338,7 @@ module Listing = struct
           list (List.map (fun p -> Data.record (Post.normalize p)) l.posts) );
         ("has_posts", bool (l.posts <> []));
       ]
-    @ common_fields
+    @ common_fields ()
 end
 
 (* The sitemap mixes posts and pages, so give it a uniform entry type. *)
@@ -357,7 +357,7 @@ module Sitemap = struct
                    [ ("url", string e.url); ("isodate", string e.isodate) ])
                s.posts) );
       ]
-    @ common_fields
+    @ common_fields ()
 end
 
 (* ------------------------------------------------------------------ *)
@@ -656,7 +656,7 @@ let process_sitemap () =
 module Redirect = struct
   type t = { target : string }
 
-  let normalize r = Data.[ ("target", string r.target) ] @ common_fields
+  let normalize r = Data.[ ("target", string r.target) ] @ common_fields ()
 end
 
 let process_redirects =
