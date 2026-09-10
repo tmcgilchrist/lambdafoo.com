@@ -15,13 +15,13 @@ I find functional programming interesting and effective for solving problems. Mo
 
 I help organise the Sydney based Functional Programming group, [FP-Syd](https://www.meetup.com/FP-Syd/).
 
-My open source contributions are mostly on [github.com/tmcgilchrist](https://github.com/tmcgilchrist).
+My open source contributions are mostly on [github.com/tmcgilchrist](https://github.com/tmcgilchrist) and [Tangled](https://tangled.org/tsmc.purely-functional.com).
 
-I occasionally use BlueSky (@tsmc.purely-functional.com) and [Linkedin](http://au.linkedin.com/in/timmcgilchrist).
+I occasionally use [Mastodon](https://hachyderm.io/@tsmc), [BlueSky](https://bsky.app/profile/tsmc.purely-functional.com) and [Linkedin](http://au.linkedin.com/in/timmcgilchrist).
 
 Outside of computing I enjoy music, MTB riding, growing plants and being outdoors.
 
-I can be contacted at [lambda_foo](https://twitter.com/lambda_foo) on Twitter or email timmcgil@gmail.com.
+I can be contacted at [@tsmc@hachyderm.io](https://hachyderm.io/@tsmc) on Mastodon or email timmcgil@gmail.com.
 
 Sometimes I look like this:
 
