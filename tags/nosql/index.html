@@ -47,7 +47,11 @@
   <!-- Analytics -->
   <script data-goatcounter="https://lambdafoo.goatcounter.com/count"
           async src="//gc.zgo.at/count.js"></script>
-  <a rel="me" hidden="true" href="https://hachyderm.io/@tsmc">Mastodon</a>
+
+  <!-- Mastodon verification. A link tag rather than an <a>, which is not
+       valid in <head> and gets relocated into the body by the parser.
+       Needs no JavaScript, so hachyderm.io can see it. -->
+  <link rel="me" href="https://hachyderm.io/@tsmc">
 </head>
 
   <body class="sidebar-overlay">
@@ -74,6 +78,8 @@
   <div class="sidebar-item">
     <p>
       <a href="https://github.com/tmcgilchrist">GitHub</a> ·
+      <a href="https://tangled.org/tsmc.purely-functional.com">Tangled</a> ·
+      <a href="https://hachyderm.io/@tsmc" rel="me">Mastodon</a> ·
       <a href="https://bsky.app/profile/tsmc.purely-functional.com">Bluesky</a>
     </p>
     <p>

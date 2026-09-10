@@ -47,7 +47,11 @@
   <!-- Analytics -->
   <script data-goatcounter="https://lambdafoo.goatcounter.com/count"
           async src="//gc.zgo.at/count.js"></script>
-  <a rel="me" hidden="true" href="https://hachyderm.io/@tsmc">Mastodon</a>
+
+  <!-- Mastodon verification. A link tag rather than an <a>, which is not
+       valid in <head> and gets relocated into the body by the parser.
+       Needs no JavaScript, so hachyderm.io can see it. -->
+  <link rel="me" href="https://hachyderm.io/@tsmc">
 </head>
 
   <body class="sidebar-overlay">
@@ -74,6 +78,8 @@
   <div class="sidebar-item">
     <p>
       <a href="https://github.com/tmcgilchrist">GitHub</a> ·
+      <a href="https://tangled.org/tsmc.purely-functional.com">Tangled</a> ·
+      <a href="https://hachyderm.io/@tsmc" rel="me">Mastodon</a> ·
       <a href="https://bsky.app/profile/tsmc.purely-functional.com">Bluesky</a>
     </p>
     <p>
@@ -108,10 +114,10 @@
 <p>I currently work as a Principal Software Engineer at <a href="https://tarides.com">Tarides</a> working with OCaml.</p>
 <p>I find functional programming interesting and effective for solving problems. Mostly I use OCaml and Haskell but have known Erlang, Elixir, Lisp and Standard ML at various times. My interests are compilers, distributed systems, operating systems, and general systems hackery.</p>
 <p>I help organise the Sydney based Functional Programming group, <a href="https://www.meetup.com/FP-Syd/">FP-Syd</a>.</p>
-<p>My open source contributions are mostly on <a href="https://github.com/tmcgilchrist">github.com/tmcgilchrist</a>.</p>
-<p>I occasionally use BlueSky (@tsmc.purely-functional.com) and <a href="http://au.linkedin.com/in/timmcgilchrist">Linkedin</a>.</p>
+<p>My open source contributions are mostly on <a href="https://github.com/tmcgilchrist">github.com/tmcgilchrist</a> and <a href="https://tangled.org/tsmc.purely-functional.com">Tangled</a>.</p>
+<p>I occasionally use <a href="https://hachyderm.io/@tsmc">Mastodon</a>, <a href="https://bsky.app/profile/tsmc.purely-functional.com">BlueSky</a> and <a href="http://au.linkedin.com/in/timmcgilchrist">Linkedin</a>.</p>
 <p>Outside of computing I enjoy music, MTB riding, growing plants and being outdoors.</p>
-<p>I can be contacted at <a href="https://twitter.com/lambda_foo">lambda_foo</a> on Twitter or email timmcgil@gmail.com.</p>
+<p>I can be contacted at <a href="https://hachyderm.io/@tsmc">@tsmc@hachyderm.io</a> on Mastodon or email timmcgil@gmail.com.</p>
 <p>Sometimes I look like this:</p>
 <p><img src="http://lambdafoo.com/images/tim-movember-2009.jpg" alt="" ></p>
 </div>
