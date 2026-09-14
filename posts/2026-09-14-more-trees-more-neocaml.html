@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>More tree-sitter, more neocaml, more elisp &middot; Perpetually Curious</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/poole.css">
+  <link rel="stylesheet" href="/css/syntax.css">
+  <link rel="stylesheet" href="/css/syntax-tm.css">
+  <link rel="stylesheet" href="/css/lanyon.css">
+  <link rel="stylesheet" href="/css/book.css">
+  <link rel="stylesheet" href="/css/dark.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/images/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+
+  <!-- Theme. Runs before first paint so the page never flashes the wrong one.
+       Follows the OS preference until the visitor picks a side with the
+       toggle, which is then remembered. -->
+  <script>
+    (function () {
+      var theme;
+      try { theme = localStorage.getItem('theme'); } catch (e) {}
+      if (theme !== 'light' && theme !== 'dark') {
+        theme = window.matchMedia('(prefers-color-scheme: dark)').matches
+          ? 'dark' : 'light';
+      }
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
+
+  <!-- Analytics -->
+  <script data-goatcounter="https://lambdafoo.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+
+  <!-- Mastodon verification. A link tag rather than an <a>, which is not
+       valid in <head> and gets relocated into the body by the parser.
+       Needs no JavaScript, so hachyderm.io can see it. -->
+  <link rel="me" href="https://hachyderm.io/@tsmc">
+</head>
+
+  <body class="sidebar-overlay">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+
+  <div class="sidebar-item">
+    <p><a href="/"><strong>Tim McGilchrist</strong></a></p>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/pages/about.html">About</a>
+    <a class="sidebar-nav-item" href="/">Blog</a>
+    <a class="sidebar-nav-item" href="/pages/talks.html">Talks</a>
+    <a class="sidebar-nav-item" href="/pages/server-room.html">Server Room</a>
+    <a class="sidebar-nav-item" href="/archive.html">Archive</a>
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      <a href="https://github.com/tmcgilchrist">GitHub</a> ·
+      <a href="https://tangled.org/tsmc.purely-functional.com">Tangled</a> ·
+      <a href="https://hachyderm.io/@tsmc" rel="me">Mastodon</a> ·
+      <a href="https://bsky.app/profile/tsmc.purely-functional.com">Bluesky</a>
+    </p>
+    <p>
+      <a href="/rss.xml">RSS</a> ·
+      <a href="/atom.xml">Atom</a>
+    </p>
+    <p>
+      &copy; Tim McGilchrist 2007-2026
+    </p>
+  </div>
+</div>
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">Perpetually Curious</a>
+            <span class="masthead-links">
+              <a href="/pages/about.html">About</a> |
+              <a href="/pages/talks.html">Talks</a> |
+              <a href="/pages/server-room.html">Server Room</a> |
+              <a href="/archive.html">Archive</a>
+            </span>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content"><div class="post">
+  <h1 class="post-title">More tree-sitter, more neocaml, more elisp</h1>
+  <span class="post-date">September 14, 2026</span><p>Back in April I wrote about spending <a href="/posts/2026-04-23-a-month-of-elisp.html">a month on elisp</a> where I created tree-sitter grammars for the OCaml mini-languages (think dune, opam and odoc) and used them to improve OCaml support in Emacs. The last few weeks I've been working on more of the same. I dug myself out of a hole after the OCaml Workshop and found some time to work on Emacs and elisp. Here's what I worked on.</p>
+<h2 id="parsing-the-mld-files-people-actually-write"><a class="anchor" aria-hidden="true" href="#parsing-the-mld-files-people-actually-write"></a>Parsing the .mld files people actually write</h2>
+<p>odoc is the OCaml documentation markup language, used both for comments in source files and for standalone <code>.mld</code> pages. The odoc grammar I started in April parsed the odoc I had written in my test corpus. It did not parse the odoc that exists in the wild however. <a href="https://github.com/tmcgilchrist/tree-sitter-odoc/pull/10">PR #10</a> fixes that, and shipped as <a href="https://github.com/tmcgilchrist/tree-sitter-odoc/releases/tag/0.2.0">tree-sitter-odoc 0.2.0</a>.</p>
+<p>The interesting failures were all cases where my grammar was stricter than odoc itself. Ultimately that's my fault for trying to dial in the grammar to be as strict as possible. So what were the issues?</p>
+<p>odoc's inline markup can span newlines. odoc turns a newline inside <code>{b ...}</code>, a heading or <code>{{!ref}...}</code> into a space, so <code>{b foo\nbar}</code> is ordinary prose rather than an error. A blank line still ends it, which I handle with a new external <code>_inline_newline</code> token (an external token is one handled by hand-written C in the scanner rather than by the generated parser) so that markup left unclosed while you are still typing does not swallow the rest of the page.</p>
+<p>I realised that raw markup is actually an inline element. That sounds like a detail until you notice that <code>{0 Fmt {%html: ...%}}</code> is the page title of essentially every dune-released library, and my grammar could not parse it.</p>
+<p>Light list items run to the next bullet or a blank line, not to the end of the line, so a bullet that wraps is one item. The item, not the list, now carries the newline that separates it from the next one. Light table cells hold inline markup, so <code>{t | {e emph} | b |}</code> works.</p>
+<p>Code block content ends at its own terminator. The openers <code>{[</code>, <code>{@</code> and <code>{delim@</code> are external tokens now, so the scanner knows which delimiter it is looking for and stops <code>{delim@lang[...]delim}</code> at <code>]delim}</code> rather than at the first <code>]}</code> that happens to appear inside the code. Delimited blocks can also carry the result block that mdx writes back, <code>{delim@lang[code]delim[output]}</code>.</p>
+<p>Finally, a <code>{</code> that opens nothing is literal text. odoc warns and carries on rather than giving up on the rest of the page, and an editor grammar had better do the same. I also fixed the injection query (the rule that tells tree-sitter which region to hand over to another grammar), which was capturing the whole code block, delimiters included, as injected content instead of just the content. These issues were all found by my own use of <code>neocaml-odoc-mode</code> with this grammar. The result is a more robust odoc parser that handles more odoc syntax.</p>
+<h2 id="neocaml-odoc-mode"><a class="anchor" aria-hidden="true" href="#neocaml-odoc-mode"></a>neocaml-odoc-mode</h2>
+<p>With a more robust grammar that handles the <code>.mld</code> files I'm writing, <a href="https://github.com/bbatsov/neocaml/pull/46">PR #46</a> is finally in reasonable shape. It has been open since April, mostly waiting on me sorting out font-locking (Emacs-speak for syntax highlighting), and has now been merged and hopefully officially released soon.</p>
+<p><code>neocaml-odoc-mode</code> is a tree-sitter major mode for <code>.mld</code> documentation pages. Font-lock covers headings, inline markup, code spans and blocks, references, links, tags, lists and tables, each with a dedicated <code>neocaml-odoc-*</code> face (a face being the bundle of colour and weight Emacs paints text with). Indentation comes along with it, plus imenu (the buffer index you navigate with) and heading-based defun navigation, so <code>C-M-a</code> and <code>C-M-e</code> step between sections which I use frequently with Combobulate. Install the grammar with <code>M-x neocaml-odoc-install-grammar</code>. The work follows the existing style of the neocaml package, so it should be an easy thing to adopt.</p>
+<p>The part I like most is language injection. On Emacs 30+, a <code>{@ocaml[...]}</code> block gets full OCaml highlighting, and the same goes for dune and opam blocks, using the grammars from the earlier work. Anything else falls back to a plain code face but could be added if someone wanted to do the work. Documentation that highlights its own examples with the same machinery as the source files is a small thing, but it is the sort of small thing that makes a mode feel finished.</p>
+<p>Now you get a nice view like:</p>
+<p><img src="/images/neocaml-odoc-syntax.png" alt="neocaml-odoc-mode highlighting a .mld page" ></p>
+<h2 id="a-segfault-and-how-to-avoid-one"><a class="anchor" aria-hidden="true" href="#a-segfault-and-how-to-avoid-one"></a>A segfault, and how to avoid one</h2>
+<p>Emacs 31.1 has been out for a while. I'm usually conservative with updating core software like Emacs and macOS versions, but now it was time to update things, experience the new features and see what breaks. A quick <code>brew upgrade --cask emacs</code> and now Emacs was successfully SEGV'ing like you don't want it to.</p>
+<p>I added Emacs 31.1 to the neocaml CI matrix in <a href="https://github.com/bbatsov/neocaml/pull/80">PR #80</a>, just to confirm it wasn't just me. Good and bad, Emacs promptly started crashing on any OCaml buffer containing a type constructor. A simple <code>let x : int = 42</code> was enough.</p>
+<p>The cause is a nice bit of accidental interaction. <code>regexp-opt</code> with <code>symbols</code> wraps its alternation in <code>\_&lt; ... \_&gt;</code>. Evaluating a symbol-boundary assertion inside a <code>:match</code> predicate pulls in lazy <code>syntax-propertize</code>, and it does that while <code>treesit-query-capture</code> is still walking the query cursor. Emacs 31.1 does not survive the re-entry and we SEGV our editor. So firing up Emacs from LLDB was the next step and getting a backtrace for the offending code. A few moments later ... and much code reading, I had an idea and a workaround. The underlying Emacs bug is <a href="https://debbugs.gnu.org/cgi/bugreport.cgi?bug=81729">#81729</a> and had already been reported by Brian Ward.</p>
+<p>Meanwhile, the fix in <a href="https://github.com/bbatsov/neocaml/pull/79">PR #79</a> is to anchor the match to the node text instead. The captures are whole <code>value_name</code>, <code>constructor_name</code> and <code>type_constructor</code> nodes and both builtin lists are plain identifiers, so <code>\`...\'</code> is exactly equivalent to symbol boundaries here. That side-steps the crash without weakening the predicate.</p>
+<p>Also <a href="https://github.com/bbatsov/neocaml/pull/80">#80</a> switched to using the hybrid <code>forward-sexp</code> function on every Emacs version, so <code>C-M-f</code> moves over a whole keyword-led form (<code>fun</code>, <code>match</code>, <code>if</code>) on Emacs 31+ instead of stopping after the keyword.</p>
+<h2 id="flattening-the-opam-tree"><a class="anchor" aria-hidden="true" href="#flattening-the-opam-tree"></a>Flattening the opam tree</h2>
+<p>In April I noted that the exact shape of the AST (Abstract Syntax Tree) turned out to be <em>much</em> more important than I expected for tree-sitter libraries. In tree-sitter-opam, <code>value</code> was a pure grouping choice that wrapped every value in a redundant node. Renaming it <code>_value</code> makes it a hidden rule (a leading underscore is tree-sitter's convention for hiding one), which promotes its alternatives into the enclosing node, and <code>queries/tags.scm</code> moves to matching the concrete nodes instead.</p>
+<p>It's a breaking change as <code>value</code> is no longer a node type, and it churned every test corpus file in the repository. It also makes every query written against the grammar shorter and every navigation command behave the way you would expect, which is the whole point. Grammars are an interface, and an interface that leaks its own grouping decisions is a bad one. I'm testing this out locally before I push out a release of <code>tree-sitter-opam</code>.</p>
+<h2 id="tree-sitter-dune-odds-and-ends"><a class="anchor" aria-hidden="true" href="#tree-sitter-dune-odds-and-ends"></a>tree-sitter-dune odds and ends</h2>
+<p>Marek Kubica has been doing good work on tree-sitter-dune while I was elsewhere. <a href="https://github.com/tmcgilchrist/tree-sitter-dune/pull/19">PR #19</a> adds the <code>tags</code> stanza (stanzas are the configuration blocks like <code>(executable ...)</code> and <code>(library ...)</code> that a dune file is built from), and <a href="https://github.com/tmcgilchrist/tree-sitter-dune/pull/21">PR #21</a> adds pforms (<code>%{...}</code>, dune's percent forms for variable substitution) as bare atoms, with the harder case of pforms inside strings left for later. There is an open naming question there, <code>variable</code> for bare atoms against <code>interpolation</code> for the in-string case, and the tree-sitter <a href="https://tree-sitter.github.io/tree-sitter/creating-parsers/3-writing-the-grammar.html#standard-rule-names">standard rule names</a> do not settle it.</p>
+<p>On my side I have a branch adding a <code>stanza_field</code> wrapper node for field-value pairs, extended across all the remaining stanza fields. It is the opposite move to the opam one above, adding structure rather than removing it, because here the field and its value really are a unit that queries want to grab together.</p>
+<p>Unlike the other grammars, dune keeps changing and adding new features so the tree-sitter support needs more frequent attention. My use of dune is fairly simple and I'm not using the new features or triggering these edge cases. It feels like there is an opportunity for tooling to do eager integration of dune trunk.</p>
+<h2 id="neocaml-dap-support"><a class="anchor" aria-hidden="true" href="#neocaml-dap-support"></a>Neocaml DAP support</h2>
+<p>Slightly off to the side, <a href="https://github.com/bbatsov/neocaml/pull/81">PR #81</a> adds a dape setup for native debugging of OCaml, with a <code>docs/debugging.md</code> to go with it. dape is an Emacs client for the Debug Adapter Protocol (DAP), the wire protocol between an editor and a debug server like LLDB or GDB. Back in <a href="/posts/2024-03-25-ocaml-debugging-with-emacs.html">Debugging OCaml with Emacs</a> I wrote up a similar setup using dap-mode. Since then I haven't used the editor integration for debugging that much, so I missed the addition of dape bytecode debugging instructions to neocaml. This rounds out the debugger tooling story for neocaml with the rest of the work needing to be done in LLDB/GDB or OCaml itself. The OCaml manual documents the current state of native and bytecode debugging, and OxCaml has an even better story for native debugging support that I want to cover soon.</p>
+<h2 id="future-work"><a class="anchor" aria-hidden="true" href="#future-work"></a>Future Work</h2>
+<p>What's up next in Emacs for OCaml?</p>
+<p>I have an old demo from June that adds runnables support to ocamllsp. The goal is parity with the rust-analyzer experience. Imagine the user invokes a command at point or per-file, gets a list of things that can be run (executables, test stanzas, individual inline tests, cram files), and the editor executes the chosen item, for example debug, run, or copy as shell command. The other idea I've been working on since the OCaml Workshop is adding texi output to odoc 3. The idea is to generate GNU Info manuals for every package installed in a local opam switch, as an alternative to odoc's HTML or Markdown output, and make them reachable from Emacs with <code>C-h i</code> and from a symbol at point. Finally I have a branch for Combobulate that adds basic navigation for odoc, dune and opam files, that needs rebasing and testing against the Combobulate OCaml support that already exists.</p>
+
+  <p class="post-tags">Tags: <a title="All pages tagged 'ocaml'." href="/tags/ocaml/index.html" rel="tag">ocaml</a>, <a title="All pages tagged 'emacs'." href="/tags/emacs/index.html" rel="tag">emacs</a>, <a title="All pages tagged 'tree-sitter'." href="/tags/tree-sitter/index.html" rel="tag">tree-sitter</a>, <a title="All pages tagged 'odoc'." href="/tags/odoc/index.html" rel="tag">odoc</a></p>
+</div>
+<div class="container content">
+          <small>Copyright © Tim McGilchrist 2007-2026</small>
+          <br>
+          <small>Powered by <a href="https://github.com/xhtmlboi/yocaml">YOCaml</a></small>
+        </div>
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <!-- After .wrap, like the sidebar toggle above. .wrap is positioned with
+         z-index auto, so anything before it in the document is painted over
+         and stops receiving clicks. -->
+    <button type="button" class="theme-toggle" title="Toggle dark mode"
+            aria-label="Toggle dark mode"></button>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+
+    <script>
+      (function () {
+        var root = document.documentElement;
+        var button = document.querySelector('.theme-toggle');
+        if (!button) return;
+
+        button.addEventListener('click', function () {
+          var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+          root.setAttribute('data-theme', next);
+          try { localStorage.setItem('theme', next); } catch (e) {}
+        });
+
+        /* Follow the OS preference, but only until the visitor has chosen. */
+        var media = window.matchMedia('(prefers-color-scheme: dark)');
+        var onChange = function (e) {
+          var stored;
+          try { stored = localStorage.getItem('theme'); } catch (err) {}
+          if (stored !== 'light' && stored !== 'dark') {
+            root.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+          }
+        };
+        if (media.addEventListener) media.addEventListener('change', onChange);
+        else if (media.addListener) media.addListener(onChange);
+      })();
+    </script>
+    </body>
+</html>
