@@ -10,7 +10,7 @@ I like giving talks to User groups and Conferences, along with helping to organi
 
 * **Towards a Benchmarking Service for OCaml**
   OCaml Workshop 2026, 24 Aug 2026
-  [[schedule]](https://ocaml.org/ocaml-workshop-2026/schedule) [[video]]()
+  [[schedule]](https://ocaml.org/ocaml-workshop-2026/schedule) [[abstract]](/talks/ocaml-workshop-2026-benchmarking/abstract.pdf) [[slides]](/talks/ocaml-workshop-2026-benchmarking/slides.pdf) [[video]]()
 * **Improving the Observability of Multicore OCaml**
   SAPLING 2025, Sydney, 24 Nov 2025
   [[schedule]](https://comp.anu.edu.au/sapling/2025/index.html) [[abstract]](https://comp.anu.edu.au/sapling/2025/abstracts/improvingtheobservabilityofmulticoreocaml.txt)
